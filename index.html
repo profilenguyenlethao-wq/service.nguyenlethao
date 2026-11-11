@@ -1,1230 +1,1079 @@
 <!DOCTYPE html>
-<html lang="vi" class="dark">
+<html lang="vi" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Thao Service • Premium MMO</title>
+    <title>LAMDZ Shop - Premium Services</title>
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- Babel -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=Be+Vietnam+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Soundcloud API -->
-    <script src="https://w.soundcloud.com/player/api.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Quicksand:wght@400;600;700&display=swap');
-        
         :root {
-            --bg-gradient: linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1e1b4b 100%);
-            --glass-bg: rgba(30, 41, 59, 0.45);
+            /* Dark Theme (Default) */
+            --bg: #080D19;
+            --surface: #111C31;
+            --primary: #3478F6;
+            --accent: #8B5CF6;
+            --success: #16C79A;
+            --warning: #F59E0B;
+            --text: #FFFFFF;
+            --text-muted: #94A3B8;
+            --glass-bg: rgba(17, 28, 49, 0.6);
             --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --radius: 20px;
         }
 
-        html.light {
-            --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #f8fafc 100%);
-            --glass-bg: rgba(255, 255, 255, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.8);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+        [data-theme="light"] {
+            --bg: #F0F4F8;
+            --surface: #FFFFFF;
+            --primary: #3478F6;
+            --accent: #8B5CF6;
+            --success: #16C79A;
+            --warning: #F59E0B;
+            --text: #0F172A;
+            --text-muted: #64748B;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
         }
 
-        body { 
-            font-family: 'Quicksand', 'Inter', sans-serif; 
-            overflow-x: hidden; 
-            background: var(--bg-gradient);
-            background-size: 200% 200%;
-            animation: gradientMove 15s ease infinite;
-            color: #f1f5f9;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Be Vietnam Pro', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
             min-height: 100vh;
-            transition: background 0.5s ease, color 0.3s;
-        }
-        html.light body { color: #0f172a; }
-
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            padding-bottom: 80px; /* Space for bottom nav */
         }
 
-        /* Liquid Glass Core */
+        /* Animated Background Blobs */
+        .bg-blobs {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 10s infinite alternate;
+        }
+        .blob-1 { background: var(--primary); width: 300px; height: 300px; top: -100px; left: -100px; }
+        .blob-2 { background: var(--accent); width: 250px; height: 250px; bottom: -50px; right: -50px; animation-delay: -5s; }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.2); }
+        }
+
+        /* Snow Canvas */
+        #snow-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; }
+        a { text-decoration: none; color: inherit; }
+
+        /* App Container */
+        .app-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+            position: relative;
+            z-index: 20;
+        }
+
+        /* Glassmorphism */
         .glass {
             background: var(--glass-bg);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-            border-radius: 24px;
-        }
-        .glass-strong {
-            background: var(--glass-bg);
-            backdrop-filter: blur(24px) saturate(200%);
-            -webkit-backdrop-filter: blur(24px) saturate(200%);
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), var(--glass-shadow);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
         }
 
-        /* Hide Scrollbar */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* Animations */
-        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        
-        .animate-bounce-in { animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-        @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
-
-        .float-anim { animation: float 3s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-
-        /* Background Effects */
-        .snowflake, .flower, .lava { position: fixed; top: -10px; pointer-events: none; z-index: 0; animation: fall linear forwards; }
-        .lava { bottom: -10px; top: auto; border-radius: 50%; animation: rise linear forwards; }
-        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); opacity: 0.1; } }
-        @keyframes rise { to { transform: translateY(-105vh) rotate(-360deg); opacity: 0; } }
-
-        /* Premium Product Card */
-        .product-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 24px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
-        }
-        .light .product-card { background: linear-gradient(145deg, #ffffff 0%, #f0f9ff 100%); border-color: #e2e8f0; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.4); }
-        
-        .product-image-wrapper {
-            position: relative;
-            background: radial-gradient(circle at center, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
-        }
-        .product-img { position: relative; z-index: 1; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .product-card:hover .product-img { transform: scale(1.1) translateY(-10px); }
-
-        /* Buttons */
-        .btn-3d { transition: all 0.1s; }
-        .btn-3d:active { transform: translateY(2px) scale(0.98); box-shadow: none !important; }
-
-        /* iOS Style Bottom Nav */
-        .ios-nav {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 400px;
+        /* Header */
+        header {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
-            padding: 8px;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 10px;
             z-index: 50;
         }
-        .light .ios-nav { background: rgba(255, 255, 255, 0.7); border-color: rgba(255, 255, 255, 0.9); }
+
+        .header-left, .header-right { display: flex; align-items: center; gap: 12px; }
+
+        .wallet-btn {
+            display: flex; align-items: center; gap: 6px;
+            padding: 8px 12px;
+            background: transparent; color: var(--text);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px; font-weight: 600; cursor: pointer;
+        }
+
+        .icon-btn {
+            background: transparent; border: none; color: var(--text);
+            display: flex; align-items: center; justify-content: center;
+            width: 40px; height: 40px; border-radius: 50%;
+            cursor: pointer; transition: 0.2s;
+        }
+        .icon-btn:hover { background: rgba(255,255,255,0.1); }
+
+        .lang-select {
+            background: transparent; border: 1px solid var(--glass-border);
+            color: var(--text); padding: 6px; border-radius: 10px;
+            font-weight: 600; outline: none; cursor: pointer;
+        }
+        .lang-select option { background: var(--surface); color: var(--text); }
+
+        .avatar-btn {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white; font-weight: bold; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Sections */
+        .page-section { display: none; animation: fadeIn 0.4s ease; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Profile Section */
+        .profile-card {
+            text-align: center;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+        }
+        .profile-avatar {
+            width: 100px; height: 100px; border-radius: 50%;
+            margin: 0 auto 16px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: 4px solid var(--surface);
+            box-shadow: 0 0 20px rgba(52, 120, 246, 0.4);
+            object-fit: cover;
+        }
+        .profile-name { font-size: 24px; margin-bottom: 8px; }
+        .profile-bio { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; }
+        
+        .social-links { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; }
+        .social-btn {
+            width: 44px; height: 44px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            transition: 0.2s;
+        }
+        .social-btn:hover { background: var(--primary); color: white; transform: translateY(-2px); }
+
+        /* Top Tabs */
+        .top-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .top-tab {
+            flex: 1; padding: 12px; text-align: center;
+            background: rgba(255,255,255,0.05); border-radius: 12px;
+            border: 1px solid transparent; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-weight: 500; transition: 0.2s;
+        }
+        .top-tab.active { background: var(--surface); border-color: var(--primary); color: var(--primary); }
+
+        /* Forms & Inputs */
+        input, textarea, select {
+            width: 100%; padding: 12px 16px;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            border-radius: 12px; color: var(--text);
+            font-family: inherit; outline: none; transition: 0.2s;
+        }
+        input:focus, textarea:focus, select:focus { border-color: var(--primary); }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; margin-bottom: 8px; font-size: 14px; color: var(--text-muted); }
+
+        .btn {
+            width: 100%; padding: 14px; border-radius: 12px;
+            font-weight: 600; cursor: pointer; border: none; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #2563EB; }
+        .btn-success { background: var(--success); color: white; }
+
+        /* Product Grid */
+        .search-bar { position: relative; margin-bottom: 16px; }
+        .search-bar i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .search-bar input { padding-left: 44px; }
+
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .product-card {
+            padding: 12px; display: flex; flex-direction: column;
+            cursor: pointer; transition: 0.2s;
+        }
+        .product-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.3); }
+        .product-img {
+            width: 100%; height: 120px; border-radius: 12px;
+            background: var(--surface); object-fit: cover; margin-bottom: 10px;
+        }
+        .product-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .product-price { color: var(--primary); font-weight: 700; font-size: 15px; }
+        .product-status { font-size: 11px; color: var(--success); margin-top: 4px; }
+
+        /* Deposit Section */
+        .qr-container { text-align: center; padding: 20px; }
+        .qr-container img { width: 100%; max-width: 250px; border-radius: 16px; margin: 16px 0; border: 4px solid white; }
+        .bank-info { text-align: left; background: rgba(0,0,0,0.2); padding: 16px; border-radius: 12px; margin-bottom: 16px; }
+        .bank-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 14px; }
+        .bank-row:last-child { border-bottom: none; }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: var(--glass-bg); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            display: flex; justify-content: space-around;
+            padding: 8px 0 16px; z-index: 100;
+        }
         .nav-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 8px 16px; border-radius: 20px; transition: all 0.3s;
-            color: #94a3b8;
+            display: flex; flex-direction: column; align-items: center;
+            font-size: 10px; color: var(--text-muted); cursor: pointer;
+            transition: 0.2s; width: 20%;
         }
-        .nav-item.active { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
-        .light .nav-item.active { background: rgba(59, 130, 246, 0.1); }
-        
-        /* FAB */
-        .fab { position: fixed; z-index: 50; touch-action: none; cursor: grab; }
-        .fab:active { cursor: grabbing; }
+        .nav-item i { margin-bottom: 4px; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item.active i { transform: translateY(-2px); }
+
+        .center-nav-btn {
+            width: 56px; height: 56px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex; align-items: center; justify-content: center;
+            color: white; transform: translateY(-20px);
+            box-shadow: 0 8px 20px rgba(52, 120, 246, 0.5);
+            border: 4px solid var(--bg);
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            display: none; align-items: center; justify-content: center;
+            z-index: 200; padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: var(--surface); width: 100%; max-width: 400px;
+            border-radius: var(--radius); padding: 24px;
+            border: 1px solid var(--glass-border);
+            max-height: 80vh; overflow-y: auto;
+            animation: zoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* Admin Panel */
+        #admin-panel { display: none; }
+        .admin-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px; }
+        .admin-tab { padding: 8px 16px; background: rgba(255,255,255,0.1); border-radius: 20px; cursor: pointer; white-space: nowrap; }
+        .admin-tab.active { background: var(--primary); color: white; }
+        .admin-section { display: none; }
+        .admin-section.active { display: block; }
+
+        .list-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; background: rgba(255,255,255,0.05); border-radius: 12px;
+            margin-bottom: 8px;
+        }
+        .action-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; }
+        .action-btn:hover { color: var(--warning); }
+        .action-btn.delete:hover { color: #ef4444; }
+
+        /* Floating Music Btn */
+        #music-toggle {
+            position: fixed; bottom: 90px; right: 20px;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: var(--surface); border: 1px solid var(--glass-border);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text); z-index: 90; cursor: pointer;
+            box-shadow: var(--shadow); animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(52, 120, 246, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(52, 120, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(52, 120, 246, 0); }
+        }
+
+        /* Utility */
+        .text-center { text-align: center; }
+        .text-muted { color: var(--text-muted); }
+        .mb-2 { margin-bottom: 8px; }
+        .mb-4 { margin-bottom: 16px; }
+        .mt-4 { margin-top: 16px; }
+        .hidden { display: none !important; }
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+        .badge-success { background: rgba(22, 199, 154, 0.2); color: var(--success); }
+        .badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
     </style>
-    <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#3b82f6' } } } }
-    </script>
 </head>
-<body class="pb-28 relative overflow-x-hidden">
+<body>
 
-    <!-- Background Effects Layer -->
-    <div id="effect-layer" class="fixed inset-0 pointer-events-none z-0"></div>
-    
-    <!-- Hidden Soundcloud Player -->
-    <div id="sc-container" style="position:fixed; bottom:-1000px; left:-1000px; width:1px; height:1px; opacity:0;"></div>
+    <!-- Background & Effects -->
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+    <canvas id="snow-canvas"></canvas>
 
-    <!-- React Root -->
-    <div id="root" class="relative z-10"></div>
+    <!-- SoundCloud Hidden Iframe (Audio) -->
+    <div style="display:none;">
+        <iframe id="sc-player" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/123456789&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+    </div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef, useCallback, useMemo } = React;
+    <!-- Music Toggle Button -->
+    <div id="music-toggle" onclick="toggleMusic()">
+        <i data-lucide="music"></i>
+    </div>
 
-        /* ================= CONSTANTS & DATA ================= */
-        const ADMIN_USER = "admin";
-        const ADMIN_PASS = "123456";
+    <div class="app-container">
         
-        const SC_TRACKS = [
-            "https://soundcloud.com/quang-huynhh/v-b-n-anh-remix-jack-j97-x",
-            "https://soundcloud.com/doyu-358490204/jack-j97-ng-i-d-ng-wen-remix"
-        ];
+        <!-- HEADER -->
+        <header class="glass">
+            <div class="header-left">
+                <button class="icon-btn" onclick="toggleSidebar()"><i data-lucide="menu"></i></button>
+                <button class="wallet-btn" onclick="navigateTo('deposit')">
+                    <i data-lucide="wallet" style="color: var(--primary); width: 18px;"></i>
+                    <span id="wallet-balance">0 đ</span>
+                </button>
+            </div>
+            <div class="header-right">
+                <button class="icon-btn" onclick="toggleTheme()"><i data-lucide="moon" id="theme-icon"></i></button>
+                <select class="lang-select" onchange="changeLanguage(this.value)">
+                    <option value="vi">VI</option>
+                    <option value="en">EN</option>
+                    <option value="zh">ZH</option>
+                    <option value="ja">JA</option>
+                </select>
+                <button class="icon-btn" onclick="openModal('notif-modal')">
+                    <i data-lucide="bell"></i>
+                </button>
+                <button class="avatar-btn" onclick="openModal('login-modal')">N</button>
+            </div>
+        </header>
 
-        const DEFAULT_PROFILE = {
-            name: "Nguyễn Lê Thảo",
-            verified: true,
-            bio: "Chuyên cung cấp dịch vụ MMO, Support Facebook/Meta, TikTok, Google và các tool hỗ trợ. Uy tín - Nhanh chóng - Bảo mật.",
-            avatar: "https://ui-avatars.com/api/?name=NL&background=3b82f6&color=fff&size=200",
-            cover: "https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&q=80",
-            contact: {
-                telegram: "usertaiwan8686", facebook: "nguyenlethaoservice",
-                phone: "0898666218", email: "nguyenlethao.profile08@gmail.com", discord: "nguyenlethao.service"
-            }
-        };
-
-        const DEFAULT_PRODUCTS = [
-            { id: 1, category: "Support Social", subcategory: "Meta", name: "UNLOCK 282", price: "150.000đ", desc: "Mở khóa tính năng 282", stock: 10, rating: 4.8, reviews: 156, badge: "NEW", image: "https://cdn-icons-png.flaticon.com/512/5968/5968764.png" },
-            { id: 2, category: "Support Social", subcategory: "Meta", name: "UNLOCK 956", price: "200.000đ", desc: "Mở khóa tính năng 956", stock: 5, rating: 4.9, reviews: 210, badge: "HOT", image: "https://cdn-icons-png.flaticon.com/512/5968/5968764.png" },
-            { id: 3, category: "Support Social", subcategory: "TikTok", name: "UNLOCK LIVE", price: "200.000đ", desc: "Mở live TikTok", stock: 7, rating: 4.7, reviews: 89, badge: "", image: "https://cdn-icons-png.flaticon.com/512/3046/3046120.png" },
-            { id: 4, category: "Shop Liên Quân", subcategory: "", name: "Acc Kim Cương 100+", price: "500.000đ", desc: "Full tướng, ngọc đỏ", stock: 5, rating: 5.0, reviews: 45, badge: "VIP", image: "https://cdn-icons-png.flaticon.com/512/8166/8166287.png" }
-        ];
-
-        const DEFAULT_POSTS = [
-            { id: 1, title: "Hướng dẫn mua hàng", content: "Vui lòng liên hệ Telegram để được hỗ trợ thanh toán và nhận hàng.", date: new Date().toISOString(), image: "" },
-            { id: 2, title: "Cập nhật bảo mật Meta", content: "Hệ thống đã cập nhật quy trình mới cho UNLOCK 956.", date: new Date().toISOString(), image: "" }
-        ];
-
-        const CATEGORIES = [
-            { name: "Shop Liên Quân", icon: "gamepad-2", subs: [] },
-            { name: "Shop Free Fire", icon: "crosshair", subs: [] },
-            { name: "Support Social", icon: "share-2", subs: ["Meta", "TikTok", "Google"] },
-            { name: "Proxy / VPN", icon: "shield", subs: [] },
-            { name: "IPA / Antiban", icon: "apple", subs: [] },
-            { name: "Source / Raw", icon: "code", subs: [] },
-            { name: "Bypass / Tool", icon: "wrench", subs: [] }
-        ];
-
-        /* ================= UTILS ================= */
-        const ls = {
-            get: (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
-            set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) { console.warn("Storage full"); } }
-        };
-
-        const compressImage = (file, maxW = 400, q = 0.7) => new Promise(res => {
-            const r = new FileReader();
-            r.onload = e => {
-                const img = new Image();
-                img.onload = () => {
-                    const c = document.createElement('canvas');
-                    let w = img.width, h = img.height;
-                    if (w > maxW) { h = h * maxW / w; w = maxW; }
-                    c.width = w; c.height = h;
-                    c.getContext('2d').drawImage(img, 0, 0, w, h);
-                    res(c.toDataURL('image/jpeg', q));
-                };
-                img.src = e.target.result;
-            };
-            r.readAsDataURL(file);
-        });
-
-        function useLucide() {
-            useEffect(() => {
-                let scheduled = false;
-                const run = () => {
-                    if (!window.lucide) return;
-                    if (!document.querySelector('[data-lucide]')) return;
-                    window.lucide.createIcons();
-                };
-                const schedule = () => {
-                    if (scheduled) return;
-                    scheduled = true;
-                    requestAnimationFrame(() => { scheduled = false; run(); });
-                };
-                run();
-                const obs = new MutationObserver(schedule);
-                obs.observe(document.body, { childList: true, subtree: true });
-                return () => obs.disconnect();
-            }, []);
-        }
-
-        /* ================= EFFECTS ================= */
-        function Effects({ type }) {
-            useEffect(() => {
-                const layer = document.getElementById('effect-layer');
-                if (!layer) return;
-                layer.innerHTML = '';
-                if (type === 'none') return;
-                
-                let interval;
-                const timeouts = [];
-                
-                const add = (html, cls, style, dur) => {
-                    const el = document.createElement('div');
-                    el.innerHTML = html; el.className = cls;
-                    Object.assign(el.style, style);
-                    layer.appendChild(el);
-                    timeouts.push(setTimeout(() => el.remove(), dur));
-                };
-
-                if (type === 'snow') {
-                    interval = setInterval(() => {
-                        add('❄', 'snowflake', { left: Math.random()*100+'vw', animationDuration: (Math.random()*4+4)+'s', opacity: Math.random()*0.5+0.2, fontSize: (Math.random()*10+12)+'px' }, 8000);
-                    }, 300);
-                } else if (type === 'flower') {
-                    const flowers = ['🌸','🌺','🌼','🌷','🍁','🍂'];
-                    interval = setInterval(() => {
-                        add(flowers[Math.floor(Math.random()*flowers.length)], 'flower', { left: Math.random()*100+'vw', animationDuration: (Math.random()*4+5)+'s', fontSize: (Math.random()*12+14)+'px' }, 9000);
-                    }, 500);
-                } else if (type === 'lava') {
-                    interval = setInterval(() => {
-                        const size = Math.random()*6+4;
-                        add('', 'lava', { left: Math.random()*100+'vw', animationDuration: (Math.random()*3+4)+'s', width: size+'px', height: size+'px', background: `radial-gradient(circle, hsl(${Math.random()*30+15},100%,60%), hsl(${Math.random()*20},100%,40%))` }, 7000);
-                    }, 150);
-                }
-
-                return () => { if(interval) clearInterval(interval); timeouts.forEach(t=>clearTimeout(t)); layer.innerHTML=''; };
-            }, [type]);
-            return null;
-        }
-
-        /* ================= COMPONENTS ================= */
-        const VerifiedIcon = ({ size = 20 }) => (
-            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="inline-block text-blue-500 ml-1 drop-shadow-md">
-                <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2ZM16.707 9.707C17.098 9.316 17.098 8.684 16.707 8.293C16.316 7.902 15.684 7.902 15.293 8.293L10.5 13.086L8.707 11.293C8.316 10.902 7.684 10.902 7.293 11.293C6.902 11.684 6.902 12.316 7.293 12.707L10.5 15.914L16.707 9.707Z" fill="currentColor"/>
-            </svg>
-        );
-
-        function ProfileHome({ profile, posts, onNavigate }) {
-            return (
-                <div className="animate-fade-in space-y-5">
-                    {/* Cover & Avatar */}
-                    <div className="relative rounded-3xl overflow-hidden glass-strong shadow-2xl">
-                        <div className="h-44 md:h-64 relative bg-gradient-to-r from-blue-600 to-cyan-400">
-                            {profile.cover && <img src={profile.cover} className="w-full h-full object-cover mix-blend-overlay opacity-80" alt="Cover" />}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                        </div>
-                        <div className="px-6 pb-6 -mt-16 relative">
-                            <img src={profile.avatar} className="w-28 h-28 rounded-full border-4 border-white dark:border-slate-800 object-cover shadow-2xl bg-white float-anim" alt="Avatar" />
-                            <div className="mt-4">
-                                <h2 className="text-3xl font-extrabold flex items-center drop-shadow-sm">
-                                    {profile.name} {profile.verified && <VerifiedIcon size={26} />}
-                                </h2>
-                                <p className="text-sm font-semibold text-blue-400 mt-1">@{ADMIN_USER} • MMO Provider</p>
-                            </div>
-                            <p className="mt-4 text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-medium">{profile.bio}</p>
-                            
-                            <div className="flex gap-3 mt-6">
-                                <button onClick={() => onNavigate('shop')} className="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-2xl text-sm font-bold shadow-[0_8px_20px_rgba(37,99,235,0.4)] transition btn-3d">Xem Shop</button>
-                                <button onClick={() => onNavigate('contact')} className="flex-1 glass-strong py-3 rounded-2xl text-sm font-bold hover:bg-white/10 transition btn-3d">Liên Hệ</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Features & Guide (Fill empty space) */}
-                    <div className="grid grid-cols-2 gap-3">
-                        <div className="glass p-4 rounded-2xl flex flex-col items-center text-center">
-                            <div className="w-10 h-10 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center mb-2"><i data-lucide="shield-check" size="20"></i></div>
-                            <h4 className="font-bold text-sm">Bảo Mật Tuyệt Đối</h4>
-                            <p className="text-[10px] text-gray-400 mt-1">Thông tin khách hàng luôn được mã hóa an toàn.</p>
-                        </div>
-                        <div className="glass p-4 rounded-2xl flex flex-col items-center text-center">
-                            <div className="w-10 h-10 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center mb-2"><i data-lucide="zap" size="20"></i></div>
-                            <h4 className="font-bold text-sm">Xử Lý Nhanh Chóng</h4>
-                            <p className="text-[10px] text-gray-400 mt-1">Hệ thống tự động, hỗ trợ 24/7 không gián đoạn.</p>
-                        </div>
-                    </div>
-
-                    {/* Latest News */}
-                    <div className="glass rounded-3xl p-6">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="font-bold text-lg flex items-center gap-2">
-                                <i data-lucide="newspaper" size="20" className="text-blue-500"></i> Bản tin mới
-                            </h3>
-                            <button onClick={() => onNavigate('posts')} className="text-xs font-bold text-blue-500">Xem tất cả</button>
-                        </div>
-                        <div className="space-y-3">
-                            {posts.slice(-2).reverse().map(p => (
-                                <div key={p.id} onClick={() => onNavigate('posts')} className="glass-strong rounded-2xl p-4 cursor-pointer hover:bg-white/5 transition border border-white/5">
-                                    <p className="font-bold text-sm text-blue-400 mb-1">{p.title}</p>
-                                    <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">{p.content}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        function Shop({ products, filter, setFilter }) {
-            const [search, setSearch] = useState('');
+        <!-- MAIN CONTENT (USER VIEW) -->
+        <main id="user-view">
             
-            // Lọc sản phẩm: Chỉ lọc theo category/subcategory được chọn, sau đó mới áp dụng search
-            const list = useMemo(() => {
-                return products.filter(p => {
-                    const matchFilter = filter ? (p.category === filter || p.subcategory === filter) : true;
-                    const matchSearch = search ? p.name.toLowerCase().includes(search.toLowerCase()) : true;
-                    return matchFilter && matchSearch;
-                });
-            }, [products, filter, search]);
-
-            return (
-                <div className="animate-fade-in space-y-5">
-                    {/* Search & Filter Bar */}
-                    <div className="glass-strong rounded-3xl p-5 sticky top-4 z-20 shadow-xl">
-                        <div className="relative mb-4">
-                            <i data-lucide="search" size="18" className="absolute left-4 top-3.5 text-gray-400"></i>
-                            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Tìm sản phẩm trong mục này..." className="w-full bg-black/20 dark:bg-black/40 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all font-medium" />
-                        </div>
-                        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-                            <button onClick={() => setFilter('')} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition ${!filter ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/10'}`}>Tất cả</button>
-                            {CATEGORIES.map(c => (
-                                <button key={c.name} onClick={() => { setFilter(c.name); setSearch(''); }} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition ${filter === c.name ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/10'}`}>
-                                    <i data-lucide={c.icon} size="14"></i> {c.name}
-                                </button>
-                            ))}
-                        </div>
+            <!-- Page: Home / Profile -->
+            <section id="page-home" class="page-section active">
+                <div class="profile-card glass">
+                    <img src="https://ui-avatars.com/api/?name=LAM+DZ&background=3478F6&color=fff&size=128" alt="Avatar" class="profile-avatar" id="profile-avatar">
+                    <h1 class="profile-name" id="profile-name">Lâm DZ Shop</h1>
+                    <p class="profile-bio" id="profile-bio">Chuyên cung cấp Acc Game & Dịch vụ uy tín số 1 VN. Giao dịch tự động 24/7.</p>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-btn"><i data-lucide="facebook"></i></a>
+                        <a href="#" class="social-btn"><i data-lucide="message-circle"></i></a>
+                        <a href="#" class="social-btn"><i data-lucide="youtube"></i></a>
                     </div>
                     
-                    {/* Premium Product Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        {list.map(p => (
-                            <div key={p.id} className="product-card p-5 flex flex-col group">
-                                {/* Badges */}
-                                <div className="flex justify-between items-start mb-4 z-10 relative">
-                                    <span className="bg-blue-600/20 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">{p.badge || 'PREMIUM'}</span>
-                                    <button className="w-8 h-8 rounded-full glass-strong flex items-center justify-center text-gray-400 hover:text-red-500 transition"><i data-lucide="heart" size="16"></i></button>
-                                </div>
-                                
-                                {/* Image with glow */}
-                                <div className="product-image-wrapper h-40 flex items-center justify-center mb-4">
-                                    {p.image ? (
-                                        <img src={p.image} className="product-img h-32 object-contain drop-shadow-2xl" alt={p.name} />
-                                    ) : (
-                                        <i data-lucide="package" size="64" className="text-blue-500 opacity-50 product-img"></i>
-                                    )}
-                                </div>
-
-                                {/* Info */}
-                                <div className="flex-1 flex flex-col relative z-10">
-                                    <div className="flex justify-between items-start mb-1">
-                                        <h3 className="font-extrabold text-lg leading-tight text-slate-900 dark:text-white">{p.name}</h3>
-                                        <div className="text-right">
-                                            <p className="font-extrabold text-blue-500 text-lg">{p.price}</p>
-                                            <p className="text-[10px] text-gray-500 line-through">{(parseInt(p.price.replace(/\D/g,'')) * 1.2).toLocaleString()}đ</p>
-                                        </div>
-                                    </div>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">{p.desc}</p>
-                                    
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <div className="flex text-yellow-400"><i data-lucide="star" size="12" fill="currentColor"></i></div>
-                                        <span className="text-xs font-bold">{p.rating} <span className="text-gray-500 font-normal">({p.reviews})</span></span>
-                                    </div>
-
-                                    {/* Actions */}
-                                    <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/10">
-                                        <div className="flex gap-1.5">
-                                            <div className="w-4 h-4 rounded-full bg-blue-600 ring-2 ring-white/20"></div>
-                                            <div className="w-4 h-4 rounded-full bg-slate-800 ring-2 ring-white/20"></div>
-                                            <div className="w-4 h-4 rounded-full bg-cyan-400 ring-2 ring-white/20"></div>
-                                        </div>
-                                        <button disabled={p.stock <= 0} className={`px-5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition btn-3d ${p.stock > 0 ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'bg-gray-700 text-gray-400 cursor-not-allowed'}`}>
-                                            {p.stock > 0 ? 'Mua Ngay' : 'Hết Hàng'} <i data-lucide="arrow-right" size="14"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    {list.length === 0 && <div className="text-center py-10 text-gray-500 font-medium">Không tìm thấy sản phẩm nào.</div>}
-                </div>
-            );
-        }
-
-        function Weather() {
-            const [weather, setWeather] = useState(null);
-            const [loading, setLoading] = useState(false);
-            const [activeCity, setActiveCity] = useState('');
-            
-            const cities = [
-                { name: "Vị trí của tôi", lat: null, lon: null },
-                { name: "Quy Nhơn", lat: 13.78, lon: 109.22 },
-                { name: "Phú Quốc", lat: 10.23, lon: 103.96 },
-                { name: "Nha Trang", lat: 12.24, lon: 109.19 },
-                { name: "Đà Nẵng", lat: 16.05, lon: 108.20 },
-                { name: "Hà Nội", lat: 21.03, lon: 105.85 },
-                { name: "HCM", lat: 10.82, lon: 106.63 }
-            ];
-
-            const fetchWeather = async (lat, lon, name) => {
-                setLoading(true);
-                try {
-                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_gusts_10m,uv_index&hourly=temperature_2m,precipitation_probability,weather_code&daily=sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=Asia%2FHo_Chi_Minh`;
-                    const r = await fetch(url);
-                    const d = await r.json();
-                    setWeather({ name, current: d.current, daily: d.daily, hourly: d.hourly });
-                    setActiveCity(name);
-                } catch (e) { alert('Lỗi tải thời tiết'); }
-                setLoading(false);
-            };
-
-            const getMyLocation = () => {
-                if (navigator.geolocation) {
-                    setLoading(true);
-                    navigator.geolocation.getCurrentPosition(
-                        (pos) => fetchWeather(pos.coords.latitude, pos.coords.longitude, "Vị trí hiện tại"),
-                        (err) => { alert('Không thể lấy vị trí. Vui lòng cấp quyền!'); setLoading(false); }
-                    );
-                } else {
-                    alert('Trình duyệt không hỗ trợ lấy vị trí.');
-                }
-            };
-
-            useEffect(() => { fetchWeather(cities[1].lat, cities[1].lon, cities[1].name); }, []);
-
-            const codeMap = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',51:'🌦',61:'🌧',80:'🌧',95:'⛈'};
-
-            return (
-                <div className="glass p-6 rounded-3xl animate-fade-in space-y-5">
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-xl font-extrabold flex items-center gap-2"><i data-lucide="cloud-sun" size="24" className="text-blue-500"></i> Thời Tiết</h2>
-                    </div>
-                    
-                    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
-                        {cities.map(c => (
-                            <button key={c.name} onClick={() => c.lat ? fetchWeather(c.lat, c.lon, c.name) : getMyLocation()} className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold transition flex items-center gap-1 ${activeCity === c.name ? 'bg-blue-600 text-white shadow-lg' : 'glass-strong hover:bg-white/10'}`}>
-                                {c.name === "Vị trí của tôi" && <i data-lucide="map-pin" size="12"></i>} {c.name}
-                            </button>
-                        ))}
-                    </div>
-                    
-                    {loading ? <div className="text-center py-10 animate-pulse font-bold text-blue-400">Đang tải dữ liệu...</div> : weather && (
-                        <div className="space-y-4">
-                            {/* Main Card */}
-                            <div className="glass-strong p-6 rounded-3xl flex justify-between items-center relative overflow-hidden">
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl"></div>
-                                <div className="z-10">
-                                    <p className="text-2xl font-extrabold text-blue-400">{weather.name}</p>
-                                    <p className="text-sm text-gray-300 mt-1 font-medium">Cảm giác: {weather.current.apparent_temperature}°C</p>
-                                    <p className="text-xs text-gray-400 mt-1">Gió: {weather.current.wind_speed_10m} km/h (Gió giật: {weather.current.wind_gusts_10m} km/h)</p>
-                                    <p className="text-xs text-gray-400">Độ ẩm: {weather.current.relative_humidity_2m}% • UV: {weather.current.uv_index}</p>
-                                </div>
-                                <div className="text-center z-10">
-                                    <p className="text-6xl drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">{codeMap[weather.current.weather_code] || '🌤'}</p>
-                                    <p className="text-4xl font-extrabold text-blue-500 mt-2">{weather.current.temperature_2m}°</p>
-                                </div>
-                            </div>
-
-                            {/* Sun & Moon */}
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="glass-strong p-4 rounded-2xl flex items-center gap-3">
-                                    <i data-lucide="sunrise" size="28" className="text-orange-400 drop-shadow-md"></i>
-                                    <div><p className="text-[10px] text-gray-400 font-bold uppercase">Mặt trời mọc</p><p className="font-bold text-lg">{weather.daily.sunrise[0].split('T')[1]}</p></div>
-                                </div>
-                                <div className="glass-strong p-4 rounded-2xl flex items-center gap-3">
-                                    <i data-lucide="sunset" size="28" className="text-red-400 drop-shadow-md"></i>
-                                    <div><p className="text-[10px] text-gray-400 font-bold uppercase">Mặt trời lặn</p><p className="font-bold text-lg">{weather.daily.sunset[0].split('T')[1]}</p></div>
-                                </div>
-                            </div>
-
-                            {/* Hourly Forecast */}
-                            <div>
-                                <p className="text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider flex items-center gap-1"><i data-lucide="clock" size="14"></i> Dự báo 24 giờ tới</p>
-                                <div className="overflow-x-auto no-scrollbar flex gap-3 glass-strong p-4 rounded-2xl">
-                                    {weather.hourly.time.slice(0, 24).map((time, i) => (
-                                        <div key={i} className="text-center min-w-[60px] space-y-1 bg-white/5 rounded-xl p-2 border border-white/5 hover:bg-white/10 transition">
-                                            <p className="text-[10px] text-gray-400 font-bold">{time.split('T')[1]}</p>
-                                            <p className="text-lg">{codeMap[weather.hourly.weather_code[i]] || '🌤'}</p>
-                                            <p className="font-bold text-sm text-blue-300">{weather.hourly.temperature_2m[i]}°</p>
-                                            <p className="text-[10px] text-blue-400 font-bold flex items-center justify-center gap-0.5"><i data-lucide="droplets" size="10"></i> {weather.hourly.precipitation_probability[i]}%</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Warning Details */}
-                            <div className="bg-red-500/10 border border-red-500/20 p-5 rounded-3xl relative overflow-hidden">
-                                <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/20 rounded-full blur-xl"></div>
-                                <p className="font-bold text-red-400 flex items-center gap-2 text-sm uppercase tracking-wide"><i data-lucide="alert-triangle" size="20"></i> Cảnh báo thiên tai Miền Trung</p>
-                                <p className="mt-2 text-xs text-gray-300 leading-relaxed font-medium">
-                                    <strong className="text-white">Tình hình:</strong> Mưa lớn diện rộng kết hợp không khí lạnh gây ra các hiện tượng cực đoan.<br/>
-                                    <strong className="text-white">Nguy cơ:</strong> Lũ quét, sạt lở đất vùng núi; ngập úng cục bộ vùng trũng thấp. Đề phòng dông lốc, sét và gió giật mạnh trong cơn dông.<br/>
-                                    <strong className="text-white">Khuyến cáo:</strong> Hạn chế di chuyển qua các ngầm tràn, suối cạn khi có mưa lớn. Gia cố nhà cửa và theo dõi sát sao bản tin thời tiết.
-                                </p>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        function Tools() {
-            const [ip, setIp] = useState(null);
-            const [loadingIp, setLoadingIp] = useState(false);
-            
-            const [speed, setSpeed] = useState(null);
-            const [testing, setTesting] = useState(false);
-
-            const [mail, setMail] = useState(() => ls.get('tempmail', null));
-            const [messages, setMessages] = useState([]);
-            const [loadingMail, setLoadingMail] = useState(false);
-
-            // IP Check
-            const checkIp = async () => {
-                setLoadingIp(true); setIp(null);
-                try {
-                    const r = await fetch('https://ipwho.is/');
-                    const d = await r.json();
-                    if(d.success) setIp(d);
-                    else alert('Lỗi check IP');
-                } catch (e) { alert('Lỗi mạng!'); }
-                setLoadingIp(false);
-            };
-
-            // Speed Test
-            const testSpeed = async () => {
-                setTesting(true); setSpeed(null);
-                const start = performance.now();
-                try {
-                    await fetch('https://speed.cloudflare.com/__down?bytes=5000000&cache=' + Date.now(), { cache: 'no-store' });
-                    const dur = (performance.now() - start) / 1000;
-                    setSpeed(((5000000 * 8) / (dur * 1000000)).toFixed(2));
-                } catch (e) { alert('Lỗi test mạng'); }
-                setTesting(false);
-            };
-
-            // Temp Mail
-            const createMail = async () => {
-                setLoadingMail(true);
-                try {
-                    const dr = await fetch('https://api.mail.tm/domains');
-                    const dd = await dr.json();
-                    const domain = dd['hydra:member'][0].domain;
-                    const address = `user${Math.floor(Math.random() * 1000000)}@${domain}`;
-                    const password = 'Password123!';
-                    
-                    const cr = await fetch('https://api.mail.tm/accounts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password }) });
-                    if (!cr.ok) throw new Error();
-                    
-                    const tr = await fetch('https://api.mail.tm/token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password }) });
-                    const td = await tr.json();
-                    
-                    const m = { address, token: td.token };
-                    ls.set('tempmail', m); setMail(m);
-                } catch (e) { alert('Lỗi tạo mail, thử lại!'); }
-                setLoadingMail(false);
-            };
-
-            const fetchMail = async () => {
-                if (!mail) return;
-                try {
-                    const r = await fetch('https://api.mail.tm/messages', { headers: { Authorization: `Bearer ${mail.token}` } });
-                    const d = await r.json();
-                    setMessages(d['hydra:member'] || []);
-                } catch (e) { alert('Lỗi tải mail'); }
-            };
-
-            return (
-                <div className="animate-fade-in space-y-5">
-                    <h2 className="text-2xl font-extrabold flex items-center gap-2"><i data-lucide="layout-grid" size="24" className="text-blue-500"></i> Tiện Ích Mở Rộng</h2>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        {/* IP Check */}
-                        <div className="glass p-6 rounded-3xl flex flex-col">
-                            <h3 className="text-lg font-extrabold flex items-center gap-2 mb-4"><i data-lucide="globe" size="20" className="text-blue-400"></i> Check IP</h3>
-                            <button onClick={checkIp} disabled={loadingIp} className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-2xl font-bold shadow-lg shadow-blue-500/30 transition btn-3d mb-4">
-                                {loadingIp ? 'Đang check...' : 'Check IP Ngay'}
-                            </button>
-                            {ip && (
-                                <div className="bg-black/20 p-4 rounded-2xl text-xs space-y-2 mt-auto animate-bounce-in border border-white/10">
-                                    <div className="flex justify-between border-b border-white/10 pb-2"><span className="text-gray-400">IP:</span><span className="font-bold text-blue-400">{ip.ip}</span></div>
-                                    <div className="flex justify-between border-b border-white/10 pb-2"><span className="text-gray-400">Nhà mạng:</span><span className="font-bold text-right">{ip.connection?.isp || 'N/A'}</span></div>
-                                    <div className="flex justify-between border-b border-white/10 pb-2"><span className="text-gray-400">Vị trí:</span><span className="font-bold text-right">{ip.city}, {ip.country}</span></div>
-                                    <div className="flex justify-between"><span className="text-gray-400">Loại:</span><span className={`font-bold ${ip.country_code === 'VN' ? 'text-green-500' : 'text-red-500'}`}>{ip.country_code === 'VN' ? 'Local (VN)' : 'Proxy/VPN'}</span></div>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Speed Test */}
-                        <div className="glass p-6 rounded-3xl flex flex-col">
-                            <h3 className="text-lg font-extrabold flex items-center gap-2 mb-4"><i data-lucide="wifi" size="20" className="text-purple-400"></i> Tốc Độ Mạng</h3>
-                            <button onClick={testSpeed} disabled={testing} className="w-full bg-purple-600 hover:bg-purple-500 text-white py-3 rounded-2xl font-bold shadow-lg shadow-purple-500/30 transition btn-3d mb-4">
-                                {testing ? 'Đang test...' : 'Bắt đầu Test'}
-                            </button>
-                            {speed && (
-                                <div className="bg-black/20 p-4 rounded-2xl text-center mt-auto animate-bounce-in border border-white/10 relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 to-transparent"></div>
-                                    <p className="text-xs text-gray-400 font-bold mb-1 relative z-10">Tốc độ tải xuống</p>
-                                    <p className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 relative z-10">{speed} <span className="text-sm">Mbps</span></p>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Temp Mail */}
-                        <div className="glass p-6 rounded-3xl md:col-span-2">
-                            <h3 className="text-lg font-extrabold flex items-center gap-2 mb-4"><i data-lucide="mail" size="20" className="text-orange-400"></i> Email Tạm Thời</h3>
-                            {!mail ? (
-                                <button onClick={createMail} disabled={loadingMail} className="w-full bg-orange-600 hover:bg-orange-500 text-white py-3 rounded-2xl font-bold shadow-lg shadow-orange-500/30 transition btn-3d">
-                                    {loadingMail ? 'Đang tạo...' : 'Tạo Email Mới'}
-                                </button>
-                            ) : (
-                                <div className="bg-black/20 p-4 rounded-2xl space-y-3 border border-white/10">
-                                    <div className="flex justify-between items-center bg-orange-500/10 p-3 rounded-xl border border-orange-500/20">
-                                        <p className="font-bold text-orange-400 break-all text-sm">{mail.address}</p>
-                                        <button onClick={() => { ls.set('tempmail', null); setMail(null); setMessages([]); }} className="text-red-400 hover:text-red-300 p-1"><i data-lucide="trash-2" size="16"></i></button>
-                                    </div>
-                                    <button onClick={fetchMail} className="w-full bg-blue-600 text-white py-2 rounded-xl text-xs font-bold transition btn-3d">Tải hộp thư mới</button>
-                                    {messages.length > 0 && (
-                                        <ul className="space-y-2 max-h-40 overflow-y-auto no-scrollbar mt-2">
-                                            {messages.map(m => (
-                                                <li key={m.id} className="bg-white/5 p-3 rounded-xl border border-white/5">
-                                                    <p className="font-bold text-xs text-blue-300">{m.subject || '(Không tiêu đề)'}</p>
-                                                    <p className="text-gray-400 text-[10px] mt-1">Từ: {m.from?.address}</p>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        function ContactPage({ profile }) {
-            const c = profile.contact || DEFAULT_PROFILE.contact;
-            const items = [
-                { icon: 'send', label: 'Telegram', value: `@${c.telegram}`, link: `https://t.me/${c.telegram}`, color: 'text-blue-500 bg-blue-500/10' },
-                { icon: 'facebook', label: 'Facebook', value: `@${c.facebook}`, link: `https://facebook.com/${c.facebook}`, color: 'text-blue-600 bg-blue-600/10' },
-                { icon: 'phone', label: 'Điện thoại', value: c.phone, link: `tel:${c.phone}`, color: 'text-green-500 bg-green-500/10' },
-                { icon: 'mail', label: 'Email', value: c.email, link: `mailto:${c.email}`, color: 'text-red-500 bg-red-500/10' },
-                { icon: 'message-square', label: 'Discord', value: c.discord, link: `https://discord.com/users/${c.discord}`, color: 'text-indigo-500 bg-indigo-500/10' }
-            ];
-            return (
-                <div className="animate-fade-in space-y-5">
-                    <div className="glass p-8 rounded-3xl text-center relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-blue-500 to-purple-500 opacity-20 blur-xl"></div>
-                        <img src={profile.avatar} alt="" className="w-24 h-24 rounded-full mx-auto border-4 border-blue-500 shadow-2xl relative z-10" />
-                        <h2 className="text-2xl font-extrabold mt-4 flex items-center justify-center relative z-10">{profile.name}{profile.verified && <VerifiedIcon size={20} />}</h2>
-                        <p className="text-sm text-gray-400 mt-2 font-medium relative z-10">Hỗ trợ khách hàng 24/7</p>
-                    </div>
-                    <div className="grid grid-cols-1 gap-3">
-                        {items.map((it, i) => (
-                            <a key={i} href={it.link} target="_blank" rel="noreferrer" className="glass-strong rounded-2xl p-4 flex items-center gap-4 hover:bg-white/10 transition border border-white/5 group">
-                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${it.color} group-hover:scale-110 transition`}>
-                                    <i data-lucide={it.icon} size="22"></i>
-                                </div>
-                                <div className="flex-1">
-                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">{it.label}</p>
-                                    <p className="text-sm font-extrabold mt-0.5 break-all">{it.value}</p>
-                                </div>
-                                <i data-lucide="chevron-right" size="18" className="text-gray-500 group-hover:translate-x-1 transition"></i>
-                            </a>
-                        ))}
-                    </div>
-                </div>
-            );
-        }
-
-        /* ================= ADMIN PANEL ================= */
-        function AdminLogin({ onLogin }) {
-            const [u, setU] = useState('');
-            const [p, setP] = useState('');
-            const [err, setErr] = useState('');
-
-            const submit = e => {
-                e.preventDefault();
-                if (u === ADMIN_USER && p === ADMIN_PASS) onLogin();
-                else setErr('Sai tài khoản hoặc mật khẩu!');
-            };
-
-            return (
-                <div className="animate-fade-in max-w-md mx-auto mt-10">
-                    <div className="glass p-8 rounded-3xl shadow-2xl relative overflow-hidden">
-                        <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/30 rounded-full blur-2xl"></div>
-                        <div className="text-center mb-8 relative z-10">
-                            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-400 mx-auto flex items-center justify-center shadow-lg shadow-blue-500/50">
-                                <i data-lucide="shield-check" size="40" className="text-white"></i>
-                            </div>
-                            <h2 className="text-2xl font-extrabold mt-4">Admin Portal</h2>
-                            <p className="text-xs text-gray-400 mt-1">Yêu cầu quyền truy cập cấp cao</p>
-                        </div>
-                        <form onSubmit={submit} className="space-y-4 relative z-10">
-                            <div>
-                                <label className="text-xs font-bold text-gray-400 ml-1 mb-1 block">Tài khoản</label>
-                                <input value={u} onChange={e => setU(e.target.value)} placeholder="Nhập tài khoản..." className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all" />
-                            </div>
-                            <div>
-                                <label className="text-xs font-bold text-gray-400 ml-1 mb-1 block">Mật khẩu</label>
-                                <input type="password" value={p} onChange={e => setP(e.target.value)} placeholder="••••••••" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all" />
-                            </div>
-                            {err && <p className="text-xs text-red-500 text-center font-bold bg-red-500/10 p-2 rounded-lg">{err}</p>}
-                            <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition btn-3d mt-2">Đăng Nhập</button>
-                        </form>
-                    </div>
-                </div>
-            );
-        }
-
-        function AdminPanel({ data, setData, onLogout }) {
-            const [tab, setTab] = useState('profile');
-            const [form, setForm] = useState({});
-            const [editId, setEditId] = useState(null);
-
-            const tabs = [
-                { id: 'profile', label: 'Profile', icon: 'user' },
-                { id: 'site', label: 'Cài đặt Web', icon: 'settings' },
-                { id: 'products', label: 'Sản phẩm', icon: 'shopping-bag' },
-                { id: 'posts', label: 'Bài viết', icon: 'newspaper' }
-            ];
-
-            const updImg = async (e, k, cb) => {
-                const f = e.target.files[0]; if (!f) return;
-                const b64 = await compressImage(f, 500, 0.7);
-                cb(k, b64);
-            };
-
-            const ProfileTab = () => {
-                const p = data.profile;
-                const upd = (k, v) => setData({ ...data, profile: { ...p, [k]: v } });
-                return (
-                    <div className="space-y-4 animate-fade-in">
-                        <div><label className="text-xs font-bold text-gray-400">Tên hiển thị</label>
-                        <input value={p.name} onChange={e => upd('name', e.target.value)} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
-                        <div className="flex items-center gap-2 bg-black/20 p-3 rounded-xl border border-white/10">
-                            <input type="checkbox" checked={p.verified} onChange={e => upd('verified', e.target.checked)} id="vf" className="w-4 h-4 accent-blue-500" />
-                            <label htmlFor="vf" className="text-sm font-bold">Hiển thị tick xanh</label>
-                        </div>
-                        <div><label className="text-xs font-bold text-gray-400">Tiểu sử (Bio)</label>
-                        <textarea value={p.bio} onChange={e => upd('bio', e.target.value)} rows="3" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
-                        <div className="grid grid-cols-2 gap-3">
-                            <div><label className="text-xs font-bold text-gray-400">Avatar</label>
-                            <div className="mt-1 flex flex-col items-center gap-2 bg-black/20 p-3 rounded-xl border border-white/10">
-                                <img src={p.avatar} className="w-16 h-16 rounded-full object-cover shadow-lg" />
-                                <input type="file" accept="image/*" onChange={e => updImg(e, 'avatar', upd)} className="text-[10px] w-full" />
-                            </div></div>
-                            <div><label className="text-xs font-bold text-gray-400">Ảnh bìa</label>
-                            <div className="mt-1 flex flex-col items-center gap-2 bg-black/20 p-3 rounded-xl border border-white/10">
-                                <img src={p.cover} className="w-full h-16 object-cover rounded-lg shadow-lg" />
-                                <input type="file" accept="image/*" onChange={e => updImg(e, 'cover', upd)} className="text-[10px] w-full" />
-                            </div></div>
-                        </div>
-                        <div><label className="text-xs font-bold text-gray-400">Liên hệ (JSON format)</label>
-                        <textarea value={JSON.stringify(p.contact, null, 2)} onChange={e => { try { upd('contact', JSON.parse(e.target.value)) } catch {} }} rows="4" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-xs font-mono outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
-                    </div>
-                );
-            };
-
-            const SiteTab = () => (
-                <div className="space-y-4 animate-fade-in">
-                    <div><label className="text-xs font-bold text-gray-400">Tên Website</label>
-                    <input value={data.siteName} onChange={e => setData({ ...data, siteName: e.target.value })} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
-                    <div><label className="text-xs font-bold text-gray-400">Hiệu ứng nền mặc định</label>
-                    <select value={data.defaultEffect} onChange={e => setData({ ...data, defaultEffect: e.target.value })} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1">
-                        <option value="none">Không có</option><option value="snow">Tuyết rơi</option><option value="flower">Hoa rơi</option><option value="lava">Dung nham</option>
-                    </select></div>
-                </div>
-            );
-
-            const ProductsTab = () => {
-                const save = () => {
-                    if (!form.name || !form.price) return alert('Vui lòng nhập Tên & Giá');
-                    const list = data.products || [];
-                    if (editId) setData({ ...data, products: list.map(x => x.id === editId ? { ...form, id: editId } : x) });
-                    else setData({ ...data, products: [...list, { ...form, id: Date.now() }] });
-                    setForm({}); setEditId(null);
-                };
-                return (
-                    <div className="space-y-4 animate-fade-in">
-                        <div className="bg-black/20 p-4 rounded-2xl border border-white/10 space-y-3">
-                            <div className="grid grid-cols-2 gap-2">
-                                <select value={form.category || ''} onChange={e => setForm({ ...form, category: e.target.value, subcategory: '' })} className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none">
-                                    <option value="">-- Danh mục --</option>
-                                    {CATEGORIES.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
-                                </select>
-                                <select value={form.subcategory || ''} onChange={e => setForm({ ...form, subcategory: e.target.value })} className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" disabled={!form.category || CATEGORIES.find(c=>c.name===form.category)?.subs.length === 0}>
-                                    <option value="">-- Danh mục con --</option>
-                                    {CATEGORIES.find(c => c.name === form.category)?.subs.map(s => <option key={s} value={s}>{s}</option>)}
-                                </select>
-                            </div>
-                            <input value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Tên sản phẩm" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
-                            <div className="flex gap-2">
-                                <input value={form.price || ''} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="Giá (VD: 150.000đ)" className="w-1/2 bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
-                                <input type="number" value={form.stock || 0} onChange={e => setForm({ ...form, stock: Number(e.target.value) })} placeholder="Kho" className="w-1/2 bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
-                            </div>
-                            <input value={form.desc || ''} onChange={e => setForm({ ...form, desc: e.target.value })} placeholder="Mô tả ngắn" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
-                            <div className="flex items-center gap-2">
-                                {form.image && <img src={form.image} className="w-10 h-10 rounded-lg object-contain bg-white/10" />}
-                                <input type="file" accept="image/*" onChange={e => updImg(e, 'image', (k, v) => setForm({ ...form, [k]: v }))} className="text-xs w-full" />
-                            </div>
-                            <div className="flex gap-2 pt-2">
-                                <button onClick={save} className="flex-1 bg-blue-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/30 transition btn-3d">{editId ? 'Lưu Thay Đổi' : 'Thêm Sản Phẩm'}</button>
-                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-600 text-white px-4 rounded-xl text-sm font-bold transition">Hủy</button>}
-                            </div>
-                        </div>
-                        <div className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
-                            {data.products.map(p => (
-                                <div key={p.id} className="bg-white/5 border border-white/5 p-3 rounded-xl flex items-center gap-3 text-xs">
-                                    <div className="flex-1 truncate font-medium">{p.name} <span className="text-blue-400 font-bold ml-1">{p.price}</span></div>
-                                    <button onClick={() => { setForm(p); setEditId(p.id); }} className="text-blue-500 p-2 hover:bg-blue-500/10 rounded-lg transition"><i data-lucide="edit" size="16"></i></button>
-                                    <button onClick={() => setData({ ...data, products: data.products.filter(x => x.id !== p.id) })} className="text-red-500 p-2 hover:bg-red-500/10 rounded-lg transition"><i data-lucide="trash-2" size="16"></i></button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                );
-            };
-
-            const PostsTab = () => {
-                const save = () => {
-                    if (!form.title || !form.content) return alert('Nhập tiêu đề & nội dung');
-                    if (editId) setData({ ...data, posts: data.posts.map(p => p.id === editId ? { ...form, id: editId, date: p.date } : p) });
-                    else setData({ ...data, posts: [...data.posts, { ...form, id: Date.now(), date: new Date().toISOString() }] });
-                    setForm({}); setEditId(null);
-                };
-                return (
-                    <div className="space-y-4 animate-fade-in">
-                        <div className="bg-black/20 p-4 rounded-2xl border border-white/10 space-y-3">
-                            <input value={form.title || ''} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Tiêu đề bài viết" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
-                            <textarea value={form.content || ''} onChange={e => setForm({ ...form, content: e.target.value })} placeholder="Nội dung chi tiết..." rows="4" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none"></textarea>
-                            <div className="flex gap-2 pt-2">
-                                <button onClick={save} className="flex-1 bg-green-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-green-500/30 transition btn-3d">{editId ? 'Lưu Thay Đổi' : 'Đăng Bài'}</button>
-                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-600 text-white px-4 rounded-xl text-sm font-bold transition">Hủy</button>}
-                            </div>
-                        </div>
-                        <div className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
-                            {data.posts.map(p => (
-                                <div key={p.id} className="bg-white/5 border border-white/5 p-3 rounded-xl flex items-center gap-3 text-xs">
-                                    <div className="flex-1 truncate font-medium">{p.title}</div>
-                                    <button onClick={() => { setForm(p); setEditId(p.id); }} className="text-blue-500 p-2 hover:bg-blue-500/10 rounded-lg transition"><i data-lucide="edit" size="16"></i></button>
-                                    <button onClick={() => setData({ ...data, posts: data.posts.filter(x => x.id !== p.id) })} className="text-red-500 p-2 hover:bg-red-500/10 rounded-lg transition"><i data-lucide="trash-2" size="16"></i></button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                );
-            };
-
-            return (
-                <div className="animate-fade-in space-y-4 pb-10">
-                    <div className="glass p-4 rounded-3xl flex justify-between items-center bg-gradient-to-r from-red-500/20 to-transparent border border-red-500/20 sticky top-4 z-30">
-                        <h2 className="font-extrabold text-lg flex items-center gap-2 text-red-400"><i data-lucide="shield-alert" size="22"></i> Dashboard</h2>
-                        <button onClick={onLogout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-lg shadow-red-500/30">Thoát</button>
-                    </div>
-                    <div className="flex gap-2 overflow-x-auto no-scrollbar">
-                        {tabs.map(t => (
-                            <button key={t.id} onClick={() => { setTab(t.id); setForm({}); setEditId(null); }} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition ${tab === t.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/10'}`}>
-                                <i data-lucide={t.icon} size="14"></i> {t.label}
-                            </button>
-                        ))}
-                    </div>
-                    <div className="glass p-5 rounded-3xl">
-                        {tab === 'profile' && <ProfileTab />}
-                        {tab === 'site' && <SiteTab />}
-                        {tab === 'products' && <ProductsTab />}
-                        {tab === 'posts' && <PostsTab />}
-                    </div>
-                </div>
-            );
-        }
-
-        /* ================= DRAWER MENU ================= */
-        function Drawer({ open, onClose, activePage, onNavigate, data, isAdmin }) {
-            const [expanded, setExpanded] = useState(null);
-            const items = [
-                { id: 'profile', label: 'Tài khoản / Profile', icon: 'user' },
-                { id: 'shop', label: 'Sản phẩm', icon: 'shopping-bag', expandable: true },
-                { id: 'posts', label: 'Bài viết & Tin tức', icon: 'newspaper' },
-                { id: 'weather', label: 'Thời tiết', icon: 'cloud-sun' },
-                { id: 'tools', label: 'Tiện ích (IP, Mạng, Mail)', icon: 'layout-grid' },
-                { id: 'contact', label: 'Liên Hệ Hỗ Trợ', icon: 'phone' }
-            ];
-
-            return (
-                <>
-                    {open && <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity" onClick={onClose}></div>}
-                    <div className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] glass-strong z-50 transform transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${open ? 'translate-x-0' : '-translate-x-full'} flex flex-col rounded-r-3xl shadow-2xl overflow-hidden border-r border-white/10`}>
-                        <div className="p-6 flex items-center gap-4 border-b border-white/10 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/20 rounded-full blur-xl"></div>
-                            <img src={data.profile.avatar} className="w-14 h-14 rounded-full object-cover border-2 border-blue-500 shadow-lg z-10" alt="Avt" />
-                            <div className="flex-1 min-w-0 z-10">
-                                <p className="font-extrabold flex items-center text-base truncate">{data.profile.name}{data.profile.verified && <VerifiedIcon size={16} />}</p>
-                                <p className="text-xs text-blue-400 font-bold mt-0.5">@{ADMIN_USER}</p>
-                            </div>
-                            <button onClick={onClose} className="p-2 bg-black/20 rounded-full hover:bg-white/10 transition z-10"><i data-lucide="x" size="20"></i></button>
-                        </div>
-                        
-                        <div className="flex-1 overflow-y-auto p-4 space-y-1 no-scrollbar">
-                            {items.map(it => (
-                                <div key={it.id}>
-                                    <button onClick={() => {
-                                        if (it.expandable) setExpanded(expanded === it.id ? null : it.id);
-                                        else { onNavigate(it.id); onClose(); }
-                                    }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all ${activePage === it.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'hover:bg-white/10 text-gray-300'}`}>
-                                        <i data-lucide={it.icon} size="20" className={activePage === it.id ? 'text-white' : 'text-blue-400'}></i>
-                                        <span className="flex-1 text-left">{it.label}</span>
-                                        {it.expandable && <i data-lucide={expanded === it.id ? 'chevron-down' : 'chevron-right'} size="16" className="opacity-50"></i>}
-                                    </button>
-                                    
-                                    {it.expandable && expanded === it.id && (
-                                        <div className="ml-10 mt-1 space-y-1 border-l-2 border-blue-500/30 pl-3">
-                                            {CATEGORIES.map(c => (
-                                                <div key={c.name}>
-                                                    <button onClick={() => { onNavigate('shop', c.name); onClose(); }} className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-gray-400 hover:text-white hover:bg-white/10 transition">
-                                                        {c.name}
-                                                    </button>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                            
-                            <div className="pt-4 border-t border-white/10 mt-4">
-                                {isAdmin ? (
-                                    <button onClick={() => { onNavigate('admin'); onClose(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-red-400 bg-red-500/10 hover:bg-red-500/20 transition">
-                                        <i data-lucide="shield-check" size="20"></i> Admin Panel
-                                    </button>
-                                ) : (
-                                    <button onClick={() => { onNavigate('admin-login'); onClose(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-gray-400 hover:bg-white/10 transition">
-                                        <i data-lucide="lock" size="20"></i> Đăng nhập Admin
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </>
-            );
-        }
-
-        /* ================= FLOATING FAB & MUSIC ================= */
-        function GlobalTools({ effect, setEffect, musicOn, setMusicOn, track, setTrack }) {
-            const [open, setOpen] = useState(false);
-            const effects = ['none', 'snow', 'flower', 'lava'];
-            
-            // Drag logic
-            const [pos, setPos] = useState(() => ls.get('fabPos', { x: window.innerWidth - 80, y: window.innerHeight - 160 }));
-            const [dragging, setDragging] = useState(false);
-            const [rel, setRel] = useState({ x: 0, y: 0 });
-
-            const onStart = (e) => {
-                if (e.target.closest('.fab-menu')) return;
-                setDragging(true);
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                setRel({ x: clientX - pos.x, y: clientY - pos.y });
-            };
-
-            const onMove = useCallback((e) => {
-                if (!dragging) return;
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                let newX = Math.max(10, Math.min(window.innerWidth - 70, clientX - rel.x));
-                let newY = Math.max(10, Math.min(window.innerHeight - 70, clientY - rel.y));
-                setPos({ x: newX, y: newY });
-            }, [dragging, rel]);
-
-            const onEnd = () => {
-                setDragging(false);
-                ls.set('fabPos', pos);
-            };
-
-            useEffect(() => {
-                if (dragging) {
-                    document.addEventListener('mousemove', onMove);
-                    document.addEventListener('mouseup', onEnd);
-                    document.addEventListener('touchmove', onMove, { passive: false });
-                    document.addEventListener('touchend', onEnd);
-                }
-                return () => {
-                    document.removeEventListener('mousemove', onMove);
-                    document.removeEventListener('mouseup', onEnd);
-                    document.removeEventListener('touchmove', onMove);
-                    document.removeEventListener('touchend', onEnd);
-                };
-            }, [dragging, onMove]);
-
-            // Music Control via hidden iframe (Moved to root App for persistence, this is just UI)
-            return (
-                <div className="fab" style={{ left: pos.x, top: pos.y }} onMouseDown={onStart} onTouchStart={onStart}>
-                    <button onClick={() => setOpen(!open)} className={`w-14 h-14 rounded-full glass-strong flex items-center justify-center shadow-2xl transition-transform ${open ? 'rotate-90 scale-110 bg-blue-600/80 border-blue-400' : 'hover:scale-105 border-white/30'}`}>
-                        <i data-lucide={open ? "x" : "sparkles"} size="24" className={open ? "text-white" : "text-blue-400"}></i>
+                    <button class="btn btn-primary" onclick="navigateTo('shop')">
+                        <i data-lucide="shopping-bag"></i> <span data-i18n="btn_shop">Mua Ngay</span>
                     </button>
-                    
-                    {open && (
-                        <div className="fab-menu absolute top-16 right-0 w-64 glass-strong rounded-3xl p-5 animate-bounce-in shadow-2xl origin-top-right border border-white/20">
-                            <h4 className="text-xs font-extrabold text-blue-400 uppercase mb-3 flex items-center gap-2"><i data-lucide="settings" size="14"></i> Bảng Điều Khiển</h4>
-                            
-                            <div className="mb-4">
-                                <p className="text-[10px] font-bold text-gray-400 mb-2">Hiệu ứng nền</p>
-                                <div className="grid grid-cols-2 gap-1.5">
-                                    {effects.map(e => (
-                                        <button key={e} onClick={() => setEffect(e)} className={`text-[11px] py-1.5 rounded-lg capitalize transition font-bold ${effect === e ? 'bg-blue-600 text-white shadow-lg' : 'bg-black/20 text-gray-300 hover:bg-white/10'}`}>{e === 'none' ? 'Tắt' : e}</button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div>
-                                <div className="flex justify-between items-center mb-2">
-                                    <p className="text-[10px] font-bold text-gray-400">Nhạc nền</p>
-                                    <button onClick={() => setMusicOn(!musicOn)} className={`w-10 h-5 rounded-full relative transition-colors ${musicOn ? 'bg-green-500' : 'bg-gray-600'}`}>
-                                        <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all ${musicOn ? 'left-6' : 'left-1'}`}></div>
-                                    </button>
-                                </div>
-                                {musicOn && (
-                                    <div className="bg-black/30 p-2 rounded-xl flex items-center justify-between border border-white/10 mt-2">
-                                        <div className="flex items-center gap-2 overflow-hidden">
-                                            <div className="w-8 h-8 rounded-full bg-blue-500 flex flex-shrink-0 items-center justify-center animate-spin-slow"><i data-lucide="disc" size="16" className="text-white"></i></div>
-                                            <div>
-                                                <p className="text-[9px] font-bold truncate text-gray-300">Đang phát...</p>
-                                                <p className="text-[8px] text-gray-500 truncate w-24">Nhạc Remix</p>
-                                            </div>
-                                        </div>
-                                        <button onClick={() => setTrack((track + 1) % SC_TRACKS.length)} className="p-1.5 bg-white/10 rounded-lg hover:bg-white/20 transition"><i data-lucide="skip-forward" size="14"></i></button>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
                 </div>
-            );
-        }
 
-        /* ================= MAIN APP ================= */
-        function App() {
-            useLucide();
-            const [darkMode, setDarkMode] = useState(() => ls.get('darkMode', true));
-            const [effect, setEffect] = useState(() => ls.get('effect', 'snow'));
-            const [musicOn, setMusicOn] = useState(false);
-            const [track, setTrack] = useState(0);
-            const [activePage, setActivePage] = useState('profile');
-            const [shopFilter, setShopFilter] = useState('');
-            const [drawerOpen, setDrawerOpen] = useState(false);
-            const [isAdmin, setIsAdmin] = useState(() => ls.get('isAdmin', false));
+                <div class="top-tabs">
+                    <div class="top-tab active" onclick="navigateTo('deposit')"><i data-lucide="landmark"></i> Ngân hàng</div>
+                    <div class="top-tab" onclick="navigateTo('deposit')"><i data-lucide="credit-card"></i> Thẻ cào</div>
+                </div>
 
-            const [data, setDataState] = useState(() => ({
-                profile: ls.get('profile', DEFAULT_PROFILE),
-                products: ls.get('products', DEFAULT_PRODUCTS),
-                posts: ls.get('posts', DEFAULT_POSTS),
-                siteName: ls.get('siteName', 'Thao Service Premium'),
-                defaultEffect: ls.get('defaultEffect', 'snow')
-            }));
+                <div class="glass" style="padding: 20px; margin-bottom: 20px;">
+                    <h3 class="mb-4" style="display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="newspaper" style="color: var(--primary);"></i> Blog Mới Nhất
+                    </h3>
+                    <div id="blog-list-home"></div>
+                </div>
+            </section>
 
-            const setData = (d) => {
-                setDataState(d);
-                ls.set('profile', d.profile); ls.set('products', d.products); ls.set('posts', d.posts);
-                ls.set('siteName', d.siteName); ls.set('defaultEffect', d.defaultEffect);
-            };
+            <!-- Page: Shop -->
+            <section id="page-shop" class="page-section">
+                <h2 class="mb-4" data-i18n="shop_title">Cửa Hàng Sản Phẩm</h2>
+                <div class="search-bar">
+                    <i data-lucide="search"></i>
+                    <input type="text" id="search-input" placeholder="Tìm kiếm acc, dịch vụ..." oninput="renderShop()">
+                </div>
+                
+                <div style="display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px;" id="category-filters">
+                    <button class="top-tab active" onclick="filterCategory('all', this)">Tất cả</button>
+                    <button class="top-tab" onclick="filterCategory('Free Fire', this)">Free Fire</button>
+                    <button class="top-tab" onclick="filterCategory('Liên Quân', this)">Liên Quân</button>
+                    <button class="top-tab" onclick="filterCategory('Dịch vụ', this)">Dịch vụ</button>
+                </div>
 
-            useEffect(() => { 
-                ls.set('darkMode', darkMode); 
-                if(darkMode) document.documentElement.classList.add('dark');
-                else document.documentElement.classList.remove('dark');
-                document.documentElement.classList.toggle('light', !darkMode);
-            }, [darkMode]);
-            
-            useEffect(() => { ls.set('effect', effect); }, [effect]);
-            useEffect(() => { ls.set('isAdmin', isAdmin); }, [isAdmin]);
+                <div class="product-grid" id="shop-grid">
+                    <!-- Products injected here -->
+                </div>
+            </section>
 
-            const navigate = (page, filter) => {
-                setActivePage(page);
-                if (page === 'shop') {
-                    setShopFilter(filter !== undefined ? filter : '');
-                }
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            };
-
-            // Soundcloud Widget setup
-            const widgetRef = useRef(null);
-            useEffect(() => {
-                if (!window.SC) return;
-                const container = document.getElementById('sc-container');
-                if (container && !container.innerHTML) {
-                    container.innerHTML = `<iframe id="sc-player" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=${encodeURIComponent(SC_TRACKS[0])}&color=%233b82f6&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false"></iframe>`;
-                    widgetRef.current = window.SC.Widget(document.getElementById('sc-player'));
-                }
-            }, []);
-
-            useEffect(() => {
-                if (!widgetRef.current) return;
-                if (musicOn) {
-                    widgetRef.current.load(SC_TRACKS[track], { auto_play: true });
-                } else {
-                    widgetRef.current.pause();
-                }
-            }, [musicOn, track]);
-
-            return (
-                <div className="max-w-4xl mx-auto p-4 pb-32">
-                    <Effects type={effect} />
-                    
-                    {/* Header - Glass */}
-                    <header className="glass sticky top-4 z-30 rounded-full p-2 px-3 mb-6 flex justify-between items-center shadow-lg transition-all duration-300">
-                        <button onClick={() => setDrawerOpen(true)} className="p-2.5 bg-white/10 rounded-full hover:bg-white/20 transition border border-white/5 active:scale-95"><i data-lucide="menu" size="20" className="text-blue-500"></i></button>
-                        <h1 className="text-base font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300 tracking-tight">{data.siteName}</h1>
-                        <div className="flex gap-2">
-                            <button onClick={() => setDarkMode(!darkMode)} className="p-2.5 bg-white/10 rounded-full hover:bg-white/20 transition border border-white/5 active:scale-95">
-                                <i data-lucide={darkMode ? 'sun' : 'moon'} size="18" className={darkMode ? 'text-yellow-400' : 'text-slate-700'}></i>
-                            </button>
+            <!-- Page: Deposit -->
+            <section id="page-deposit" class="page-section">
+                <h2 class="mb-4" data-i18n="deposit_title">Nạp Tiền Tự Động</h2>
+                <div class="glass">
+                    <div class="qr-container">
+                        <h3 style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <i data-lucide="landmark" style="color: var(--primary);"></i> Nạp qua chuyển khoản
+                        </h3>
+                        <div class="bank-info mt-4">
+                            <div class="bank-row"><span class="text-muted">Ngân hàng</span> <span class="badge badge-warning">BIDV</span></div>
+                            <div class="bank-row"><span class="text-muted">Chủ TK</span> <strong>VU TUNG LAM</strong></div>
+                            <div class="bank-row"><span class="text-muted">Số TK</span> <strong>8899606340</strong></div>
+                            <div class="bank-row"><span class="text-muted">Nội dung</span> <strong style="color: var(--warning);">LAMDZ nlt208kk</strong></div>
                         </div>
-                    </header>
-
-                    {/* Page Content */}
-                    <div className="min-h-[60vh] relative">
-                        {activePage === 'profile' && <ProfileHome profile={data.profile} posts={data.posts} onNavigate={navigate} />}
-                        {activePage === 'shop' && <Shop products={data.products} filter={shopFilter} setFilter={setShopFilter} />}
-                        {activePage === 'weather' && <Weather />}
-                        {activePage === 'tools' && <Tools />}
-                        {activePage === 'contact' && <ContactPage profile={data.profile} />}
-                        {activePage === 'posts' && (
-                            <div className="glass p-6 rounded-3xl space-y-4 animate-fade-in">
-                                <h2 className="text-xl font-extrabold mb-4">Bài Viết Mới Nhất</h2>
-                                {data.posts.map(p => (
-                                    <div key={p.id} className="glass-strong p-5 rounded-2xl">
-                                        <h3 className="font-bold text-blue-400">{p.title}</h3>
-                                        <p className="text-xs text-gray-500 mt-1 mb-2">{new Date(p.date).toLocaleDateString('vi-VN')}</p>
-                                        <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{p.content}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                        {activePage === 'admin-login' && <AdminLogin onLogin={() => { setIsAdmin(true); navigate('admin'); }} />}
-                        {activePage === 'admin' && (isAdmin ? <AdminPanel data={data} setData={setData} onLogout={() => { setIsAdmin(false); navigate('profile'); }} /> : <AdminLogin onLogin={() => { setIsAdmin(true); navigate('admin'); }} />)}
+                        <img src="https://img.vietqr.io/image/BIDV-8899606340-compact2.png?amount=0&addInfo=LAMDZ%20nlt208kk&accountName=VU%20TUNG%20LAM" alt="VietQR">
+                        <p class="text-muted" style="font-size: 13px;">Mở App Ngân hàng quét mã QR để nạp tiền tự động. Hệ thống cộng tiền sau 1-5 phút.</p>
                     </div>
-
-                    {/* Floating Tools & Music Controller */}
-                    <GlobalTools effect={effect} setEffect={setEffect} musicOn={musicOn} setMusicOn={setMusicOn} track={track} setTrack={setTrack} />
-                    
-                    {/* Drawer Menu */}
-                    <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} activePage={activePage} onNavigate={navigate} data={data} isAdmin={isAdmin} />
-
-                    {/* iOS Style Bottom Nav */}
-                    <nav className="ios-nav">
-                        <button onClick={() => navigate('profile')} className={`nav-item ${activePage === 'profile' ? 'active' : ''}`}>
-                            <i data-lucide="home" size="22"></i>
-                            <span className="text-[10px] font-bold mt-1">Home</span>
-                        </button>
-                        <button onClick={() => navigate('shop')} className={`nav-item ${activePage === 'shop' ? 'active' : ''}`}>
-                            <i data-lucide="shopping-bag" size="22"></i>
-                            <span className="text-[10px] font-bold mt-1">Shop</span>
-                        </button>
-                        <button onClick={() => navigate('tools')} className={`nav-item ${activePage === 'tools' ? 'active' : ''}`}>
-                            <i data-lucide="layout-grid" size="22"></i>
-                            <span className="text-[10px] font-bold mt-1">Tools</span>
-                        </button>
-                        <button onClick={() => navigate('contact')} className={`nav-item ${activePage === 'contact' ? 'active' : ''}`}>
-                            <i data-lucide="phone" size="22"></i>
-                            <span className="text-[10px] font-bold mt-1">Contact</span>
-                        </button>
-                    </nav>
                 </div>
-            );
+            </section>
+
+            <!-- Page: Support / Blog -->
+            <section id="page-blog" class="page-section">
+                <h2 class="mb-4">Trung Tâm Hỗ Trợ & Blog</h2>
+                <div class="glass" style="padding: 20px;">
+                    <div id="blog-list-full"></div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ADMIN DASHBOARD -->
+        <main id="admin-panel">
+            <div class="glass" style="padding: 20px; margin-bottom: 20px;">
+                <h2 class="mb-2">Admin Dashboard</h2>
+                <p class="text-muted mb-4">Quản trị hệ thống LAMDZ Shop</p>
+                <button class="btn btn-primary" onclick="logoutAdmin()" style="background: #ef4444;">Đăng Xuất</button>
+            </div>
+
+            <div class="admin-tabs">
+                <div class="admin-tab active" onclick="switchAdminTab('products', this)">Sản phẩm</div>
+                <div class="admin-tab" onclick="switchAdminTab('posts', this)">Bài viết</div>
+                <div class="admin-tab" onclick="switchAdminTab('profile', this)">Profile</div>
+            </div>
+
+            <!-- Admin: Products -->
+            <div id="admin-tab-products" class="admin-section active glass" style="padding: 20px;">
+                <button class="btn btn-success mb-4" onclick="openAddProduct()"><i data-lucide="plus"></i> Thêm Sản Phẩm</button>
+                <div id="admin-product-list"></div>
+            </div>
+
+            <!-- Admin: Posts -->
+            <div id="admin-tab-posts" class="admin-section glass" style="padding: 20px;">
+                <button class="btn btn-success mb-4" onclick="openAddPost()"><i data-lucide="plus"></i> Thêm Bài Viết</button>
+                <div id="admin-post-list"></div>
+            </div>
+
+            <!-- Admin: Profile -->
+            <div id="admin-tab-profile" class="admin-section glass" style="padding: 20px;">
+                <div class="form-group">
+                    <label class="form-label">Tên Admin/Shop</label>
+                    <input type="text" id="admin-profile-name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mô tả (Bio)</label>
+                    <textarea id="admin-profile-bio" rows="3"></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="saveProfile()">Lưu Thay Đổi</button>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bottom-nav" id="bottom-nav">
+        <div class="nav-item active" onclick="navigateTo('home')">
+            <i data-lucide="home"></i>
+            <span data-i18n="nav_home">Trang chủ</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('deposit')">
+            <i data-lucide="wallet"></i>
+            <span data-i18n="nav_deposit">Nạp Tiền</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('shop')" style="position: relative;">
+            <div class="center-nav-btn">
+                <i data-lucide="shopping-cart"></i>
+            </div>
+            <span style="margin-top: 4px;" data-i18n="nav_shop">Mua dịch vụ</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('blog')">
+            <i data-lucide="file-text"></i>
+            <span data-i18n="nav_blog">Bài viết</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('profile')">
+            <i data-lucide="user"></i>
+            <span data-i18n="nav_account">Tài khoản</span>
+        </div>
+    </nav>
+
+    <!-- MODALS -->
+    
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal-content">
+            <h3 class="mb-4 text-center">Đăng Nhập Admin</h3>
+            <div class="form-group">
+                <label class="form-label">Tài khoản</label>
+                <input type="text" id="admin-user" placeholder="Nhập username...">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Mật khẩu</label>
+                <input type="password" id="admin-pass" placeholder="Nhập mật khẩu...">
+            </div>
+            <button class="btn btn-primary" onclick="loginAdmin()">Đăng Nhập</button>
+            <button class="btn text-muted mt-4" onclick="closeModal('login-modal')" style="background: transparent;">Đóng</button>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div class="modal-overlay" id="product-modal">
+        <div class="modal-content">
+            <div id="product-detail-content"></div>
+            <button class="btn btn-primary mt-4" onclick="buyProduct()">Mua Ngay</button>
+            <button class="btn text-muted mt-2" onclick="closeModal('product-modal')" style="background: transparent;">Đóng</button>
+        </div>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div class="modal-overlay" id="edit-product-modal">
+        <div class="modal-content">
+            <h3 class="mb-4" id="modal-product-title">Thêm Sản Phẩm</h3>
+            <input type="hidden" id="edit-prod-id">
+            <div class="form-group"><input type="text" id="edit-prod-name" placeholder="Tên sản phẩm"></div>
+            <div class="form-group"><input type="number" id="edit-prod-price" placeholder="Giá (VNĐ)"></div>
+            <div class="form-group"><input type="text" id="edit-prod-cat" placeholder="Danh mục (VD: Free Fire, Liên Quân)"></div>
+            <div class="form-group"><input type="text" id="edit-prod-img" placeholder="Link ảnh (URL)"></div>
+            <div class="form-group"><textarea id="edit-prod-desc" placeholder="Mô tả sản phẩm" rows="3"></textarea></div>
+            <button class="btn btn-success" onclick="saveProduct()">Lưu Sản Phẩm</button>
+            <button class="btn mt-2" onclick="closeModal('edit-product-modal')" style="background: rgba(255,255,255,0.1);">Hủy</button>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div class="modal-overlay" id="notif-modal">
+        <div class="modal-content">
+            <h3 class="mb-4">Thông báo</h3>
+            <div class="list-item">
+                <div>
+                    <strong>Chào mừng đến với LAMDZ!</strong>
+                    <p class="text-muted" style="font-size: 12px;">Hệ thống đã cập nhật giao diện mới.</p>
+                </div>
+            </div>
+            <button class="btn btn-primary mt-4" onclick="closeModal('notif-modal')">Đã hiểu</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. DỮ LIỆU & TRẠNG THÁI ---
+        const ADMIN_CREDS = { user: 'nguyenlethao', pass: 'nguynthaomissbo0806' };
+        
+        // Dữ liệu mặc định (Lưu vào LocalStorage)
+        const defaultData = {
+            profile: {
+                name: "Lâm DZ Shop",
+                bio: "Chuyên cung cấp Acc Game & Dịch vụ uy tín số 1 VN. Giao dịch tự động 24/7.",
+                avatar: "https://ui-avatars.com/api/?name=LAM+DZ&background=3478F6&color=fff&size=128"
+            },
+            products: [
+                { id: 1, name: "Acc Free Fire Kim Cương", price: 150000, category: "Free Fire", img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=300", desc: "Acc FF full skin, rank Cao Thủ.", status: "Còn hàng" },
+                { id: 2, name: "Acc Liên Quân Cao Thủ", price: 250000, category: "Liên Quân", img: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&q=80&w=300", desc: "Full tướng, 50 skin.", status: "Còn hàng" },
+                { id: 3, name: "Dịch vụ cày thuê rank", price: 50000, category: "Dịch vụ", img: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=80&w=300", desc: "Cày rank FF từ Đồng lên Kim Cương.", status: "Sẵn sàng" }
+            ],
+            posts: [
+                { id: 1, title: "Cập nhật bảng giá tháng 10", content: "Giảm giá 10% cho tất cả acc Free Fire...", date: "2023-10-25" },
+                { id: 2, title: "Hướng dẫn nạp tiền tự động", content: "Chuyển khoản đúng nội dung để được cộng tiền...", date: "2023-10-20" }
+            ],
+            balance: 0
+        };
+
+        let store = JSON.parse(localStorage.getItem('lamdz_store')) || defaultData;
+        let currentUser = localStorage.getItem('lamdz_admin') ? true : false;
+        let currentLang = localStorage.getItem('lamdz_lang') || 'vi';
+        let isMusicPlaying = false;
+        let currentProductId = null;
+        let currentCategoryFilter = 'all';
+
+        // --- 2. KHỞI TẠO BAN ĐẦU ---
+        function init() {
+            // Theme
+            const savedTheme = localStorage.getItem('lamdz_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
+            // Language
+            changeLanguage(currentLang, false);
+
+            // Render
+            renderShop();
+            renderBlog();
+            updateProfileUI();
+            updateBalanceUI();
+
+            // Check Admin Session
+            if (currentUser) {
+                document.getElementById('admin-panel').style.display = 'block';
+                document.getElementById('user-view').style.display = 'none';
+                document.getElementById('bottom-nav').style.display = 'none';
+                renderAdminData();
+            }
+
+            // Init Icons
+            lucide.createIcons();
+
+            // Init Snow
+            initSnow();
         }
 
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+        // --- 3. CHUYỂN TRANG & UI ---
+        function navigateTo(page) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
+            if(page === 'profile') page = 'home'; // Fallback
+            
+            const targetPage = document.getElementById(`page-${page}`);
+            if(targetPage) targetPage.classList.add('active');
+
+            // Highlight nav
+            const navItems = document.querySelectorAll('.nav-item');
+            if(page === 'home') navItems[0].classList.add('active');
+            if(page === 'deposit') navItems[1].classList.add('active');
+            if(page === 'shop') navItems[2].classList.add('active');
+            if(page === 'blog') navItems[3].classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        // --- 4. THEME & LANG ---
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('lamdz_theme', next);
+            updateThemeIcon(next);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('theme-icon');
+            if(theme === 'dark') {
+                icon.setAttribute('data-lucide', 'moon');
+            } else {
+                icon.setAttribute('data-lucide', 'sun');
+            }
+            lucide.createIcons();
+        }
+
+        const translations = {
+            vi: { btn_shop: "Mua Ngay", shop_title: "Cửa Hàng Sản Phẩm", deposit_title: "Nạp Tiền Tự Động", nav_home: "Trang chủ", nav_deposit: "Nạp Tiền", nav_shop: "Mua dịch vụ", nav_blog: "Bài viết", nav_account: "Tài khoản" },
+            en: { btn_shop: "Buy Now", shop_title: "Product Store", deposit_title: "Auto Deposit", nav_home: "Home", nav_deposit: "Deposit", nav_shop: "Shop", nav_blog: "Blog", nav_account: "Account" },
+            zh: { btn_shop: "立即购买", shop_title: "产品商店", deposit_title: "自动存款", nav_home: "首页", nav_deposit: "存款", nav_shop: "服务", nav_blog: "博客", nav_account: "账户" },
+            ja: { btn_shop: "今すぐ購入", shop_title: "商品ストア", deposit_title: "自動入金", nav_home: "ホーム", nav_deposit: "入金", nav_shop: "ショップ", nav_blog: "ブログ", nav_account: "アカウント" }
+        };
+
+        function changeLanguage(lang, save = true) {
+            currentLang = lang;
+            if(save) localStorage.setItem('lamdz_lang', lang);
+            
+            // Update simple text nodes with data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(translations[lang] && translations[lang][key]) {
+                    el.innerText = translations[lang][key];
+                }
+            });
+        }
+
+        // --- 5. RENDER DỮ LIỆU (SHOP & BLOG) ---
+        function updateProfileUI() {
+            document.getElementById('profile-name').innerText = store.profile.name;
+            document.getElementById('profile-bio').innerText = store.profile.bio;
+            document.getElementById('profile-avatar').src = store.profile.avatar;
+            
+            // Admin inputs
+            document.getElementById('admin-profile-name').value = store.profile.name;
+            document.getElementById('admin-profile-bio').value = store.profile.bio;
+        }
+
+        function updateBalanceUI() {
+            document.getElementById('wallet-balance').innerText = new Intl.NumberFormat('vi-VN').format(store.balance) + ' đ';
+        }
+
+        function renderShop() {
+            const grid = document.getElementById('shop-grid');
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            grid.innerHTML = '';
+            
+            let filtered = store.products.filter(p => {
+                const matchSearch = p.name.toLowerCase().includes(searchTerm);
+                const matchCat = currentCategoryFilter === 'all' || p.category === currentCategoryFilter;
+                return matchSearch && matchCat;
+            });
+
+            if(filtered.length === 0) {
+                grid.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center; padding: 20px;">Không tìm thấy sản phẩm nào.</p>';
+                return;
+            }
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card glass';
+                card.onclick = () => showProductDetail(p.id);
+                card.innerHTML = `
+                    <img src="${p.img}" alt="${p.name}" class="product-img" loading="lazy">
+                    <div class="product-title">${p.name}</div>
+                    <div class="product-price">${new Intl.NumberFormat('vi-VN').format(p.price)} đ</div>
+                    <div class="product-status"><span class="badge badge-success">${p.status}</span></div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterCategory(cat, btn) {
+            currentCategoryFilter = cat;
+            document.querySelectorAll('#category-filters .top-tab').forEach(el => el.classList.remove('active'));
+            btn.classList.add('active');
+            renderShop();
+        }
+
+        function showProductDetail(id) {
+            const p = store.products.find(x => x.id === id);
+            if(!p) return;
+            currentProductId = id;
+            
+            const content = document.getElementById('product-detail-content');
+            content.innerHTML = `
+                <img src="${p.img}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 16px;">
+                <h3 class="mb-2">${p.name}</h3>
+                <h4 style="color: var(--primary); margin-bottom: 16px;">${new Intl.NumberFormat('vi-VN').format(p.price)} đ</h4>
+                <p class="text-muted mb-4">${p.desc}</p>
+                <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+                    <span class="badge badge-success">${p.status}</span>
+                    <span class="badge badge-warning">Bảo hành: Vĩnh viễn</span>
+                </div>
+            `;
+            openModal('product-modal');
+            lucide.createIcons();
+        }
+
+        function buyProduct() {
+            const p = store.products.find(x => x.id === currentProductId);
+            if(store.balance < p.price) {
+                alert("Số dư không đủ! Vui lòng nạp thêm tiền.");
+                closeModal('product-modal');
+                navigateTo('deposit');
+                return;
+            }
+            store.balance -= p.price;
+            saveData();
+            updateBalanceUI();
+            alert("Mua thành công! Vui lòng liên hệ Admin để nhận Acc.");
+            closeModal('product-modal');
+        }
+
+        function renderBlog() {
+            const listHome = document.getElementById('blog-list-home');
+            const listFull = document.getElementById('blog-list-full');
+            
+            let html = '';
+            store.posts.forEach(post => {
+                html += `
+                    <div class="list-item" style="flex-direction: column; align-items: flex-start;">
+                        <h4 style="margin-bottom: 4px;">${post.title}</h4>
+                        <span class="text-muted" style="font-size: 12px; margin-bottom: 8px;">${post.date}</span>
+                        <p style="font-size: 14px; line-height: 1.5;">${post.content}</p>
+                    </div>
+                `;
+            });
+            
+            if(listHome) listHome.innerHTML = html;
+            if(listFull) listFull.innerHTML = html;
+        }
+
+        // --- 6. XỬ LÝ ADMIN ---
+        function loginAdmin() {
+            const u = document.getElementById('admin-user').value;
+            const p = document.getElementById('admin-pass').value;
+            
+            if(u === ADMIN_CREDS.user && p === ADMIN_CREDS.pass) {
+                currentUser = true;
+                localStorage.setItem('lamdz_admin', 'true');
+                closeModal('login-modal');
+                
+                document.getElementById('admin-panel').style.display = 'block';
+                document.getElementById('user-view').style.display = 'none';
+                document.getElementById('bottom-nav').style.display = 'none';
+                document.getElementById('music-toggle').style.display = 'none';
+                
+                renderAdminData();
+                alert("Đăng nhập thành công!");
+            } else {
+                alert("Sai tài khoản hoặc mật khẩu!");
+            }
+        }
+
+        function logoutAdmin() {
+            currentUser = false;
+            localStorage.removeItem('lamdz_admin');
+            document.getElementById('admin-panel').style.display = 'none';
+            document.getElementById('user-view').style.display = 'block';
+            document.getElementById('bottom-nav').style.display = 'flex';
+            document.getElementById('music-toggle').style.display = 'flex';
+            navigateTo('home');
+        }
+
+        function renderAdminData() {
+            // Render Products Admin
+            const pList = document.getElementById('admin-product-list');
+            pList.innerHTML = '';
+            store.products.forEach(p => {
+                pList.innerHTML += `
+                    <div class="list-item">
+                        <div>
+                            <strong>${p.name}</strong><br>
+                            <span class="text-muted" style="font-size:12px;">${new Intl.NumberFormat('vi-VN').format(p.price)} đ - ${p.category}</span>
+                        </div>
+                        <div>
+                            <button class="action-btn" onclick="editProduct(${p.id})"><i data-lucide="edit-2" style="width:18px;"></i></button>
+                            <button class="action-btn delete" onclick="deleteProduct(${p.id})"><i data-lucide="trash-2" style="width:18px;"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Render Posts Admin
+            const postList = document.getElementById('admin-post-list');
+            postList.innerHTML = '';
+            store.posts.forEach(post => {
+                postList.innerHTML += `
+                    <div class="list-item">
+                        <div>
+                            <strong>${post.title}</strong><br>
+                            <span class="text-muted" style="font-size:12px;">${post.date}</span>
+                        </div>
+                        <button class="action-btn delete" onclick="deletePost(${post.id})"><i data-lucide="trash-2" style="width:18px;"></i></button>
+                    </div>
+                `;
+            });
+
+            lucide.createIcons();
+        }
+
+        function switchAdminTab(tab, btn) {
+            document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(`admin-tab-${tab}`).classList.add('active');
+        }
+
+        function openAddProduct() {
+            document.getElementById('modal-product-title').innerText = "Thêm Sản Phẩm";
+            document.getElementById('edit-prod-id').value = "";
+            document.getElementById('edit-prod-name').value = "";
+            document.getElementById('edit-prod-price').value = "";
+            document.getElementById('edit-prod-cat').value = "";
+            document.getElementById('edit-prod-img').value = "";
+            document.getElementById('edit-prod-desc').value = "";
+            openModal('edit-product-modal');
+        }
+
+        function editProduct(id) {
+            const p = store.products.find(x => x.id === id);
+            if(!p) return;
+            document.getElementById('modal-product-title').innerText = "Sửa Sản Phẩm";
+            document.getElementById('edit-prod-id').value = p.id;
+            document.getElementById('edit-prod-name').value = p.name;
+            document.getElementById('edit-prod-price').value = p.price;
+            document.getElementById('edit-prod-cat').value = p.category;
+            document.getElementById('edit-prod-img').value = p.img;
+            document.getElementById('edit-prod-desc').value = p.desc;
+            openModal('edit-product-modal');
+        }
+
+        function saveProduct() {
+            const id = document.getElementById('edit-prod-id').value;
+            const name = document.getElementById('edit-prod-name').value;
+            const price = parseInt(document.getElementById('edit-prod-price').value);
+            const category = document.getElementById('edit-prod-cat').value;
+            const img = document.getElementById('edit-prod-img').value || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=300';
+            const desc = document.getElementById('edit-prod-desc').value;
+
+            if(!name || !price || !category) {
+                alert("Vui lòng nhập đủ thông tin!");
+                return;
+            }
+
+            if(id) {
+                // Update
+                const index = store.products.findIndex(x => x.id == id);
+                store.products[index] = { ...store.products[index], name, price, category, img, desc };
+            } else {
+                // Add new
+                const newId = Date.now();
+                store.products.push({ id: newId, name, price, category, img, desc, status: "Còn hàng" });
+            }
+            
+            saveData();
+            renderAdminData();
+            renderShop();
+            closeModal('edit-product-modal');
+            alert("Đã lưu!");
+        }
+
+        function deleteProduct(id) {
+            if(confirm("Bạn có chắc muốn xóa sản phẩm này?")) {
+                store.products = store.products.filter(x => x.id !== id);
+                saveData();
+                renderAdminData();
+                renderShop();
+            }
+        }
+
+        function openAddPost() {
+            const title = prompt("Nhập tiêu đề bài viết:");
+            if(!title) return;
+            const content = prompt("Nhập nội dung bài viết:");
+            if(!content) return;
+            
+            store.posts.unshift({
+                id: Date.now(),
+                title: title,
+                content: content,
+                date: new Date().toLocaleDateString('vi-VN')
+            });
+            saveData();
+            renderAdminData();
+            renderBlog();
+        }
+
+        function deletePost(id) {
+            if(confirm("Xóa bài viết này?")) {
+                store.posts = store.posts.filter(x => x.id !== id);
+                saveData();
+                renderAdminData();
+                renderBlog();
+            }
+        }
+
+        function saveProfile() {
+            store.profile.name = document.getElementById('admin-profile-name').value;
+            store.profile.bio = document.getElementById('admin-profile-bio').value;
+            saveData();
+            updateProfileUI();
+            alert("Đã cập nhật Profile!");
+        }
+
+        function saveData() {
+            localStorage.setItem('lamdz_store', JSON.stringify(store));
+        }
+
+        // --- 7. AUDIO & HIỆU ỨNG (SNOW) ---
+        function toggleMusic() {
+            const iframe = document.getElementById('sc-player');
+            const btn = document.getElementById('music-toggle');
+            
+            // Lưu ý: Trình duyệt chặn autoplay, nên ta dùng mẹo load iframe
+            if(!isMusicPlaying) {
+                // Đổi link Soundcloud của bạn vào đây (Lấy link Widget API)
+                iframe.src = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1699653752&color=%233478f6&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false";
+                btn.style.background = "var(--primary)";
+                btn.style.color = "white";
+                isMusicPlaying = true;
+            } else {
+                iframe.src = "";
+                btn.style.background = "var(--surface)";
+                btn.style.color = "var(--text)";
+                isMusicPlaying = false;
+            }
+        }
+
+        // Hiệu ứng tuyết rơi
+        function initSnow() {
+            const canvas = document.getElementById('snow-canvas');
+            const ctx = canvas.getContext('2d');
+            let width = window.innerWidth;
+            let height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+
+            const particles = [];
+            const particleCount = 50;
+
+            for(let i=0; i<particleCount; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 2 + 1,
+                    speed: Math.random() * 1 + 0.5,
+                    drift: Math.random() * 1 - 0.5
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+                ctx.beginPath();
+                for(let i=0; i<particleCount; i++) {
+                    let p = particles[i];
+                    ctx.moveTo(p.x, p.y);
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    
+                    p.y += p.speed;
+                    p.x += p.drift;
+
+                    if(p.y > height) { p.y = -10; p.x = Math.random() * width; }
+                    if(p.x > width || p.x < 0) { p.drift *= -1; }
+                }
+                ctx.fill();
+                requestAnimationFrame(animate);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            });
+        }
+
+        // Khởi chạy
+        window.onload = init;
+
     </script>
 </body>
-</html> 
+</html>
