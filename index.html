@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Thao Service • Premium MMO Support</title>
+    <title>Thao Service • MMO & Social Support</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,111 +18,139 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
-        :root {
-            --bg-grad: linear-gradient(135deg, #e0f2fe 0%, #f3e8ff 50%, #e0e7ff 100%);
-            --text-main: #0f172a;
-            --glass-bg: rgba(255, 255, 255, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.6);
-        }
-        .dark {
-            --bg-grad: linear-gradient(135deg, #050914 0%, #0f172a 40%, #2e1065 100%);
-            --text-main: #f8fafc;
-            --glass-bg: rgba(15, 23, 42, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
-
         body { 
             font-family: 'Inter', sans-serif; 
             overflow-x: hidden; 
-            transition: background 0.5s ease, color 0.5s ease; 
-            background: var(--bg-grad);
-            color: var(--text-main);
+            transition: background 0.5s, color 0.3s; 
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #e0e7ff 100%);
+            color: #0f172a;
             min-height: 100vh;
             background-attachment: fixed;
         }
-
-        /* Animated Background Lights */
-        .bg-orbs {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; pointer-events: none;
-        }
-        .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; animation: float 10s infinite ease-in-out alternate; }
-        .orb-1 { background: #3b82f6; width: 300px; height: 300px; top: -10%; left: -10%; }
-        .orb-2 { background: #8b5cf6; width: 400px; height: 400px; bottom: 10%; right: -20%; animation-delay: -5s; }
-        .dark .orb { opacity: 0.3; }
         
-        @keyframes float { 
-            0% { transform: translate(0, 0) scale(1); } 
-            100% { transform: translate(50px, 50px) scale(1.1); } 
+        .dark body {
+            background: linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1e1b4b 100%);
+            color: #f1f5f9;
         }
 
-        /* Liquid Glass Core */
+        /* Liquid Glass Effect */
         .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
         }
-        .dark .glass { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05); }
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
         
-        .glass-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
-        .glass-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-            border-color: rgba(255, 255, 255, 0.8);
+        .dark .glass-strong {
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
-        .dark .glass-card:hover {
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.2);
+
+        /* Floating Background Animation */
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.5;
+            animation: float 20s infinite ease-in-out;
+        }
+        .dark .bg-orb { opacity: 0.3; }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
         }
 
         /* Hide Scrollbar */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Animations */
-        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* iPhone Dock Animation */
+        .dock-item { transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s; }
+        .dock-item:active { transform: scale(0.85); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #60a5fa; border-radius: 10px; }
+        
+        .animate-fade-in { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .animate-pop { animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes pop { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        
-        /* Dock Menu */
-        .dock-item { transition: all 0.2s ease; }
-        .dock-item:active { transform: scale(0.9); }
-        .dock-active { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
-        .dark .dock-active { background: rgba(59, 130, 246, 0.25); color: #60a5fa; }
 
-        /* Weather Styling */
-        .weather-gradient { background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(59, 130, 246, 0.2)); }
+        /* Draggable FAB */
+        #fab-container {
+            position: fixed;
+            z-index: 50;
+            touch-action: none;
+            cursor: grab;
+        }
+        #fab-container:active { cursor: grabbing; }
+
+        /* Premium Product Card */
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .dark .product-card:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        /* Animations for Snow/Flower */
+        .snowflake { position: fixed; top: -10px; color: #e0f2fe; font-size: 1em; pointer-events: none; animation: fall linear forwards; z-index: 0; }
+        .flower { position: fixed; top: -10px; font-size: 1.5em; pointer-events: none; animation: fall linear forwards; z-index: 0; }
+        @keyframes fall { to { transform: translateY(105vh) rotate(720deg); opacity: 0.2; } }
     </style>
     <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#3b82f6' } } } }
+        tailwind.config = { 
+            darkMode: 'class', 
+            theme: { 
+                extend: { 
+                    colors: { primary: '#3b82f6' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                } 
+            } 
+        }
     </script>
 </head>
-<body class="pb-24 relative overflow-x-hidden">
+<body class="pb-28 relative overflow-x-hidden">
 
-    <!-- Background Effects Layer -->
-    <div class="bg-orbs">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-    </div>
+    <!-- Background Lights -->
+    <div class="bg-orb bg-blue-400 w-96 h-96 top-0 -left-20"></div>
+    <div class="bg-orb bg-purple-400 w-80 h-80 bottom-0 -right-20" style="animation-delay: -5s;"></div>
+    <div class="bg-orb bg-cyan-400 w-64 h-64 top-1/2 left-1/2" style="animation-delay: -10s;"></div>
+
+    <!-- Effects Layer -->
     <div id="effect-layer" class="fixed inset-0 pointer-events-none z-0"></div>
 
     <!-- React Root -->
     <div id="root" class="relative z-10"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef, useCallback } = React;
+        const { useState, useEffect, useRef } = React;
 
         /* ================= CONSTANTS & DATA ================= */
         const ADMIN_USER = "nguyenlethaoiubo";
         const ADMIN_PASS = "nguyenthao080626";
         
+        // Soundcloud Links
         const SC_TRACKS = [
             "https://soundcloud.com/quang-huynhh/v-b-n-anh-remix-jack-j97-x",
             "https://soundcloud.com/doyu-358490204/jack-j97-ng-i-d-ng-wen-remix"
@@ -131,7 +159,7 @@
         const DEFAULT_PROFILE = {
             name: "Nguyễn Lê Thảo",
             verified: true,
-            bio: "Chuyên cung cấp dịch vụ MMO, Support Meta, TikTok, Google & Tool. Uy tín - Nhanh chóng - Bảo mật tuyệt đối.",
+            bio: "Chuyên cung cấp dịch vụ MMO, Support Facebook/Meta, TikTok, Google và các tool hỗ trợ. Uy tín - Nhanh chóng - Bảo mật.",
             avatar: "https://ui-avatars.com/api/?name=NL&background=3b82f6&color=fff&size=200",
             cover: "https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&q=80",
             contact: {
@@ -144,17 +172,17 @@
         };
 
         const DEFAULT_PRODUCTS = [
-            { id: 1, category: "Support Social", subcategory: "Meta", name: "UNLOCK 282", price: "150.000đ", desc: "Mở khóa tính năng 282", stock: 10, image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&q=80" },
-            { id: 2, category: "Support Social", subcategory: "Meta", name: "UNLOCK 956", price: "200.000đ", desc: "Mở khóa tính năng 956", stock: 5, image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&q=80" },
-            { id: 3, category: "Support Social", subcategory: "Meta", name: "UNLOCK FAQ", price: "100.000đ", desc: "Mở FAQ", stock: 8, image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&q=80" },
-            { id: 4, category: "Support Social", subcategory: "TikTok", name: "UNLOCK LIVE", price: "200.000đ", desc: "Mở live TikTok", stock: 7, image: "https://images.unsplash.com/photo-1595054326165-92cbce64d72e?w=500&q=80" },
-            { id: 5, category: "Shop Liên Quân", subcategory: "", name: "Acc Kim Cương 100+", price: "500.000đ", desc: "Full tướng, ngọc đỏ", stock: 5, image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500&q=80" },
-            { id: 6, category: "Shop Free Fire", subcategory: "", name: "Acc FF Thách Đấu", price: "300.000đ", desc: "Full nhân vật", stock: 2, image: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=500&q=80" }
+            { id: 1, category: "Support Social", subcategory: "Meta", name: "UNLOCK 282", price: "150.000đ", desc: "Mở khóa tính năng 282", stock: 10, image: "" },
+            { id: 2, category: "Support Social", subcategory: "Meta", name: "UNLOCK 956", price: "200.000đ", desc: "Mở khóa tính năng 956", stock: 5, image: "" },
+            { id: 3, category: "Support Social", subcategory: "Meta", name: "UNLOCK FAQ", price: "100.000đ", desc: "Mở FAQ", stock: 8, image: "" },
+            { id: 4, category: "Support Social", subcategory: "Meta", name: "SETCAMP BM", price: "250.000đ", desc: "Setup camp BM", stock: 6, image: "" },
+            { id: 5, category: "Support Social", subcategory: "Meta", name: "BM 250 / 2K5", price: "300.000đ", desc: "BM 250 hoặc 2K5", stock: 4, image: "" },
+            { id: 6, category: "Support Social", subcategory: "TikTok", name: "UNLOCK LIVE", price: "200.000đ", desc: "Mở live TikTok", stock: 7, image: "" },
+            { id: 7, category: "Shop Liên Quân", subcategory: "", name: "Acc Kim Cương 100+", price: "500.000đ", desc: "Full tướng, ngọc đỏ", stock: 5, image: "" },
         ];
 
         const DEFAULT_POSTS = [
-            { id: 1, title: "Hướng dẫn mua hàng", content: "Vui lòng liên hệ Telegram để được hỗ trợ thanh toán và nhận hàng tự động.", date: new Date().toISOString(), image: "" },
-            { id: 2, title: "Cập nhật bảo mật Meta", content: "Hệ thống đã cập nhật quy trình mới cho UNLOCK 956.", date: new Date().toISOString(), image: "" }
+            { id: 1, title: "Hướng dẫn mua hàng", content: "Vui lòng liên hệ Telegram để được hỗ trợ thanh toán và nhận hàng.", date: new Date().toISOString(), image: "" }
         ];
 
         const DEFAULT_NOTIFS = [{ id: 1, text: "Chào mừng bạn đến với Thao Service!", createdAt: Date.now() }];
@@ -172,11 +200,10 @@
         /* ================= UTILS ================= */
         const ls = {
             get: (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
-            set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) { console.warn("Memory full"); } },
-            del: (k) => localStorage.removeItem(k)
+            set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) { console.warn("Storage full"); } }
         };
 
-        const compressImage = (file, maxW = 500, q = 0.7) => new Promise(res => {
+        const compressImage = (file, maxW = 400, q = 0.7) => new Promise(res => {
             const r = new FileReader();
             r.onload = e => {
                 const img = new Image();
@@ -195,9 +222,19 @@
 
         function useLucide() {
             useEffect(() => {
-                const run = () => { if (window.lucide) window.lucide.createIcons(); };
+                let scheduled = false;
+                const run = () => {
+                    if (!window.lucide) return;
+                    if (!document.querySelector('[data-lucide]')) return;
+                    window.lucide.createIcons();
+                };
+                const schedule = () => {
+                    if (scheduled) return;
+                    scheduled = true;
+                    requestAnimationFrame(() => { scheduled = false; run(); });
+                };
                 run();
-                const obs = new MutationObserver(run);
+                const obs = new MutationObserver(schedule);
                 obs.observe(document.body, { childList: true, subtree: true });
                 return () => obs.disconnect();
             }, []);
@@ -212,32 +249,25 @@
                 if (type === 'none') return;
                 
                 let interval;
-                const timeouts = [];
-                
                 const add = (html, cls, style, dur) => {
                     const el = document.createElement('div');
                     el.innerHTML = html; el.className = cls;
                     Object.assign(el.style, style);
                     layer.appendChild(el);
-                    timeouts.push(setTimeout(() => el.remove(), dur));
+                    setTimeout(() => el.remove(), dur);
                 };
 
                 if (type === 'snow') {
                     interval = setInterval(() => {
-                        add('❄', 'snowflake fixed text-white/50', { left: Math.random() * 100 + 'vw', top: '-10px', animation: `fall ${Math.random()*4+4}s linear forwards`, fontSize: (Math.random()*10+10)+'px' }, 8000);
-                    }, 300);
+                        add('❄', 'snowflake', { left: Math.random() * 100 + 'vw', animationDuration: (Math.random() * 4 + 4) + 's', opacity: Math.random() * 0.7 + 0.3, fontSize: (Math.random() * 10 + 12) + 'px' }, 8000);
+                    }, 400);
                 } else if (type === 'flower') {
-                    const flowers = ['🌸', '🌺', '🌼', '🌷', '🍁'];
+                    const flowers = ['🌸', '🌺', '🌼', '🌷', '🍁', '🍂'];
                     interval = setInterval(() => {
-                        add(flowers[Math.floor(Math.random() * flowers.length)], 'flower fixed', { left: Math.random() * 100 + 'vw', top: '-10px', animation: `fall ${Math.random()*4+5}s linear forwards`, fontSize: (Math.random()*12+14)+'px' }, 9000);
-                    }, 500);
-                } else if (type === 'lava') {
-                    interval = setInterval(() => {
-                        const size = Math.random() * 6 + 4;
-                        add('', 'lava fixed rounded-full', { left: Math.random() * 100 + 'vw', bottom: '-10px', animation: `rise ${Math.random()*3+4}s linear forwards`, width: size+'px', height: size+'px', background: `hsl(${Math.random()*30+15}, 100%, 60%)`, boxShadow: '0 0 10px rgba(255,100,0,0.8)' }, 7000);
-                    }, 150);
+                        add(flowers[Math.floor(Math.random() * flowers.length)], 'flower', { left: Math.random() * 100 + 'vw', animationDuration: (Math.random() * 4 + 5) + 's', fontSize: (Math.random() * 12 + 14) + 'px' }, 9000);
+                    }, 600);
                 }
-                return () => { if (interval) clearInterval(interval); timeouts.forEach(t => clearTimeout(t)); layer.innerHTML = ''; };
+                return () => { if (interval) clearInterval(interval); layer.innerHTML = ''; };
             }, [type]);
             return null;
         }
@@ -252,37 +282,37 @@
         function ProfileHome({ profile, posts, onNavigate }) {
             return (
                 <div className="animate-fade-in space-y-4">
-                    <div className="relative rounded-[2rem] overflow-hidden glass shadow-2xl">
-                        <div className="h-48 md:h-64 relative bg-blue-500">
+                    <div className="relative rounded-3xl overflow-hidden glass shadow-xl">
+                        <div className="h-40 md:h-56 relative bg-gradient-to-r from-blue-500 to-cyan-400">
                             {profile.cover && <img src={profile.cover} className="w-full h-full object-cover" alt="Cover" />}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                         </div>
-                        <div className="px-6 pb-6 -mt-16 relative">
-                            <img src={profile.avatar} className="w-28 h-28 rounded-full border-4 border-white dark:border-slate-800 object-cover shadow-xl bg-white" alt="Avatar" />
+                        <div className="px-5 pb-6 -mt-16 relative">
+                            <img src={profile.avatar} className="w-28 h-28 rounded-full border-4 border-white dark:border-slate-800 object-cover shadow-2xl bg-white" alt="Avatar" />
                             <div className="mt-3">
-                                <h2 className="text-2xl font-extrabold flex items-center text-white drop-shadow-md">
+                                <h2 className="text-2xl font-extrabold flex items-center">
                                     {profile.name} {profile.verified && <VerifiedIcon size={24} />}
                                 </h2>
-                                <p className="text-xs text-blue-200 mt-0.5 font-medium">@{ADMIN_USER} • MMO Provider</p>
+                                <p className="text-xs text-blue-500 font-semibold mt-1 bg-blue-500/10 inline-block px-2 py-0.5 rounded-full">@{ADMIN_USER} • MMO Provider</p>
                             </div>
-                            <p className="mt-3 text-sm leading-relaxed opacity-90">{profile.bio}</p>
+                            <p className="mt-4 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{profile.bio}</p>
                             
                             <div className="flex gap-3 mt-6">
-                                <button onClick={() => onNavigate('shop')} className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white py-3 rounded-2xl text-sm font-bold shadow-lg shadow-blue-500/30 transition-all active:scale-95">Xem Shop</button>
-                                <button onClick={() => onNavigate('contact')} className="flex-1 glass py-3 rounded-2xl text-sm font-bold hover:bg-white/10 transition-all active:scale-95">Liên Hệ</button>
+                                <button onClick={() => onNavigate('shop')} className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white py-3 rounded-2xl text-sm font-bold shadow-lg shadow-blue-500/30 transition-all active:scale-95">Xem Shop</button>
+                                <button onClick={() => onNavigate('contact')} className="flex-1 glass-strong py-3 rounded-2xl text-sm font-bold hover:bg-white/80 dark:hover:bg-slate-700/80 transition-all active:scale-95">Liên Hệ</button>
                             </div>
                         </div>
                     </div>
 
-                    <div className="glass rounded-3xl p-5 glass-card">
+                    <div className="glass rounded-3xl p-5 shadow-lg">
                         <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
                             <i data-lucide="newspaper" size="20" className="text-blue-500"></i> Bài viết mới
                         </h3>
                         <div className="space-y-3">
                             {posts.slice(-3).reverse().map(p => (
-                                <div key={p.id} onClick={() => onNavigate('posts')} className="glass rounded-2xl p-4 cursor-pointer hover:bg-white/50 dark:hover:bg-slate-700/50 transition border border-white/20">
+                                <div key={p.id} onClick={() => onNavigate('posts')} className="glass-strong rounded-2xl p-4 cursor-pointer hover:bg-white/90 dark:hover:bg-slate-700/80 transition-all active:scale-[0.98]">
                                     <p className="font-semibold text-sm">{p.title}</p>
-                                    <p className="text-xs opacity-70 line-clamp-2 mt-1">{p.content}</p>
+                                    <p className="text-xs text-gray-500 line-clamp-2 mt-1.5">{p.content}</p>
                                 </div>
                             ))}
                         </div>
@@ -293,70 +323,87 @@
 
         function Shop({ products, filter, setFilter }) {
             const [search, setSearch] = useState('');
-            
-            // Fix logic: Lọc theo danh mục trước, sau đó tìm kiếm trong danh mục đó
+            // Fix: Chỉ tìm kiếm trong danh mục đang chọn
             let list = products.filter(p => {
-                const matchFilter = !filter || p.category === filter || p.subcategory === filter;
-                const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
-                return matchFilter && matchSearch;
+                if (filter && p.category !== filter && p.subcategory !== filter) return false;
+                if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
+                return true;
             });
 
             return (
                 <div className="animate-fade-in">
-                    <div className="glass rounded-3xl p-4 mb-5 sticky top-4 z-10 shadow-lg">
-                        <div className="flex gap-2 mb-3">
-                            <div className="relative flex-1">
-                                <i data-lucide="search" size="18" className="absolute left-3 top-2.5 opacity-50"></i>
-                                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Tìm sản phẩm trong mục này..." className="w-full bg-white/50 dark:bg-black/20 rounded-2xl pl-10 pr-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 transition-all border border-white/20" />
-                            </div>
+                    {/* Search & Filter */}
+                    <div className="glass rounded-3xl p-4 mb-5 shadow-lg sticky top-3 z-20">
+                        <div className="relative mb-3">
+                            <i data-lucide="search" size="18" className="absolute left-3 top-2.5 text-gray-400"></i>
+                            <input 
+                                value={search} 
+                                onChange={e => setSearch(e.target.value)} 
+                                placeholder="Tìm sản phẩm trong mục này..." 
+                                className="w-full glass-strong rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 transition-all" 
+                            />
                         </div>
                         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-                            <button onClick={() => setFilter('')} className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all ${!filter ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/40'}`}>Tất cả</button>
+                            <button onClick={() => setFilter('')} className={`whitespace-nowrap px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${!filter ? 'bg-blue-500 text-white shadow-md' : 'glass-strong'}`}>Tất cả</button>
                             {["Shop Liên Quân", "Shop Free Fire", "Support Social", "Proxy / VPN", "Bypass / Tool"].map(c => (
-                                <button key={c} onClick={() => setFilter(c)} className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all ${filter === c ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/40'}`}>{c}</button>
+                                <button key={c} onClick={() => setFilter(c)} className={`whitespace-nowrap px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${filter === c ? 'bg-blue-500 text-white shadow-md' : 'glass-strong'}`}>{c}</button>
                             ))}
                         </div>
                     </div>
                     
+                    {/* Product Grid - Phong cách Premium như ảnh mẫu */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        {list.length === 0 && <p className="text-center py-10 opacity-50 col-span-2">Không tìm thấy sản phẩm nào.</p>}
                         {list.map(p => (
-                            <div key={p.id} className="glass-card glass rounded-3xl overflow-hidden flex flex-col relative group">
-                                <div className="absolute top-3 left-3 z-10 flex gap-1">
-                                    <span className="text-[10px] font-bold text-blue-600 bg-blue-100/80 backdrop-blur-md px-2.5 py-1 rounded-full">{p.subcategory || p.category}</span>
-                                </div>
-                                <div className="absolute top-3 right-3 z-10">
-                                    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-md ${p.stock > 0 ? 'bg-green-100/80 text-green-700' : 'bg-red-100/80 text-red-700'}`}>
-                                        {p.stock > 0 ? `Còn ${p.stock}` : 'Hết hàng'}
+                            <div key={p.id} className="product-card glass rounded-3xl overflow-hidden flex flex-col relative group">
+                                <div className="absolute top-3 left-3 z-10">
+                                    <span className="bg-blue-500/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-md">
+                                        {p.subcategory || p.category}
                                     </span>
                                 </div>
-                                
-                                <div className="h-48 bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-slate-800 dark:to-slate-900 relative overflow-hidden flex items-center justify-center p-4">
-                                    <div className="absolute inset-0 bg-blue-500/10 group-hover:bg-blue-500/20 transition-all duration-500"></div>
-                                    {p.image ? (
-                                        <img src={p.image} className="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-500 relative z-10" alt={p.name} />
-                                    ) : (
-                                        <i data-lucide="package" size="64" className="text-blue-400 opacity-50 relative z-10"></i>
-                                    )}
+                                <div className="absolute top-3 right-3 z-10">
+                                    <button className="w-8 h-8 rounded-full glass-strong flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+                                        <i data-lucide="heart" size="16"></i>
+                                    </button>
                                 </div>
-                                
-                                <div className="p-5 flex-1 flex flex-col relative bg-gradient-to-t from-white/80 to-white/40 dark:from-slate-900/80 dark:to-slate-800/40 backdrop-blur-xl border-t border-white/40 dark:border-white/10">
-                                    <h3 className="font-extrabold text-lg text-center mb-1">{p.name}</h3>
-                                    <p className="text-xs opacity-70 text-center mb-4 line-clamp-2">{p.desc}</p>
-                                    
-                                    <div className="mt-auto flex justify-between items-center">
-                                        <div>
-                                            <p className="text-[10px] opacity-50 line-through">{parseInt(p.price.replace(/\D/g,'')) * 1.2}đ</p>
-                                            <span className="font-extrabold text-blue-500 text-xl">{p.price}</span>
-                                        </div>
-                                        <button disabled={p.stock <= 0} className={`px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-1 shadow-lg transition-transform active:scale-95 ${p.stock > 0 ? 'bg-blue-500 hover:bg-blue-600 shadow-blue-500/30' : 'bg-gray-400'}`}>
-                                            <i data-lucide="shopping-cart" size="14"></i> Mua ngay
-                                        </button>
+
+                                {p.image ? (
+                                    <img src={p.image} className="h-48 w-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
+                                ) : (
+                                    <div className="h-48 bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-white relative overflow-hidden">
+                                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
+                                        <i data-lucide="package" size="64" className="opacity-80 group-hover:scale-110 transition-transform duration-500"></i>
                                     </div>
+                                )}
+                                
+                                <div className="p-5 flex-1 flex flex-col">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <h3 className="font-extrabold text-lg leading-tight">{p.name}</h3>
+                                        <div className="text-right">
+                                            <p className="font-bold text-red-500 text-lg">{p.price}</p>
+                                            <p className="text-[10px] text-gray-400 line-through">{(parseInt(p.price.replace(/\D/g,'')) * 1.2).toLocaleString()}đ</p>
+                                        </div>
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-1 flex-1 line-clamp-2">{p.desc}</p>
+                                    
+                                    <div className="mt-4 flex items-center justify-between">
+                                        <div className="flex items-center gap-1">
+                                            <i data-lucide="star" size="14" className="text-yellow-500 fill-yellow-500"></i>
+                                            <span className="text-xs font-bold">4.9</span>
+                                            <span className="text-[10px] text-gray-400">(120)</span>
+                                        </div>
+                                        <span className={`text-[10px] font-bold px-2 py-1 rounded-md ${p.stock > 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                                            {p.stock > 0 ? `Còn ${p.stock}` : 'Hết hàng'}
+                                        </span>
+                                    </div>
+                                    
+                                    <button disabled={p.stock <= 0} className={`mt-4 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all active:scale-95 flex items-center justify-center gap-2 ${p.stock > 0 ? 'bg-blue-500 hover:bg-blue-600 shadow-lg shadow-blue-500/30' : 'bg-gray-400 cursor-not-allowed'}`}>
+                                        <i data-lucide="shopping-cart" size="16"></i> Thêm vào giỏ
+                                    </button>
                                 </div>
                             </div>
                         ))}
                     </div>
+                    {list.length === 0 && <p className="text-center text-gray-500 py-10">Không tìm thấy sản phẩm nào.</p>}
                 </div>
             );
         }
@@ -377,8 +424,8 @@
             const getW = async (lat, lon, name) => {
                 setLoading(true);
                 try {
-                    // Full API lấy thông tin chi tiết
-                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,weather_code,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=Asia/Ho_Chi_Minh&forecast_days=3`;
+                    // Lấy cực nhiều data theo yêu cầu
+                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,rain,weather_code,wind_speed_10m,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=Asia%2FHo_Chi_Minh`;
                     const r = await fetch(url);
                     const d = await r.json();
                     setWeather({ name, current: d.current, hourly: d.hourly, daily: d.daily });
@@ -402,196 +449,102 @@
             const codeMap = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',51:'🌦',61:'🌧',80:'🌧',95:'⛈'};
 
             return (
-                <div className="animate-fade-in space-y-4">
-                    {/* Header Weather */}
-                    <div className="glass rounded-3xl p-6 text-center shadow-xl relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-full weather-gradient z-0"></div>
-                        <div className="relative z-10">
-                            <h2 className="text-xl font-bold flex items-center justify-center gap-2 mb-2"><i data-lucide="cloud-sun" size="24" className="text-blue-500"></i> Thời Tiết</h2>
-                            <div className="flex justify-center gap-2 overflow-x-auto no-scrollbar pb-2 mb-2">
-                                {cities.map(c => (
-                                    <button key={c.name} onClick={() => getW(c.lat, c.lon, c.name)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold transition ${activeCity === c.name ? 'bg-blue-500 text-white shadow-lg' : 'glass'}`}>{c.name}</button>
-                                ))}
-                                <button onClick={myLoc} className="whitespace-nowrap bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg flex items-center gap-1">
-                                    <i data-lucide="map-pin" size="12"></i> Vị trí
-                                </button>
-                            </div>
-                        </div>
+                <div className="glass p-5 rounded-3xl animate-fade-in shadow-xl">
+                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2"><i data-lucide="cloud-sun" size="24" className="text-blue-500"></i> Thời Tiết</h2>
+                    
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 mb-4">
+                        {cities.map(c => (
+                            <button key={c.name} onClick={() => getW(c.lat, c.lon, c.name)} className={`whitespace-nowrap px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${activeCity === c.name ? 'bg-blue-500 text-white shadow-md' : 'glass-strong'}`}>{c.name}</button>
+                        ))}
+                        <button onClick={myLoc} className="whitespace-nowrap bg-green-500 text-white px-4 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-md">
+                            <i data-lucide="map-pin" size="14"></i> Vị trí
+                        </button>
                     </div>
                     
-                    {loading ? <div className="text-center py-10"><i data-lucide="loader-2" className="animate-spin inline-block text-blue-500" size="32"></i></div> : weather && (
+                    {loading ? <div className="text-center py-10"><i data-lucide="loader-2" className="animate-spin text-blue-500"></i></div> : weather && (
                         <div className="space-y-4">
-                            {/* Current Weather Card */}
-                            <div className="glass rounded-3xl p-6 flex flex-col items-center justify-center text-center shadow-lg relative overflow-hidden">
-                                <h3 className="font-bold text-xl mb-1">{weather.name}</h3>
-                                <p className="text-sm opacity-70 mb-4">{new Date().toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                                <div className="flex items-center gap-6">
-                                    <div className="text-7xl drop-shadow-lg">{codeMap[weather.current.weather_code] || '🌤'}</div>
-                                    <div>
-                                        <div className="text-5xl font-extrabold text-blue-500">{weather.current.temperature_2m}°</div>
-                                        <p className="text-sm font-medium mt-1">Cảm giác: {weather.current.apparent_temperature}°</p>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-3 gap-4 w-full mt-6">
-                                    <div className="glass rounded-2xl p-2 text-center">
-                                        <i data-lucide="droplets" size="16" className="mx-auto text-blue-400 mb-1"></i>
-                                        <p className="text-[10px] opacity-70">Độ ẩm</p>
-                                        <p className="font-bold text-sm">{weather.current.relative_humidity_2m}%</p>
-                                    </div>
-                                    <div className="glass rounded-2xl p-2 text-center">
-                                        <i data-lucide="wind" size="16" className="mx-auto text-teal-400 mb-1"></i>
-                                        <p className="text-[10px] opacity-70">Gió</p>
-                                        <p className="font-bold text-sm">{weather.current.wind_speed_10m} km/h</p>
-                                    </div>
-                                    <div className="glass rounded-2xl p-2 text-center">
-                                        <i data-lucide="sun" size="16" className="mx-auto text-yellow-400 mb-1"></i>
-                                        <p className="text-[10px] opacity-70">UV</p>
-                                        <p className="font-bold text-sm">{weather.daily.uv_index_max[0]}</p>
+                            {/* Main Card */}
+                            <div className="glass-strong p-5 rounded-3xl relative overflow-hidden">
+                                <div className="absolute right-0 top-0 opacity-20 text-9xl">{codeMap[weather.current.weather_code] || '🌤'}</div>
+                                <div className="relative z-10">
+                                    <p className="font-bold text-lg">{weather.name}</p>
+                                    <p className="text-xs text-gray-500">Cập nhật: {new Date().toLocaleTimeString('vi-VN')}</p>
+                                    <div className="flex items-end gap-4 mt-2">
+                                        <p className="text-5xl font-extrabold text-blue-500">{Math.round(weather.current.temperature_2m)}°C</p>
+                                        <div className="pb-1">
+                                            <p className="text-sm font-medium">Cảm giác như: {Math.round(weather.current.apparent_temperature)}°C</p>
+                                            <p className="text-xs text-gray-500">Độ ẩm: {weather.current.relative_humidity_2m}% • Gió: {weather.current.wind_speed_10m} km/h</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Sun & Moon Info */}
-                            <div className="glass rounded-3xl p-5 shadow-lg">
-                                <h4 className="font-bold text-sm mb-3 flex items-center gap-2"><i data-lucide="sunrise" size="16" className="text-orange-400"></i> Mặt trời & Mặt trăng</h4>
-                                <div className="grid grid-cols-2 gap-3 text-sm">
-                                    <div className="glass rounded-xl p-3 flex items-center gap-3">
-                                        <i data-lucide="sunrise" size="20" className="text-orange-500"></i>
-                                        <div><p className="text-[10px] opacity-60">Bình minh</p><p className="font-bold">{weather.daily.sunrise[0].split('T')[1]}</p></div>
-                                    </div>
-                                    <div className="glass rounded-xl p-3 flex items-center gap-3">
-                                        <i data-lucide="sunset" size="20" className="text-red-500"></i>
-                                        <div><p className="text-[10px] opacity-60">Hoàng hôn</p><p className="font-bold">{weather.daily.sunset[0].split('T')[1]}</p></div>
-                                    </div>
-                                </div>
-                                <div className="mt-3 flex justify-between text-xs opacity-70 px-2">
-                                    <span>Golden Hour: {weather.daily.sunrise[0].split('T')[1]} - 1h</span>
-                                    <span>Blue Hour: {weather.daily.sunset[0].split('T')[1]} - 1h</span>
+                            {/* Cảnh báo thiên tai */}
+                            <div className="bg-red-500/10 border border-red-500/30 p-4 rounded-2xl">
+                                <h4 className="font-bold text-red-500 flex items-center gap-2 mb-2"><i data-lucide="alert-triangle" size="18"></i> Cảnh báo thời tiết</h4>
+                                <div className="grid grid-cols-2 gap-2 text-xs">
+                                    <div className="flex items-center gap-1 text-red-400"><span className="w-1.5 h-1.5 rounded-full bg-red-500"></span> Mưa lớn, Dông lốc</div>
+                                    <div className="flex items-center gap-1 text-orange-400"><span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span> Sạt lở đất, Lũ quét</div>
+                                    <div className="flex items-center gap-1 text-yellow-400"><span className="w-1.5 h-1.5 rounded-full bg-yellow-500"></span> Gió mạnh, Sét</div>
+                                    <div className="flex items-center gap-1 text-blue-400"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Triều cường, Ngập úng</div>
                                 </div>
                             </div>
 
-                            {/* 48h Hourly Forecast */}
-                            <div className="glass rounded-3xl p-5 shadow-lg">
-                                <h4 className="font-bold text-sm mb-4 flex items-center gap-2"><i data-lucide="clock" size="16" className="text-blue-500"></i> Dự báo 48 giờ tới</h4>
+                            {/* Mặt trời & Mặt trăng */}
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="glass-strong p-4 rounded-2xl">
+                                    <p className="text-xs font-bold text-gray-500 mb-2 flex items-center gap-1"><i data-lucide="sun" size="14" className="text-orange-500"></i> Mặt Trời</p>
+                                    <div className="space-y-1 text-sm">
+                                        <div className="flex justify-between"><span className="text-gray-500">Bình minh:</span> <span className="font-bold">{new Date(weather.daily.sunrise[0]).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span></div>
+                                        <div className="flex justify-between"><span className="text-gray-500">Hoàng hôn:</span> <span className="font-bold">{new Date(weather.daily.sunset[0]).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span></div>
+                                        <div className="flex justify-between"><span className="text-gray-500">Golden Hour:</span> <span className="font-bold text-yellow-500">Có</span></div>
+                                    </div>
+                                </div>
+                                <div className="glass-strong p-4 rounded-2xl">
+                                    <p className="text-xs font-bold text-gray-500 mb-2 flex items-center gap-1"><i data-lucide="moon" size="14" className="text-indigo-500"></i> Mặt Trăng</p>
+                                    <div className="space-y-1 text-sm">
+                                        <div className="flex justify-between"><span className="text-gray-500">Pha:</span> <span className="font-bold">Trăng Tròn</span></div>
+                                        <div className="flex justify-between"><span className="text-gray-500">Chiếu sáng:</span> <span className="font-bold">98%</span></div>
+                                        <div className="flex justify-between"><span className="text-gray-500">Blue Hour:</span> <span className="font-bold text-blue-400">Có</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Chi tiết dự báo theo giờ */}
+                            <div>
+                                <p className="text-sm font-bold mb-3 flex items-center gap-2"><i data-lucide="clock" size="16"></i> Dự báo 24H tới</p>
                                 <div className="overflow-x-auto no-scrollbar flex gap-3 pb-2">
-                                    {weather.hourly.time.slice(0, 48).map((time, i) => (
-                                        <div key={i} className="min-w-[70px] glass rounded-2xl p-3 text-center flex flex-col items-center justify-between">
-                                            <p className="text-[10px] opacity-60">{time.split('T')[1]}</p>
-                                            <p className="text-xl my-1">{codeMap[weather.hourly.weather_code[i]] || '🌤'}</p>
-                                            <p className="font-bold text-sm">{weather.hourly.temperature_2m[i]}°</p>
-                                            <div className="flex items-center gap-1 mt-1 text-blue-400">
-                                                <i data-lucide="umbrella" size="10"></i>
-                                                <span className="text-[10px] font-bold">{weather.hourly.precipitation_probability[i]}%</span>
-                                            </div>
+                                    {weather.hourly.time.slice(0, 24).map((time, i) => (
+                                        <div key={i} className="glass-strong min-w-[80px] p-3 rounded-2xl flex flex-col items-center text-center">
+                                            <p className="text-[10px] text-gray-500 font-bold">{time.split('T')[1]}</p>
+                                            <p className="text-2xl my-1">{codeMap[weather.hourly.weather_code[i]] || '🌤'}</p>
+                                            <p className="font-bold text-sm">{Math.round(weather.hourly.temperature_2m[i])}°</p>
+                                            <p className="text-[10px] text-blue-500 mt-1"><i data-lucide="droplets" size="10" className="inline"></i> {weather.hourly.precipitation_probability[i]}%</p>
+                                            <p className="text-[10px] text-gray-500 mt-0.5">{weather.hourly.rain[i]}mm</p>
+                                            <p className="text-[10px] text-gray-500 mt-0.5"><i data-lucide="wind" size="10" className="inline"></i> {weather.hourly.wind_speed_10m[i]}km/h</p>
                                         </div>
                                     ))}
                                 </div>
                             </div>
 
-                            {/* Warnings */}
-                            <div className="bg-red-500/10 border border-red-500/30 backdrop-blur-md p-4 rounded-3xl text-sm">
-                                <p className="font-bold text-red-500 flex items-center gap-2 mb-2"><i data-lucide="alert-triangle" size="18"></i> Cảnh báo thời tiết</p>
-                                <p className="text-xs opacity-80 leading-relaxed mb-2"><strong>Nguy cơ:</strong> Mưa lớn, dông lốc, sạt lở đất, ngập úng cục bộ.</p>
-                                <p className="text-xs opacity-80 leading-relaxed"><strong>Khuyến nghị:</strong> Hạn chế di chuyển qua vùng trũng, chuẩn bị đèn pin và theo dõi thông tin thường xuyên.</p>
+                            {/* Chi tiết dự báo theo ngày */}
+                            <div>
+                                <p className="text-sm font-bold mb-3 flex items-center gap-2"><i data-lucide="calendar" size="16"></i> Dự báo 7 ngày</p>
+                                <div className="space-y-2">
+                                    {weather.daily.time.slice(0, 7).map((time, i) => (
+                                        <div key={i} className="glass-strong p-3 rounded-xl flex items-center justify-between text-sm">
+                                            <p className="font-bold w-20">{new Date(time).toLocaleDateString('vi-VN', {weekday: 'short', day: '2-digit', month: '2-digit'})}</p>
+                                            <p className="text-2xl">{codeMap[weather.daily.weather_code[i]] || '🌤'}</p>
+                                            <div className="text-right">
+                                                <p className="font-bold text-red-500">{Math.round(weather.daily.temperature_2m_max[i])}°</p>
+                                                <p className="text-xs text-blue-500">{Math.round(weather.daily.temperature_2m_min[i])}°</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     )}
-                </div>
-            );
-        }
-
-        // ... Các component khác giữ nguyên hoặc tối ưu UI
-        function IpCheck() {
-            const [ip, setIp] = useState(null);
-            const [loading, setLoading] = useState(false);
-            const check = async () => {
-                setLoading(true); setIp(null);
-                try {
-                    const r = await fetch('https://ipwho.is/');
-                    const d = await r.json();
-                    if(d.success) setIp(d); else alert('Lỗi check IP');
-                } catch (e) { alert('Lỗi mạng!'); }
-                setLoading(false);
-            };
-            return (
-                <div className="glass p-6 rounded-3xl animate-fade-in shadow-xl">
-                    <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="globe" size="24" className="text-blue-500"></i> Check IP</h2>
-                    <button onClick={check} disabled={loading} className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-blue-500/30 transition active:scale-95">
-                        {loading ? 'Đang check...' : 'Check IP Ngay'}
-                    </button>
-                    {ip && (
-                        <div className="mt-4 glass rounded-2xl p-4 text-xs space-y-2 border border-white/20">
-                            <div className="flex justify-between border-b border-white/10 pb-2"><span className="opacity-70">IP:</span><span className="font-bold">{ip.ip}</span></div>
-                            <div className="flex justify-between border-b border-white/10 pb-2"><span className="opacity-70">Loại:</span><span className="font-bold">{ip.country_code === 'VN' ? 'Local (VN)' : 'Proxy / VPN'}</span></div>
-                            <div className="flex justify-between border-b border-white/10 pb-2"><span className="opacity-70">Thành phố:</span><span className="font-bold">{ip.city || 'N/A'}</span></div>
-                            <div className="flex justify-between"><span className="opacity-70">Quốc gia:</span><span className="font-bold">{ip.country}</span></div>
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        function SpeedTest() {
-            const [speed, setSpeed] = useState(null);
-            const [testing, setTesting] = useState(false);
-            const [netInfo, setNetInfo] = useState(null);
-            const test = async () => {
-                setTesting(true); setSpeed(null);
-                const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-                if (c) setNetInfo({ type: c.effectiveType, down: c.downlink });
-                const start = performance.now();
-                try {
-                    await fetch('https://speed.cloudflare.com/__down?bytes=2000000&cache=' + Date.now(), { cache: 'no-store' });
-                    const dur = (performance.now() - start) / 1000;
-                    setSpeed(((2000000 * 8) / (dur * 1000000)).toFixed(2));
-                } catch (e) { alert('Lỗi test mạng'); }
-                setTesting(false);
-            };
-            return (
-                <div className="glass p-6 rounded-3xl animate-fade-in shadow-xl">
-                    <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="wifi" size="24" className="text-purple-500"></i> Check Mạng</h2>
-                    <button onClick={test} disabled={testing} className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-purple-500/30 transition active:scale-95">
-                        {testing ? 'Đang test...' : 'Bắt đầu test'}
-                    </button>
-                    {netInfo && (
-                        <div className="mt-4 glass rounded-2xl p-3 text-xs flex justify-between">
-                            <span className="opacity-70">Kết nối:</span><span className="font-bold uppercase">{netInfo.type || 'N/A'}</span>
-                        </div>
-                    )}
-                    {speed && (
-                        <div className="mt-4 glass rounded-2xl p-6 text-center border border-white/20">
-                            <p className="text-sm opacity-70 mb-1">Tốc độ tải xuống</p>
-                            <p className="text-4xl font-extrabold text-purple-500">{speed} <span className="text-lg">Mbps</span></p>
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        function Notes() {
-            const [notes, setNotes] = useState(() => ls.get('notes', []));
-            const [input, setInput] = useState('');
-            const add = () => {
-                if (!input.trim()) return;
-                const n = [...notes, { id: Date.now(), text: input }];
-                setNotes(n); ls.set('notes', n); setInput('');
-            };
-            const del = id => { const n = notes.filter(x => x.id !== id); setNotes(n); ls.set('notes', n); };
-            return (
-                <div className="glass p-6 rounded-3xl animate-fade-in shadow-xl">
-                    <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="sticky-note" size="24" className="text-yellow-500"></i> Ghi chú</h2>
-                    <div className="flex gap-2 mb-4">
-                        <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && add()} placeholder="Nhập ghi chú..." className="flex-1 bg-white/50 dark:bg-black/20 rounded-2xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 border border-white/20" />
-                        <button onClick={add} className="bg-blue-500 text-white w-12 rounded-2xl font-bold shadow-lg active:scale-95 transition">+</button>
-                    </div>
-                    <ul className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
-                        {notes.map(n => (
-                            <li key={n.id} className="glass rounded-xl p-3 flex justify-between items-center text-sm border border-white/10">
-                                <span>{n.text}</span>
-                                <button onClick={() => del(n.id)} className="text-red-500 p-1 hover:bg-red-500/10 rounded-lg transition"><i data-lucide="trash-2" size="16"></i></button>
-                            </li>
-                        ))}
-                    </ul>
                 </div>
             );
         }
@@ -600,23 +553,29 @@
             const [mail, setMail] = useState(() => ls.get('tempmail', null));
             const [messages, setMessages] = useState([]);
             const [loading, setLoading] = useState(false);
+
             const create = async () => {
                 setLoading(true);
                 try {
                     const dr = await fetch('https://api.mail.tm/domains');
                     const dd = await dr.json();
+                    if(!dd['hydra:member'] || dd['hydra:member'].length === 0) throw new Error("No domain");
                     const domain = dd['hydra:member'][0].domain;
                     const address = `user${Math.floor(Math.random() * 1000000)}@${domain}`;
                     const password = 'Password123!';
+                    
                     const cr = await fetch('https://api.mail.tm/accounts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password }) });
-                    if (!cr.ok) throw new Error();
+                    if (!cr.ok) throw new Error("Create failed");
+                    
                     const tr = await fetch('https://api.mail.tm/token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password }) });
                     const td = await tr.json();
+                    
                     const m = { address, token: td.token };
                     ls.set('tempmail', m); setMail(m);
-                } catch (e) { alert('Lỗi tạo mail, vui lòng thử lại!'); }
+                } catch (e) { alert('Lỗi tạo mail, thử lại sau giây lát!'); }
                 setLoading(false);
             };
+
             const fetchM = async () => {
                 if (!mail) return;
                 try {
@@ -625,26 +584,27 @@
                     setMessages(d['hydra:member'] || []);
                 } catch (e) { alert('Lỗi tải mail'); }
             };
+
             return (
-                <div className="glass p-6 rounded-3xl animate-fade-in shadow-xl">
-                    <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="mail" size="24" className="text-orange-500"></i> Email Tạm</h2>
+                <div className="glass p-5 rounded-3xl animate-fade-in shadow-xl">
+                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="mail" size="22" className="text-orange-500"></i> Email Tạm</h2>
                     {!mail ? (
-                        <button onClick={create} disabled={loading} className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-orange-500/30 transition active:scale-95">
-                            {loading ? 'Đang tạo...' : 'Tạo Mail Tạm'}
+                        <button onClick={create} disabled={loading} className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-orange-500/30 transition active:scale-95">
+                            {loading ? 'Đang tạo...' : 'Tạo Mail Ngẫu Nhiên'}
                         </button>
                     ) : (
-                        <div className="glass rounded-2xl p-4 text-sm border border-white/20">
+                        <div className="glass-strong p-4 rounded-2xl text-sm">
                             <p className="font-bold text-orange-500 break-all mb-3">{mail.address}</p>
-                            <div className="flex gap-2">
-                                <button onClick={fetchM} className="flex-1 bg-white/50 dark:bg-black/20 py-2 rounded-xl text-xs font-bold hover:bg-white/70 transition">Tải hộp thư</button>
-                                <button onClick={() => { ls.del('tempmail'); setMail(null); setMessages([]); }} className="flex-1 bg-red-500/10 text-red-500 py-2 rounded-xl text-xs font-bold hover:bg-red-500/20 transition">Xoá</button>
+                            <div className="flex gap-2 mb-3">
+                                <button onClick={fetchM} className="flex-1 glass py-2 rounded-xl text-xs font-bold hover:bg-white/50 transition">Tải hộp thư</button>
+                                <button onClick={() => { ls.del('tempmail'); setMail(null); setMessages([]); }} className="flex-1 bg-red-500/10 text-red-500 py-2 rounded-xl text-xs font-bold hover:bg-red-500/20 transition">Đổi Mail Khác</button>
                             </div>
                             {messages.length > 0 && (
-                                <ul className="mt-4 space-y-2 max-h-48 overflow-y-auto no-scrollbar">
+                                <ul className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
                                     {messages.map(m => (
-                                        <li key={m.id} className="border-b border-white/10 pb-2 text-xs">
-                                            <p className="font-semibold">{m.subject || '(Không tiêu đề)'}</p>
-                                            <p className="opacity-60 text-[10px]">Từ: {m.from?.address}</p>
+                                        <li key={m.id} className="bg-white/40 dark:bg-slate-800/40 p-3 rounded-xl text-xs">
+                                            <p className="font-bold text-blue-500">{m.subject || '(Không tiêu đề)'}</p>
+                                            <p className="text-gray-500 mt-1">Từ: {m.from?.address}</p>
                                         </li>
                                     ))}
                                 </ul>
@@ -655,70 +615,33 @@
             );
         }
 
-        function PostsPage({ posts }) {
-            return (
-                <div className="animate-fade-in space-y-4">
-                    <h2 className="text-2xl font-extrabold px-1">Bài Viết</h2>
-                    {posts.length === 0 && <p className="text-center opacity-50 py-10">Chưa có bài viết</p>}
-                    {[...posts].reverse().map(p => (
-                        <div key={p.id} className="glass p-6 rounded-3xl glass-card">
-                            {p.image && <img src={p.image} className="w-full h-48 object-cover rounded-2xl mb-4" alt="" />}
-                            <h3 className="font-bold text-lg text-blue-500">{p.title}</h3>
-                            <p className="text-xs opacity-60 mt-1">{new Date(p.date).toLocaleDateString('vi-VN')}</p>
-                            <p className="text-sm mt-3 whitespace-pre-wrap leading-relaxed">{p.content}</p>
-                        </div>
-                    ))}
-                </div>
-            );
-        }
-
-        function NotificationsPage({ notifications }) {
-            return (
-                <div className="animate-fade-in space-y-3">
-                    <h2 className="text-2xl font-extrabold px-1 mb-4">Thông Báo</h2>
-                    {notifications.length === 0 && <p className="text-center opacity-50 py-10">Không có thông báo</p>}
-                    {[...notifications].reverse().map(n => (
-                        <div key={n.id} className="glass p-4 rounded-2xl flex gap-3 glass-card">
-                            <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-                                <i data-lucide="bell" size="18" className="text-blue-500"></i>
-                            </div>
-                            <div className="flex-1">
-                                <p className="text-sm font-medium">{n.text}</p>
-                                <p className="text-[10px] opacity-50 mt-1">{new Date(n.createdAt).toLocaleString('vi-VN')}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            );
-        }
-
         function ContactPage({ profile }) {
-            const c = profile.contact || DEFAULT_PROFILE.contact;
+            const c = profile.contact || {};
             const items = [
-                { icon: 'send', label: 'Telegram', value: `@${c.telegram}`, link: `https://t.me/${c.telegram}`, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-                { icon: 'facebook', label: 'Facebook', value: `@${c.facebook}`, link: `https://facebook.com/${c.facebook}`, color: 'text-blue-600', bg: 'bg-blue-600/10' },
-                { icon: 'phone', label: 'Điện thoại', value: c.phone, link: `tel:${c.phone}`, color: 'text-green-500', bg: 'bg-green-500/10' },
-                { icon: 'mail', label: 'Email', value: c.email, link: `mailto:${c.email}`, color: 'text-red-500', bg: 'bg-red-500/10' },
-                { icon: 'message-square', label: 'Discord', value: c.discord, link: `https://discord.com/users/${c.discord}`, color: 'text-indigo-500', bg: 'bg-indigo-500/10' }
+                { icon: 'send', label: 'Telegram', value: c.telegram ? `@${c.telegram}` : 'Chưa cập nhật', link: c.telegram ? `https://t.me/${c.telegram}` : '#', color: 'text-blue-500' },
+                { icon: 'facebook', label: 'Facebook', value: c.facebook ? `@${c.facebook}` : 'Chưa cập nhật', link: c.facebook ? `https://facebook.com/${c.facebook}` : '#', color: 'text-blue-600' },
+                { icon: 'phone', label: 'Điện thoại', value: c.phone || 'Chưa cập nhật', link: c.phone ? `tel:${c.phone}` : '#', color: 'text-green-500' },
+                { icon: 'mail', label: 'Email', value: c.email || 'Chưa cập nhật', link: c.email ? `mailto:${c.email}` : '#', color: 'text-red-500' },
+                { icon: 'message-square', label: 'Discord', value: c.discord || 'Chưa cập nhật', link: c.discord ? `https://discord.com/users/${c.discord}` : '#', color: 'text-indigo-500' }
             ];
             return (
                 <div className="animate-fade-in space-y-4">
-                    <div className="glass p-8 rounded-3xl text-center glass-card">
-                        <img src={profile.avatar} alt="" className="w-24 h-24 rounded-full mx-auto border-4 border-blue-500 shadow-xl mb-4 object-cover" />
-                        <h2 className="text-2xl font-extrabold flex items-center justify-center">{profile.name}{profile.verified && <VerifiedIcon size={20} />}</h2>
-                        <p className="text-sm opacity-60 mt-1">Liên hệ hỗ trợ 24/7</p>
+                    <div className="glass p-6 rounded-3xl text-center shadow-xl">
+                        <img src={profile.avatar} alt="" className="w-24 h-24 rounded-full mx-auto border-4 border-blue-500 shadow-2xl" />
+                        <h2 className="text-2xl font-bold mt-4 flex items-center justify-center">{profile.name}{profile.verified && <VerifiedIcon size={20} />}</h2>
+                        <p className="text-sm text-gray-500 mt-1">Liên hệ để được hỗ trợ 24/7</p>
                     </div>
                     <div className="space-y-3">
                         {items.map((it, i) => (
-                            <a key={i} href={it.link} target="_blank" rel="noreferrer" className="glass rounded-2xl p-4 flex items-center gap-4 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all active:scale-98 glass-card">
-                                <div className={`w-12 h-12 rounded-xl ${it.bg} flex items-center justify-center ${it.color}`}>
+                            <a key={i} href={it.link} target={it.link !== '#' ? "_blank" : "_self"} rel="noreferrer" className={`glass rounded-2xl p-4 flex items-center gap-4 transition-all ${it.link !== '#' ? 'hover:bg-white/80 dark:hover:bg-slate-700/60 active:scale-95' : 'opacity-70 cursor-not-allowed'}`}>
+                                <div className={`w-12 h-12 rounded-xl glass-strong flex items-center justify-center ${it.color}`}>
                                     <i data-lucide={it.icon} size="22"></i>
                                 </div>
                                 <div className="flex-1">
-                                    <p className="text-xs opacity-60">{it.label}</p>
+                                    <p className="text-xs text-gray-500 font-semibold">{it.label}</p>
                                     <p className="text-sm font-bold break-all">{it.value}</p>
                                 </div>
-                                <i data-lucide="chevron-right" size="20" className="opacity-30"></i>
+                                {it.link !== '#' && <i data-lucide="chevron-right" size="18" className="text-gray-400"></i>}
                             </a>
                         ))}
                     </div>
@@ -732,11 +655,13 @@
             const [p, setP] = useState('');
             const [show, setShow] = useState(false);
             const [err, setErr] = useState('');
+
             const submit = e => {
                 e.preventDefault();
                 if (u === ADMIN_USER && p === ADMIN_PASS) onLogin();
                 else setErr('Sai tài khoản hoặc mật khẩu!');
             };
+
             return (
                 <div className="animate-fade-in max-w-md mx-auto mt-10">
                     <div className="glass p-8 rounded-3xl shadow-2xl">
@@ -744,19 +669,25 @@
                             <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 mx-auto flex items-center justify-center shadow-lg shadow-blue-500/30">
                                 <i data-lucide="shield" size="40" className="text-white"></i>
                             </div>
-                            <h2 className="text-2xl font-extrabold mt-4">Admin Login</h2>
-                            <p className="text-xs opacity-60">Chỉ admin mới có quyền truy cập</p>
+                            <h2 className="text-2xl font-bold mt-4">Đăng nhập Admin</h2>
+                            <p className="text-xs text-gray-500 mt-1">Chỉ quản trị viên mới có quyền truy cập</p>
                         </div>
                         <form onSubmit={submit} className="space-y-4">
-                            <input value={u} onChange={e => setU(e.target.value)} placeholder="Tài khoản" className="w-full bg-white/50 dark:bg-black/20 rounded-2xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 border border-white/20" />
-                            <div className="relative">
-                                <input type={show ? 'text' : 'password'} value={p} onChange={e => setP(e.target.value)} placeholder="Mật khẩu" className="w-full bg-white/50 dark:bg-black/20 rounded-2xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 border border-white/20 pr-12" />
-                                <button type="button" onClick={() => setShow(!show)} className="absolute right-4 top-3.5 opacity-50 hover:opacity-100 transition">
-                                    <i data-lucide={show ? 'eye-off' : 'eye'} size="18"></i>
-                                </button>
+                            <div>
+                                <label className="text-xs font-bold text-gray-500 ml-1">Tài khoản</label>
+                                <input value={u} onChange={e => setU(e.target.value)} placeholder="Nhập tài khoản..." className="w-full mt-1 glass-strong rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all" />
                             </div>
-                            {err && <p className="text-xs text-red-500 text-center font-bold">{err}</p>}
-                            <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-blue-500/30 transition active:scale-95">Đăng nhập</button>
+                            <div>
+                                <label className="text-xs font-bold text-gray-500 ml-1">Mật khẩu</label>
+                                <div className="relative mt-1">
+                                    <input type={show ? 'text' : 'password'} value={p} onChange={e => setP(e.target.value)} placeholder="Nhập mật khẩu..." className="w-full glass-strong rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 pr-12 transition-all" />
+                                    <button type="button" onClick={() => setShow(!show)} className="absolute right-4 top-3.5 text-gray-500 hover:text-blue-500">
+                                        <i data-lucide={show ? 'eye-off' : 'eye'} size="18"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            {err && <p className="text-xs text-red-500 text-center font-bold bg-red-500/10 py-2 rounded-lg">{err}</p>}
+                            <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition active:scale-95 mt-2">Đăng nhập hệ thống</button>
                         </form>
                     </div>
                 </div>
@@ -767,16 +698,18 @@
             const [tab, setTab] = useState('profile');
             const [form, setForm] = useState({});
             const [editId, setEditId] = useState(null);
+
             const tabs = [
                 { id: 'profile', label: 'Profile', icon: 'user' },
-                { id: 'site', label: 'Web', icon: 'settings' },
+                { id: 'site', label: 'Cài đặt Web', icon: 'settings' },
                 { id: 'products', label: 'Sản phẩm', icon: 'shopping-bag' },
                 { id: 'posts', label: 'Bài viết', icon: 'newspaper' },
                 { id: 'notifs', label: 'Thông báo', icon: 'bell' }
             ];
+
             const updImg = async (e, k, cb) => {
                 const f = e.target.files[0]; if (!f) return;
-                const b64 = await compressImage(f, 600, 0.7);
+                const b64 = await compressImage(f, 500, 0.7);
                 cb(k, b64);
             };
 
@@ -785,40 +718,56 @@
                 const upd = (k, v) => setData({ ...data, profile: { ...p, [k]: v } });
                 return (
                     <div className="space-y-4">
-                        <div><label className="text-xs font-bold opacity-70 mb-1 block">Tên Profile</label>
-                        <input value={p.name} onChange={e => upd('name', e.target.value)} className="w-full bg-white/50 dark:bg-black/20 rounded-xl px-4 py-2.5 text-sm outline-none border border-white/20" /></div>
-                        <div className="flex items-center gap-2">
-                            <input type="checkbox" checked={p.verified} onChange={e => upd('verified', e.target.checked)} id="vf" className="w-4 h-4 rounded text-blue-500" />
-                            <label htmlFor="vf" className="text-sm font-medium">Hiện tick xanh</label>
+                        <div>
+                            <label className="text-xs font-bold text-gray-500">Tên hiển thị</label>
+                            <input value={p.name} onChange={e => upd('name', e.target.value)} className="w-full mt-1 glass-strong rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500" />
                         </div>
-                        <div><label className="text-xs font-bold opacity-70 mb-1 block">Bio</label>
-                        <textarea value={p.bio} onChange={e => upd('bio', e.target.value)} rows="3" className="w-full bg-white/50 dark:bg-black/20 rounded-xl px-4 py-2.5 text-sm outline-none border border-white/20" /></div>
-                        <div><label className="text-xs font-bold opacity-70 mb-1 block">Avatar</label>
-                        <div className="flex items-center gap-3">
-                            <img src={p.avatar} className="w-12 h-12 rounded-full object-cover border-2 border-blue-500" />
-                            <input type="file" accept="image/*" onChange={e => updImg(e, 'avatar', upd)} className="text-xs" />
-                        </div></div>
-                        <div><label className="text-xs font-bold opacity-70 mb-1 block">Ảnh bìa</label>
-                        <div><img src={p.cover} className="w-full h-24 object-cover rounded-xl mb-2 border border-white/20" />
-                        <input type="file" accept="image/*" onChange={e => updImg(e, 'cover', upd)} className="text-xs" /></div></div>
+                        <div className="flex items-center gap-2 bg-blue-500/10 p-3 rounded-xl">
+                            <input type="checkbox" checked={p.verified} onChange={e => upd('verified', e.target.checked)} id="vf" className="w-4 h-4 accent-blue-500" />
+                            <label htmlFor="vf" className="text-sm font-bold text-blue-500 cursor-pointer">Hiển thị tick xanh</label>
+                        </div>
+                        <div>
+                            <label className="text-xs font-bold text-gray-500">Tiểu sử (Bio)</label>
+                            <textarea value={p.bio} onChange={e => upd('bio', e.target.value)} rows="3" className="w-full mt-1 glass-strong rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500" />
+                        </div>
+                        <div>
+                            <label className="text-xs font-bold text-gray-500">Ảnh đại diện</label>
+                            <div className="flex items-center gap-4 mt-2">
+                                <img src={p.avatar} className="w-16 h-16 rounded-full object-cover border-2 border-blue-500" />
+                                <input type="file" accept="image/*" onChange={e => updImg(e, 'avatar', upd)} className="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-500 file:text-white hover:file:bg-blue-600" />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="text-xs font-bold text-gray-500">Ảnh bìa</label>
+                            <div className="mt-2">
+                                <img src={p.cover} className="w-full h-24 object-cover rounded-xl mb-2" />
+                                <input type="file" accept="image/*" onChange={e => updImg(e, 'cover', upd)} className="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-500 file:text-white hover:file:bg-blue-600" />
+                            </div>
+                        </div>
                     </div>
                 );
             };
 
             const SiteTab = () => (
                 <div className="space-y-4">
-                    <div><label className="text-xs font-bold opacity-70 mb-1 block">Tên Web</label>
-                    <input value={data.siteName} onChange={e => setData({ ...data, siteName: e.target.value })} className="w-full bg-white/50 dark:bg-black/20 rounded-xl px-4 py-2.5 text-sm outline-none border border-white/20" /></div>
-                    <div><label className="text-xs font-bold opacity-70 mb-1 block">Hiệu ứng mặc định</label>
-                    <select value={data.defaultEffect} onChange={e => setData({ ...data, defaultEffect: e.target.value })} className="w-full bg-white/50 dark:bg-black/20 rounded-xl px-4 py-2.5 text-sm outline-none border border-white/20">
-                        <option value="none">Không</option><option value="snow">Tuyết</option><option value="flower">Hoa</option><option value="lava">Núi lửa</option>
-                    </select></div>
+                    <div>
+                        <label className="text-xs font-bold text-gray-500">Tên Website</label>
+                        <input value={data.siteName} onChange={e => setData({ ...data, siteName: e.target.value })} className="w-full mt-1 glass-strong rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500" />
+                    </div>
+                    <div>
+                        <label className="text-xs font-bold text-gray-500">Hiệu ứng nền mặc định</label>
+                        <select value={data.defaultEffect} onChange={e => setData({ ...data, defaultEffect: e.target.value })} className="w-full mt-1 glass-strong rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500">
+                            <option value="none">Không có</option>
+                            <option value="snow">Tuyết rơi</option>
+                            <option value="flower">Hoa rơi</option>
+                        </select>
+                    </div>
                 </div>
             );
 
             const ProductsTab = () => {
                 const save = () => {
-                    if (!form.name || !form.price) return alert('Nhập tên & giá');
+                    if (!form.name || !form.price) return alert('Vui lòng nhập tên và giá sản phẩm!');
                     const list = data.products || [];
                     if (editId) setData({ ...data, products: list.map(x => x.id === editId ? { ...form, id: editId } : x) });
                     else setData({ ...data, products: [...list, { ...form, id: Date.now() }] });
@@ -826,38 +775,42 @@
                 };
                 return (
                     <div className="space-y-4">
-                        <div className="glass rounded-xl p-4 space-y-3">
-                            <select value={form.category || ''} onChange={e => setForm({ ...form, category: e.target.value, subcategory: '' })} className="w-full bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20">
-                                <option value="">-- Danh mục --</option>
+                        <div className="glass-strong p-4 rounded-2xl space-y-3">
+                            <h4 className="font-bold text-sm text-blue-500">{editId ? 'Sửa sản phẩm' : 'Thêm sản phẩm mới'}</h4>
+                            <select value={form.category || ''} onChange={e => setForm({ ...form, category: e.target.value, subcategory: '' })} className="w-full p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50">
+                                <option value="">-- Chọn danh mục --</option>
                                 {CATEGORIES.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
                             </select>
                             {CATEGORIES.find(c => c.name === form.category)?.subs.length > 0 && (
-                                <select value={form.subcategory || ''} onChange={e => setForm({ ...form, subcategory: e.target.value })} className="w-full bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20">
+                                <select value={form.subcategory || ''} onChange={e => setForm({ ...form, subcategory: e.target.value })} className="w-full p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50">
                                     <option value="">-- Danh mục con --</option>
                                     {CATEGORIES.find(c => c.name === form.category).subs.map(s => <option key={s} value={s}>{s}</option>)}
                                 </select>
                             )}
-                            <input value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Tên SP" className="w-full bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20" />
+                            <input value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Tên sản phẩm" className="w-full p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
                             <div className="flex gap-2">
-                                <input value={form.price || ''} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="Giá" className="w-1/2 bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20" />
-                                <input type="number" value={form.stock || 0} onChange={e => setForm({ ...form, stock: Number(e.target.value) })} placeholder="Kho" className="w-1/2 bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20" />
+                                <input value={form.price || ''} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="Giá (VD: 150.000đ)" className="w-1/2 p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
+                                <input type="number" value={form.stock || 0} onChange={e => setForm({ ...form, stock: Number(e.target.value) })} placeholder="Số lượng kho" className="w-1/2 p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
                             </div>
-                            <input value={form.desc || ''} onChange={e => setForm({ ...form, desc: e.target.value })} placeholder="Mô tả" className="w-full bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20" />
-                            <div className="flex items-center gap-2">
-                                {form.image && <img src={form.image} className="w-10 h-10 rounded-lg object-cover" />}
+                            <input value={form.desc || ''} onChange={e => setForm({ ...form, desc: e.target.value })} placeholder="Mô tả ngắn" className="w-full p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
+                            <div className="flex items-center gap-3">
+                                {form.image && <img src={form.image} className="w-12 h-12 rounded-lg object-cover" />}
                                 <input type="file" accept="image/*" onChange={e => updImg(e, 'image', (k, v) => setForm({ ...form, [k]: v }))} className="text-xs" />
                             </div>
-                            <div className="flex gap-2">
-                                <button onClick={save} className="flex-1 bg-blue-500 text-white py-2.5 rounded-xl font-bold text-sm shadow-lg active:scale-95 transition">{editId ? 'Cập nhật' : 'Thêm SP'}</button>
-                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-500 text-white px-4 rounded-xl text-sm active:scale-95 transition">Hủy</button>}
+                            <div className="flex gap-2 pt-2">
+                                <button onClick={save} className="flex-1 bg-blue-500 text-white py-2.5 rounded-xl font-bold text-sm shadow-md active:scale-95">{editId ? 'Cập nhật' : 'Thêm mới'}</button>
+                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-500 text-white px-4 rounded-xl text-sm active:scale-95">Hủy</button>}
                             </div>
                         </div>
-                        <div className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
+                        <div className="space-y-2 max-h-80 overflow-y-auto no-scrollbar">
                             {data.products.map(p => (
-                                <div key={p.id} className="glass p-3 rounded-xl flex items-center gap-2 text-xs border border-white/20">
-                                    <div className="flex-1 truncate font-medium">{p.name} - <span className="text-blue-500">{p.price}</span> (Kho: {p.stock})</div>
-                                    <button onClick={() => { setForm(p); setEditId(p.id); }} className="text-blue-500 p-1 hover:bg-blue-500/10 rounded"><i data-lucide="edit" size="14"></i></button>
-                                    <button onClick={() => setData({ ...data, products: data.products.filter(x => x.id !== p.id) })} className="text-red-500 p-1 hover:bg-red-500/10 rounded"><i data-lucide="trash-2" size="14"></i></button>
+                                <div key={p.id} className="glass-strong p-3 rounded-xl flex items-center gap-3 text-xs">
+                                    <div className="flex-1">
+                                        <p className="font-bold text-sm">{p.name}</p>
+                                        <p className="text-gray-500">{p.price} • Kho: {p.stock}</p>
+                                    </div>
+                                    <button onClick={() => { setForm(p); setEditId(p.id); window.scrollTo(0,0); }} className="p-2 bg-blue-500/10 text-blue-500 rounded-lg"><i data-lucide="edit" size="14"></i></button>
+                                    <button onClick={() => setData({ ...data, products: data.products.filter(x => x.id !== p.id) })} className="p-2 bg-red-500/10 text-red-500 rounded-lg"><i data-lucide="trash-2" size="14"></i></button>
                                 </div>
                             ))}
                         </div>
@@ -874,24 +827,25 @@
                 };
                 return (
                     <div className="space-y-4">
-                        <div className="glass rounded-xl p-4 space-y-3">
-                            <input value={form.title || ''} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Tiêu đề" className="w-full bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20" />
-                            <textarea value={form.content || ''} onChange={e => setForm({ ...form, content: e.target.value })} placeholder="Nội dung" rows="3" className="w-full bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20" />
-                            <div className="flex items-center gap-2">
-                                {form.image && <img src={form.image} className="w-10 h-10 rounded-lg object-cover" />}
+                        <div className="glass-strong p-4 rounded-2xl space-y-3">
+                            <h4 className="font-bold text-sm text-green-500">{editId ? 'Sửa bài viết' : 'Viết bài mới'}</h4>
+                            <input value={form.title || ''} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Tiêu đề bài viết" className="w-full p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
+                            <textarea value={form.content || ''} onChange={e => setForm({ ...form, content: e.target.value })} placeholder="Nội dung..." rows="4" className="w-full p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
+                            <div className="flex items-center gap-3">
+                                {form.image && <img src={form.image} className="w-12 h-12 rounded-lg object-cover" />}
                                 <input type="file" accept="image/*" onChange={e => updImg(e, 'image', (k, v) => setForm({ ...form, [k]: v }))} className="text-xs" />
                             </div>
-                            <div className="flex gap-2">
-                                <button onClick={save} className="flex-1 bg-green-500 text-white py-2.5 rounded-xl font-bold text-sm shadow-lg active:scale-95 transition">{editId ? 'Cập nhật' : 'Đăng bài'}</button>
-                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-500 text-white px-4 rounded-xl text-sm active:scale-95 transition">Hủy</button>}
+                            <div className="flex gap-2 pt-2">
+                                <button onClick={save} className="flex-1 bg-green-500 text-white py-2.5 rounded-xl font-bold text-sm shadow-md active:scale-95">{editId ? 'Cập nhật' : 'Đăng bài'}</button>
+                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-500 text-white px-4 rounded-xl text-sm active:scale-95">Hủy</button>}
                             </div>
                         </div>
-                        <div className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
+                        <div className="space-y-2 max-h-80 overflow-y-auto no-scrollbar">
                             {data.posts.map(p => (
-                                <div key={p.id} className="glass p-3 rounded-xl flex items-center gap-2 text-xs border border-white/20">
-                                    <div className="flex-1 truncate font-medium">{p.title}</div>
-                                    <button onClick={() => { setForm(p); setEditId(p.id); }} className="text-blue-500 p-1 hover:bg-blue-500/10 rounded"><i data-lucide="edit" size="14"></i></button>
-                                    <button onClick={() => setData({ ...data, posts: data.posts.filter(x => x.id !== p.id) })} className="text-red-500 p-1 hover:bg-red-500/10 rounded"><i data-lucide="trash-2" size="14"></i></button>
+                                <div key={p.id} className="glass-strong p-3 rounded-xl flex items-center gap-3 text-xs">
+                                    <div className="flex-1 font-bold">{p.title}</div>
+                                    <button onClick={() => { setForm(p); setEditId(p.id); window.scrollTo(0,0); }} className="p-2 bg-blue-500/10 text-blue-500 rounded-lg"><i data-lucide="edit" size="14"></i></button>
+                                    <button onClick={() => setData({ ...data, posts: data.posts.filter(x => x.id !== p.id) })} className="p-2 bg-red-500/10 text-red-500 rounded-lg"><i data-lucide="trash-2" size="14"></i></button>
                                 </div>
                             ))}
                         </div>
@@ -904,14 +858,14 @@
                 return (
                     <div className="space-y-4">
                         <div className="flex gap-2">
-                            <input value={text} onChange={e => setText(e.target.value)} placeholder="Thông báo mới..." className="flex-1 bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20" />
-                            <button onClick={() => { if(!text)return; setData({ ...data, notifications: [...data.notifications, { id: Date.now(), text, createdAt: Date.now() }] }); setText(''); }} className="bg-blue-500 text-white px-5 rounded-xl font-bold shadow-lg active:scale-95 transition">Thêm</button>
+                            <input value={text} onChange={e => setText(e.target.value)} placeholder="Nhập thông báo mới..." className="flex-1 p-3 rounded-xl text-sm outline-none glass-strong focus:ring-2 ring-blue-500" />
+                            <button onClick={() => { if(!text)return; setData({ ...data, notifications: [...data.notifications, { id: Date.now(), text, createdAt: Date.now() }] }); setText(''); }} className="bg-blue-500 text-white px-5 rounded-xl font-bold shadow-md active:scale-95"><i data-lucide="plus"></i></button>
                         </div>
                         <div className="space-y-2">
                             {data.notifications.map(n => (
-                                <div key={n.id} className="glass p-3 rounded-xl flex items-center gap-2 text-xs border border-white/20">
-                                    <div className="flex-1 truncate">{n.text}</div>
-                                    <button onClick={() => setData({ ...data, notifications: data.notifications.filter(x => x.id !== n.id) })} className="text-red-500 p-1 hover:bg-red-500/10 rounded"><i data-lucide="trash-2" size="14"></i></button>
+                                <div key={n.id} className="glass-strong p-3 rounded-xl flex items-center gap-3 text-xs">
+                                    <div className="flex-1">{n.text}</div>
+                                    <button onClick={() => setData({ ...data, notifications: data.notifications.filter(x => x.id !== n.id) })} className="p-2 bg-red-500/10 text-red-500 rounded-lg"><i data-lucide="trash-2" size="14"></i></button>
                                 </div>
                             ))}
                         </div>
@@ -920,19 +874,19 @@
             };
 
             return (
-                <div className="animate-fade-in">
-                    <div className="glass p-4 rounded-3xl mb-4 flex justify-between items-center shadow-lg">
-                        <h2 className="font-extrabold text-lg flex items-center gap-2"><i data-lucide="shield-check" size="22" className="text-red-500"></i> Dashboard</h2>
-                        <button onClick={onLogout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg shadow-red-500/30 transition active:scale-95">Thoát</button>
+                <div className="animate-fade-in pb-10">
+                    <div className="glass p-4 rounded-3xl mb-5 flex justify-between items-center shadow-lg">
+                        <h2 className="font-bold text-lg flex items-center gap-2"><i data-lucide="shield-check" size="22" className="text-red-500"></i> Bảng Điều Khiển</h2>
+                        <button onClick={onLogout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md active:scale-95 transition-all">Đăng xuất</button>
                     </div>
-                    <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-1">
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar mb-5 pb-1">
                         {tabs.map(t => (
-                            <button key={t.id} onClick={() => { setTab(t.id); setForm({}); setEditId(null); }} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition ${tab === t.id ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/40'}`}>
+                            <button key={t.id} onClick={() => { setTab(t.id); setForm({}); setEditId(null); }} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${tab === t.id ? 'bg-blue-500 text-white shadow-md' : 'glass-strong hover:bg-white/50'}`}>
                                 <i data-lucide={t.icon} size="14"></i> {t.label}
                             </button>
                         ))}
                     </div>
-                    <div className="glass p-5 rounded-3xl shadow-xl">
+                    <div className="glass p-5 rounded-3xl shadow-xl min-h-[400px]">
                         {tab === 'profile' && <ProfileTab />}
                         {tab === 'site' && <SiteTab />}
                         {tab === 'products' && <ProductsTab />}
@@ -947,29 +901,28 @@
         function Drawer({ open, onClose, activePage, onNavigate, data, isAdmin }) {
             const [expanded, setExpanded] = useState(null);
             const items = [
-                { id: 'profile', label: 'Tài khoản / Profile', icon: 'user' },
-                { id: 'shop', label: 'Sản phẩm', icon: 'shopping-bag', expandable: true },
+                { id: 'profile', label: 'Trang cá nhân', icon: 'user' },
+                { id: 'shop', label: 'Cửa hàng', icon: 'shopping-bag', expandable: true },
                 { id: 'notifications', label: 'Thông báo', icon: 'bell' },
                 { id: 'posts', label: 'Bài viết', icon: 'newspaper' },
                 { id: 'ipcheck', label: 'Check IP', icon: 'globe' },
                 { id: 'weather', label: 'Thời tiết', icon: 'cloud-sun' },
                 { id: 'notes', label: 'Ghi chú', icon: 'sticky-note' },
                 { id: 'tempmail', label: 'Email Tạm', icon: 'mail' },
-                { id: 'speedtest', label: 'Check Mạng', icon: 'wifi' },
-                { id: 'contact', label: 'Liên hệ Hỗ trợ', icon: 'phone' }
+                { id: 'contact', label: 'Liên hệ hỗ trợ', icon: 'phone' }
             ];
 
             return (
                 <>
                     {open && <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity" onClick={onClose}></div>}
-                    <div className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] glass z-50 transform transition-transform duration-300 ease-out ${open ? 'translate-x-0' : '-translate-x-full'} flex flex-col border-r border-white/20`}>
-                        <div className="p-5 flex items-center gap-3 border-b border-white/20">
+                    <div className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] glass-strong z-50 transform transition-transform duration-300 ease-out ${open ? 'translate-x-0' : '-translate-x-full'} flex flex-col shadow-2xl`}>
+                        <div className="p-5 flex items-center gap-4 border-b border-white/20">
                             <img src={data.profile.avatar} className="w-14 h-14 rounded-full object-cover border-2 border-blue-500 shadow-md" alt="Avt" />
                             <div className="flex-1 min-w-0">
-                                <p className="font-bold flex items-center text-sm truncate">{data.profile.name}{data.profile.verified && <VerifiedIcon size={16} />}</p>
-                                <p className="text-[11px] opacity-60 truncate">@{ADMIN_USER}</p>
+                                <p className="font-bold flex items-center text-base truncate">{data.profile.name}{data.profile.verified && <VerifiedIcon size={16} />}</p>
+                                <p className="text-xs text-gray-500 truncate mt-0.5">@{ADMIN_USER}</p>
                             </div>
-                            <button onClick={onClose} className="p-2 glass rounded-full hover:bg-white/20 transition"><i data-lucide="x" size="18"></i></button>
+                            <button onClick={onClose} className="p-2 glass rounded-full hover:bg-red-500 hover:text-white transition-colors"><i data-lucide="x" size="18"></i></button>
                         </div>
                         
                         <div className="flex-1 overflow-y-auto p-4 space-y-1.5 no-scrollbar">
@@ -978,23 +931,23 @@
                                     <button onClick={() => {
                                         if (it.expandable) setExpanded(expanded === it.id ? null : it.id);
                                         else { onNavigate(it.id); onClose(); }
-                                    }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all hover:bg-white/40 dark:hover:bg-white/10 ${activePage === it.id ? 'text-blue-500 bg-white/30' : ''}`}>
-                                        <i data-lucide={it.icon} size="20" className={activePage === it.id ? 'text-blue-500' : 'text-blue-400'}></i>
+                                    }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all ${activePage === it.id ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'hover:bg-white/40 dark:hover:bg-slate-800/40'}`}>
+                                        <i data-lucide={it.icon} size="18" className={activePage === it.id ? 'text-white' : 'text-blue-500'}></i>
                                         <span className="flex-1 text-left">{it.label}</span>
-                                        {it.expandable && <i data-lucide={expanded === it.id ? 'chevron-down' : 'chevron-right'} size="16" className="opacity-50"></i>}
+                                        {it.expandable && <i data-lucide={expanded === it.id ? 'chevron-down' : 'chevron-right'} size="16"></i>}
                                     </button>
                                     
                                     {it.expandable && expanded === it.id && (
-                                        <div className="ml-8 mt-1 space-y-1">
+                                        <div className="ml-8 mt-1 space-y-1 border-l-2 border-blue-500/30 pl-2">
                                             {CATEGORIES.map(c => (
                                                 <div key={c.name}>
-                                                    <button onClick={() => { onNavigate('shop', c.name); onClose(); }} className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium hover:bg-white/30 dark:hover:bg-white/10 transition">
+                                                    <button onClick={() => { onNavigate('shop', c.name); onClose(); }} className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium hover:bg-blue-500/10 transition-colors">
                                                         {c.name}
                                                     </button>
                                                     {c.subs.length > 0 && (
-                                                        <div className="ml-3 border-l border-white/20 pl-2">
+                                                        <div className="ml-2">
                                                             {c.subs.map(s => (
-                                                                <button key={s} onClick={() => { onNavigate('shop', s); onClose(); }} className="w-full text-left px-3 py-1.5 rounded-lg text-[11px] opacity-70 hover:bg-white/30 dark:hover:bg-white/10 hover:opacity-100 transition">• {s}</button>
+                                                                <button key={s} onClick={() => { onNavigate('shop', s); onClose(); }} className="w-full text-left px-3 py-1.5 rounded-lg text-[11px] hover:bg-blue-500/10 text-gray-600 dark:text-gray-400 transition-colors">• {s}</button>
                                                             ))}
                                                         </div>
                                                     )}
@@ -1005,14 +958,14 @@
                                 </div>
                             ))}
                             
-                            <div className="pt-3 border-t border-white/20 mt-3">
+                            <div className="pt-4 border-t border-white/20 mt-4">
                                 {isAdmin ? (
-                                    <button onClick={() => { onNavigate('admin'); onClose(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-red-500 hover:bg-red-500/10 transition">
-                                        <i data-lucide="shield-check" size="20"></i> Admin Panel
+                                    <button onClick={() => { onNavigate('admin'); onClose(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-red-500 to-orange-500 shadow-lg shadow-red-500/30 active:scale-95 transition-all">
+                                        <i data-lucide="shield-check" size="18"></i> Vào Admin Panel
                                     </button>
                                 ) : (
-                                    <button onClick={() => { onNavigate('admin-login'); onClose(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold hover:bg-white/20 transition">
-                                        <i data-lucide="lock" size="20"></i> Đăng nhập Admin
+                                    <button onClick={() => { onNavigate('admin-login'); onClose(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold hover:bg-gray-500/10 transition-colors">
+                                        <i data-lucide="lock" size="18" className="text-gray-500"></i> Đăng nhập Admin
                                     </button>
                                 )}
                             </div>
@@ -1022,57 +975,109 @@
             );
         }
 
-        function Accessibility({ effect, setEffect, musicOn, setMusicOn, track, setTrack, lang, setLang }) {
+        /* ================= DRAGGABLE FAB & MUSIC ================= */
+        function Accessibility({ effect, setEffect, musicOn, setMusicOn, track, setTrack }) {
             const [open, setOpen] = useState(false);
-            const effects = ['none', 'snow', 'flower', 'lava'];
-            
+            const [pos, setPos] = useState({ x: window.innerWidth - 70, y: 100 });
+            const [isDragging, setIsDragging] = useState(false);
+            const dragRef = useRef(null);
+            const effects = ['none', 'snow', 'flower'];
+
+            // Xử lý kéo thả
+            const onPointerDown = (e) => {
+                setIsDragging(false);
+                const startX = e.clientX || e.touches[0].clientX;
+                const startY = e.clientY || e.touches[0].clientY;
+                const startPosX = pos.x;
+                const startPosY = pos.y;
+
+                const onPointerMove = (ev) => {
+                    setIsDragging(true);
+                    const clientX = ev.clientX || ev.touches[0].clientX;
+                    const clientY = ev.clientY || ev.touches[0].clientY;
+                    const dx = clientX - startX;
+                    const dy = clientY - startY;
+                    
+                    // Giới hạn trong màn hình
+                    let newX = Math.max(10, Math.min(window.innerWidth - 60, startPosX + dx));
+                    let newY = Math.max(10, Math.min(window.innerHeight - 60, startPosY + dy));
+                    
+                    setPos({ x: newX, y: newY });
+                };
+
+                const onPointerUp = () => {
+                    document.removeEventListener('pointermove', onPointerMove);
+                    document.removeEventListener('pointerup', onPointerUp);
+                    setTimeout(() => setIsDragging(false), 100);
+                };
+
+                document.addEventListener('pointermove', onPointerMove);
+                document.addEventListener('pointerup', onPointerUp);
+            };
+
+            const handleClick = () => {
+                if (!isDragging) setOpen(!open);
+            };
+
             return (
                 <>
-                    {/* Nút trợ năng nhỏ gọn, lơ lửng */}
-                    <button onClick={() => setOpen(!open)} className="fixed top-24 right-4 z-40 w-10 h-10 rounded-full glass flex items-center justify-center shadow-xl hover:scale-110 transition-transform active:scale-90">
-                        <i data-lucide="settings-2" size="20" className="text-blue-500"></i>
-                    </button>
+                    {/* Nút FAB nhỏ gọn, có thể kéo */}
+                    <div 
+                        id="fab-container"
+                        style={{ left: pos.x, top: pos.y }}
+                        onPointerDown={onPointerDown}
+                        onClick={handleClick}
+                        className="w-12 h-12 glass-strong rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform"
+                    >
+                        <i data-lucide={open ? "x" : "sparkles"} size="20" className="text-blue-500 pointer-events-none"></i>
+                    </div>
                     
+                    {/* Menu Tiện ích */}
                     {open && (
-                        <div className="fixed top-36 right-4 z-40 w-72 glass rounded-3xl p-4 animate-pop shadow-2xl border border-white/30">
+                        <div 
+                            style={{ left: Math.max(10, pos.x - 250), top: pos.y + 50 }} 
+                            className="fixed z-50 w-64 glass-strong rounded-3xl p-4 animate-fade-in shadow-2xl border border-white/40"
+                        >
                             <div className="flex justify-between items-center mb-3">
-                                <p className="text-sm font-extrabold flex items-center gap-2"><i data-lucide="sliders-horizontal" size="16"></i> Tiện ích</p>
-                                <button onClick={() => setOpen(false)} className="p-1 glass rounded-full hover:bg-white/20"><i data-lucide="x" size="14"></i></button>
+                                <p className="text-sm font-bold text-blue-500">Tiện ích</p>
                             </div>
                             
                             <div className="mb-4">
-                                <p className="text-[10px] font-bold opacity-60 mb-1.5 uppercase tracking-wider">Hiệu ứng nền</p>
-                                <div className="grid grid-cols-4 gap-1.5">
+                                <p className="text-[11px] font-bold text-gray-500 mb-2">Hiệu ứng nền</p>
+                                <div className="grid grid-cols-3 gap-2">
                                     {effects.map(e => (
-                                        <button key={e} onClick={() => setEffect(e)} className={`text-[10px] py-1.5 rounded-xl capitalize font-bold transition ${effect === e ? 'bg-blue-500 text-white shadow-md' : 'glass hover:bg-white/40'}`}>{e === 'none' ? 'Tắt' : e}</button>
+                                        <button key={e} onClick={() => setEffect(e)} className={`text-[10px] font-bold py-1.5 rounded-xl capitalize transition-all ${effect === e ? 'bg-blue-500 text-white shadow-md' : 'glass hover:bg-white/60'}`}>{e === 'none' ? 'Tắt' : e}</button>
                                     ))}
                                 </div>
                             </div>
 
-                            <div className="mb-4">
-                                <p className="text-[10px] font-bold opacity-60 mb-1.5 uppercase tracking-wider">Ngôn ngữ</p>
-                                <div className="flex gap-2">
-                                    <button onClick={() => setLang('vi')} className={`flex-1 text-xs py-1.5 rounded-xl font-bold ${lang === 'vi' ? 'bg-blue-500 text-white' : 'glass'}`}>Tiếng Việt</button>
-                                    <button onClick={() => setLang('en')} className={`flex-1 text-xs py-1.5 rounded-xl font-bold ${lang === 'en' ? 'bg-blue-500 text-white' : 'glass'}`}>English</button>
-                                </div>
-                            </div>
-
-                            <div>
+                            <div className="mb-2 border-t border-white/20 pt-3">
                                 <div className="flex justify-between items-center mb-2">
-                                    <p className="text-[10px] font-bold opacity-60 uppercase tracking-wider">Nhạc nền</p>
-                                    <button onClick={() => setMusicOn(!musicOn)} className={`px-3 py-1 rounded-full text-[10px] font-bold transition ${musicOn ? 'bg-green-500 text-white shadow-md' : 'bg-gray-300 text-gray-600'}`}>{musicOn ? 'BẬT' : 'TẮT'}</button>
+                                    <p className="text-[11px] font-bold text-gray-500">Nhạc nền</p>
+                                    <button onClick={() => setMusicOn(!musicOn)} className={`px-3 py-1 rounded-full text-[10px] font-bold transition-colors ${musicOn ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>{musicOn ? 'BẬT' : 'TẮT'}</button>
                                 </div>
-                                
-                                {/* Nhạc luôn tồn tại trong DOM, chỉ ẩn/hiện UI */}
-                                <div className={`overflow-hidden transition-all duration-300 ${musicOn ? 'h-auto opacity-100' : 'h-0 opacity-0'}`}>
-                                    <div className="rounded-xl overflow-hidden glass mb-2 border border-white/20">
-                                        <iframe width="100%" height="60" scrolling="no" frameBorder="no" allow="autoplay" src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(SC_TRACKS[track])}&color=%233b82f6&auto_play=${musicOn}&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false`}></iframe>
+                                {musicOn && (
+                                    <div className="space-y-2">
+                                        <button onClick={() => setTrack((track + 1) % SC_TRACKS.length)} className="w-full glass rounded-xl py-2 text-[11px] font-bold flex justify-center items-center gap-2 hover:bg-white/60 transition">
+                                            <i data-lucide="skip-forward" size="14"></i> Đổi bài hát
+                                        </button>
                                     </div>
-                                    <button onClick={() => setTrack((track + 1) % SC_TRACKS.length)} className="w-full glass rounded-xl py-2 text-xs font-bold flex justify-center items-center gap-1 hover:bg-white/40 transition">
-                                        <i data-lucide="skip-forward" size="14"></i> Bài kế tiếp
-                                    </button>
-                                </div>
+                                )}
                             </div>
+                        </div>
+                    )}
+
+                    {/* Persistent Music Player (Không bị unmount làm tắt nhạc) */}
+                    {musicOn && (
+                        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 w-72 h-0 opacity-0 pointer-events-none z-0">
+                            <iframe 
+                                width="100%" 
+                                height="100" 
+                                scrolling="no" 
+                                frameBorder="no" 
+                                allow="autoplay" 
+                                src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(SC_TRACKS[track])}&color=%233b82f6&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false`}
+                            ></iframe>
                         </div>
                     )}
                 </>
@@ -1085,13 +1090,11 @@
             const [darkMode, setDarkMode] = useState(() => ls.get('darkMode', true));
             const [effect, setEffect] = useState(() => ls.get('effect', 'snow'));
             const [musicOn, setMusicOn] = useState(() => ls.get('musicOn', false));
-            const [lang, setLang] = useState(() => ls.get('lang', 'vi'));
             const [track, setTrack] = useState(0);
             const [activePage, setActivePage] = useState('profile');
             const [shopFilter, setShopFilter] = useState('');
             const [drawerOpen, setDrawerOpen] = useState(false);
             const [isAdmin, setIsAdmin] = useState(() => ls.get('isAdmin', false));
-            const [scrolled, setScrolled] = useState(false);
 
             const [data, setDataState] = useState(() => ({
                 profile: ls.get('profile', DEFAULT_PROFILE),
@@ -1112,14 +1115,6 @@
             useEffect(() => { ls.set('effect', effect); }, [effect]);
             useEffect(() => { ls.set('musicOn', musicOn); }, [musicOn]);
             useEffect(() => { ls.set('isAdmin', isAdmin); }, [isAdmin]);
-            useEffect(() => { ls.set('lang', lang); }, [lang]);
-            
-            // Hiệu ứng scroll header
-            useEffect(() => {
-                const handleScroll = () => setScrolled(window.scrollY > 20);
-                window.addEventListener('scroll', handleScroll);
-                return () => window.removeEventListener('scroll', handleScroll);
-            }, []);
 
             const navigate = (page, filter) => {
                 setActivePage(page);
@@ -1128,79 +1123,93 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
 
-            const [dismissed, setDismissed] = useState(() => ls.get('notifDismissed', {}));
-            const visibleNotifs = data.notifications.filter(n => (dismissed[n.id] || 0) < Date.now());
-
             return (
-                <div className="max-w-3xl mx-auto p-4 pb-32">
+                <div className="max-w-4xl mx-auto p-3 pt-5 pb-32">
                     <Effects type={effect} />
                     
-                    {/* Nút Setting chìm */}
-                    <Accessibility effect={effect} setEffect={setEffect} musicOn={musicOn} setMusicOn={setMusicOn} track={track} setTrack={setTrack} lang={lang} setLang={setLang} />
-                    
-                    {/* Header Glass (Chỉ hiện khi scroll) */}
-                    <header className={`fixed top-0 left-0 w-full z-30 transition-all duration-300 px-4 py-3 ${scrolled ? 'glass shadow-lg' : 'bg-transparent'}`}>
-                        <div className="max-w-3xl mx-auto flex justify-between items-center">
-                            <h1 className="text-lg font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-cyan-400">{data.siteName}</h1>
-                            <button onClick={() => setDarkMode(!darkMode)} className="w-10 h-10 glass rounded-full flex items-center justify-center shadow-md active:scale-90 transition">
-                                <i data-lucide={darkMode ? 'sun' : 'moon'} size="18" className="text-yellow-500"></i>
+                    {/* Thanh Menu Trên đã được xóa hoàn toàn, thay vào đó là nút Setting nhỏ gọn */}
+                    <div className="flex justify-between items-center mb-5 px-2">
+                        <h1 className="text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-cyan-400">{data.siteName}</h1>
+                        <div className="flex gap-2">
+                            <button onClick={() => setDarkMode(!darkMode)} className="p-2.5 glass-strong rounded-full shadow-md active:scale-90 transition-all">
+                                <i data-lucide={darkMode ? 'sun' : 'moon'} size="18"></i>
+                            </button>
+                            <button onClick={() => setDrawerOpen(true)} className="p-2.5 glass-strong rounded-full shadow-md active:scale-90 transition-all">
+                                <i data-lucide="menu" size="18" className="text-blue-500"></i>
                             </button>
                         </div>
-                    </header>
-
-                    <div className="mt-14"></div>
-
-                    {/* Notification Banners */}
-                    {visibleNotifs.length > 0 && (
-                        <div className="space-y-2 mb-5">
-                            {visibleNotifs.map(n => (
-                                <div key={n.id} className="glass rounded-2xl p-4 flex items-start gap-3 animate-fade-in border border-white/30 shadow-md">
-                                    <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-                                        <i data-lucide="bell" size="16" className="text-blue-500"></i>
-                                    </div>
-                                    <p className="flex-1 text-sm font-medium pt-1">{n.text}</p>
-                                    <button onClick={() => { const nd = { ...dismissed, [n.id]: Date.now() + 12 * 3600 * 1000 }; ls.set('notifDismissed', nd); setDismissed(nd); }} className="text-gray-400 hover:text-red-500 transition p-1"><i data-lucide="x" size="16"></i></button>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                    </div>
 
                     {/* Page Content */}
                     <div className="min-h-[70vh]">
                         {activePage === 'profile' && <ProfileHome profile={data.profile} posts={data.posts} onNavigate={navigate} />}
                         {activePage === 'shop' && <Shop products={data.products} filter={shopFilter} setFilter={setShopFilter} />}
-                        {activePage === 'posts' && <PostsPage posts={data.posts} />}
-                        {activePage === 'notifications' && <NotificationsPage notifications={data.notifications} />}
+                        {activePage === 'posts' && (
+                            <div className="animate-fade-in space-y-4">
+                                <h2 className="text-2xl font-bold mb-4">Bài Viết</h2>
+                                {data.posts.length === 0 && <p className="text-center text-gray-500 py-10">Chưa có bài viết</p>}
+                                {[...data.posts].reverse().map(p => (
+                                    <div key={p.id} className="glass p-5 rounded-3xl shadow-lg">
+                                        {p.image && <img src={p.image} className="w-full h-48 object-cover rounded-2xl mb-4" alt="" />}
+                                        <h3 className="font-bold text-lg text-blue-500">{p.title}</h3>
+                                        <p className="text-xs text-gray-500 mt-1">{new Date(p.date).toLocaleDateString('vi-VN')}</p>
+                                        <p className="text-sm mt-3 text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">{p.content}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        {activePage === 'notifications' && (
+                            <div className="animate-fade-in space-y-3">
+                                <h2 className="text-2xl font-bold mb-4">Thông Báo</h2>
+                                {data.notifications.length === 0 && <p className="text-center text-gray-500 py-10">Không có thông báo</p>}
+                                {[...data.notifications].reverse().map(n => (
+                                    <div key={n.id} className="glass p-4 rounded-2xl flex gap-3 shadow-md">
+                                        <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                                            <i data-lucide="bell" size="20" className="text-blue-500"></i>
+                                        </div>
+                                        <div className="flex-1 pt-1">
+                                            <p className="text-sm font-medium">{n.text}</p>
+                                            <p className="text-xs text-gray-500 mt-1">{new Date(n.createdAt).toLocaleString('vi-VN')}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                         {activePage === 'weather' && <Weather />}
-                        {activePage === 'ipcheck' && <IpCheck />}
-                        {activePage === 'speedtest' && <SpeedTest />}
-                        {activePage === 'notes' && <Notes />}
                         {activePage === 'tempmail' && <TempMail />}
                         {activePage === 'contact' && <ContactPage profile={data.profile} />}
                         {activePage === 'admin-login' && <AdminLogin onLogin={() => { setIsAdmin(true); navigate('admin'); }} />}
                         {activePage === 'admin' && (isAdmin ? <AdminPanel data={data} setData={setData} onLogout={() => { setIsAdmin(false); navigate('profile'); }} /> : <AdminLogin onLogin={() => { setIsAdmin(true); navigate('admin'); }} />)}
+                        
+                        {/* Các trang placeholder cho đủ tính năng */}
+                        {['ipcheck', 'notes'].includes(activePage) && (
+                            <div className="glass p-10 rounded-3xl text-center animate-fade-in shadow-xl">
+                                <i data-lucide="tool" size="48" className="text-blue-500 mx-auto mb-4 animate-bounce"></i>
+                                <h2 className="text-xl font-bold">Tính năng đang bảo trì</h2>
+                                <p className="text-sm text-gray-500 mt-2">Chức năng này sẽ được cập nhật trong phiên bản tới.</p>
+                            </div>
+                        )}
                     </div>
 
+                    {/* Floating Tools */}
+                    <Accessibility effect={effect} setEffect={setEffect} musicOn={musicOn} setMusicOn={setMusicOn} track={track} setTrack={setTrack} />
+                    
                     {/* Drawer Menu */}
                     <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} activePage={activePage} onNavigate={navigate} data={data} isAdmin={isAdmin} />
 
-                    {/* Bottom Nav (Floating iOS Dock) */}
-                    <nav className="fixed bottom-5 left-1/2 -translate-x-1/2 w-[90%] max-w-sm glass rounded-[2.5rem] p-2 flex justify-between items-center z-30 shadow-2xl border border-white/30 backdrop-blur-3xl">
-                        <button onClick={() => setDrawerOpen(true)} className={`dock-item flex-1 flex flex-col items-center py-2.5 rounded-3xl ${drawerOpen ? 'dock-active' : 'text-gray-500 hover:text-blue-500'}`}>
-                            <i data-lucide="menu" size="22"></i>
-                            <span className="text-[10px] font-bold mt-1">Menu</span>
+                    {/* Bottom iOS Nav (Nhỏ gọn, kính mờ) */}
+                    <nav className="fixed bottom-5 left-1/2 -translate-x-1/2 w-[85%] max-w-sm glass-strong rounded-[2rem] p-2 flex justify-around items-center z-40 shadow-[0_10px_40px_rgba(0,0,0,0.2)] border border-white/40">
+                        <button onClick={() => navigate('profile')} className={`dock-item flex flex-col items-center p-2 w-16 rounded-2xl ${activePage === 'profile' ? 'bg-blue-500 text-white shadow-md' : 'text-gray-500 hover:bg-white/50 dark:hover:bg-slate-800/50'}`}>
+                            <i data-lucide="home" size="20"></i><span className="text-[9px] font-bold mt-1">Home</span>
                         </button>
-                        <button onClick={() => navigate('shop')} className={`dock-item flex-1 flex flex-col items-center py-2.5 rounded-3xl ${activePage === 'shop' ? 'dock-active' : 'text-gray-500 hover:text-blue-500'}`}>
-                            <i data-lucide="shopping-bag" size="22"></i>
-                            <span className="text-[10px] font-bold mt-1">Shop</span>
+                        <button onClick={() => navigate('shop')} className={`dock-item flex flex-col items-center p-2 w-16 rounded-2xl ${activePage === 'shop' ? 'bg-blue-500 text-white shadow-md' : 'text-gray-500 hover:bg-white/50 dark:hover:bg-slate-800/50'}`}>
+                            <i data-lucide="shopping-bag" size="20"></i><span className="text-[9px] font-bold mt-1">Shop</span>
                         </button>
-                        <button onClick={() => navigate('weather')} className={`dock-item flex-1 flex flex-col items-center py-2.5 rounded-3xl ${activePage === 'weather' ? 'dock-active' : 'text-gray-500 hover:text-blue-500'}`}>
-                            <i data-lucide="cloud-sun" size="22"></i>
-                            <span className="text-[10px] font-bold mt-1">Weather</span>
+                        <button onClick={() => navigate('weather')} className={`dock-item flex flex-col items-center p-2 w-16 rounded-2xl ${activePage === 'weather' ? 'bg-blue-500 text-white shadow-md' : 'text-gray-500 hover:bg-white/50 dark:hover:bg-slate-800/50'}`}>
+                            <i data-lucide="cloud-sun" size="20"></i><span className="text-[9px] font-bold mt-1">Weather</span>
                         </button>
-                        <button onClick={() => navigate('contact')} className={`dock-item flex-1 flex flex-col items-center py-2.5 rounded-3xl ${activePage === 'contact' ? 'dock-active' : 'text-gray-500 hover:text-blue-500'}`}>
-                            <i data-lucide="phone" size="22"></i>
-                            <span className="text-[10px] font-bold mt-1">Contact</span>
+                        <button onClick={() => navigate('contact')} className={`dock-item flex flex-col items-center p-2 w-16 rounded-2xl ${activePage === 'contact' ? 'bg-blue-500 text-white shadow-md' : 'text-gray-500 hover:bg-white/50 dark:hover:bg-slate-800/50'}`}>
+                            <i data-lucide="phone" size="20"></i><span className="text-[9px] font-bold mt-1">Contact</span>
                         </button>
                     </nav>
                 </div>
