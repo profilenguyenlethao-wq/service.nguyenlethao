@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Service Processing Support</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden; 
+            transition: background 0.3s, color 0.3s; 
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        .dark body {
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+
+        /* Liquid Glass Effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animations */
+        .snowflake { position: fixed; top: -10px; color: #fff; font-size: 1em; pointer-events: none; animation: fall linear forwards; z-index: 0; }
+        @keyframes fall { to { transform: translateY(105vh); } }
+        
+        .flower { position: fixed; top: -10px; font-size: 1.5em; pointer-events: none; animation: fall linear forwards; z-index: 0; }
+        .fog { position: fixed; bottom: 0; left: 0; width: 100%; height: 30vh; background: linear-gradient(to top, rgba(255,255,255,0.8), transparent); pointer-events: none; z-index: 0; }
+        .dark .fog { background: linear-gradient(to top, rgba(15,23,42,0.8), transparent); }
+
+        /* Hide Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* iPhone Dock Animation */
+        .dock-item { transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .dock-item:active { transform: scale(0.85); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: { primary: '#3b82f6', darkBg: '#0f172a' }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen pb-24 md:pb-0 relative">
+
+    <!-- Background Effects Layer -->
+    <div id="effect-layer" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- React Root -->
+    <div id="root" class="relative z-10"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- DATA MẶC ĐỊNH ---
+        const DEFAULT_PRODUCTS = [
+            { id: 1, category: "Shop Liên Quân", name: "Acc Kim Cương 100+", price: "500.000đ", desc: "Full tướng, ngọc đỏ", stock: 5 },
+            { id: 2, category: "Shop Free Fire", name: "Acc FF Thách Đấu", price: "300.000đ", desc: "Full nhân vật, súng đẹp", stock: 2 },
+            { id: 3, category: "Meta", name: "UNLOCK 282", price: "150.000đ", desc: "Mở khóa tính năng 282", stock: 10 },
+            { id: 4, category: "TikTok", name: "UNLOCK LIVE", price: "200.000đ", desc: "Mở live tiktok", stock: 0 }
+        ];
+
+        const DEFAULT_POSTS = [
+            { id: 1, title: "Hướng dẫn mua hàng", content: "Vui lòng liên hệ Telegram để được hỗ trợ thanh toán và nhận hàng." },
+            { id: 2, title: "Cập nhật bảo mật Meta", content: "Hệ thống đã cập nhật quy trình mới cho UNLOCK 956." }
+        ];
+
+        // Nhạc SoundCloud (Đã lấy link gốc từ yêu cầu của bạn)
+        const SC_TRACKS = [
+            "https://soundcloud.com/quang-huynhh/v-b-n-anh-remix-jack-j97-x", // Bài 1
+            "https://soundcloud.com/doyu-358490204/jack-j97-ng-i-d-ng-wen-remix", // Bài 2
+            "https://soundcloud.com/khôi/luu-nien-x-thoi-di-vay" 
+        ];
+
+        // --- COMPONENTS ---
+        
+        // 1. Quản lý hiệu ứng
+        function EffectManager({ type }) {
+            useEffect(() => {
+                const layer = document.getElementById('effect-layer');
+                if(!layer) return;
+                layer.innerHTML = ''; // Clear cũ
+                
+                if (type === 'snow') {
+                    const interval = setInterval(() => {
+                        const el = document.createElement('div');
+                        el.innerHTML = '❄'; el.className = 'snowflake';
+                        el.style.left = Math.random() * 100 + 'vw';
+                        el.style.animationDuration = Math.random() * 3 + 2 + 's';
+                        el.style.opacity = Math.random();
+                        layer.appendChild(el);
+                        setTimeout(() => el.remove(), 5000);
+                    }, 200);
+                    return () => clearInterval(interval);
+                } 
+                else if (type === 'flower') {
+                    const flowers = ['🌸', '🌺', '🌼', '🍁'];
+                    const interval = setInterval(() => {
+                        const el = document.createElement('div');
+                        el.innerHTML = flowers[Math.floor(Math.random()*flowers.length)]; el.className = 'flower';
+                        el.style.left = Math.random() * 100 + 'vw';
+                        el.style.animationDuration = Math.random() * 4 + 3 + 's';
+                        layer.appendChild(el);
+                        setTimeout(() => el.remove(), 7000);
+                    }, 400);
+                    return () => clearInterval(interval);
+                }
+                else if (type === 'fog') {
+                    layer.innerHTML = '<div class="fog"></div>';
+                }
+            }, [type]);
+            return null;
+        }
+
+        // 2. Tiện ích Thời tiết (Full tính năng)
+        function WeatherWidget({ t }) {
+            const [weather, setWeather] = useState(null);
+            const [loading, setLoading] = useState(false);
+            const cities = [
+                { name: "Quy Nhơn", lat: 13.78, lon: 109.22 },
+                { name: "Nha Trang", lat: 12.24, lon: 109.19 },
+                { name: "Đà Nẵng", lat: 16.05, lon: 108.20 },
+                { name: "Hà Nội", lat: 21.03, lon: 105.85 },
+                { name: "HCM", lat: 10.82, lon: 106.63 }
+            ];
+
+            const getWeather = async (lat, lon, name) => {
+                setLoading(true);
+                try {
+                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability&timezone=Asia/Ho_Chi_Minh`);
+                    const data = await res.json();
+                    setWeather({ name, current: data.current, hourly: data.hourly });
+                } catch (e) { console.error(e); }
+                setLoading(false);
+            };
+
+            const checkMyLocation = async () => {
+                setLoading(true);
+                try {
+                    const res = await fetch('https://ipapi.co/json/');
+                    const data = await res.json();
+                    if(data.latitude) getWeather(data.latitude, data.longitude, `Vị trí: ${data.city}`);
+                } catch (e) { console.error(e); }
+                setLoading(false);
+            };
+
+            return (
+                <div className="glass p-5 rounded-2xl mb-4">
+                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="cloud-sun"></i> {t.weather}</h2>
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+                        {cities.map(c => (
+                            <button key={c.name} onClick={() => getWeather(c.lat, c.lon, c.name)} className="whitespace-nowrap bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-semibold">{c.name}</button>
+                        ))}
+                        <button onClick={checkMyLocation} className="whitespace-nowrap bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1"><i data-lucide="map-pin" size="14"></i> {t.myLocation}</button>
+                    </div>
+                    {loading ? <p className="mt-3 text-sm text-center animate-pulse">Đang tải...</p> : weather && (
+                        <div className="mt-4 space-y-4">
+                            <div className="bg-white/50 dark:bg-black/20 p-4 rounded-xl flex justify-between items-center">
+                                <div>
+                                    <p className="font-bold text-lg">{weather.name}</p>
+                                    <p className="text-xs text-gray-500">Độ ẩm: {weather.current.relative_humidity_2m}% | Gió: {weather.current.wind_speed_10m} km/h</p>
+                                </div>
+                                <p className="text-4xl font-extrabold text-blue-500">{weather.current.temperature_2m}°C</p>
+                            </div>
+                            {/* Dự báo 24H */}
+                            <div className="overflow-x-auto no-scrollbar flex gap-4 bg-white/30 dark:bg-black/10 p-3 rounded-xl">
+                                {weather.hourly.time.slice(0, 12).map((time, idx) => (
+                                    <div key={idx} className="text-center min-w-[60px]">
+                                        <p className="text-xs text-gray-500">{time.split('T')[1]}</p>
+                                        <p className="font-bold">{weather.hourly.temperature_2m[idx]}°</p>
+                                        <p className="text-[10px] text-blue-500">{weather.hourly.precipitation_probability[idx]}% mưa</p>
+                                    </div>
+                                ))}
+                            </div>
+                            {/* Cảnh báo thiên tai Miền Trung */}
+                            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-3 rounded-xl text-sm">
+                                <p className="font-bold text-red-600 dark:text-red-400 flex items-center gap-1"><i data-lucide="alert-triangle" size="16"></i> Cảnh báo khu vực Miền Trung</p>
+                                <p className="mt-1 text-gray-700 dark:text-gray-300">Thường xuyên có mưa lớn, lũ quét, sạt lở đất vào cuối năm. <strong>Cách phòng tránh:</strong> Gia cố nhà cửa, không đi qua suối/rốn khi trời mưa lớn, chuẩn bị đèn pin và lương thực.</p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // 3. Check Tốc độ mạng
+        function SpeedTestWidget({ t }) {
+            const [speed, setSpeed] = useState(null);
+            const [testing, setTesting] = useState(false);
+
+            const testSpeed = async () => {
+                setTesting(true); setSpeed(null);
+                const startTime = performance.now();
+                try {
+                    // Tải 1 file ảnh 5MB từ CDN để test
+                    await fetch('https://upload.wikimedia.org/wikipedia/commons/3/3d/LARGE_elevation.jpg?cache=' + Date.now(), { cache: 'no-store' });
+                    const endTime = performance.now();
+                    const duration = (endTime - startTime) / 1000;
+                    const fileSize = 5000000; // 5MB
+                    const speedMbps = ((fileSize * 8) / (duration * 1000000)).toFixed(2);
+                    setSpeed(speedMbps);
+                } catch (e) { alert("Lỗi test mạng!"); }
+                setTesting(false);
+            };
+
+            return (
+                <div className="glass p-5 rounded-2xl mb-4">
+                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="wifi"></i> {t.speedTest}</h2>
+                    <button onClick={testSpeed} disabled={testing} className="w-full bg-purple-500 text-white py-2 rounded-lg font-bold shadow-lg shadow-purple-500/30">
+                        {testing ? 'Đang test...' : 'Bắt đầu test (WiFi/4G)'}
+                    </button>
+                    {speed && (
+                        <div className="mt-4 text-center bg-white/50 dark:bg-black/20 p-4 rounded-xl">
+                            <p className="text-sm text-gray-500">Tốc độ tải xuống</p>
+                            <p className="text-3xl font-extrabold text-purple-500">{speed} <span className="text-lg">Mbps</span></p>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // 4. Check IP
+        function IpCheckWidget({ t }) {
+            const [ip, setIp] = useState(null);
+            const check = async () => {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                setIp(data);
+            };
+            return (
+                <div className="glass p-5 rounded-2xl mb-4">
+                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="globe"></i> {t.ipCheck}</h2>
+                    <button onClick={check} className="w-full bg-blue-500 text-white py-2 rounded-lg font-bold shadow-lg shadow-blue-500/30">Check IP Ngay</button>
+                    {ip && (
+                        <div className="mt-4 text-sm space-y-2 bg-white/50 dark:bg-black/20 p-4 rounded-xl">
+                            <div className="flex justify-between border-b pb-1"><span className="text-gray-500">IP:</span> <span className="font-bold">{ip.ip}</span></div>
+                            <div className="flex justify-between border-b pb-1"><span className="text-gray-500">Local/Proxy:</span> <span>{ip.country_code === 'VN' ? 'Local (VN)' : 'Proxy/VPN'}</span></div>
+                            <div className="flex justify-between border-b pb-1"><span className="text-gray-500">Thành phố:</span> <span>{ip.city}</span></div>
+                            <div className="flex justify-between border-b pb-1"><span className="text-gray-500">Mã bưu chính:</span> <span>{ip.postal}</span></div>
+                            <div className="flex justify-between"><span className="text-gray-500">Quốc gia:</span> <span>{ip.country_name}</span></div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // 5. Note (Ghi chú)
+        function NoteWidget({ t }) {
+            const [notes, setNotes] = useState(() => JSON.parse(localStorage.getItem('notes') || '[]'));
+            const [input, setInput] = useState('');
+            
+            const addNote = () => {
+                if(!input) return;
+                const newNotes = [...notes, { id: Date.now(), text: input }];
+                setNotes(newNotes); localStorage.setItem('notes', JSON.stringify(newNotes)); setInput('');
+            };
+            const delNote = (id) => {
+                const newNotes = notes.filter(n => n.id !== id);
+                setNotes(newNotes); localStorage.setItem('notes', JSON.stringify(newNotes));
+            };
+            return (
+                <div className="glass p-5 rounded-2xl mb-4">
+                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="sticky-note"></i> {t.notes}</h2>
+                    <div className="flex gap-2">
+                        <input value={input} onChange={e=>setInput(e.target.value)} className="flex-1 bg-white/50 dark:bg-black/20 border border-gray-300 dark:border-gray-700 rounded-lg p-2 text-sm outline-none focus:ring-2 ring-blue-500" placeholder="Nhập ghi chú..." />
+                        <button onClick={addNote} className="bg-blue-500 text-white px-4 rounded-lg font-bold">+</button>
+                    </div>
+                    <ul className="mt-3 space-y-2 max-h-40 overflow-y-auto no-scrollbar">
+                        {notes.map(n => (
+                            <li key={n.id} className="flex justify-between items-center bg-white/50 dark:bg-black/20 p-2 rounded text-sm">
+                                <span>{n.text}</span>
+                                <button onClick={()=>delNote(n.id)} className="text-red-500 p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded"><i data-lucide="trash-2" size="16"></i></button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        }
+
+        // 6. Mail Tạm
+        function TempMailWidget({ t }) {
+            const [mail, setMail] = useState(null);
+            const [messages, setMessages] = useState([]);
+            const [loading, setLoading] = useState(false);
+            
+            const createMail = async () => {
+                setLoading(true);
+                try {
+                    const domainsRes = await fetch('https://api.mail.tm/domains');
+                    const domains = await domainsRes.json();
+                    const domain = domains['hydra:member'][0].domain;
+                    const address = `user${Math.floor(Math.random()*100000)}@${domain}`;
+                    const password = 'Password123!';
+                    
+                    await fetch('https://api.mail.tm/accounts', {
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({address, password})
+                    });
+                    
+                    const tokenRes = await fetch('https://api.mail.tm/token', {
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({address, password})
+                    });
+                    const tokenData = await tokenRes.json();
+                    
+                    localStorage.setItem('tempmail', JSON.stringify({ address, token: tokenData.token }));
+                    setMail({ address, token: tokenData.token });
+                } catch (e) { alert("Lỗi tạo mail, thử lại sau!"); }
+                setLoading(false);
+            };
+
+            const fetchMails = async () => {
+                if(!mail) return;
+                const res = await fetch('https://api.mail.tm/messages', {
+                    headers: { Authorization: `Bearer ${mail.token}` }
+                });
+                const data = await res.json();
+                setMessages(data['hydra:member'] || []);
+            };
+
+            const delMail = () => {
+                localStorage.removeItem('tempmail');
+                setMail(null); setMessages([]);
+            };
+
+            useEffect(() => {
+                const saved = localStorage.getItem('tempmail');
+                if (saved) setMail(JSON.parse(saved));
+            }, []);
+
+            return (
+                <div className="glass p-5 rounded-2xl mb-4">
+                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="mail"></i> {t.tempMail}</h2>
+                    {!mail ? (
+                        <button onClick={createMail} disabled={loading} className="w-full bg-orange-500 text-white py-2 rounded-lg font-bold shadow-lg shadow-orange-500/30">
+                            {loading ? 'Đang tạo...' : 'Tạo Mail Tạm'}
+                        </button>
+                    ) : (
+                        <div className="bg-white/50 dark:bg-black/20 p-3 rounded-xl text-sm">
+                            <p className="font-bold text-lg text-orange-500">{mail.address}</p>
+                            <div className="flex gap-2 mt-2">
+                                <button onClick={fetchMails} className="flex-1 bg-gray-200 dark:bg-gray-700 py-1 rounded">Tải hộp thư</button>
+                                <button onClick={delMail} className="flex-1 bg-red-100 text-red-600 dark:bg-red-900/30 py-1 rounded">Xóa Mail</button>
+                            </div>
+                            {messages.length > 0 && (
+                                <ul className="mt-3 space-y-1">
+                                    {messages.map(m => <li key={m.id} className="border-b pb-1">{m.subject}</li>)}
+                                </ul>
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // 7. Admin Panel
+        function AdminPanel({ products, setProducts, posts, setPosts, notification, setNotification, siteName, setSiteName, avatar, setAvatar, lang, setLang, effect, setEffect }) {
+            const [name, setName] = useState('');
+            const [price, setPrice] = useState('');
+            const [desc, setDesc] = useState('');
+            const [stock, setStock] = useState(0);
+            
+            const [postTitle, setPostTitle] = useState('');
+            const [postContent, setPostContent] = useState('');
+
+            const addProduct = (e) => {
+                e.preventDefault();
+                const newP = [...products, { id: Date.now(), category: "Shop Khác", name, price, desc, stock: Number(stock) }];
+                setProducts(newP); localStorage.setItem('products', JSON.stringify(newP));
+                setName(''); setPrice(''); setDesc(''); setStock(0);
+            };
+
+            const delProduct = (id) => {
+                const newP = products.filter(p => p.id !== id);
+                setProducts(newP); localStorage.setItem('products', JSON.stringify(newP));
+            };
+
+            const addPost = (e) => {
+                e.preventDefault();
+                const newP = [...posts, { id: Date.now(), title: postTitle, content: postContent }];
+                setPosts(newP); localStorage.setItem('posts', JSON.stringify(newP));
+                setPostTitle(''); setPostContent('');
+            };
+
+            return (
+                <div className="glass p-5 rounded-2xl mb-4 border-2 border-red-500/50">
+                    <h2 className="text-xl font-bold mb-4 text-red-500 flex items-center gap-2"><i data-lucide="shield-alert"></i> Admin Dashboard</h2>
+                    
+                    <div className="space-y-4">
+                        {/* Cài đặt chung */}
+                        <div className="bg-white/50 dark:bg-black/20 p-3 rounded-xl">
+                            <h3 className="font-bold mb-2">Cài đặt Web</h3>
+                            <input value={siteName} onChange={e=>{setSiteName(e.target.value); localStorage.setItem('siteName', e.target.value);}} className="w-full p-2 mb-2 rounded bg-white dark:bg-gray-800 text-sm" placeholder="Tên Web"/>
+                            <input value={avatar} onChange={e=>{setAvatar(e.target.value); localStorage.setItem('avatar', e.target.value);}} className="w-full p-2 mb-2 rounded bg-white dark:bg-gray-800 text-sm" placeholder="Link ảnh đại diện (URL)"/>
+                            <textarea value={notification} onChange={e=>{setNotification(e.target.value); localStorage.setItem('notification', e.target.value);}} className="w-full p-2 rounded bg-white dark:bg-gray-800 text-sm" rows="2" placeholder="Thông báo toàn web..."></textarea>
+                        </div>
+
+                        {/* Quản lý Sản phẩm */}
+                        <div className="bg-white/50 dark:bg-black/20 p-3 rounded-xl">
+                            <h3 className="font-bold mb-2">Thêm Sản Phẩm</h3>
+                            <form onSubmit={addProduct} className="space-y-2">
+                                <input value={name} onChange={e=>setName(e.target.value)} placeholder="Tên" className="w-full p-2 rounded bg-white dark:bg-gray-800 text-sm" required/>
+                                <div className="flex gap-2">
+                                    <input value={price} onChange={e=>setPrice(e.target.value)} placeholder="Giá" className="w-1/2 p-2 rounded bg-white dark:bg-gray-800 text-sm" required/>
+                                    <input type="number" value={stock} onChange={e=>setStock(e.target.value)} placeholder="Kho" className="w-1/2 p-2 rounded bg-white dark:bg-gray-800 text-sm" required/>
+                                </div>
+                                <input value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Mô tả" className="w-full p-2 rounded bg-white dark:bg-gray-800 text-sm" />
+                                <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded text-sm font-bold">Lưu Sản Phẩm</button>
+                            </form>
+                            <div className="mt-3 space-y-1 max-h-32 overflow-y-auto">
+                                {products.map(p => (
+                                    <div key={p.id} className="flex justify-between items-center bg-white dark:bg-gray-800 p-2 rounded text-xs">
+                                        <span>{p.name} - {p.price} (Kho: {p.stock})</span>
+                                        <button onClick={()=>delProduct(p.id)} className="text-red-500"><i data-lucide="x" size="14"></i></button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Quản lý Bài viết */}
+                        <div className="bg-white/50 dark:bg-black/20 p-3 rounded-xl">
+                            <h3 className="font-bold mb-2">Thêm Bài Viết</h3>
+                            <form onSubmit={addPost} className="space-y-2">
+                                <input value={postTitle} onChange={e=>setPostTitle(e.target.value)} placeholder="Tiêu đề" className="w-full p-2 rounded bg-white dark:bg-gray-800 text-sm" required/>
+                                <textarea value={postContent} onChange={e=>setPostContent(e.target.value)} placeholder="Nội dung..." className="w-full p-2 rounded bg-white dark:bg-gray-800 text-sm" required></textarea>
+                                <button type="submit" className="w-full bg-green-500 text-white py-2 rounded text-sm font-bold">Đăng Bài</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // 8. Music Player
+        function MusicPlayer({ t }) {
+            const [track, setTrack] = useState(0);
+            const [isPlaying, setIsPlaying] = useState(false);
+
+            // Xử lý SoundCloud Embed
+            const embedUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(SC_TRACKS[track])}&color=%233b82f6&auto_play=${isPlaying}&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
+
+            return (
+                <div className="fixed bottom-24 md:bottom-4 right-4 w-64 z-50 glass p-2 rounded-2xl shadow-2xl flex flex-col gap-2">
+                    <div className="flex justify-between items-center px-1">
+                        <span className="text-xs font-bold text-blue-500 flex items-center gap-1"><i data-lucide="music" size="12"></i> Nhạc Chill</span>
+                        <button onClick={()=>setTrack((track+1)%SC_TRACKS.length)} className="text-gray-500 hover:text-blue-500"><i data-lucide="skip-forward" size="16"></i></button>
+                    </div>
+                    <div className="rounded-xl overflow-hidden">
+                        <iframe width="100%" height="60" scrolling="no" frameBorder="no" allow="autoplay" src={embedUrl}></iframe>
+                    </div>
+                </div>
+            );
+        }
+
+        // 9. Menu Trợ năng (Floating Button)
+        function AccessibilityMenu({ t, setEffect, effect }) {
+            const [open, setOpen] = useState(false);
+            
+            const scrollToTop = () => window.scrollTo({top: 0, behavior: 'smooth'});
+            const scrollToBottom = () => window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+            const searchPage = () => {
+                const query = prompt("Nhập từ khóa cần tìm:");
+                if(query) alert(`Đang tìm kiếm: ${query} (Tính năng demo)`);
+            };
+
+            return (
+                <div className="fixed bottom-24 md:bottom-4 left-4 z-50 flex flex-col-reverse gap-2">
+                    <button onClick={()=>setOpen(!open)} className="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition">
+                        <i data-lucide="accessibility" size="24"></i>
+                    </button>
+                    
+                    {open && (
+                        <div className="glass p-2 rounded-2xl flex flex-col gap-2 animate-fade-in">
+                            <button onClick={scrollToTop} className="p-2 bg-white/50 dark:bg-black/50 rounded-xl hover:bg-blue-100" title="Lên đầu trang"><i data-lucide="arrow-up"></i></button>
+                            <button onClick={scrollToBottom} className="p-2 bg-white/50 dark:bg-black/50 rounded-xl hover:bg-blue-100" title="Xuống cuối trang"><i data-lucide="arrow-down"></i></button>
+                            <button onClick={searchPage} className="p-2 bg-white/50 dark:bg-black/50 rounded-xl hover:bg-blue-100" title="Tìm kiếm"><i data-lucide="search"></i></button>
+                            <button onClick={()=>{
+                                const effects = ['none', 'snow', 'flower', 'fog'];
+                                const next = effects[(effects.indexOf(effect)+1)%effects.length];
+                                setEffect(next);
+                            }} className="p-2 bg-white/50 dark:bg-black/50 rounded-xl hover:bg-blue-100 text-xs" title="Đổi hiệu ứng">
+                                <i data-lucide="sparkles"></i>
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // --- MAIN APP ---
+        function App() {
+            const [lang, setLang] = useState('vi');
+            const [darkMode, setDarkMode] = useState(true);
+            const [activeTab, setActiveTab] = useState('home'); // home, shop, posts, tools, admin
+            const [effect, setEffect] = useState('snow');
+            
+            // Dữ liệu lưu trữ LocalStorage
+            const [siteName, setSiteName] = useState(() => localStorage.getItem('siteName') || "Service Support");
+            const [avatar, setAvatar] = useState(() => localStorage.getItem('avatar') || "https://ui-avatars.com/api/?name=Admin&background=3b82f6&color=fff");
+            const [notification, setNotification] = useState(() => localStorage.getItem('notification') || "Chào mừng bạn đến với Service Processing Support!");
+            const [showNotif, setShowNotif] = useState(true);
+            const [products, setProducts] = useState(() => JSON.parse(localStorage.getItem('products') || JSON.stringify(DEFAULT_PRODUCTS)));
+            const [posts, setPosts] = useState(() => JSON.parse(localStorage.getItem('posts') || JSON.stringify(DEFAULT_POSTS)));
+
+            // Translations
+            const t = {
+                vi: { home: "Trang chủ", shop: "Sản phẩm", posts: "Bài viết", tools: "Tiện ích", admin: "Admin", weather: "Thời tiết", myLocation: "Vị trí của tôi", speedTest: "Tốc độ mạng", ipCheck: "Check IP", notes: "Ghi chú", tempMail: "Mail Tạm", contact: "Liên hệ" },
+                en: { home: "Home", shop: "Shop", posts: "Posts", tools: "Tools", admin: "Admin", weather: "Weather", myLocation: "My Location", speedTest: "Speed Test", ipCheck: "IP Check", notes: "Notes", tempMail: "Temp Mail", contact: "Contact" }
+            }[lang];
+
+            // Toggle Dark Mode
+            useEffect(() => {
+                if (darkMode) document.documentElement.classList.add('dark');
+                else document.documentElement.classList.remove('dark');
+                lucide.createIcons(); // Render icons
+            });
+
+            // Tắt thông báo 12H
+            const handleDismissNotif = () => {
+                setShowNotif(false);
+                setTimeout(() => setShowNotif(true), 12 * 60 * 60 * 1000); 
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto p-4">
+                    <EffectManager type={effect} />
+                    
+                    {/* Header */}
+                    <header className="flex justify-between items-center mb-6 glass p-4 rounded-2xl sticky top-4 z-40">
+                        <div className="flex items-center gap-3">
+                            <img src={avatar} alt="Avatar" className="w-10 h-10 rounded-full border-2 border-blue-500" />
+                            <div>
+                                <h1 className="text-lg font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-cyan-400">{siteName}</h1>
+                                <p className="text-xs text-gray-500">Processing Support</p>
+                            </div>
+                        </div>
+                        <div className="flex gap-2">
+                            <button onClick={()=>setLang(lang==='vi'?'en':'vi')} className="p-2 bg-gray-200 dark:bg-gray-800 rounded-full text-xs font-bold">{lang.toUpperCase()}</button>
+                            <button onClick={()=>setDarkMode(!darkMode)} className="p-2 bg-gray-200 dark:bg-gray-800 rounded-full">
+                                <i data-lucide={darkMode ? "sun" : "moon"} size="18"></i>
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* Notification */}
+                    {showNotif && notification && (
+                        <div className="bg-blue-100 dark:bg-blue-900/40 border border-blue-300 dark:border-blue-700 text-blue-800 dark:text-blue-200 p-3 rounded-xl mb-4 flex justify-between items-center text-sm animate-slide-down">
+                            <span><i data-lucide="bell" size="14" className="inline mr-1"></i> {notification}</span>
+                            <button onClick={handleDismissNotif} className="p-1 hover:bg-blue-200 dark:hover:bg-blue-800 rounded"><i data-lucide="x" size="16"></i></button>
+                        </div>
+                    )}
+
+                    {/* Main Content Area */}
+                    <div className="mb-24">
+                        {activeTab === 'home' && (
+                            <div className="space-y-4 animate-fade-in">
+                                <div className="glass p-6 rounded-2xl text-center">
+                                    <h2 className="text-3xl font-extrabold mb-2">Dịch Vụ Hỗ Trợ Xử Lý</h2>
+                                    <p className="text-gray-500 mb-4">Chuyên cung cấp Acc Game, Support Meta, TikTok, Google và các Tool hỗ trợ.</p>
+                                    <button onClick={()=>setActiveTab('shop')} className="bg-blue-500 text-white px-6 py-2 rounded-full font-bold shadow-lg shadow-blue-500/30">Xem Sản Phẩm</button>
+                                </div>
+                                <WeatherWidget t={t} />
+                            </div>
+                        )}
+
+                        {activeTab === 'tools' && (
+                            <div className="space-y-4 animate-fade-in">
+                                <WeatherWidget t={t} />
+                                <IpCheckWidget t={t} />
+                                <SpeedTestWidget t={t} />
+                                <NoteWidget t={t} />
+                                <TempMailWidget t={t} />
+                            </div>
+                        )}
+
+                        {activeTab === 'shop' && (
+                            <div className="space-y-4 animate-fade-in">
+                                <h2 className="text-2xl font-bold mb-4">Sản Phẩm / Gian Hàng</h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {products.map(p => (
+                                        <div key={p.id} className="glass p-4 rounded-xl flex flex-col justify-between">
+                                            <div>
+                                                <div className="flex justify-between items-start">
+                                                    <span className="text-xs font-bold text-blue-500 bg-blue-100 dark:bg-blue-900/50 px-2 py-1 rounded-full">{p.category}</span>
+                                                    <span className={`text-xs font-bold px-2 py-1 rounded-full ${p.stock > 0 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+                                                        {p.stock > 0 ? `Kho: ${p.stock}` : 'Hết hàng'}
+                                                    </span>
+                                                </div>
+                                                <h3 className="font-bold text-lg mt-2">{p.name}</h3>
+                                                <p className="text-sm text-gray-500">{p.desc}</p>
+                                            </div>
+                                            <div className="mt-4 flex justify-between items-center">
+                                                <span className="font-bold text-red-500">{p.price}</span>
+                                                <button disabled={p.stock <= 0} className={`px-4 py-1 rounded-lg text-sm font-bold text-white ${p.stock > 0 ? 'bg-blue-500' : 'bg-gray-400 cursor-not-allowed'}`}>Mua Ngay</button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'posts' && (
+                            <div className="space-y-4 animate-fade-in">
+                                <h2 className="text-2xl font-bold mb-4">Bài Viết / Blog</h2>
+                                {posts.map(post => (
+                                    <div key={post.id} className="glass p-5 rounded-xl">
+                                        <h3 className="font-bold text-lg text-blue-500">{post.title}</h3>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">{post.content}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {activeTab === 'admin' && (
+                            <AdminPanel 
+                                products={products} setProducts={setProducts} 
+                                posts={posts} setPosts={setPosts}
+                                notification={notification} setNotification={setNotification}
+                                siteName={siteName} setSiteName={setSiteName}
+                                avatar={avatar} setAvatar={setAvatar}
+                                lang={lang} setLang={setLang}
+                                effect={effect} setEffect={setEffect}
+                            />
+                        )}
+                    </div>
+
+                    {/* Footer Contact */}
+                    <footer className="glass p-6 rounded-2xl text-center space-y-3 mb-6">
+                        <h3 className="font-bold text-lg">Contact Support</h3>
+                        <div className="flex flex-wrap justify-center gap-3 text-sm">
+                            <a href="https://t.me/usertaiwan8686" target="_blank" className="flex items-center gap-1 bg-blue-50 dark:bg-gray-800 px-3 py-1 rounded-full hover:bg-blue-100"><i data-lucide="send" size="14" className="text-blue-500"></i> Telegram</a>
+                            <a href="https://facebook.com/nguyenlethaoservice" target="_blank" className="flex items-center gap-1 bg-blue-50 dark:bg-gray-800 px-3 py-1 rounded-full hover:bg-blue-100"><i data-lucide="facebook" size="14" className="text-blue-600"></i> Facebook</a>
+                            <a href="tel:0898666218" className="flex items-center gap-1 bg-blue-50 dark:bg-gray-800 px-3 py-1 rounded-full hover:bg-blue-100"><i data-lucide="phone" size="14" className="text-green-500"></i> 0898666218</a>
+                            <a href="mailto:nguyenlethao.profile08@gmail.com" className="flex items-center gap-1 bg-blue-50 dark:bg-gray-800 px-3 py-1 rounded-full hover:bg-blue-100"><i data-lucide="mail" size="14" className="text-red-500"></i> Email</a>
+                            <span className="flex items-center gap-1 bg-blue-50 dark:bg-gray-800 px-3 py-1 rounded-full"><i data-lucide="message-square" size="14" className="text-indigo-500"></i> Discord: nguyenlethao.service</span>
+                        </div>
+                    </footer>
+
+                    {/* Accessibility & Music */}
+                    <AccessibilityMenu t={t} effect={effect} setEffect={setEffect} />
+                    <MusicPlayer t={t} />
+
+                    {/* Bottom Navigation Dock (iPhone Style) */}
+                    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[95%] md:w-[500px] glass rounded-3xl p-2 flex justify-around items-center z-50 shadow-2xl">
+                        <button onClick={()=>setActiveTab('home')} className={`dock-item flex flex-col items-center p-2 ${activeTab==='home'?'text-blue-500':'text-gray-500'}`}>
+                            <i data-lucide="home" size="22"></i><span className="text-[10px] font-bold mt-1">{t.home}</span>
+                        </button>
+                        <button onClick={()=>setActiveTab('shop')} className={`dock-item flex flex-col items-center p-2 ${activeTab==='shop'?'text-blue-500':'text-gray-500'}`}>
+                            <i data-lucide="shopping-bag" size="22"></i><span className="text-[10px] font-bold mt-1">{t.shop}</span>
+                        </button>
+                        <button onClick={()=>setActiveTab('tools')} className={`dock-item flex flex-col items-center p-2 ${activeTab==='tools'?'text-blue-500':'text-gray-500'}`}>
+                            <i data-lucide="wrench" size="22"></i><span className="text-[10px] font-bold mt-1">{t.tools}</span>
+                        </button>
+                        <button onClick={()=>setActiveTab('posts')} className={`dock-item flex flex-col items-center p-2 ${activeTab==='posts'?'text-blue-500':'text-gray-500'}`}>
+                            <i data-lucide="file-text" size="22"></i><span className="text-[10px] font-bold mt-1">{t.posts}</span>
+                        </button>
+                        <button onClick={()=>setActiveTab('admin')} className={`dock-item flex flex-col items-center p-2 ${activeTab==='admin'?'text-red-500':'text-gray-500'}`}>
+                            <i data-lucide="settings" size="22"></i><span className="text-[10px] font-bold mt-1">{t.admin}</span>
+                        </button>
+                    </nav>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
