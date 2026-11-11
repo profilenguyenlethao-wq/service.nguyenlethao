@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Thao Service • MMO & Social Support</title>
+    <title>Thao Service • Premium MMO</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,143 +14,173 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Soundcloud API -->
+    <script src="https://w.soundcloud.com/player/api.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Quicksand:wght@400;600;700&display=swap');
         
-        body { 
-            font-family: 'Inter', sans-serif; 
-            overflow-x: hidden; 
-            transition: background 0.5s, color 0.3s; 
-            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #e0e7ff 100%);
-            color: #0f172a;
-            min-height: 100vh;
-            background-attachment: fixed;
-        }
-        
-        .dark body {
-            background: linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1e1b4b 100%);
-            color: #f1f5f9;
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1e1b4b 100%);
+            --glass-bg: rgba(30, 41, 59, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
-        /* Liquid Glass Effect */
+        html.light {
+            --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #f8fafc 100%);
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+        }
+
+        body { 
+            font-family: 'Quicksand', 'Inter', sans-serif; 
+            overflow-x: hidden; 
+            background: var(--bg-gradient);
+            background-size: 200% 200%;
+            animation: gradientMove 15s ease infinite;
+            color: #f1f5f9;
+            min-height: 100vh;
+            transition: background 0.5s ease, color 0.3s;
+        }
+        html.light body { color: #0f172a; }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Liquid Glass Core */
         .glass {
-            background: rgba(255, 255, 255, 0.45);
+            background: var(--glass-bg);
             backdrop-filter: blur(16px) saturate(180%);
             -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            border-radius: 24px;
         }
-        .dark .glass {
-            background: rgba(30, 41, 59, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        }
-        
         .glass-strong {
-            background: rgba(255, 255, 255, 0.75);
+            background: var(--glass-bg);
             backdrop-filter: blur(24px) saturate(200%);
             -webkit-backdrop-filter: blur(24px) saturate(200%);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-        }
-        .dark .glass-strong {
-            background: rgba(15, 23, 42, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        /* Floating Background Animation */
-        .bg-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: 0;
-            opacity: 0.5;
-            animation: float 20s infinite ease-in-out;
-        }
-        .dark .bg-orb { opacity: 0.3; }
-        
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), var(--glass-shadow);
         }
 
         /* Hide Scrollbar */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* iPhone Dock Animation */
-        .dock-item { transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s; }
-        .dock-item:active { transform: scale(0.85); }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #60a5fa; border-radius: 10px; }
+        /* Animations */
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
         
-        .animate-fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .animate-bounce-in { animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
 
-        /* Draggable FAB */
-        #fab-container {
-            position: fixed;
-            z-index: 50;
-            touch-action: none;
-            cursor: grab;
-        }
-        #fab-container:active { cursor: grabbing; }
+        .float-anim { animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+        /* Background Effects */
+        .snowflake, .flower, .lava { position: fixed; top: -10px; pointer-events: none; z-index: 0; animation: fall linear forwards; }
+        .lava { bottom: -10px; top: auto; border-radius: 50%; animation: rise linear forwards; }
+        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); opacity: 0.1; } }
+        @keyframes rise { to { transform: translateY(-105vh) rotate(-360deg); opacity: 0; } }
 
         /* Premium Product Card */
         .product-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        .light .product-card { background: linear-gradient(145deg, #ffffff 0%, #f0f9ff 100%); border-color: #e2e8f0; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(59, 130, 246, 0.2); }
+        
+        .product-image-wrapper {
+            position: relative;
+            background: radial-gradient(circle at center, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
         }
-        .dark .product-card:hover {
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        .product-image-wrapper::after {
+            content: ''; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+            width: 60%; height: 10px; background: rgba(0,0,0,0.3); border-radius: 50%; filter: blur(8px); z-index: 0;
         }
+        .product-img { position: relative; z-index: 1; transition: transform 0.3s; }
+        .product-card:hover .product-img { transform: scale(1.05) translateY(-5px); }
 
-        /* Animations for Snow/Flower */
-        .snowflake { position: fixed; top: -10px; color: #e0f2fe; font-size: 1em; pointer-events: none; animation: fall linear forwards; z-index: 0; }
-        .flower { position: fixed; top: -10px; font-size: 1.5em; pointer-events: none; animation: fall linear forwards; z-index: 0; }
-        @keyframes fall { to { transform: translateY(105vh) rotate(720deg); opacity: 0.2; } }
+        /* Sticker Dock */
+        .sticker-dock {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+        }
+        .dock-menu {
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform-origin: bottom center;
+            display: flex;
+            gap: 12px;
+            padding: 10px 15px;
+            border-radius: 30px;
+            pointer-events: none;
+        }
+        .sticker-dock.open .dock-menu {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .dock-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            transition: all 0.2s;
+        }
+        .light .dock-btn { background: rgba(0,0,0,0.05); }
+        .dock-btn:active { transform: scale(0.9); }
+        
+        /* 3D Hover buttons */
+        .btn-3d { transition: all 0.1s; }
+        .btn-3d:active { transform: translateY(2px) scale(0.98); box-shadow: none !important; }
+
+        /* Weather Cards */
+        .weather-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+        
+        /* Scroll Reveal */
+        .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
     </style>
     <script>
-        tailwind.config = { 
-            darkMode: 'class', 
-            theme: { 
-                extend: { 
-                    colors: { primary: '#3b82f6' },
-                    fontFamily: { sans: ['Inter', 'sans-serif'] }
-                } 
-            } 
-        }
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#3b82f6' } } } }
     </script>
 </head>
 <body class="pb-28 relative overflow-x-hidden">
 
-    <!-- Background Lights -->
-    <div class="bg-orb bg-blue-400 w-96 h-96 top-0 -left-20"></div>
-    <div class="bg-orb bg-purple-400 w-80 h-80 bottom-0 -right-20" style="animation-delay: -5s;"></div>
-    <div class="bg-orb bg-cyan-400 w-64 h-64 top-1/2 left-1/2" style="animation-delay: -10s;"></div>
-
-    <!-- Effects Layer -->
+    <!-- Background Effects Layer -->
     <div id="effect-layer" class="fixed inset-0 pointer-events-none z-0"></div>
+    
+    <!-- Hidden Soundcloud Player -->
+    <div id="sc-container" style="position:fixed; bottom:-1000px; left:-1000px; width:1px; height:1px; opacity:0;"></div>
 
     <!-- React Root -->
     <div id="root" class="relative z-10"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect, useRef, useCallback, useMemo } = React;
 
         /* ================= CONSTANTS & DATA ================= */
-        const ADMIN_USER = "nguyenlethaoiubo";
-        const ADMIN_PASS = "nguyenthao080626";
+        const ADMIN_USER = "admin";
+        const ADMIN_PASS = "123456";
         
-        // Soundcloud Links
         const SC_TRACKS = [
             "https://soundcloud.com/quang-huynhh/v-b-n-anh-remix-jack-j97-x",
             "https://soundcloud.com/doyu-358490204/jack-j97-ng-i-d-ng-wen-remix"
@@ -163,38 +193,33 @@
             avatar: "https://ui-avatars.com/api/?name=NL&background=3b82f6&color=fff&size=200",
             cover: "https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&q=80",
             contact: {
-                telegram: "usertaiwan8686", 
-                facebook: "nguyenlethaoservice",
-                phone: "0898666218", 
-                email: "nguyenlethao.profile08@gmail.com", 
-                discord: "nguyenlethao.service"
+                telegram: "usertaiwan8686", facebook: "nguyenlethaoservice",
+                phone: "0898666218", email: "nguyenlethao.profile08@gmail.com", discord: "nguyenlethao.service"
             }
         };
 
         const DEFAULT_PRODUCTS = [
-            { id: 1, category: "Support Social", subcategory: "Meta", name: "UNLOCK 282", price: "150.000đ", desc: "Mở khóa tính năng 282", stock: 10, image: "" },
-            { id: 2, category: "Support Social", subcategory: "Meta", name: "UNLOCK 956", price: "200.000đ", desc: "Mở khóa tính năng 956", stock: 5, image: "" },
-            { id: 3, category: "Support Social", subcategory: "Meta", name: "UNLOCK FAQ", price: "100.000đ", desc: "Mở FAQ", stock: 8, image: "" },
-            { id: 4, category: "Support Social", subcategory: "Meta", name: "SETCAMP BM", price: "250.000đ", desc: "Setup camp BM", stock: 6, image: "" },
-            { id: 5, category: "Support Social", subcategory: "Meta", name: "BM 250 / 2K5", price: "300.000đ", desc: "BM 250 hoặc 2K5", stock: 4, image: "" },
-            { id: 6, category: "Support Social", subcategory: "TikTok", name: "UNLOCK LIVE", price: "200.000đ", desc: "Mở live TikTok", stock: 7, image: "" },
-            { id: 7, category: "Shop Liên Quân", subcategory: "", name: "Acc Kim Cương 100+", price: "500.000đ", desc: "Full tướng, ngọc đỏ", stock: 5, image: "" },
+            { id: 1, category: "Support Social", subcategory: "Meta", name: "UNLOCK 282", price: "150.000đ", desc: "Mở khóa tính năng 282", stock: 10, rating: 4.8, reviews: 156, badge: "NEW", image: "https://cdn-icons-png.flaticon.com/512/5968/5968764.png" },
+            { id: 2, category: "Support Social", subcategory: "Meta", name: "UNLOCK 956", price: "200.000đ", desc: "Mở khóa tính năng 956", stock: 5, rating: 4.9, reviews: 210, badge: "HOT", image: "https://cdn-icons-png.flaticon.com/512/5968/5968764.png" },
+            { id: 3, category: "Support Social", subcategory: "TikTok", name: "UNLOCK LIVE", price: "200.000đ", desc: "Mở live TikTok", stock: 7, rating: 4.7, reviews: 89, badge: "", image: "https://cdn-icons-png.flaticon.com/512/3046/3046120.png" },
+            { id: 4, category: "Shop Liên Quân", subcategory: "", name: "Acc Kim Cương 100+", price: "500.000đ", desc: "Full tướng, ngọc đỏ", stock: 5, rating: 5.0, reviews: 45, badge: "VIP", image: "https://cdn-icons-png.flaticon.com/512/8166/8166287.png" }
         ];
 
         const DEFAULT_POSTS = [
-            { id: 1, title: "Hướng dẫn mua hàng", content: "Vui lòng liên hệ Telegram để được hỗ trợ thanh toán và nhận hàng.", date: new Date().toISOString(), image: "" }
+            { id: 1, title: "Hướng dẫn mua hàng", content: "Vui lòng liên hệ Telegram để được hỗ trợ thanh toán và nhận hàng.", date: new Date().toISOString(), image: "" },
+            { id: 2, title: "Cập nhật bảo mật Meta", content: "Hệ thống đã cập nhật quy trình mới cho UNLOCK 956.", date: new Date().toISOString(), image: "" }
         ];
 
-        const DEFAULT_NOTIFS = [{ id: 1, text: "Chào mừng bạn đến với Thao Service!", createdAt: Date.now() }];
+        const DEFAULT_NOTIFS = [{ id: 1, text: "Chào mừng bạn đến với Thao Service Premium!", createdAt: Date.now() }];
 
         const CATEGORIES = [
-            { name: "Shop Liên Quân", subs: [] },
-            { name: "Shop Free Fire", subs: [] },
-            { name: "Support Social", subs: ["Meta", "TikTok", "Google"] },
-            { name: "Proxy / VPN", subs: [] },
-            { name: "IPA / Antiban", subs: [] },
-            { name: "Source / Raw", subs: [] },
-            { name: "Bypass / Tool", subs: [] }
+            { name: "Shop Liên Quân", icon: "gamepad-2", subs: [] },
+            { name: "Shop Free Fire", icon: "crosshair", subs: [] },
+            { name: "Support Social", icon: "share-2", subs: ["Meta", "TikTok", "Google"] },
+            { name: "Proxy / VPN", icon: "shield", subs: [] },
+            { name: "IPA / Antiban", icon: "apple", subs: [] },
+            { name: "Source / Raw", icon: "code", subs: [] },
+            { name: "Bypass / Tool", icon: "wrench", subs: [] }
         ];
 
         /* ================= UTILS ================= */
@@ -249,32 +274,40 @@
                 if (type === 'none') return;
                 
                 let interval;
+                const timeouts = [];
+                
                 const add = (html, cls, style, dur) => {
                     const el = document.createElement('div');
                     el.innerHTML = html; el.className = cls;
                     Object.assign(el.style, style);
                     layer.appendChild(el);
-                    setTimeout(() => el.remove(), dur);
+                    timeouts.push(setTimeout(() => el.remove(), dur));
                 };
 
                 if (type === 'snow') {
                     interval = setInterval(() => {
-                        add('❄', 'snowflake', { left: Math.random() * 100 + 'vw', animationDuration: (Math.random() * 4 + 4) + 's', opacity: Math.random() * 0.7 + 0.3, fontSize: (Math.random() * 10 + 12) + 'px' }, 8000);
-                    }, 400);
+                        add('❄', 'snowflake', { left: Math.random()*100+'vw', animationDuration: (Math.random()*4+4)+'s', opacity: Math.random()*0.7+0.3, fontSize: (Math.random()*10+12)+'px' }, 8000);
+                    }, 300);
                 } else if (type === 'flower') {
-                    const flowers = ['🌸', '🌺', '🌼', '🌷', '🍁', '🍂'];
+                    const flowers = ['🌸','🌺','🌼','🌷','🍁','🍂'];
                     interval = setInterval(() => {
-                        add(flowers[Math.floor(Math.random() * flowers.length)], 'flower', { left: Math.random() * 100 + 'vw', animationDuration: (Math.random() * 4 + 5) + 's', fontSize: (Math.random() * 12 + 14) + 'px' }, 9000);
-                    }, 600);
+                        add(flowers[Math.floor(Math.random()*flowers.length)], 'flower', { left: Math.random()*100+'vw', animationDuration: (Math.random()*4+5)+'s', fontSize: (Math.random()*12+14)+'px' }, 9000);
+                    }, 500);
+                } else if (type === 'lava') {
+                    interval = setInterval(() => {
+                        const size = Math.random()*6+4;
+                        add('', 'lava', { left: Math.random()*100+'vw', animationDuration: (Math.random()*3+4)+'s', width: size+'px', height: size+'px', background: `radial-gradient(circle, hsl(${Math.random()*30+15},100%,60%), hsl(${Math.random()*20},100%,40%))` }, 7000);
+                    }, 150);
                 }
-                return () => { if (interval) clearInterval(interval); layer.innerHTML = ''; };
+
+                return () => { if(interval) clearInterval(interval); timeouts.forEach(t=>clearTimeout(t)); layer.innerHTML=''; };
             }, [type]);
             return null;
         }
 
         /* ================= COMPONENTS ================= */
         const VerifiedIcon = ({ size = 20 }) => (
-            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="inline-block text-blue-500 ml-1">
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="inline-block text-blue-500 ml-1 drop-shadow-md">
                 <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2ZM16.707 9.707C17.098 9.316 17.098 8.684 16.707 8.293C16.316 7.902 15.684 7.902 15.293 8.293L10.5 13.086L8.707 11.293C8.316 10.902 7.684 10.902 7.293 11.293C6.902 11.684 6.902 12.316 7.293 12.707L10.5 15.914L16.707 9.707Z" fill="currentColor"/>
             </svg>
         );
@@ -282,37 +315,37 @@
         function ProfileHome({ profile, posts, onNavigate }) {
             return (
                 <div className="animate-fade-in space-y-4">
-                    <div className="relative rounded-3xl overflow-hidden glass shadow-xl">
-                        <div className="h-40 md:h-56 relative bg-gradient-to-r from-blue-500 to-cyan-400">
-                            {profile.cover && <img src={profile.cover} className="w-full h-full object-cover" alt="Cover" />}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                    <div className="relative rounded-3xl overflow-hidden glass-strong shadow-2xl">
+                        <div className="h-44 md:h-64 relative bg-gradient-to-r from-blue-600 to-cyan-400">
+                            {profile.cover && <img src={profile.cover} className="w-full h-full object-cover mix-blend-overlay" alt="Cover" />}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                         </div>
-                        <div className="px-5 pb-6 -mt-16 relative">
-                            <img src={profile.avatar} className="w-28 h-28 rounded-full border-4 border-white dark:border-slate-800 object-cover shadow-2xl bg-white" alt="Avatar" />
-                            <div className="mt-3">
-                                <h2 className="text-2xl font-extrabold flex items-center">
-                                    {profile.name} {profile.verified && <VerifiedIcon size={24} />}
+                        <div className="px-6 pb-6 -mt-16 relative">
+                            <img src={profile.avatar} className="w-28 h-28 rounded-full border-4 border-white dark:border-slate-800 object-cover shadow-2xl bg-white float-anim" alt="Avatar" />
+                            <div className="mt-4">
+                                <h2 className="text-3xl font-extrabold flex items-center drop-shadow-sm">
+                                    {profile.name} {profile.verified && <VerifiedIcon size={26} />}
                                 </h2>
-                                <p className="text-xs text-blue-500 font-semibold mt-1 bg-blue-500/10 inline-block px-2 py-0.5 rounded-full">@{ADMIN_USER} • MMO Provider</p>
+                                <p className="text-sm font-semibold text-blue-400 mt-1">@{ADMIN_USER} • MMO Provider</p>
                             </div>
-                            <p className="mt-4 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{profile.bio}</p>
+                            <p className="mt-4 text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-medium">{profile.bio}</p>
                             
                             <div className="flex gap-3 mt-6">
-                                <button onClick={() => onNavigate('shop')} className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white py-3 rounded-2xl text-sm font-bold shadow-lg shadow-blue-500/30 transition-all active:scale-95">Xem Shop</button>
-                                <button onClick={() => onNavigate('contact')} className="flex-1 glass-strong py-3 rounded-2xl text-sm font-bold hover:bg-white/80 dark:hover:bg-slate-700/80 transition-all active:scale-95">Liên Hệ</button>
+                                <button onClick={() => onNavigate('shop')} className="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-2xl text-sm font-bold shadow-[0_8px_20px_rgba(37,99,235,0.4)] transition btn-3d">Xem Shop</button>
+                                <button onClick={() => onNavigate('contact')} className="flex-1 glass-strong py-3 rounded-2xl text-sm font-bold hover:bg-white/10 transition btn-3d">Liên Hệ</button>
                             </div>
                         </div>
                     </div>
 
-                    <div className="glass rounded-3xl p-5 shadow-lg">
+                    <div className="glass rounded-3xl p-6">
                         <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                            <i data-lucide="newspaper" size="20" className="text-blue-500"></i> Bài viết mới
+                            <i data-lucide="newspaper" size="20" className="text-blue-500"></i> Bản tin mới
                         </h3>
                         <div className="space-y-3">
                             {posts.slice(-3).reverse().map(p => (
-                                <div key={p.id} onClick={() => onNavigate('posts')} className="glass-strong rounded-2xl p-4 cursor-pointer hover:bg-white/90 dark:hover:bg-slate-700/80 transition-all active:scale-[0.98]">
-                                    <p className="font-semibold text-sm">{p.title}</p>
-                                    <p className="text-xs text-gray-500 line-clamp-2 mt-1.5">{p.content}</p>
+                                <div key={p.id} onClick={() => onNavigate('posts')} className="glass-strong rounded-2xl p-4 cursor-pointer hover:bg-white/5 transition border border-white/5">
+                                    <p className="font-bold text-sm text-blue-400 mb-1">{p.title}</p>
+                                    <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">{p.content}</p>
                                 </div>
                             ))}
                         </div>
@@ -323,87 +356,85 @@
 
         function Shop({ products, filter, setFilter }) {
             const [search, setSearch] = useState('');
-            // Fix: Chỉ tìm kiếm trong danh mục đang chọn
-            let list = products.filter(p => {
-                if (filter && p.category !== filter && p.subcategory !== filter) return false;
-                if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
-                return true;
-            });
+            
+            // Fix bug: chỉ lọc theo filter của category đó, search chỉ áp dụng trong list đã lọc
+            const list = useMemo(() => {
+                return products.filter(p => {
+                    const matchFilter = filter ? (p.category === filter || p.subcategory === filter) : true;
+                    const matchSearch = search ? p.name.toLowerCase().includes(search.toLowerCase()) : true;
+                    return matchFilter && matchSearch;
+                });
+            }, [products, filter, search]);
 
             return (
-                <div className="animate-fade-in">
-                    {/* Search & Filter */}
-                    <div className="glass rounded-3xl p-4 mb-5 shadow-lg sticky top-3 z-20">
-                        <div className="relative mb-3">
-                            <i data-lucide="search" size="18" className="absolute left-3 top-2.5 text-gray-400"></i>
-                            <input 
-                                value={search} 
-                                onChange={e => setSearch(e.target.value)} 
-                                placeholder="Tìm sản phẩm trong mục này..." 
-                                className="w-full glass-strong rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 transition-all" 
-                            />
+                <div className="animate-fade-in space-y-5">
+                    {/* Filter Bar */}
+                    <div className="glass-strong rounded-3xl p-5 sticky top-4 z-20 shadow-xl">
+                        <div className="relative mb-4">
+                            <i data-lucide="search" size="18" className="absolute left-4 top-3.5 text-gray-400"></i>
+                            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Tìm sản phẩm trong mục này..." className="w-full bg-black/20 dark:bg-black/40 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all font-medium" />
                         </div>
                         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-                            <button onClick={() => setFilter('')} className={`whitespace-nowrap px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${!filter ? 'bg-blue-500 text-white shadow-md' : 'glass-strong'}`}>Tất cả</button>
-                            {["Shop Liên Quân", "Shop Free Fire", "Support Social", "Proxy / VPN", "Bypass / Tool"].map(c => (
-                                <button key={c} onClick={() => setFilter(c)} className={`whitespace-nowrap px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${filter === c ? 'bg-blue-500 text-white shadow-md' : 'glass-strong'}`}>{c}</button>
+                            <button onClick={() => setFilter('')} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition ${!filter ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/10'}`}>Tất cả</button>
+                            {CATEGORIES.map(c => (
+                                <button key={c.name} onClick={() => { setFilter(c.name); setSearch(''); }} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition ${filter === c.name ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/10'}`}>
+                                    <i data-lucide={c.icon} size="14"></i> {c.name}
+                                </button>
                             ))}
                         </div>
                     </div>
                     
-                    {/* Product Grid - Phong cách Premium như ảnh mẫu */}
+                    {/* Product Grid - Premium Style */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         {list.map(p => (
-                            <div key={p.id} className="product-card glass rounded-3xl overflow-hidden flex flex-col relative group">
-                                <div className="absolute top-3 left-3 z-10">
-                                    <span className="bg-blue-500/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-md">
-                                        {p.subcategory || p.category}
-                                    </span>
+                            <div key={p.id} className="product-card p-5 flex flex-col group">
+                                {/* Badges */}
+                                <div className="flex justify-between items-start mb-4 z-10 relative">
+                                    <span className="bg-blue-600/20 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">{p.badge || 'PREMIUM'}</span>
+                                    <button className="w-8 h-8 rounded-full glass-strong flex items-center justify-center text-gray-400 hover:text-red-500 transition"><i data-lucide="heart" size="16"></i></button>
                                 </div>
-                                <div className="absolute top-3 right-3 z-10">
-                                    <button className="w-8 h-8 rounded-full glass-strong flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
-                                        <i data-lucide="heart" size="16"></i>
-                                    </button>
+                                
+                                {/* Image with glow */}
+                                <div className="product-image-wrapper h-40 flex items-center justify-center mb-4">
+                                    {p.image ? (
+                                        <img src={p.image} className="product-img h-32 object-contain drop-shadow-2xl" alt={p.name} />
+                                    ) : (
+                                        <i data-lucide="package" size="64" className="text-blue-500 opacity-50 product-img"></i>
+                                    )}
                                 </div>
 
-                                {p.image ? (
-                                    <img src={p.image} className="h-48 w-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
-                                ) : (
-                                    <div className="h-48 bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-white relative overflow-hidden">
-                                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
-                                        <i data-lucide="package" size="64" className="opacity-80 group-hover:scale-110 transition-transform duration-500"></i>
-                                    </div>
-                                )}
-                                
-                                <div className="p-5 flex-1 flex flex-col">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <h3 className="font-extrabold text-lg leading-tight">{p.name}</h3>
+                                {/* Info */}
+                                <div className="flex-1 flex flex-col relative z-10">
+                                    <div className="flex justify-between items-start mb-1">
+                                        <h3 className="font-extrabold text-lg leading-tight text-slate-900 dark:text-white">{p.name}</h3>
                                         <div className="text-right">
-                                            <p className="font-bold text-red-500 text-lg">{p.price}</p>
-                                            <p className="text-[10px] text-gray-400 line-through">{(parseInt(p.price.replace(/\D/g,'')) * 1.2).toLocaleString()}đ</p>
+                                            <p className="font-extrabold text-blue-500 text-lg">{p.price}</p>
+                                            <p className="text-[10px] text-gray-500 line-through">{(parseInt(p.price.replace(/\D/g,'')) * 1.2).toLocaleString()}đ</p>
                                         </div>
                                     </div>
-                                    <p className="text-xs text-gray-500 mt-1 flex-1 line-clamp-2">{p.desc}</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">{p.desc}</p>
                                     
-                                    <div className="mt-4 flex items-center justify-between">
-                                        <div className="flex items-center gap-1">
-                                            <i data-lucide="star" size="14" className="text-yellow-500 fill-yellow-500"></i>
-                                            <span className="text-xs font-bold">4.9</span>
-                                            <span className="text-[10px] text-gray-400">(120)</span>
-                                        </div>
-                                        <span className={`text-[10px] font-bold px-2 py-1 rounded-md ${p.stock > 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
-                                            {p.stock > 0 ? `Còn ${p.stock}` : 'Hết hàng'}
-                                        </span>
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <div className="flex text-yellow-400"><i data-lucide="star" size="12" fill="currentColor"></i></div>
+                                        <span className="text-xs font-bold">{p.rating} <span className="text-gray-500 font-normal">({p.reviews})</span></span>
                                     </div>
-                                    
-                                    <button disabled={p.stock <= 0} className={`mt-4 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all active:scale-95 flex items-center justify-center gap-2 ${p.stock > 0 ? 'bg-blue-500 hover:bg-blue-600 shadow-lg shadow-blue-500/30' : 'bg-gray-400 cursor-not-allowed'}`}>
-                                        <i data-lucide="shopping-cart" size="16"></i> Thêm vào giỏ
-                                    </button>
+
+                                    {/* Colors / Stock */}
+                                    <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/10">
+                                        <div className="flex gap-1.5">
+                                            <div className="w-4 h-4 rounded-full bg-blue-600 ring-2 ring-white/20"></div>
+                                            <div className="w-4 h-4 rounded-full bg-slate-800 ring-2 ring-white/20"></div>
+                                            <div className="w-4 h-4 rounded-full bg-cyan-400 ring-2 ring-white/20"></div>
+                                        </div>
+                                        <button disabled={p.stock <= 0} className={`px-5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition btn-3d ${p.stock > 0 ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'bg-gray-700 text-gray-400 cursor-not-allowed'}`}>
+                                            {p.stock > 0 ? 'Mua Ngay' : 'Hết Hàng'} <i data-lucide="arrow-right" size="14"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         ))}
                     </div>
-                    {list.length === 0 && <p className="text-center text-gray-500 py-10">Không tìm thấy sản phẩm nào.</p>}
+                    {list.length === 0 && <div className="text-center py-10 text-gray-500 font-medium">Không tìm thấy sản phẩm nào.</div>}
                 </div>
             );
         }
@@ -414,33 +445,20 @@
             const [activeCity, setActiveCity] = useState('');
             
             const cities = [
-                { name: "Quy Nhơn", lat: 13.78, lon: 109.22 },
-                { name: "Nha Trang", lat: 12.24, lon: 109.19 },
-                { name: "Đà Nẵng", lat: 16.05, lon: 108.20 },
                 { name: "Hà Nội", lat: 21.03, lon: 105.85 },
+                { name: "Đà Nẵng", lat: 16.05, lon: 108.20 },
                 { name: "HCM", lat: 10.82, lon: 106.63 }
             ];
 
             const getW = async (lat, lon, name) => {
                 setLoading(true);
                 try {
-                    // Lấy cực nhiều data theo yêu cầu
-                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,rain,weather_code,wind_speed_10m,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=Asia%2FHo_Chi_Minh`;
+                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_gusts_10m,uv_index&hourly=temperature_2m,precipitation_probability,weather_code&daily=sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=Asia%2FHo_Chi_Minh`;
                     const r = await fetch(url);
                     const d = await r.json();
-                    setWeather({ name, current: d.current, hourly: d.hourly, daily: d.daily });
+                    setWeather({ name, current: d.current, daily: d.daily, hourly: d.hourly });
                     setActiveCity(name);
                 } catch (e) { alert('Lỗi tải thời tiết'); }
-                setLoading(false);
-            };
-
-            const myLoc = async () => {
-                setLoading(true);
-                try {
-                    const r = await fetch('https://ipwho.is/');
-                    const d = await r.json();
-                    if(d.latitude) getW(d.latitude, d.longitude, `📍 ${d.city}`);
-                } catch (e) { alert('Lỗi check vị trí'); }
                 setLoading(false);
             };
 
@@ -449,102 +467,164 @@
             const codeMap = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',51:'🌦',61:'🌧',80:'🌧',95:'⛈'};
 
             return (
-                <div className="glass p-5 rounded-3xl animate-fade-in shadow-xl">
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2"><i data-lucide="cloud-sun" size="24" className="text-blue-500"></i> Thời Tiết</h2>
-                    
-                    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 mb-4">
-                        {cities.map(c => (
-                            <button key={c.name} onClick={() => getW(c.lat, c.lon, c.name)} className={`whitespace-nowrap px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${activeCity === c.name ? 'bg-blue-500 text-white shadow-md' : 'glass-strong'}`}>{c.name}</button>
-                        ))}
-                        <button onClick={myLoc} className="whitespace-nowrap bg-green-500 text-white px-4 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-md">
-                            <i data-lucide="map-pin" size="14"></i> Vị trí
-                        </button>
+                <div className="glass p-6 rounded-3xl animate-fade-in space-y-5">
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-xl font-extrabold flex items-center gap-2"><i data-lucide="cloud-sun" size="24" className="text-blue-500"></i> Thời Tiết</h2>
                     </div>
                     
-                    {loading ? <div className="text-center py-10"><i data-lucide="loader-2" className="animate-spin text-blue-500"></i></div> : weather && (
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+                        {cities.map(c => (
+                            <button key={c.name} onClick={() => getW(c.lat, c.lon, c.name)} className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition ${activeCity === c.name ? 'bg-blue-600 text-white' : 'glass-strong hover:bg-white/10'}`}>{c.name}</button>
+                        ))}
+                    </div>
+                    
+                    {loading ? <div className="text-center py-10 animate-pulse">Đang tải dữ liệu...</div> : weather && (
                         <div className="space-y-4">
                             {/* Main Card */}
-                            <div className="glass-strong p-5 rounded-3xl relative overflow-hidden">
-                                <div className="absolute right-0 top-0 opacity-20 text-9xl">{codeMap[weather.current.weather_code] || '🌤'}</div>
-                                <div className="relative z-10">
-                                    <p className="font-bold text-lg">{weather.name}</p>
-                                    <p className="text-xs text-gray-500">Cập nhật: {new Date().toLocaleTimeString('vi-VN')}</p>
-                                    <div className="flex items-end gap-4 mt-2">
-                                        <p className="text-5xl font-extrabold text-blue-500">{Math.round(weather.current.temperature_2m)}°C</p>
-                                        <div className="pb-1">
-                                            <p className="text-sm font-medium">Cảm giác như: {Math.round(weather.current.apparent_temperature)}°C</p>
-                                            <p className="text-xs text-gray-500">Độ ẩm: {weather.current.relative_humidity_2m}% • Gió: {weather.current.wind_speed_10m} km/h</p>
-                                        </div>
-                                    </div>
+                            <div className="glass-strong p-6 rounded-3xl flex justify-between items-center relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl"></div>
+                                <div>
+                                    <p className="text-2xl font-extrabold">{weather.name}</p>
+                                    <p className="text-sm text-gray-400 mt-1 font-medium">Cảm giác: {weather.current.apparent_temperature}°C</p>
+                                    <p className="text-xs text-gray-400 mt-1">Gió: {weather.current.wind_speed_10m} km/h (Gió giật: {weather.current.wind_gusts_10m} km/h)</p>
+                                    <p className="text-xs text-gray-400">Độ ẩm: {weather.current.relative_humidity_2m}% • UV: {weather.current.uv_index}</p>
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-6xl drop-shadow-lg">{codeMap[weather.current.weather_code] || '🌤'}</p>
+                                    <p className="text-4xl font-extrabold text-blue-500 mt-2">{weather.current.temperature_2m}°</p>
                                 </div>
                             </div>
 
-                            {/* Cảnh báo thiên tai */}
-                            <div className="bg-red-500/10 border border-red-500/30 p-4 rounded-2xl">
-                                <h4 className="font-bold text-red-500 flex items-center gap-2 mb-2"><i data-lucide="alert-triangle" size="18"></i> Cảnh báo thời tiết</h4>
-                                <div className="grid grid-cols-2 gap-2 text-xs">
-                                    <div className="flex items-center gap-1 text-red-400"><span className="w-1.5 h-1.5 rounded-full bg-red-500"></span> Mưa lớn, Dông lốc</div>
-                                    <div className="flex items-center gap-1 text-orange-400"><span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span> Sạt lở đất, Lũ quét</div>
-                                    <div className="flex items-center gap-1 text-yellow-400"><span className="w-1.5 h-1.5 rounded-full bg-yellow-500"></span> Gió mạnh, Sét</div>
-                                    <div className="flex items-center gap-1 text-blue-400"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Triều cường, Ngập úng</div>
-                                </div>
-                            </div>
-
-                            {/* Mặt trời & Mặt trăng */}
+                            {/* Sun & Moon */}
                             <div className="grid grid-cols-2 gap-3">
-                                <div className="glass-strong p-4 rounded-2xl">
-                                    <p className="text-xs font-bold text-gray-500 mb-2 flex items-center gap-1"><i data-lucide="sun" size="14" className="text-orange-500"></i> Mặt Trời</p>
-                                    <div className="space-y-1 text-sm">
-                                        <div className="flex justify-between"><span className="text-gray-500">Bình minh:</span> <span className="font-bold">{new Date(weather.daily.sunrise[0]).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span></div>
-                                        <div className="flex justify-between"><span className="text-gray-500">Hoàng hôn:</span> <span className="font-bold">{new Date(weather.daily.sunset[0]).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span></div>
-                                        <div className="flex justify-between"><span className="text-gray-500">Golden Hour:</span> <span className="font-bold text-yellow-500">Có</span></div>
-                                    </div>
+                                <div className="glass-strong p-4 rounded-2xl flex items-center gap-3">
+                                    <i data-lucide="sunrise" size="24" className="text-orange-400"></i>
+                                    <div><p className="text-[10px] text-gray-400 font-bold">MẶT TRỜI MỌC</p><p className="font-bold">{weather.daily.sunrise[0].split('T')[1]}</p></div>
                                 </div>
-                                <div className="glass-strong p-4 rounded-2xl">
-                                    <p className="text-xs font-bold text-gray-500 mb-2 flex items-center gap-1"><i data-lucide="moon" size="14" className="text-indigo-500"></i> Mặt Trăng</p>
-                                    <div className="space-y-1 text-sm">
-                                        <div className="flex justify-between"><span className="text-gray-500">Pha:</span> <span className="font-bold">Trăng Tròn</span></div>
-                                        <div className="flex justify-between"><span className="text-gray-500">Chiếu sáng:</span> <span className="font-bold">98%</span></div>
-                                        <div className="flex justify-between"><span className="text-gray-500">Blue Hour:</span> <span className="font-bold text-blue-400">Có</span></div>
-                                    </div>
+                                <div className="glass-strong p-4 rounded-2xl flex items-center gap-3">
+                                    <i data-lucide="sunset" size="24" className="text-red-400"></i>
+                                    <div><p className="text-[10px] text-gray-400 font-bold">MẶT TRỜI LẶN</p><p className="font-bold">{weather.daily.sunset[0].split('T')[1]}</p></div>
                                 </div>
                             </div>
 
-                            {/* Chi tiết dự báo theo giờ */}
+                            {/* Hourly Forecast */}
                             <div>
-                                <p className="text-sm font-bold mb-3 flex items-center gap-2"><i data-lucide="clock" size="16"></i> Dự báo 24H tới</p>
-                                <div className="overflow-x-auto no-scrollbar flex gap-3 pb-2">
+                                <p className="text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Dự báo 24H</p>
+                                <div className="overflow-x-auto no-scrollbar flex gap-2 glass-strong p-4 rounded-2xl">
                                     {weather.hourly.time.slice(0, 24).map((time, i) => (
-                                        <div key={i} className="glass-strong min-w-[80px] p-3 rounded-2xl flex flex-col items-center text-center">
+                                        <div key={i} className="text-center min-w-[50px] space-y-1">
                                             <p className="text-[10px] text-gray-500 font-bold">{time.split('T')[1]}</p>
-                                            <p className="text-2xl my-1">{codeMap[weather.hourly.weather_code[i]] || '🌤'}</p>
-                                            <p className="font-bold text-sm">{Math.round(weather.hourly.temperature_2m[i])}°</p>
-                                            <p className="text-[10px] text-blue-500 mt-1"><i data-lucide="droplets" size="10" className="inline"></i> {weather.hourly.precipitation_probability[i]}%</p>
-                                            <p className="text-[10px] text-gray-500 mt-0.5">{weather.hourly.rain[i]}mm</p>
-                                            <p className="text-[10px] text-gray-500 mt-0.5"><i data-lucide="wind" size="10" className="inline"></i> {weather.hourly.wind_speed_10m[i]}km/h</p>
+                                            <p className="text-lg">{codeMap[weather.hourly.weather_code[i]] || '🌤'}</p>
+                                            <p className="font-bold text-sm">{weather.hourly.temperature_2m[i]}°</p>
+                                            <p className="text-[10px] text-blue-400 font-bold">{weather.hourly.precipitation_probability[i]}%</p>
                                         </div>
                                     ))}
                                 </div>
                             </div>
 
-                            {/* Chi tiết dự báo theo ngày */}
-                            <div>
-                                <p className="text-sm font-bold mb-3 flex items-center gap-2"><i data-lucide="calendar" size="16"></i> Dự báo 7 ngày</p>
-                                <div className="space-y-2">
-                                    {weather.daily.time.slice(0, 7).map((time, i) => (
-                                        <div key={i} className="glass-strong p-3 rounded-xl flex items-center justify-between text-sm">
-                                            <p className="font-bold w-20">{new Date(time).toLocaleDateString('vi-VN', {weekday: 'short', day: '2-digit', month: '2-digit'})}</p>
-                                            <p className="text-2xl">{codeMap[weather.daily.weather_code[i]] || '🌤'}</p>
-                                            <div className="text-right">
-                                                <p className="font-bold text-red-500">{Math.round(weather.daily.temperature_2m_max[i])}°</p>
-                                                <p className="text-xs text-blue-500">{Math.round(weather.daily.temperature_2m_min[i])}°</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+                            {/* Warning */}
+                            <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-2xl">
+                                <p className="font-bold text-red-500 flex items-center gap-2 text-sm"><i data-lucide="alert-triangle" size="18"></i> Cảnh báo thời tiết cực đoan</p>
+                                <p className="mt-2 text-xs text-gray-300 leading-relaxed">Hệ thống ghi nhận các chỉ số về mưa lớn, dông lốc, lũ lụt, sạt lở đất (nếu có). Vui lòng theo dõi sát sao nhiệt độ và lượng mưa để có biện pháp phòng tránh. Đối với khu vực miền Trung, đề phòng ngập úng cục bộ do mưa lớn kéo dài.</p>
                             </div>
                         </div>
                     )}
+                </div>
+            );
+        }
+
+        function IpCheck() {
+            const [ip, setIp] = useState(null);
+            const [loading, setLoading] = useState(false);
+            
+            const check = async () => {
+                setLoading(true); setIp(null);
+                try {
+                    const r = await fetch('https://ipwho.is/');
+                    const d = await r.json();
+                    if(d.success) setIp(d);
+                    else alert('Lỗi check IP');
+                } catch (e) { alert('Lỗi mạng, thử lại sau!'); }
+                setLoading(false);
+            };
+
+            return (
+                <div className="glass p-6 rounded-3xl animate-fade-in space-y-4">
+                    <h2 className="text-xl font-extrabold flex items-center gap-2"><i data-lucide="globe" size="24" className="text-blue-500"></i> Check IP</h2>
+                    <button onClick={check} disabled={loading} className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-2xl font-bold shadow-lg shadow-blue-500/30 transition btn-3d">
+                        {loading ? 'Đang check...' : 'Check IP Ngay'}
+                    </button>
+                    
+                    {ip && (
+                        <div className="glass-strong p-5 rounded-2xl text-sm space-y-3 mt-4 animate-bounce-in">
+                            <div className="flex justify-between border-b border-white/10 pb-2"><span className="text-gray-400">IP:</span><span className="font-bold text-blue-400">{ip.ip}</span></div>
+                            <div className="flex justify-between border-b border-white/10 pb-2"><span className="text-gray-400">Nhà mạng:</span><span className="font-bold">{ip.connection?.isp || 'N/A'}</span></div>
+                            <div className="flex justify-between border-b border-white/10 pb-2"><span className="text-gray-400">Vị trí:</span><span className="font-bold">{ip.city}, {ip.country}</span></div>
+                            <div className="flex justify-between"><span className="text-gray-400">Loại IP:</span><span className={`font-bold ${ip.country_code === 'VN' ? 'text-green-500' : 'text-red-500'}`}>{ip.country_code === 'VN' ? 'Local (Việt Nam)' : 'Proxy / VPN'}</span></div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function SpeedTest() {
+            const [speed, setSpeed] = useState(null);
+            const [testing, setTesting] = useState(false);
+
+            const test = async () => {
+                setTesting(true); setSpeed(null);
+                const start = performance.now();
+                try {
+                    await fetch('https://speed.cloudflare.com/__down?bytes=5000000&cache=' + Date.now(), { cache: 'no-store' });
+                    const dur = (performance.now() - start) / 1000;
+                    setSpeed(((5000000 * 8) / (dur * 1000000)).toFixed(2));
+                } catch (e) { alert('Lỗi test mạng'); }
+                setTesting(false);
+            };
+
+            return (
+                <div className="glass p-6 rounded-3xl animate-fade-in space-y-4">
+                    <h2 className="text-xl font-extrabold flex items-center gap-2"><i data-lucide="wifi" size="24" className="text-purple-500"></i> Check Tốc Độ Mạng</h2>
+                    <button onClick={test} disabled={testing} className="w-full bg-purple-600 hover:bg-purple-500 text-white py-3 rounded-2xl font-bold shadow-lg shadow-purple-500/30 transition btn-3d">
+                        {testing ? 'Đang test...' : 'Bắt đầu test'}
+                    </button>
+                    
+                    {speed && (
+                        <div className="mt-4 glass-strong p-6 rounded-2xl text-center animate-bounce-in">
+                            <p className="text-sm text-gray-400 font-bold mb-2">Tốc độ tải xuống</p>
+                            <p className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">{speed} <span className="text-xl">Mbps</span></p>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function Notes() {
+            const [notes, setNotes] = useState(() => ls.get('notes', []));
+            const [input, setInput] = useState('');
+            
+            const add = () => {
+                if (!input.trim()) return;
+                const n = [...notes, { id: Date.now(), text: input }];
+                setNotes(n); ls.set('notes', n); setInput('');
+            };
+            const del = id => { const n = notes.filter(x => x.id !== id); setNotes(n); ls.set('notes', n); };
+            
+            return (
+                <div className="glass p-6 rounded-3xl animate-fade-in space-y-4">
+                    <h2 className="text-xl font-extrabold flex items-center gap-2"><i data-lucide="sticky-note" size="24" className="text-yellow-500"></i> Ghi Chú</h2>
+                    <div className="flex gap-2">
+                        <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && add()} placeholder="Nhập ghi chú..." className="flex-1 bg-black/20 border border-white/10 rounded-2xl px-4 py-3 text-sm outline-none focus:ring-2 ring-yellow-500" />
+                        <button onClick={add} className="bg-yellow-500 text-white px-5 rounded-2xl font-bold transition btn-3d"><i data-lucide="plus" size="20"></i></button>
+                    </div>
+                    <ul className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
+                        {notes.map(n => (
+                            <li key={n.id} className="glass-strong rounded-2xl p-4 flex justify-between items-center text-sm animate-fade-in">
+                                <span className="font-medium">{n.text}</span>
+                                <button onClick={() => del(n.id)} className="text-red-500 p-2 hover:bg-red-500/10 rounded-xl transition"><i data-lucide="trash-2" size="16"></i></button>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             );
         }
@@ -559,20 +639,19 @@
                 try {
                     const dr = await fetch('https://api.mail.tm/domains');
                     const dd = await dr.json();
-                    if(!dd['hydra:member'] || dd['hydra:member'].length === 0) throw new Error("No domain");
                     const domain = dd['hydra:member'][0].domain;
                     const address = `user${Math.floor(Math.random() * 1000000)}@${domain}`;
                     const password = 'Password123!';
                     
                     const cr = await fetch('https://api.mail.tm/accounts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password }) });
-                    if (!cr.ok) throw new Error("Create failed");
+                    if (!cr.ok) throw new Error();
                     
                     const tr = await fetch('https://api.mail.tm/token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password }) });
                     const td = await tr.json();
                     
                     const m = { address, token: td.token };
                     ls.set('tempmail', m); setMail(m);
-                } catch (e) { alert('Lỗi tạo mail, thử lại sau giây lát!'); }
+                } catch (e) { alert('Lỗi tạo mail, thử lại!'); }
                 setLoading(false);
             };
 
@@ -586,25 +665,25 @@
             };
 
             return (
-                <div className="glass p-5 rounded-3xl animate-fade-in shadow-xl">
-                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="mail" size="22" className="text-orange-500"></i> Email Tạm</h2>
+                <div className="glass p-6 rounded-3xl animate-fade-in space-y-4">
+                    <h2 className="text-xl font-extrabold flex items-center gap-2"><i data-lucide="mail" size="24" className="text-orange-500"></i> Email Tạm</h2>
                     {!mail ? (
-                        <button onClick={create} disabled={loading} className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-orange-500/30 transition active:scale-95">
-                            {loading ? 'Đang tạo...' : 'Tạo Mail Ngẫu Nhiên'}
+                        <button onClick={create} disabled={loading} className="w-full bg-orange-600 hover:bg-orange-500 text-white py-3 rounded-2xl font-bold shadow-lg shadow-orange-500/30 transition btn-3d">
+                            {loading ? 'Đang tạo...' : 'Tạo Mail Tạm'}
                         </button>
                     ) : (
-                        <div className="glass-strong p-4 rounded-2xl text-sm">
-                            <p className="font-bold text-orange-500 break-all mb-3">{mail.address}</p>
-                            <div className="flex gap-2 mb-3">
-                                <button onClick={fetchM} className="flex-1 glass py-2 rounded-xl text-xs font-bold hover:bg-white/50 transition">Tải hộp thư</button>
-                                <button onClick={() => { ls.del('tempmail'); setMail(null); setMessages([]); }} className="flex-1 bg-red-500/10 text-red-500 py-2 rounded-xl text-xs font-bold hover:bg-red-500/20 transition">Đổi Mail Khác</button>
+                        <div className="glass-strong p-4 rounded-2xl text-sm space-y-3">
+                            <p className="font-bold text-orange-400 break-all bg-orange-500/10 p-3 rounded-xl border border-orange-500/20">{mail.address}</p>
+                            <div className="flex gap-2">
+                                <button onClick={fetchM} className="flex-1 bg-blue-600 text-white py-2 rounded-xl text-xs font-bold transition btn-3d">Tải hộp thư</button>
+                                <button onClick={() => { ls.set('tempmail', null); setMail(null); setMessages([]); }} className="flex-1 bg-red-500/20 text-red-500 py-2 rounded-xl text-xs font-bold transition btn-3d">Xoá</button>
                             </div>
                             {messages.length > 0 && (
-                                <ul className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
+                                <ul className="space-y-2 max-h-48 overflow-y-auto no-scrollbar mt-3">
                                     {messages.map(m => (
-                                        <li key={m.id} className="bg-white/40 dark:bg-slate-800/40 p-3 rounded-xl text-xs">
-                                            <p className="font-bold text-blue-500">{m.subject || '(Không tiêu đề)'}</p>
-                                            <p className="text-gray-500 mt-1">Từ: {m.from?.address}</p>
+                                        <li key={m.id} className="bg-black/20 p-3 rounded-xl border border-white/5">
+                                            <p className="font-bold text-xs">{m.subject || '(Không tiêu đề)'}</p>
+                                            <p className="text-gray-400 text-[10px] mt-1">Từ: {m.from?.address}</p>
                                         </li>
                                     ))}
                                 </ul>
@@ -616,32 +695,33 @@
         }
 
         function ContactPage({ profile }) {
-            const c = profile.contact || {};
+            const c = profile.contact;
             const items = [
-                { icon: 'send', label: 'Telegram', value: c.telegram ? `@${c.telegram}` : 'Chưa cập nhật', link: c.telegram ? `https://t.me/${c.telegram}` : '#', color: 'text-blue-500' },
-                { icon: 'facebook', label: 'Facebook', value: c.facebook ? `@${c.facebook}` : 'Chưa cập nhật', link: c.facebook ? `https://facebook.com/${c.facebook}` : '#', color: 'text-blue-600' },
-                { icon: 'phone', label: 'Điện thoại', value: c.phone || 'Chưa cập nhật', link: c.phone ? `tel:${c.phone}` : '#', color: 'text-green-500' },
-                { icon: 'mail', label: 'Email', value: c.email || 'Chưa cập nhật', link: c.email ? `mailto:${c.email}` : '#', color: 'text-red-500' },
-                { icon: 'message-square', label: 'Discord', value: c.discord || 'Chưa cập nhật', link: c.discord ? `https://discord.com/users/${c.discord}` : '#', color: 'text-indigo-500' }
+                { icon: 'send', label: 'Telegram', value: `@${c.telegram}`, link: `https://t.me/${c.telegram}`, color: 'text-blue-500 bg-blue-500/10' },
+                { icon: 'facebook', label: 'Facebook', value: `@${c.facebook}`, link: `https://facebook.com/${c.facebook}`, color: 'text-blue-600 bg-blue-600/10' },
+                { icon: 'phone', label: 'Điện thoại', value: c.phone, link: `tel:${c.phone}`, color: 'text-green-500 bg-green-500/10' },
+                { icon: 'mail', label: 'Email', value: c.email, link: `mailto:${c.email}`, color: 'text-red-500 bg-red-500/10' },
+                { icon: 'message-square', label: 'Discord', value: c.discord, link: `https://discord.com/users/${c.discord}`, color: 'text-indigo-500 bg-indigo-500/10' }
             ];
             return (
-                <div className="animate-fade-in space-y-4">
-                    <div className="glass p-6 rounded-3xl text-center shadow-xl">
-                        <img src={profile.avatar} alt="" className="w-24 h-24 rounded-full mx-auto border-4 border-blue-500 shadow-2xl" />
-                        <h2 className="text-2xl font-bold mt-4 flex items-center justify-center">{profile.name}{profile.verified && <VerifiedIcon size={20} />}</h2>
-                        <p className="text-sm text-gray-500 mt-1">Liên hệ để được hỗ trợ 24/7</p>
+                <div className="animate-fade-in space-y-5">
+                    <div className="glass p-8 rounded-3xl text-center relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-blue-500 to-purple-500 opacity-20 blur-xl"></div>
+                        <img src={profile.avatar} alt="" className="w-24 h-24 rounded-full mx-auto border-4 border-blue-500 shadow-2xl relative z-10" />
+                        <h2 className="text-2xl font-extrabold mt-4 flex items-center justify-center relative z-10">{profile.name}{profile.verified && <VerifiedIcon size={20} />}</h2>
+                        <p className="text-sm text-gray-400 mt-2 font-medium relative z-10">Hỗ trợ khách hàng 24/7</p>
                     </div>
-                    <div className="space-y-3">
+                    <div className="grid grid-cols-1 gap-3">
                         {items.map((it, i) => (
-                            <a key={i} href={it.link} target={it.link !== '#' ? "_blank" : "_self"} rel="noreferrer" className={`glass rounded-2xl p-4 flex items-center gap-4 transition-all ${it.link !== '#' ? 'hover:bg-white/80 dark:hover:bg-slate-700/60 active:scale-95' : 'opacity-70 cursor-not-allowed'}`}>
-                                <div className={`w-12 h-12 rounded-xl glass-strong flex items-center justify-center ${it.color}`}>
+                            <a key={i} href={it.link} target="_blank" rel="noreferrer" className="glass-strong rounded-2xl p-4 flex items-center gap-4 hover:bg-white/10 transition border border-white/5 group">
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${it.color} group-hover:scale-110 transition`}>
                                     <i data-lucide={it.icon} size="22"></i>
                                 </div>
                                 <div className="flex-1">
-                                    <p className="text-xs text-gray-500 font-semibold">{it.label}</p>
-                                    <p className="text-sm font-bold break-all">{it.value}</p>
+                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">{it.label}</p>
+                                    <p className="text-sm font-extrabold mt-0.5 break-all">{it.value}</p>
                                 </div>
-                                {it.link !== '#' && <i data-lucide="chevron-right" size="18" className="text-gray-400"></i>}
+                                <i data-lucide="chevron-right" size="18" className="text-gray-500 group-hover:translate-x-1 transition"></i>
                             </a>
                         ))}
                     </div>
@@ -653,7 +733,6 @@
         function AdminLogin({ onLogin }) {
             const [u, setU] = useState('');
             const [p, setP] = useState('');
-            const [show, setShow] = useState(false);
             const [err, setErr] = useState('');
 
             const submit = e => {
@@ -664,30 +743,26 @@
 
             return (
                 <div className="animate-fade-in max-w-md mx-auto mt-10">
-                    <div className="glass p-8 rounded-3xl shadow-2xl">
-                        <div className="text-center mb-6">
-                            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 mx-auto flex items-center justify-center shadow-lg shadow-blue-500/30">
-                                <i data-lucide="shield" size="40" className="text-white"></i>
+                    <div className="glass p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+                        <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/30 rounded-full blur-2xl"></div>
+                        <div className="text-center mb-8 relative z-10">
+                            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-400 mx-auto flex items-center justify-center shadow-lg shadow-blue-500/50">
+                                <i data-lucide="shield-check" size="40" className="text-white"></i>
                             </div>
-                            <h2 className="text-2xl font-bold mt-4">Đăng nhập Admin</h2>
-                            <p className="text-xs text-gray-500 mt-1">Chỉ quản trị viên mới có quyền truy cập</p>
+                            <h2 className="text-2xl font-extrabold mt-4">Admin Portal</h2>
+                            <p className="text-xs text-gray-400 mt-1">Yêu cầu quyền truy cập cấp cao</p>
                         </div>
-                        <form onSubmit={submit} className="space-y-4">
+                        <form onSubmit={submit} className="space-y-4 relative z-10">
                             <div>
-                                <label className="text-xs font-bold text-gray-500 ml-1">Tài khoản</label>
-                                <input value={u} onChange={e => setU(e.target.value)} placeholder="Nhập tài khoản..." className="w-full mt-1 glass-strong rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all" />
+                                <label className="text-xs font-bold text-gray-400 ml-1 mb-1 block">Tài khoản</label>
+                                <input value={u} onChange={e => setU(e.target.value)} placeholder="Nhập tài khoản..." className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all" />
                             </div>
                             <div>
-                                <label className="text-xs font-bold text-gray-500 ml-1">Mật khẩu</label>
-                                <div className="relative mt-1">
-                                    <input type={show ? 'text' : 'password'} value={p} onChange={e => setP(e.target.value)} placeholder="Nhập mật khẩu..." className="w-full glass-strong rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 pr-12 transition-all" />
-                                    <button type="button" onClick={() => setShow(!show)} className="absolute right-4 top-3.5 text-gray-500 hover:text-blue-500">
-                                        <i data-lucide={show ? 'eye-off' : 'eye'} size="18"></i>
-                                    </button>
-                                </div>
+                                <label className="text-xs font-bold text-gray-400 ml-1 mb-1 block">Mật khẩu</label>
+                                <input type="password" value={p} onChange={e => setP(e.target.value)} placeholder="••••••••" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all" />
                             </div>
-                            {err && <p className="text-xs text-red-500 text-center font-bold bg-red-500/10 py-2 rounded-lg">{err}</p>}
-                            <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition active:scale-95 mt-2">Đăng nhập hệ thống</button>
+                            {err && <p className="text-xs text-red-500 text-center font-bold bg-red-500/10 p-2 rounded-lg">{err}</p>}
+                            <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition btn-3d mt-2">Đăng Nhập</button>
                         </form>
                     </div>
                 </div>
@@ -703,8 +778,7 @@
                 { id: 'profile', label: 'Profile', icon: 'user' },
                 { id: 'site', label: 'Cài đặt Web', icon: 'settings' },
                 { id: 'products', label: 'Sản phẩm', icon: 'shopping-bag' },
-                { id: 'posts', label: 'Bài viết', icon: 'newspaper' },
-                { id: 'notifs', label: 'Thông báo', icon: 'bell' }
+                { id: 'posts', label: 'Bài viết', icon: 'newspaper' }
             ];
 
             const updImg = async (e, k, cb) => {
@@ -717,100 +791,86 @@
                 const p = data.profile;
                 const upd = (k, v) => setData({ ...data, profile: { ...p, [k]: v } });
                 return (
-                    <div className="space-y-4">
-                        <div>
-                            <label className="text-xs font-bold text-gray-500">Tên hiển thị</label>
-                            <input value={p.name} onChange={e => upd('name', e.target.value)} className="w-full mt-1 glass-strong rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500" />
-                        </div>
-                        <div className="flex items-center gap-2 bg-blue-500/10 p-3 rounded-xl">
+                    <div className="space-y-4 animate-fade-in">
+                        <div><label className="text-xs font-bold text-gray-400">Tên hiển thị</label>
+                        <input value={p.name} onChange={e => upd('name', e.target.value)} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
+                        <div className="flex items-center gap-2 bg-black/20 p-3 rounded-xl border border-white/10">
                             <input type="checkbox" checked={p.verified} onChange={e => upd('verified', e.target.checked)} id="vf" className="w-4 h-4 accent-blue-500" />
-                            <label htmlFor="vf" className="text-sm font-bold text-blue-500 cursor-pointer">Hiển thị tick xanh</label>
+                            <label htmlFor="vf" className="text-sm font-bold">Hiển thị tick xanh</label>
                         </div>
-                        <div>
-                            <label className="text-xs font-bold text-gray-500">Tiểu sử (Bio)</label>
-                            <textarea value={p.bio} onChange={e => upd('bio', e.target.value)} rows="3" className="w-full mt-1 glass-strong rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500" />
+                        <div><label className="text-xs font-bold text-gray-400">Tiểu sử (Bio)</label>
+                        <textarea value={p.bio} onChange={e => upd('bio', e.target.value)} rows="3" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div><label className="text-xs font-bold text-gray-400">Avatar</label>
+                            <div className="mt-1 flex flex-col items-center gap-2 bg-black/20 p-3 rounded-xl border border-white/10">
+                                <img src={p.avatar} className="w-16 h-16 rounded-full object-cover shadow-lg" />
+                                <input type="file" accept="image/*" onChange={e => updImg(e, 'avatar', upd)} className="text-[10px] w-full" />
+                            </div></div>
+                            <div><label className="text-xs font-bold text-gray-400">Ảnh bìa</label>
+                            <div className="mt-1 flex flex-col items-center gap-2 bg-black/20 p-3 rounded-xl border border-white/10">
+                                <img src={p.cover} className="w-full h-16 object-cover rounded-lg shadow-lg" />
+                                <input type="file" accept="image/*" onChange={e => updImg(e, 'cover', upd)} className="text-[10px] w-full" />
+                            </div></div>
                         </div>
-                        <div>
-                            <label className="text-xs font-bold text-gray-500">Ảnh đại diện</label>
-                            <div className="flex items-center gap-4 mt-2">
-                                <img src={p.avatar} className="w-16 h-16 rounded-full object-cover border-2 border-blue-500" />
-                                <input type="file" accept="image/*" onChange={e => updImg(e, 'avatar', upd)} className="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-500 file:text-white hover:file:bg-blue-600" />
-                            </div>
-                        </div>
-                        <div>
-                            <label className="text-xs font-bold text-gray-500">Ảnh bìa</label>
-                            <div className="mt-2">
-                                <img src={p.cover} className="w-full h-24 object-cover rounded-xl mb-2" />
-                                <input type="file" accept="image/*" onChange={e => updImg(e, 'cover', upd)} className="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-500 file:text-white hover:file:bg-blue-600" />
-                            </div>
-                        </div>
+                        <div><label className="text-xs font-bold text-gray-400">Liên hệ (JSON format)</label>
+                        <textarea value={JSON.stringify(p.contact, null, 2)} onChange={e => { try { upd('contact', JSON.parse(e.target.value)) } catch {} }} rows="4" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-xs font-mono outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
                     </div>
                 );
             };
 
             const SiteTab = () => (
-                <div className="space-y-4">
-                    <div>
-                        <label className="text-xs font-bold text-gray-500">Tên Website</label>
-                        <input value={data.siteName} onChange={e => setData({ ...data, siteName: e.target.value })} className="w-full mt-1 glass-strong rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500" />
-                    </div>
-                    <div>
-                        <label className="text-xs font-bold text-gray-500">Hiệu ứng nền mặc định</label>
-                        <select value={data.defaultEffect} onChange={e => setData({ ...data, defaultEffect: e.target.value })} className="w-full mt-1 glass-strong rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500">
-                            <option value="none">Không có</option>
-                            <option value="snow">Tuyết rơi</option>
-                            <option value="flower">Hoa rơi</option>
-                        </select>
-                    </div>
+                <div className="space-y-4 animate-fade-in">
+                    <div><label className="text-xs font-bold text-gray-400">Tên Website</label>
+                    <input value={data.siteName} onChange={e => setData({ ...data, siteName: e.target.value })} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
+                    <div><label className="text-xs font-bold text-gray-400">Hiệu ứng nền mặc định</label>
+                    <select value={data.defaultEffect} onChange={e => setData({ ...data, defaultEffect: e.target.value })} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1">
+                        <option value="none">Không có</option><option value="snow">Tuyết rơi</option><option value="flower">Hoa rơi</option><option value="lava">Dung nham</option>
+                    </select></div>
                 </div>
             );
 
             const ProductsTab = () => {
                 const save = () => {
-                    if (!form.name || !form.price) return alert('Vui lòng nhập tên và giá sản phẩm!');
+                    if (!form.name || !form.price) return alert('Vui lòng nhập Tên & Giá');
                     const list = data.products || [];
                     if (editId) setData({ ...data, products: list.map(x => x.id === editId ? { ...form, id: editId } : x) });
                     else setData({ ...data, products: [...list, { ...form, id: Date.now() }] });
                     setForm({}); setEditId(null);
                 };
                 return (
-                    <div className="space-y-4">
-                        <div className="glass-strong p-4 rounded-2xl space-y-3">
-                            <h4 className="font-bold text-sm text-blue-500">{editId ? 'Sửa sản phẩm' : 'Thêm sản phẩm mới'}</h4>
-                            <select value={form.category || ''} onChange={e => setForm({ ...form, category: e.target.value, subcategory: '' })} className="w-full p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50">
-                                <option value="">-- Chọn danh mục --</option>
-                                {CATEGORIES.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
-                            </select>
-                            {CATEGORIES.find(c => c.name === form.category)?.subs.length > 0 && (
-                                <select value={form.subcategory || ''} onChange={e => setForm({ ...form, subcategory: e.target.value })} className="w-full p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50">
-                                    <option value="">-- Danh mục con --</option>
-                                    {CATEGORIES.find(c => c.name === form.category).subs.map(s => <option key={s} value={s}>{s}</option>)}
+                    <div className="space-y-4 animate-fade-in">
+                        <div className="bg-black/20 p-4 rounded-2xl border border-white/10 space-y-3">
+                            <div className="grid grid-cols-2 gap-2">
+                                <select value={form.category || ''} onChange={e => setForm({ ...form, category: e.target.value, subcategory: '' })} className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none">
+                                    <option value="">-- Danh mục --</option>
+                                    {CATEGORIES.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
                                 </select>
-                            )}
-                            <input value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Tên sản phẩm" className="w-full p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
-                            <div className="flex gap-2">
-                                <input value={form.price || ''} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="Giá (VD: 150.000đ)" className="w-1/2 p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
-                                <input type="number" value={form.stock || 0} onChange={e => setForm({ ...form, stock: Number(e.target.value) })} placeholder="Số lượng kho" className="w-1/2 p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
+                                <select value={form.subcategory || ''} onChange={e => setForm({ ...form, subcategory: e.target.value })} className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" disabled={!form.category || CATEGORIES.find(c=>c.name===form.category)?.subs.length === 0}>
+                                    <option value="">-- Danh mục con --</option>
+                                    {CATEGORIES.find(c => c.name === form.category)?.subs.map(s => <option key={s} value={s}>{s}</option>)}
+                                </select>
                             </div>
-                            <input value={form.desc || ''} onChange={e => setForm({ ...form, desc: e.target.value })} placeholder="Mô tả ngắn" className="w-full p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
-                            <div className="flex items-center gap-3">
-                                {form.image && <img src={form.image} className="w-12 h-12 rounded-lg object-cover" />}
-                                <input type="file" accept="image/*" onChange={e => updImg(e, 'image', (k, v) => setForm({ ...form, [k]: v }))} className="text-xs" />
+                            <input value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Tên sản phẩm" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
+                            <div className="flex gap-2">
+                                <input value={form.price || ''} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="Giá (VD: 150.000đ)" className="w-1/2 bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
+                                <input type="number" value={form.stock || 0} onChange={e => setForm({ ...form, stock: Number(e.target.value) })} placeholder="Kho" className="w-1/2 bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
+                            </div>
+                            <input value={form.desc || ''} onChange={e => setForm({ ...form, desc: e.target.value })} placeholder="Mô tả ngắn" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
+                            <div className="flex items-center gap-2">
+                                {form.image && <img src={form.image} className="w-10 h-10 rounded-lg object-contain bg-white/10" />}
+                                <input type="file" accept="image/*" onChange={e => updImg(e, 'image', (k, v) => setForm({ ...form, [k]: v }))} className="text-xs w-full" />
                             </div>
                             <div className="flex gap-2 pt-2">
-                                <button onClick={save} className="flex-1 bg-blue-500 text-white py-2.5 rounded-xl font-bold text-sm shadow-md active:scale-95">{editId ? 'Cập nhật' : 'Thêm mới'}</button>
-                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-500 text-white px-4 rounded-xl text-sm active:scale-95">Hủy</button>}
+                                <button onClick={save} className="flex-1 bg-blue-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/30 transition btn-3d">{editId ? 'Lưu Thay Đổi' : 'Thêm Sản Phẩm'}</button>
+                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-600 text-white px-4 rounded-xl text-sm font-bold transition">Hủy</button>}
                             </div>
                         </div>
-                        <div className="space-y-2 max-h-80 overflow-y-auto no-scrollbar">
+                        <div className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
                             {data.products.map(p => (
-                                <div key={p.id} className="glass-strong p-3 rounded-xl flex items-center gap-3 text-xs">
-                                    <div className="flex-1">
-                                        <p className="font-bold text-sm">{p.name}</p>
-                                        <p className="text-gray-500">{p.price} • Kho: {p.stock}</p>
-                                    </div>
-                                    <button onClick={() => { setForm(p); setEditId(p.id); window.scrollTo(0,0); }} className="p-2 bg-blue-500/10 text-blue-500 rounded-lg"><i data-lucide="edit" size="14"></i></button>
-                                    <button onClick={() => setData({ ...data, products: data.products.filter(x => x.id !== p.id) })} className="p-2 bg-red-500/10 text-red-500 rounded-lg"><i data-lucide="trash-2" size="14"></i></button>
+                                <div key={p.id} className="bg-white/5 border border-white/5 p-3 rounded-xl flex items-center gap-3 text-xs">
+                                    <div className="flex-1 truncate font-medium">{p.name} <span className="text-blue-400 font-bold ml-1">{p.price}</span></div>
+                                    <button onClick={() => { setForm(p); setEditId(p.id); }} className="text-blue-500 p-2 hover:bg-blue-500/10 rounded-lg transition"><i data-lucide="edit" size="16"></i></button>
+                                    <button onClick={() => setData({ ...data, products: data.products.filter(x => x.id !== p.id) })} className="text-red-500 p-2 hover:bg-red-500/10 rounded-lg transition"><i data-lucide="trash-2" size="16"></i></button>
                                 </div>
                             ))}
                         </div>
@@ -826,46 +886,21 @@
                     setForm({}); setEditId(null);
                 };
                 return (
-                    <div className="space-y-4">
-                        <div className="glass-strong p-4 rounded-2xl space-y-3">
-                            <h4 className="font-bold text-sm text-green-500">{editId ? 'Sửa bài viết' : 'Viết bài mới'}</h4>
-                            <input value={form.title || ''} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Tiêu đề bài viết" className="w-full p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
-                            <textarea value={form.content || ''} onChange={e => setForm({ ...form, content: e.target.value })} placeholder="Nội dung..." rows="4" className="w-full p-2.5 rounded-xl text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
-                            <div className="flex items-center gap-3">
-                                {form.image && <img src={form.image} className="w-12 h-12 rounded-lg object-cover" />}
-                                <input type="file" accept="image/*" onChange={e => updImg(e, 'image', (k, v) => setForm({ ...form, [k]: v }))} className="text-xs" />
-                            </div>
+                    <div className="space-y-4 animate-fade-in">
+                        <div className="bg-black/20 p-4 rounded-2xl border border-white/10 space-y-3">
+                            <input value={form.title || ''} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Tiêu đề bài viết" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
+                            <textarea value={form.content || ''} onChange={e => setForm({ ...form, content: e.target.value })} placeholder="Nội dung chi tiết..." rows="4" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none"></textarea>
                             <div className="flex gap-2 pt-2">
-                                <button onClick={save} className="flex-1 bg-green-500 text-white py-2.5 rounded-xl font-bold text-sm shadow-md active:scale-95">{editId ? 'Cập nhật' : 'Đăng bài'}</button>
-                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-500 text-white px-4 rounded-xl text-sm active:scale-95">Hủy</button>}
+                                <button onClick={save} className="flex-1 bg-green-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-green-500/30 transition btn-3d">{editId ? 'Lưu Thay Đổi' : 'Đăng Bài'}</button>
+                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-600 text-white px-4 rounded-xl text-sm font-bold transition">Hủy</button>}
                             </div>
                         </div>
-                        <div className="space-y-2 max-h-80 overflow-y-auto no-scrollbar">
+                        <div className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
                             {data.posts.map(p => (
-                                <div key={p.id} className="glass-strong p-3 rounded-xl flex items-center gap-3 text-xs">
-                                    <div className="flex-1 font-bold">{p.title}</div>
-                                    <button onClick={() => { setForm(p); setEditId(p.id); window.scrollTo(0,0); }} className="p-2 bg-blue-500/10 text-blue-500 rounded-lg"><i data-lucide="edit" size="14"></i></button>
-                                    <button onClick={() => setData({ ...data, posts: data.posts.filter(x => x.id !== p.id) })} className="p-2 bg-red-500/10 text-red-500 rounded-lg"><i data-lucide="trash-2" size="14"></i></button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                );
-            };
-
-            const NotifsTab = () => {
-                const [text, setText] = useState('');
-                return (
-                    <div className="space-y-4">
-                        <div className="flex gap-2">
-                            <input value={text} onChange={e => setText(e.target.value)} placeholder="Nhập thông báo mới..." className="flex-1 p-3 rounded-xl text-sm outline-none glass-strong focus:ring-2 ring-blue-500" />
-                            <button onClick={() => { if(!text)return; setData({ ...data, notifications: [...data.notifications, { id: Date.now(), text, createdAt: Date.now() }] }); setText(''); }} className="bg-blue-500 text-white px-5 rounded-xl font-bold shadow-md active:scale-95"><i data-lucide="plus"></i></button>
-                        </div>
-                        <div className="space-y-2">
-                            {data.notifications.map(n => (
-                                <div key={n.id} className="glass-strong p-3 rounded-xl flex items-center gap-3 text-xs">
-                                    <div className="flex-1">{n.text}</div>
-                                    <button onClick={() => setData({ ...data, notifications: data.notifications.filter(x => x.id !== n.id) })} className="p-2 bg-red-500/10 text-red-500 rounded-lg"><i data-lucide="trash-2" size="14"></i></button>
+                                <div key={p.id} className="bg-white/5 border border-white/5 p-3 rounded-xl flex items-center gap-3 text-xs">
+                                    <div className="flex-1 truncate font-medium">{p.title}</div>
+                                    <button onClick={() => { setForm(p); setEditId(p.id); }} className="text-blue-500 p-2 hover:bg-blue-500/10 rounded-lg transition"><i data-lucide="edit" size="16"></i></button>
+                                    <button onClick={() => setData({ ...data, posts: data.posts.filter(x => x.id !== p.id) })} className="text-red-500 p-2 hover:bg-red-500/10 rounded-lg transition"><i data-lucide="trash-2" size="16"></i></button>
                                 </div>
                             ))}
                         </div>
@@ -874,80 +909,80 @@
             };
 
             return (
-                <div className="animate-fade-in pb-10">
-                    <div className="glass p-4 rounded-3xl mb-5 flex justify-between items-center shadow-lg">
-                        <h2 className="font-bold text-lg flex items-center gap-2"><i data-lucide="shield-check" size="22" className="text-red-500"></i> Bảng Điều Khiển</h2>
-                        <button onClick={onLogout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md active:scale-95 transition-all">Đăng xuất</button>
+                <div className="animate-fade-in space-y-4">
+                    <div className="glass p-4 rounded-3xl flex justify-between items-center bg-gradient-to-r from-red-500/20 to-transparent border border-red-500/20">
+                        <h2 className="font-extrabold text-lg flex items-center gap-2 text-red-400"><i data-lucide="shield-alert" size="22"></i> Admin Dashboard</h2>
+                        <button onClick={onLogout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-lg shadow-red-500/30">Đăng Xuất</button>
                     </div>
-                    <div className="flex gap-2 overflow-x-auto no-scrollbar mb-5 pb-1">
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar">
                         {tabs.map(t => (
-                            <button key={t.id} onClick={() => { setTab(t.id); setForm({}); setEditId(null); }} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${tab === t.id ? 'bg-blue-500 text-white shadow-md' : 'glass-strong hover:bg-white/50'}`}>
+                            <button key={t.id} onClick={() => { setTab(t.id); setForm({}); setEditId(null); }} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition ${tab === t.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/10'}`}>
                                 <i data-lucide={t.icon} size="14"></i> {t.label}
                             </button>
                         ))}
                     </div>
-                    <div className="glass p-5 rounded-3xl shadow-xl min-h-[400px]">
+                    <div className="glass p-5 rounded-3xl">
                         {tab === 'profile' && <ProfileTab />}
                         {tab === 'site' && <SiteTab />}
                         {tab === 'products' && <ProductsTab />}
                         {tab === 'posts' && <PostsTab />}
-                        {tab === 'notifs' && <NotifsTab />}
                     </div>
                 </div>
             );
         }
 
-        /* ================= DRAWER & NAV ================= */
+        /* ================= DRAWER MENU ================= */
         function Drawer({ open, onClose, activePage, onNavigate, data, isAdmin }) {
             const [expanded, setExpanded] = useState(null);
             const items = [
-                { id: 'profile', label: 'Trang cá nhân', icon: 'user' },
-                { id: 'shop', label: 'Cửa hàng', icon: 'shopping-bag', expandable: true },
-                { id: 'notifications', label: 'Thông báo', icon: 'bell' },
-                { id: 'posts', label: 'Bài viết', icon: 'newspaper' },
-                { id: 'ipcheck', label: 'Check IP', icon: 'globe' },
+                { id: 'profile', label: 'Tài khoản / Profile', icon: 'user' },
+                { id: 'shop', label: 'Sản phẩm', icon: 'shopping-bag', expandable: true },
+                { id: 'posts', label: 'Bài viết & Tin tức', icon: 'newspaper' },
                 { id: 'weather', label: 'Thời tiết', icon: 'cloud-sun' },
-                { id: 'notes', label: 'Ghi chú', icon: 'sticky-note' },
+                { id: 'ipcheck', label: 'Check IP', icon: 'globe' },
+                { id: 'notes', label: 'Ghi chú cá nhân', icon: 'sticky-note' },
                 { id: 'tempmail', label: 'Email Tạm', icon: 'mail' },
-                { id: 'contact', label: 'Liên hệ hỗ trợ', icon: 'phone' }
+                { id: 'speedtest', label: 'Check Tốc Độ Mạng', icon: 'wifi' },
+                { id: 'contact', label: 'Liên Hệ Hỗ Trợ', icon: 'phone' }
             ];
 
             return (
                 <>
-                    {open && <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity" onClick={onClose}></div>}
-                    <div className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] glass-strong z-50 transform transition-transform duration-300 ease-out ${open ? 'translate-x-0' : '-translate-x-full'} flex flex-col shadow-2xl`}>
-                        <div className="p-5 flex items-center gap-4 border-b border-white/20">
-                            <img src={data.profile.avatar} className="w-14 h-14 rounded-full object-cover border-2 border-blue-500 shadow-md" alt="Avt" />
-                            <div className="flex-1 min-w-0">
-                                <p className="font-bold flex items-center text-base truncate">{data.profile.name}{data.profile.verified && <VerifiedIcon size={16} />}</p>
-                                <p className="text-xs text-gray-500 truncate mt-0.5">@{ADMIN_USER}</p>
+                    {open && <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity" onClick={onClose}></div>}
+                    <div className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] glass-strong z-50 transform transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${open ? 'translate-x-0' : '-translate-x-full'} flex flex-col rounded-r-3xl shadow-2xl overflow-hidden border-r border-white/10`}>
+                        <div className="p-6 flex items-center gap-4 border-b border-white/10 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/20 rounded-full blur-xl"></div>
+                            <img src={data.profile.avatar} className="w-14 h-14 rounded-full object-cover border-2 border-blue-500 shadow-lg z-10" alt="Avt" />
+                            <div className="flex-1 min-w-0 z-10">
+                                <p className="font-extrabold flex items-center text-base truncate">{data.profile.name}{data.profile.verified && <VerifiedIcon size={16} />}</p>
+                                <p className="text-xs text-blue-400 font-bold mt-0.5">@{ADMIN_USER}</p>
                             </div>
-                            <button onClick={onClose} className="p-2 glass rounded-full hover:bg-red-500 hover:text-white transition-colors"><i data-lucide="x" size="18"></i></button>
+                            <button onClick={onClose} className="p-2 bg-black/20 rounded-full hover:bg-white/10 transition z-10"><i data-lucide="x" size="20"></i></button>
                         </div>
                         
-                        <div className="flex-1 overflow-y-auto p-4 space-y-1.5 no-scrollbar">
+                        <div className="flex-1 overflow-y-auto p-4 space-y-1 no-scrollbar">
                             {items.map(it => (
                                 <div key={it.id}>
                                     <button onClick={() => {
                                         if (it.expandable) setExpanded(expanded === it.id ? null : it.id);
                                         else { onNavigate(it.id); onClose(); }
-                                    }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all ${activePage === it.id ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'hover:bg-white/40 dark:hover:bg-slate-800/40'}`}>
-                                        <i data-lucide={it.icon} size="18" className={activePage === it.id ? 'text-white' : 'text-blue-500'}></i>
+                                    }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all ${activePage === it.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'hover:bg-white/10 text-gray-300'}`}>
+                                        <i data-lucide={it.icon} size="20" className={activePage === it.id ? 'text-white' : 'text-blue-400'}></i>
                                         <span className="flex-1 text-left">{it.label}</span>
-                                        {it.expandable && <i data-lucide={expanded === it.id ? 'chevron-down' : 'chevron-right'} size="16"></i>}
+                                        {it.expandable && <i data-lucide={expanded === it.id ? 'chevron-down' : 'chevron-right'} size="16" className="opacity-50"></i>}
                                     </button>
                                     
                                     {it.expandable && expanded === it.id && (
-                                        <div className="ml-8 mt-1 space-y-1 border-l-2 border-blue-500/30 pl-2">
+                                        <div className="ml-10 mt-1 space-y-1 border-l-2 border-blue-500/30 pl-3">
                                             {CATEGORIES.map(c => (
                                                 <div key={c.name}>
-                                                    <button onClick={() => { onNavigate('shop', c.name); onClose(); }} className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium hover:bg-blue-500/10 transition-colors">
+                                                    <button onClick={() => { onNavigate('shop', c.name); onClose(); }} className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-gray-400 hover:text-white hover:bg-white/10 transition">
                                                         {c.name}
                                                     </button>
                                                     {c.subs.length > 0 && (
                                                         <div className="ml-2">
                                                             {c.subs.map(s => (
-                                                                <button key={s} onClick={() => { onNavigate('shop', s); onClose(); }} className="w-full text-left px-3 py-1.5 rounded-lg text-[11px] hover:bg-blue-500/10 text-gray-600 dark:text-gray-400 transition-colors">• {s}</button>
+                                                                <button key={s} onClick={() => { onNavigate('shop', s); onClose(); }} className="w-full text-left px-3 py-1.5 rounded-lg text-[11px] font-medium text-gray-500 hover:text-blue-400 transition">• {s}</button>
                                                             ))}
                                                         </div>
                                                     )}
@@ -958,14 +993,14 @@
                                 </div>
                             ))}
                             
-                            <div className="pt-4 border-t border-white/20 mt-4">
+                            <div className="pt-4 border-t border-white/10 mt-4">
                                 {isAdmin ? (
-                                    <button onClick={() => { onNavigate('admin'); onClose(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-red-500 to-orange-500 shadow-lg shadow-red-500/30 active:scale-95 transition-all">
-                                        <i data-lucide="shield-check" size="18"></i> Vào Admin Panel
+                                    <button onClick={() => { onNavigate('admin'); onClose(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-red-400 bg-red-500/10 hover:bg-red-500/20 transition">
+                                        <i data-lucide="shield-check" size="20"></i> Admin Panel
                                     </button>
                                 ) : (
-                                    <button onClick={() => { onNavigate('admin-login'); onClose(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold hover:bg-gray-500/10 transition-colors">
-                                        <i data-lucide="lock" size="18" className="text-gray-500"></i> Đăng nhập Admin
+                                    <button onClick={() => { onNavigate('admin-login'); onClose(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-gray-400 hover:bg-white/10 transition">
+                                        <i data-lucide="lock" size="20"></i> Đăng nhập Admin
                                     </button>
                                 )}
                             </div>
@@ -975,111 +1010,124 @@
             );
         }
 
-        /* ================= DRAGGABLE FAB & MUSIC ================= */
+        /* ================= ACCESSIBILITY & MUSIC ================= */
         function Accessibility({ effect, setEffect, musicOn, setMusicOn, track, setTrack }) {
             const [open, setOpen] = useState(false);
-            const [pos, setPos] = useState({ x: window.innerWidth - 70, y: 100 });
-            const [isDragging, setIsDragging] = useState(false);
-            const dragRef = useRef(null);
-            const effects = ['none', 'snow', 'flower'];
+            const effects = ['none', 'snow', 'flower', 'lava'];
+            
+            // Drag logic
+            const [pos, setPos] = useState(() => ls.get('fabPos', { x: window.innerWidth - 70, y: window.innerHeight - 150 }));
+            const [dragging, setDragging] = useState(false);
+            const [rel, setRel] = useState({ x: 0, y: 0 });
 
-            // Xử lý kéo thả
-            const onPointerDown = (e) => {
-                setIsDragging(false);
-                const startX = e.clientX || e.touches[0].clientX;
-                const startY = e.clientY || e.touches[0].clientY;
-                const startPosX = pos.x;
-                const startPosY = pos.y;
-
-                const onPointerMove = (ev) => {
-                    setIsDragging(true);
-                    const clientX = ev.clientX || ev.touches[0].clientX;
-                    const clientY = ev.clientY || ev.touches[0].clientY;
-                    const dx = clientX - startX;
-                    const dy = clientY - startY;
-                    
-                    // Giới hạn trong màn hình
-                    let newX = Math.max(10, Math.min(window.innerWidth - 60, startPosX + dx));
-                    let newY = Math.max(10, Math.min(window.innerHeight - 60, startPosY + dy));
-                    
-                    setPos({ x: newX, y: newY });
-                };
-
-                const onPointerUp = () => {
-                    document.removeEventListener('pointermove', onPointerMove);
-                    document.removeEventListener('pointerup', onPointerUp);
-                    setTimeout(() => setIsDragging(false), 100);
-                };
-
-                document.addEventListener('pointermove', onPointerMove);
-                document.addEventListener('pointerup', onPointerUp);
+            const onStart = (e) => {
+                if (e.target.closest('.fab-menu')) return;
+                setDragging(true);
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                setRel({ x: clientX - pos.x, y: clientY - pos.y });
             };
 
-            const handleClick = () => {
-                if (!isDragging) setOpen(!open);
+            const onMove = useCallback((e) => {
+                if (!dragging) return;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                
+                // Keep in bounds
+                let newX = Math.max(10, Math.min(window.innerWidth - 60, clientX - rel.x));
+                let newY = Math.max(10, Math.min(window.innerHeight - 60, clientY - rel.y));
+                
+                setPos({ x: newX, y: newY });
+            }, [dragging, rel]);
+
+            const onEnd = () => {
+                setDragging(false);
+                ls.set('fabPos', pos);
             };
+
+            useEffect(() => {
+                if (dragging) {
+                    document.addEventListener('mousemove', onMove);
+                    document.addEventListener('mouseup', onEnd);
+                    document.addEventListener('touchmove', onMove, { passive: false });
+                    document.addEventListener('touchend', onEnd);
+                }
+                return () => {
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onEnd);
+                    document.removeEventListener('touchmove', onMove);
+                    document.removeEventListener('touchend', onEnd);
+                };
+            }, [dragging, onMove]);
+
+            // Music Control via hidden iframe
+            const iframeRef = useRef(null);
+            const widgetRef = useRef(null);
+
+            useEffect(() => {
+                if (!window.SC) return;
+                const container = document.getElementById('sc-container');
+                if (container && !container.innerHTML) {
+                    container.innerHTML = `<iframe id="sc-player" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=${encodeURIComponent(SC_TRACKS[0])}&color=%233b82f6&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false"></iframe>`;
+                    iframeRef.current = document.getElementById('sc-player');
+                    widgetRef.current = window.SC.Widget(iframeRef.current);
+                }
+            }, []);
+
+            useEffect(() => {
+                if (!widgetRef.current) return;
+                if (musicOn) {
+                    widgetRef.current.load(SC_TRACKS[track], { auto_play: true });
+                } else {
+                    widgetRef.current.pause();
+                }
+            }, [musicOn, track]);
 
             return (
                 <>
-                    {/* Nút FAB nhỏ gọn, có thể kéo */}
                     <div 
-                        id="fab-container"
+                        className="fixed z-50 touch-none"
                         style={{ left: pos.x, top: pos.y }}
-                        onPointerDown={onPointerDown}
-                        onClick={handleClick}
-                        className="w-12 h-12 glass-strong rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform"
+                        onMouseDown={onStart}
+                        onTouchStart={onStart}
                     >
-                        <i data-lucide={open ? "x" : "sparkles"} size="20" className="text-blue-500 pointer-events-none"></i>
-                    </div>
-                    
-                    {/* Menu Tiện ích */}
-                    {open && (
-                        <div 
-                            style={{ left: Math.max(10, pos.x - 250), top: pos.y + 50 }} 
-                            className="fixed z-50 w-64 glass-strong rounded-3xl p-4 animate-fade-in shadow-2xl border border-white/40"
-                        >
-                            <div className="flex justify-between items-center mb-3">
-                                <p className="text-sm font-bold text-blue-500">Tiện ích</p>
-                            </div>
-                            
-                            <div className="mb-4">
-                                <p className="text-[11px] font-bold text-gray-500 mb-2">Hiệu ứng nền</p>
-                                <div className="grid grid-cols-3 gap-2">
-                                    {effects.map(e => (
-                                        <button key={e} onClick={() => setEffect(e)} className={`text-[10px] font-bold py-1.5 rounded-xl capitalize transition-all ${effect === e ? 'bg-blue-500 text-white shadow-md' : 'glass hover:bg-white/60'}`}>{e === 'none' ? 'Tắt' : e}</button>
-                                    ))}
+                        <button onClick={() => setOpen(!open)} className={`w-12 h-12 rounded-full glass-strong flex items-center justify-center shadow-2xl transition-transform ${open ? 'rotate-90 scale-110 bg-blue-600/50' : 'hover:scale-105'} cursor-grab active:cursor-grabbing`}>
+                            <i data-lucide={open ? "x" : "sparkles"} size="22" className={open ? "text-white" : "text-blue-400"}></i>
+                        </button>
+                        
+                        {open && (
+                            <div className="fab-menu absolute top-14 right-0 w-64 glass-strong rounded-2xl p-4 animate-bounce-in shadow-2xl origin-top-right border border-white/20">
+                                <h4 className="text-xs font-extrabold text-blue-400 uppercase mb-3 flex items-center gap-2"><i data-lucide="settings" size="14"></i> Tiện ích</h4>
+                                
+                                <div className="mb-4">
+                                    <p className="text-[10px] font-bold text-gray-400 mb-2">Hiệu ứng nền</p>
+                                    <div className="grid grid-cols-2 gap-1.5">
+                                        {effects.map(e => (
+                                            <button key={e} onClick={() => setEffect(e)} className={`text-[11px] py-1.5 rounded-lg capitalize transition font-bold ${effect === e ? 'bg-blue-600 text-white shadow-lg' : 'bg-black/20 text-gray-300 hover:bg-white/10'}`}>{e === 'none' ? 'Tắt' : e}</button>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="mb-2 border-t border-white/20 pt-3">
-                                <div className="flex justify-between items-center mb-2">
-                                    <p className="text-[11px] font-bold text-gray-500">Nhạc nền</p>
-                                    <button onClick={() => setMusicOn(!musicOn)} className={`px-3 py-1 rounded-full text-[10px] font-bold transition-colors ${musicOn ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>{musicOn ? 'BẬT' : 'TẮT'}</button>
-                                </div>
-                                {musicOn && (
-                                    <div className="space-y-2">
-                                        <button onClick={() => setTrack((track + 1) % SC_TRACKS.length)} className="w-full glass rounded-xl py-2 text-[11px] font-bold flex justify-center items-center gap-2 hover:bg-white/60 transition">
-                                            <i data-lucide="skip-forward" size="14"></i> Đổi bài hát
+                                <div>
+                                    <div className="flex justify-between items-center mb-2">
+                                        <p className="text-[10px] font-bold text-gray-400">Nhạc nền</p>
+                                        <button onClick={() => setMusicOn(!musicOn)} className={`w-10 h-5 rounded-full relative transition-colors ${musicOn ? 'bg-green-500' : 'bg-gray-600'}`}>
+                                            <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all ${musicOn ? 'left-6' : 'left-1'}`}></div>
                                         </button>
                                     </div>
-                                )}
+                                    {musicOn && (
+                                        <div className="bg-black/30 p-2 rounded-xl flex items-center justify-between border border-white/10">
+                                            <div className="flex items-center gap-2 overflow-hidden">
+                                                <div className="w-8 h-8 rounded-full bg-blue-500 flex flex-shrink-0 items-center justify-center animate-spin-slow"><i data-lucide="disc" size="16" className="text-white"></i></div>
+                                            <p className="text-[10px] font-bold truncate text-gray-300">Đang phát...</p>
+                                            </div>
+                                            <button onClick={() => setTrack((track + 1) % SC_TRACKS.length)} className="p-1.5 bg-white/10 rounded-lg hover:bg-white/20 transition"><i data-lucide="skip-forward" size="14"></i></button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    )}
-
-                    {/* Persistent Music Player (Không bị unmount làm tắt nhạc) */}
-                    {musicOn && (
-                        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 w-72 h-0 opacity-0 pointer-events-none z-0">
-                            <iframe 
-                                width="100%" 
-                                height="100" 
-                                scrolling="no" 
-                                frameBorder="no" 
-                                allow="autoplay" 
-                                src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(SC_TRACKS[track])}&color=%233b82f6&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false`}
-                            ></iframe>
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </>
             );
         }
@@ -1089,7 +1137,7 @@
             useLucide();
             const [darkMode, setDarkMode] = useState(() => ls.get('darkMode', true));
             const [effect, setEffect] = useState(() => ls.get('effect', 'snow'));
-            const [musicOn, setMusicOn] = useState(() => ls.get('musicOn', false));
+            const [musicOn, setMusicOn] = useState(false);
             const [track, setTrack] = useState(0);
             const [activePage, setActivePage] = useState('profile');
             const [shopFilter, setShopFilter] = useState('');
@@ -1111,107 +1159,102 @@
                 ls.set('notifications', d.notifications); ls.set('siteName', d.siteName); ls.set('defaultEffect', d.defaultEffect);
             };
 
-            useEffect(() => { ls.set('darkMode', darkMode); document.documentElement.classList.toggle('dark', darkMode); }, [darkMode]);
+            useEffect(() => { 
+                ls.set('darkMode', darkMode); 
+                if(darkMode) document.documentElement.classList.add('dark');
+                else document.documentElement.classList.remove('dark');
+                document.documentElement.classList.toggle('light', !darkMode);
+            }, [darkMode]);
+            
             useEffect(() => { ls.set('effect', effect); }, [effect]);
-            useEffect(() => { ls.set('musicOn', musicOn); }, [musicOn]);
             useEffect(() => { ls.set('isAdmin', isAdmin); }, [isAdmin]);
 
             const navigate = (page, filter) => {
                 setActivePage(page);
-                if (filter !== undefined) setShopFilter(filter);
-                if (page === 'shop' && !filter) setShopFilter('');
+                if (page === 'shop') {
+                    setShopFilter(filter !== undefined ? filter : '');
+                }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
 
+            const [dockOpen, setDockOpen] = useState(false);
+            const [lang, setLang] = useState('vi');
+
             return (
-                <div className="max-w-4xl mx-auto p-3 pt-5 pb-32">
+                <div className="max-w-4xl mx-auto p-4 pb-32">
                     <Effects type={effect} />
                     
-                    {/* Thanh Menu Trên đã được xóa hoàn toàn, thay vào đó là nút Setting nhỏ gọn */}
-                    <div className="flex justify-between items-center mb-5 px-2">
-                        <h1 className="text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-cyan-400">{data.siteName}</h1>
+                    {/* Header */}
+                    <header className="glass sticky top-4 z-30 rounded-3xl p-3 px-4 mb-6 flex justify-between items-center shadow-lg transition-all duration-300">
+                        <button onClick={() => setDrawerOpen(true)} className="p-2 glass-strong rounded-xl hover:scale-105 transition"><i data-lucide="menu" size="20" className="text-blue-500"></i></button>
+                        <h1 className="text-lg font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300 tracking-tight">{data.siteName}</h1>
                         <div className="flex gap-2">
-                            <button onClick={() => setDarkMode(!darkMode)} className="p-2.5 glass-strong rounded-full shadow-md active:scale-90 transition-all">
-                                <i data-lucide={darkMode ? 'sun' : 'moon'} size="18"></i>
-                            </button>
-                            <button onClick={() => setDrawerOpen(true)} className="p-2.5 glass-strong rounded-full shadow-md active:scale-90 transition-all">
-                                <i data-lucide="menu" size="18" className="text-blue-500"></i>
+                            <button onClick={() => setLang(lang === 'vi' ? 'en' : 'vi')} className="p-2 glass-strong rounded-xl text-[10px] font-extrabold hover:scale-105 transition">{lang.toUpperCase()}</button>
+                            <button onClick={() => setDarkMode(!darkMode)} className="p-2 glass-strong rounded-xl hover:scale-105 transition">
+                                <i data-lucide={darkMode ? 'sun' : 'moon'} size="18" className={darkMode ? 'text-yellow-400' : 'text-slate-700'}></i>
                             </button>
                         </div>
-                    </div>
+                    </header>
 
                     {/* Page Content */}
-                    <div className="min-h-[70vh]">
+                    <div className="min-h-[60vh] relative">
                         {activePage === 'profile' && <ProfileHome profile={data.profile} posts={data.posts} onNavigate={navigate} />}
                         {activePage === 'shop' && <Shop products={data.products} filter={shopFilter} setFilter={setShopFilter} />}
-                        {activePage === 'posts' && (
-                            <div className="animate-fade-in space-y-4">
-                                <h2 className="text-2xl font-bold mb-4">Bài Viết</h2>
-                                {data.posts.length === 0 && <p className="text-center text-gray-500 py-10">Chưa có bài viết</p>}
-                                {[...data.posts].reverse().map(p => (
-                                    <div key={p.id} className="glass p-5 rounded-3xl shadow-lg">
-                                        {p.image && <img src={p.image} className="w-full h-48 object-cover rounded-2xl mb-4" alt="" />}
-                                        <h3 className="font-bold text-lg text-blue-500">{p.title}</h3>
-                                        <p className="text-xs text-gray-500 mt-1">{new Date(p.date).toLocaleDateString('vi-VN')}</p>
-                                        <p className="text-sm mt-3 text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">{p.content}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                        {activePage === 'notifications' && (
-                            <div className="animate-fade-in space-y-3">
-                                <h2 className="text-2xl font-bold mb-4">Thông Báo</h2>
-                                {data.notifications.length === 0 && <p className="text-center text-gray-500 py-10">Không có thông báo</p>}
-                                {[...data.notifications].reverse().map(n => (
-                                    <div key={n.id} className="glass p-4 rounded-2xl flex gap-3 shadow-md">
-                                        <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                                            <i data-lucide="bell" size="20" className="text-blue-500"></i>
-                                        </div>
-                                        <div className="flex-1 pt-1">
-                                            <p className="text-sm font-medium">{n.text}</p>
-                                            <p className="text-xs text-gray-500 mt-1">{new Date(n.createdAt).toLocaleString('vi-VN')}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
                         {activePage === 'weather' && <Weather />}
+                        {activePage === 'ipcheck' && <IpCheck />}
+                        {activePage === 'speedtest' && <SpeedTest />}
+                        {activePage === 'notes' && <Notes />}
                         {activePage === 'tempmail' && <TempMail />}
                         {activePage === 'contact' && <ContactPage profile={data.profile} />}
-                        {activePage === 'admin-login' && <AdminLogin onLogin={() => { setIsAdmin(true); navigate('admin'); }} />}
-                        {activePage === 'admin' && (isAdmin ? <AdminPanel data={data} setData={setData} onLogout={() => { setIsAdmin(false); navigate('profile'); }} /> : <AdminLogin onLogin={() => { setIsAdmin(true); navigate('admin'); }} />)}
-                        
-                        {/* Các trang placeholder cho đủ tính năng */}
-                        {['ipcheck', 'notes'].includes(activePage) && (
-                            <div className="glass p-10 rounded-3xl text-center animate-fade-in shadow-xl">
-                                <i data-lucide="tool" size="48" className="text-blue-500 mx-auto mb-4 animate-bounce"></i>
-                                <h2 className="text-xl font-bold">Tính năng đang bảo trì</h2>
-                                <p className="text-sm text-gray-500 mt-2">Chức năng này sẽ được cập nhật trong phiên bản tới.</p>
+                        {activePage === 'posts' && (
+                            <div className="glass p-6 rounded-3xl space-y-4">
+                                <h2 className="text-xl font-extrabold mb-4">Bài Viết Mới Nhất</h2>
+                                {data.posts.map(p => (
+                                    <div key={p.id} className="glass-strong p-5 rounded-2xl">
+                                        <h3 className="font-bold text-blue-400">{p.title}</h3>
+                                        <p className="text-xs text-gray-500 mt-1 mb-2">{new Date(p.date).toLocaleDateString('vi-VN')}</p>
+                                        <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{p.content}</p>
+                                    </div>
+                                ))}
                             </div>
                         )}
+                        {activePage === 'admin-login' && <AdminLogin onLogin={() => { setIsAdmin(true); navigate('admin'); }} />}
+                        {activePage === 'admin' && (isAdmin ? <AdminPanel data={data} setData={setData} onLogout={() => { setIsAdmin(false); navigate('profile'); }} /> : <AdminLogin onLogin={() => { setIsAdmin(true); navigate('admin'); }} />)}
                     </div>
 
-                    {/* Floating Tools */}
+                    {/* Accessibility Floating Button (Draggable) */}
                     <Accessibility effect={effect} setEffect={setEffect} musicOn={musicOn} setMusicOn={setMusicOn} track={track} setTrack={setTrack} />
                     
                     {/* Drawer Menu */}
                     <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} activePage={activePage} onNavigate={navigate} data={data} isAdmin={isAdmin} />
 
-                    {/* Bottom iOS Nav (Nhỏ gọn, kính mờ) */}
-                    <nav className="fixed bottom-5 left-1/2 -translate-x-1/2 w-[85%] max-w-sm glass-strong rounded-[2rem] p-2 flex justify-around items-center z-40 shadow-[0_10px_40px_rgba(0,0,0,0.2)] border border-white/40">
-                        <button onClick={() => navigate('profile')} className={`dock-item flex flex-col items-center p-2 w-16 rounded-2xl ${activePage === 'profile' ? 'bg-blue-500 text-white shadow-md' : 'text-gray-500 hover:bg-white/50 dark:hover:bg-slate-800/50'}`}>
-                            <i data-lucide="home" size="20"></i><span className="text-[9px] font-bold mt-1">Home</span>
+                    {/* Sticker Dock (Bottom Nav iOS Style) */}
+                    <div className={`sticker-dock ${dockOpen ? 'open' : ''}`}>
+                        <div className="dock-menu glass-strong rounded-full px-4 py-2">
+                            <button onClick={() => { navigate('profile'); setDockOpen(false); }} className={`dock-btn ${activePage === 'profile' ? 'text-blue-500' : 'text-gray-400'}`}>
+                                <i data-lucide="home" size="20"></i>
+                            </button>
+                            <button onClick={() => { navigate('shop'); setDockOpen(false); }} className={`dock-btn ${activePage === 'shop' ? 'text-blue-500' : 'text-gray-400'}`}>
+                                <i data-lucide="shopping-bag" size="20"></i>
+                            </button>
+                            <button onClick={() => { navigate('weather'); setDockOpen(false); }} className={`dock-btn ${activePage === 'weather' ? 'text-blue-500' : 'text-gray-400'}`}>
+                                <i data-lucide="cloud-sun" size="20"></i>
+                            </button>
+                            <button onClick={() => { navigate('contact'); setDockOpen(false); }} className={`dock-btn ${activePage === 'contact' ? 'text-blue-500' : 'text-gray-400'}`}>
+                                <i data-lucide="phone" size="20"></i>
+                            </button>
+                        </div>
+                        
+                        {/* Quby Sticker Button */}
+                        <button 
+                            onClick={() => setDockOpen(!dockOpen)} 
+                            className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-[0_10px_30px_rgba(59,130,246,0.5)] border-4 border-white/20 active:scale-90 transition-transform relative z-10"
+                        >
+                            <span className="text-3xl filter drop-shadow-md animate-bounce-in block" style={{ animationDuration: '2s', animationIterationCount: 'infinite' }}>
+                                {dockOpen ? '✕' : '🐳'}
+                            </span>
                         </button>
-                        <button onClick={() => navigate('shop')} className={`dock-item flex flex-col items-center p-2 w-16 rounded-2xl ${activePage === 'shop' ? 'bg-blue-500 text-white shadow-md' : 'text-gray-500 hover:bg-white/50 dark:hover:bg-slate-800/50'}`}>
-                            <i data-lucide="shopping-bag" size="20"></i><span className="text-[9px] font-bold mt-1">Shop</span>
-                        </button>
-                        <button onClick={() => navigate('weather')} className={`dock-item flex flex-col items-center p-2 w-16 rounded-2xl ${activePage === 'weather' ? 'bg-blue-500 text-white shadow-md' : 'text-gray-500 hover:bg-white/50 dark:hover:bg-slate-800/50'}`}>
-                            <i data-lucide="cloud-sun" size="20"></i><span className="text-[9px] font-bold mt-1">Weather</span>
-                        </button>
-                        <button onClick={() => navigate('contact')} className={`dock-item flex flex-col items-center p-2 w-16 rounded-2xl ${activePage === 'contact' ? 'bg-blue-500 text-white shadow-md' : 'text-gray-500 hover:bg-white/50 dark:hover:bg-slate-800/50'}`}>
-                            <i data-lucide="phone" size="20"></i><span className="text-[9px] font-bold mt-1">Contact</span>
-                        </button>
-                    </nav>
+                    </div>
                 </div>
             );
         }
