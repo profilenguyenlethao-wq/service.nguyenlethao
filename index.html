@@ -1,1181 +1,1158 @@
 <!DOCTYPE html>
 <html lang="vi" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Thao Service • Profile & Shop MMO</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-*{font-family:'Inter',sans-serif}
-body{overflow-x:hidden;transition:background .3s,color .3s;background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 50%,#f8fafc 100%);color:#0f172a;min-height:100vh}
-.dark body{background:linear-gradient(135deg,#0a0f1e 0%,#0f172a 50%,#1e1b4b 100%);color:#f1f5f9}
-.glass{background:rgba(255,255,255,.65);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(255,255,255,.5);box-shadow:0 8px 32px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.6)}
-.dark .glass{background:rgba(30,41,59,.55);border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 32px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.05)}
-.glass-strong{background:rgba(255,255,255,.85);backdrop-filter:blur(30px) saturate(200%);-webkit-backdrop-filter:blur(30px) saturate(200%);border:1px solid rgba(255,255,255,.7)}
-.dark .glass-strong{background:rgba(15,23,42,.85);border:1px solid rgba(255,255,255,.1)}
-.no-scrollbar::-webkit-scrollbar{display:none}
-.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-thumb{background:#60a5fa;border-radius:10px}
-.fx-snow,.fx-flower,.fx-lava,.fx-bubble{position:fixed;pointer-events:none;z-index:0}
-.fx-snow{top:-20px;animation:fxFall linear forwards;color:#e0f2fe}
-.fx-flower{top:-20px;animation:fxFall linear forwards}
-.fx-lava{bottom:-20px;animation:fxRise linear forwards}
-.fx-bubble{bottom:-20px;animation:fxRise linear forwards}
-@keyframes fxFall{to{transform:translateY(110vh) rotate(720deg);opacity:.2}}
-@keyframes fxRise{to{transform:translateY(-110vh);opacity:0}}
-.fx-fog{position:fixed;bottom:0;left:0;width:100%;height:35vh;background:linear-gradient(to top,rgba(255,255,255,.7),transparent);pointer-events:none;z-index:0}
-.dark .fx-fog{background:linear-gradient(to top,rgba(59,130,246,.15),transparent)}
-.dock-item{transition:transform .2s cubic-bezier(.4,0,.2,1)}
-.dock-item:active{transform:scale(.85)}
-.animate-fade-in{animation:fadeIn .3s ease-out}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.animate-slide-up{animation:slideUp .3s ease-out}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.drawer-item{transition:background .2s,transform .15s}
-.drawer-item:hover{background:rgba(59,130,246,.1);transform:translateX(4px)}
-.line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-</style>
-<script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:'#3b82f6'}}}}</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Thao Service • MMO & Social Support</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden; 
+            transition: background 0.3s, color 0.3s; 
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f8fafc 100%);
+            color: #0f172a;
+            min-height: 100vh;
+        }
+        .dark body {
+            background: linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1e1b4b 100%);
+            color: #f1f5f9;
+        }
+
+        /* Liquid Glass Effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+        .dark .glass-strong {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animations */
+        .snowflake { position: fixed; top: -10px; color: #e0f2fe; font-size: 1em; pointer-events: none; animation: fall linear forwards; z-index: 0; }
+        .flower { position: fixed; top: -10px; font-size: 1.5em; pointer-events: none; animation: fall linear forwards; z-index: 0; }
+        .lava { position: fixed; bottom: -10px; border-radius: 50%; pointer-events: none; animation: rise linear forwards; z-index: 0; box-shadow: 0 0 10px rgba(255,100,0,0.8); }
+        .fog { position: fixed; bottom: 0; left: 0; width: 100%; height: 35vh; background: linear-gradient(to top, rgba(255,255,255,0.7), transparent); pointer-events: none; z-index: 0; }
+        .dark .fog { background: linear-gradient(to top, rgba(59,130,246,0.15), transparent); }
+        
+        @keyframes fall { to { transform: translateY(105vh) rotate(720deg); opacity: 0.2; } }
+        @keyframes rise { to { transform: translateY(-105vh); opacity: 0; } }
+
+        /* Hide Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* iPhone Dock Animation */
+        .dock-item { transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .dock-item:active { transform: scale(0.85); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #60a5fa; border-radius: 10px; }
+        
+        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#3b82f6' } } } }
+    </script>
 </head>
-<body>
-<div id="fx-layer" class="fixed inset-0 pointer-events-none z-0"></div>
-<div id="root" class="relative z-10"></div>
+<body class="pb-24 relative">
 
-<script type="text/babel">
-const {useState,useEffect,useRef} = React;
+    <!-- Background Effects Layer -->
+    <div id="effect-layer" class="fixed inset-0 pointer-events-none z-0"></div>
 
-/* ===== CONSTANTS ===== */
-const ADMIN_USERNAME='nguyenlethaoiubo';
-const ADMIN_PASSWORD='nguyenthao080626';
-const SC_TRACKS=[
-  "https://soundcloud.com/quang-huynhh/v-b-n-anh-remix-jack-j97-x",
-  "https://soundcloud.com/doyu-358490204/jack-j97-ng-i-d-ng-wen-remix"
-];
-const PRODUCT_CATEGORIES=[
-  {name:"Shop Liên Quân",subs:["Acc Kim Cương","Acc Cao Thủ"]},
-  {name:"Shop Free Fire",subs:["Acc Thách Đấu"]},
-  {name:"Support Social",subs:["Meta","TikTok","Google"]},
-  {name:"Proxy / VPN",subs:[]},
-  {name:"IPA / Antiban",subs:[]},
-  {name:"Source / Raw",subs:[]},
-  {name:"Bypass / Tool",subs:[]}
-];
-const DEFAULT_PROFILE={
-  name:"Nguyễn Lê Thảo", verified:true,
-  bio:"Chuyên cung cấp dịch vụ MMO, Support Facebook/Meta, TikTok, Google và các tool hỗ trợ. Uy tín - Nhanh chóng - Bảo mật.",
-  avatar:"https://ui-avatars.com/api/?name=NL&background=3b82f6&color=fff&size=200",
-  cover:"https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&q=80",
-  contact:{telegram:"usertaiwan8686",facebook:"nguyenlethaoservice",phone:"0898666218",email:"nguyenlethao.profile08@gmail.com",discord:"nguyenlethao.service"}
-};
-const DEFAULT_PRODUCTS=[
-  {id:1,category:"Support Social",subcategory:"Meta",name:"UNLOCK 282",price:"150.000đ",desc:"Mở khóa tính năng 282",stock:10,image:""},
-  {id:2,category:"Support Social",subcategory:"Meta",name:"UNLOCK 956",price:"200.000đ",desc:"Mở khóa tính năng 956",stock:5,image:""},
-  {id:3,category:"Support Social",subcategory:"Meta",name:"UNLOCK FAQ",price:"100.000đ",desc:"Mở FAQ",stock:8,image:""},
-  {id:4,category:"Support Social",subcategory:"Meta",name:"SETCAMP BM",price:"250.000đ",desc:"Setup camp BM",stock:6,image:""},
-  {id:5,category:"Support Social",subcategory:"Meta",name:"BM 250 / 2K5",price:"300.000đ",desc:"BM 250 hoặc 2K5",stock:4,image:""},
-  {id:6,category:"Support Social",subcategory:"Meta",name:"TICK PROFILE / FANPAGE",price:"500.000đ",desc:"Tick xanh profile/fanpage",stock:3,image:""},
-  {id:7,category:"Support Social",subcategory:"Meta",name:"PAY TICK / UPDATE TICK",price:"400.000đ",desc:"Pay/Update tick",stock:5,image:""},
-  {id:8,category:"Support Social",subcategory:"TikTok",name:"UNLOCK LIVE",price:"200.000đ",desc:"Mở live TikTok",stock:7,image:""},
-  {id:9,category:"Support Social",subcategory:"TikTok",name:"UNLOCK ACCOUNT",price:"180.000đ",desc:"Mở tài khoản TikTok",stock:10,image:""},
-  {id:10,category:"Support Social",subcategory:"TikTok",name:"UPDATE ARTIST",price:"350.000đ",desc:"Update Artist",stock:3,image:""},
-  {id:11,category:"Support Social",subcategory:"TikTok",name:"UPDATE BUSINESSES",price:"350.000đ",desc:"Update Business",stock:3,image:""},
-  {id:12,category:"Support Social",subcategory:"Google",name:"UNLOCK GOOGLE SPAM/2FA/DIE",price:"250.000đ",desc:"Unlock Google",stock:5,image:""},
-  {id:13,category:"Shop Liên Quân",subcategory:"Acc Kim Cương",name:"Acc Kim Cương 100+",price:"500.000đ",desc:"Full tướng, ngọc đỏ",stock:5,image:""},
-  {id:14,category:"Shop Free Fire",subcategory:"Acc Thách Đấu",name:"Acc FF Thách Đấu",price:"300.000đ",desc:"Full nhân vật",stock:2,image:""}
-];
-const DEFAULT_POSTS=[
-  {id:1,title:"Hướng dẫn mua hàng",content:"Vui lòng liên hệ Telegram để được hỗ trợ thanh toán và nhận hàng.",date:new Date().toISOString(),image:""},
-  {id:2,title:"Cập nhật bảo mật Meta",content:"Hệ thống đã cập nhật quy trình mới cho UNLOCK 956.",date:new Date().toISOString(),image:""}
-];
-const DEFAULT_NOTIFICATIONS=[{id:1,text:"Chào mừng bạn đến với Thao Service!",createdAt:Date.now()}];
+    <!-- React Root -->
+    <div id="root" class="relative z-10"></div>
 
-/* ===== UTILS ===== */
-const ls={
-  get:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}},
-  set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){alert("Bộ nhớ đầy, hãy xoá bớt ảnh!");}},
-  del:k=>localStorage.removeItem(k)
-};
-const compressImage=(file,maxW=400,q=.7)=>new Promise(res=>{
-  const r=new FileReader();
-  r.onload=e=>{const img=new Image();img.onload=()=>{
-    const c=document.createElement('canvas');let w=img.width,h=img.height;
-    if(w>maxW){h=h*maxW/w;w=maxW}
-    c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
-    res(c.toDataURL('image/jpeg',q));
-  };img.src=e.target.result};
-  r.readAsDataURL(file);
-});
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
 
-/* ===== ICON HOOK (fix lỗi icon) ===== */
-function useLucide(){
-  useEffect(()=>{
-    let scheduled=false;
-    const run=()=>{if(!window.lucide)return;if(!document.querySelector('[data-lucide]'))return;window.lucide.createIcons();};
-    const schedule=()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;run();});};
-    run();
-    const obs=new MutationObserver(schedule);
-    obs.observe(document.body,{childList:true,subtree:true});
-    return()=>obs.disconnect();
-  },[]);
-}
+        /* ================= CONSTANTS & DATA ================= */
+        const ADMIN_USER = "nguyenlethaoiubo";
+        const ADMIN_PASS = "nguyenthao080626";
+        
+        // Fix link Soundcloud bị lỗi font
+        const SC_TRACKS = [
+            "https://soundcloud.com/quang-huynhh/v-b-n-anh-remix-jack-j97-x",
+            "https://soundcloud.com/doyu-358490204/jack-j97-ng-i-d-ng-wen-remix"
+        ];
 
-/* ===== EFFECTS ===== */
-function Effects({type}){
-  useEffect(()=>{
-    const layer=document.getElementById('fx-layer');if(!layer)return;
-    layer.innerHTML='';if(type==='none')return;
-    let interval,timeouts=[];
-    const add=(html,cls,styleFn,dur)=>{
-      const el=document.createElement('div');el.innerHTML=html;el.className=cls;
-      Object.assign(el.style,styleFn());layer.appendChild(el);
-      timeouts.push(setTimeout(()=>el.remove(),dur));
-    };
-    if(type==='snow')interval=setInterval(()=>{
-      add('❄','fx-snow',()=>({left:Math.random()*100+'vw',animationDuration:(Math.random()*4+4)+'s',opacity:Math.random()*.7+.3,fontSize:(Math.random()*10+12)+'px'}),8000);
-    },300);
-    else if(type==='flower'){
-      const a=['🌸','🌺','🌼','🌷','🍁','🍂'];
-      interval=setInterval(()=>{
-        add(a[Math.floor(Math.random()*a.length)],'fx-flower',()=>({left:Math.random()*100+'vw',animationDuration:(Math.random()*4+5)+'s',fontSize:(Math.random()*12+14)+'px'}),9000);
-      },500);
-    }else if(type==='lava')interval=setInterval(()=>{
-      const s=Math.random()*6+4;
-      add('','fx-lava',()=>({left:Math.random()*100+'vw',animationDuration:(Math.random()*3+4)+'s',width:s+'px',height:s+'px',background:`radial-gradient(circle,hsl(${Math.random()*30+15},100%,60%),hsl(${Math.random()*20},100%,40%))`,borderRadius:'50%',boxShadow:'0 0 10px rgba(255,100,0,.8)'}),7000);
-    },120);
-    else if(type==='bubbles')interval=setInterval(()=>{
-      const s=Math.random()*25+15;
-      add('','fx-bubble',()=>({left:Math.random()*100+'vw',animationDuration:(Math.random()*5+5)+'s',width:s+'px',height:s+'px',border:'2px solid rgba(96,165,250,.5)',borderRadius:'50%',opacity:Math.random()*.6+.3}),10000);
-    },400);
-    else if(type==='fog')layer.innerHTML='<div class="fx-fog"></div>';
-    return()=>{if(interval)clearInterval(interval);timeouts.forEach(t=>clearTimeout(t));layer.innerHTML='';};
-  },[type]);
-  return null;
-}
+        const DEFAULT_PROFILE = {
+            name: "Nguyễn Lê Thảo",
+            verified: true,
+            bio: "Chuyên cung cấp dịch vụ MMO, Support Facebook/Meta, TikTok, Google và các tool hỗ trợ. Uy tín - Nhanh chóng - Bảo mật.",
+            avatar: "https://ui-avatars.com/api/?name=NL&background=3b82f6&color=fff&size=200",
+            cover: "https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&q=80",
+            contact: {
+                telegram: "usertaiwan8686", facebook: "nguyenlethaoservice",
+                phone: "0898666218", email: "nguyenlethao.profile08@gmail.com", discord: "nguyenlethao.service"
+            }
+        };
 
-/* ===== VERIFIED BADGE ===== */
-const Verified=({size=20})=>(
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="inline-block text-blue-500">
-    <circle cx="12" cy="12" r="10" fill="currentColor"/>
-    <path d="M8 12.5l2.5 2.5L16 9.5" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-  </svg>
-);
+        const DEFAULT_PRODUCTS = [
+            { id: 1, category: "Support Social", subcategory: "Meta", name: "UNLOCK 282", price: "150.000đ", desc: "Mở khóa tính năng 282", stock: 10, image: "" },
+            { id: 2, category: "Support Social", subcategory: "Meta", name: "UNLOCK 956", price: "200.000đ", desc: "Mở khóa tính năng 956", stock: 5, image: "" },
+            { id: 3, category: "Support Social", subcategory: "Meta", name: "UNLOCK FAQ", price: "100.000đ", desc: "Mở FAQ", stock: 8, image: "" },
+            { id: 4, category: "Support Social", subcategory: "Meta", name: "SETCAMP BM", price: "250.000đ", desc: "Setup camp BM", stock: 6, image: "" },
+            { id: 5, category: "Support Social", subcategory: "Meta", name: "BM 250 / 2K5", price: "300.000đ", desc: "BM 250 hoặc 2K5", stock: 4, image: "" },
+            { id: 6, category: "Support Social", subcategory: "Meta", name: "TICK PROFILE / FANPAGE", price: "500.000đ", desc: "Tick xanh profile/fanpage", stock: 3, image: "" },
+            { id: 7, category: "Support Social", subcategory: "Meta", name: "PAY TICK / UPDATE TICK", price: "400.000đ", desc: "Pay/Update tick", stock: 5, image: "" },
+            { id: 8, category: "Support Social", subcategory: "TikTok", name: "UNLOCK LIVE", price: "200.000đ", desc: "Mở live TikTok", stock: 7, image: "" },
+            { id: 9, category: "Support Social", subcategory: "TikTok", name: "UNLOCK ACCOUNT", price: "180.000đ", desc: "Mở tài khoản TikTok", stock: 10, image: "" },
+            { id: 10, category: "Support Social", subcategory: "TikTok", name: "UPDATE ARTIST", price: "350.000đ", desc: "Update Artist", stock: 3, image: "" },
+            { id: 11, category: "Support Social", subcategory: "TikTok", name: "UPDATE BUSINESSES", price: "350.000đ", desc: "Update Business", stock: 3, image: "" },
+            { id: 12, category: "Support Social", subcategory: "Google", name: "UNLOCK GOOGLE SPAM/2FA/DIE", price: "250.000đ", desc: "Unlock Google", stock: 5, image: "" },
+            { id: 13, category: "Shop Liên Quân", subcategory: "", name: "Acc Kim Cương 100+", price: "500.000đ", desc: "Full tướng, ngọc đỏ", stock: 5, image: "" },
+            { id: 14, category: "Shop Free Fire", subcategory: "", name: "Acc FF Thách Đấu", price: "300.000đ", desc: "Full nhân vật", stock: 2, image: "" }
+        ];
 
-/* ===== PROFILE HOME ===== */
-function ProfileHome({profile,posts,products,onNavigate}){
-  return(
-    <div className="animate-fade-in space-y-4">
-      <div className="relative rounded-3xl overflow-hidden glass">
-        <div className="h-40 md:h-56 relative bg-gradient-to-r from-blue-500 to-cyan-400">
-          {profile.cover&&<img src={profile.cover} alt="" className="w-full h-full object-cover"/>}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"/>
-        </div>
-        <div className="px-5 pb-6 -mt-14 relative">
-          <img src={profile.avatar} alt="" className="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-white dark:border-slate-800 object-cover shadow-lg bg-white"/>
-          <div className="mt-3">
-            <h2 className="text-2xl font-extrabold flex items-center gap-1.5">
-              {profile.name}{profile.verified&&<Verified size={22}/>}
-            </h2>
-            <p className="text-xs text-gray-500 mt-0.5">@{ADMIN_USERNAME} • MMO Service Provider</p>
-          </div>
-          <p className="mt-3 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{profile.bio}</p>
-          <div className="grid grid-cols-3 gap-2 mt-4">
-            <div className="glass-strong rounded-xl p-2 text-center">
-              <p className="text-lg font-bold text-blue-500">{products.length}</p>
-              <p className="text-[10px] text-gray-500">Sản phẩm</p>
-            </div>
-            <div className="glass-strong rounded-xl p-2 text-center">
-              <p className="text-lg font-bold text-green-500">{posts.length}</p>
-              <p className="text-[10px] text-gray-500">Bài viết</p>
-            </div>
-            <div className="glass-strong rounded-xl p-2 text-center">
-              <p className="text-lg font-bold text-purple-500">24/7</p>
-              <p className="text-[10px] text-gray-500">Hỗ trợ</p>
-            </div>
-          </div>
-          <div className="flex gap-2 mt-4">
-            <button onClick={()=>onNavigate('shop')} className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 transition">Xem Shop</button>
-            <button onClick={()=>onNavigate('contact')} className="flex-1 glass-strong py-2.5 rounded-xl text-sm font-bold hover:bg-white/80 transition">Liên Hệ</button>
-          </div>
-        </div>
-      </div>
-      <div className="glass rounded-2xl p-5">
-        <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-          <i data-lucide="newspaper" size="18" className="text-blue-500"/> Bài viết mới
-        </h3>
-        <div className="space-y-2">
-          {posts.slice(-3).reverse().map(p=>(
-            <div key={p.id} onClick={()=>onNavigate('posts')} className="glass-strong rounded-xl p-3 cursor-pointer hover:bg-white/90 dark:hover:bg-slate-700/80 transition">
-              <p className="font-semibold text-sm">{p.title}</p>
-              <p className="text-xs text-gray-500 line-clamp-2 mt-1">{p.content}</p>
-            </div>
-          ))}
-          {posts.length===0&&<p className="text-sm text-gray-500 text-center py-4">Chưa có bài viết</p>}
-        </div>
-      </div>
-    </div>
-  );
-}
+        const DEFAULT_POSTS = [
+            { id: 1, title: "Hướng dẫn mua hàng", content: "Vui lòng liên hệ Telegram để được hỗ trợ thanh toán và nhận hàng.", date: new Date().toISOString(), image: "" },
+            { id: 2, title: "Cập nhật bảo mật Meta", content: "Hệ thống đã cập nhật quy trình mới cho UNLOCK 956.", date: new Date().toISOString(), image: "" }
+        ];
 
-/* ===== SHOP ===== */
-function Shop({products,filter,setFilter}){
-  const [search,setSearch]=useState('');
-  const [sort,setSort]=useState('new');
-  const cats=['All',...new Set(products.map(p=>p.category))];
-  let list=products.filter(p=>{
-    if(filter&&p.category!==filter&&p.subcategory!==filter)return false;
-    if(search&&!p.name.toLowerCase().includes(search.toLowerCase()))return false;
-    return true;
-  });
-  if(sort==='price')list=[...list].sort((a,b)=>parseInt(a.price.replace(/\D/g,''))-parseInt(b.price.replace(/\D/g,''));
-  return(
-    <div className="animate-fade-in">
-      <div className="glass rounded-2xl p-4 mb-4">
-        <div className="flex gap-2 mb-3">
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Tìm sản phẩm..." className="flex-1 glass-strong rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 ring-blue-500"/>
-          <select value={sort} onChange={e=>setSort(e.target.value)} className="glass-strong rounded-xl px-3 py-2 text-sm outline-none">
-            <option value="new">Mới nhất</option>
-            <option value="price">Giá</option>
-          </select>
-        </div>
-        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-          <button onClick={()=>setFilter('')} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold ${!filter?'bg-blue-500 text-white':'glass-strong'}`}>Tất cả</button>
-          {cats.filter(c=>c!=='All').map(c=>(
-            <button key={c} onClick={()=>setFilter(c)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold ${filter===c?'bg-blue-500 text-white':'glass-strong'}`}>{c}</button>
-          ))}
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {list.map(p=>(
-          <div key={p.id} className="glass rounded-2xl overflow-hidden flex flex-col">
-            {p.image?<img src={p.image} className="h-40 w-full object-cover" alt=""/>:
-              <div className="h-40 bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-white text-4xl font-bold"><i data-lucide="package" size="48"/></div>}
-            <div className="p-4 flex-1 flex flex-col">
-              <div className="flex justify-between items-start mb-2">
-                <span className="text-[10px] font-bold text-blue-500 bg-blue-100 dark:bg-blue-900/50 px-2 py-0.5 rounded-full">{p.subcategory||p.category}</span>
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${p.stock>0?'bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400':'bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400'}`}>
-                  {p.stock>0?`Kho: ${p.stock}`:'Hết'}
-                </span>
-              </div>
-              <h3 className="font-bold text-base">{p.name}</h3>
-              <p className="text-xs text-gray-500 mt-1 flex-1">{p.desc}</p>
-              <div className="mt-3 flex justify-between items-center">
-                <span className="font-bold text-red-500">{p.price}</span>
-                <button disabled={p.stock<=0} className={`px-4 py-1.5 rounded-lg text-xs font-bold text-white ${p.stock>0?'bg-blue-500 hover:bg-blue-600':'bg-gray-400 cursor-not-allowed'}`}>Mua</button>
-              </div>
-            </div>
-          </div>
-        ))}
-        {list.length===0&&<div className="col-span-full text-center text-gray-500 py-10">Không có sản phẩm</div>}
-      </div>
-    </div>
-  );
-}
+        const DEFAULT_NOTIFS = [{ id: 1, text: "Chào mừng bạn đến với Thao Service!", createdAt: Date.now() }];
 
-/* ===== WEATHER ===== */
-function Weather(){
-  const [weather,setWeather]=useState(null);
-  const [loading,setLoading]=useState(false);
-  const [activeCity,setActiveCity]=useState(null);
-  const cities=[
-    {name:"Quy Nhơn",lat:13.78,lon:109.22},
-    {name:"Nha Trang",lat:12.24,lon:109.19},
-    {name:"Đà Nẵng",lat:16.05,lon:108.20},
-    {name:"Hà Nội",lat:21.03,lon:105.85},
-    {name:"HCM",lat:10.82,lon:106.63}
-  ];
-  const getW=async(lat,lon,name)=>{
-    setLoading(true);
-    try{
-      const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability&timezone=Asia/Ho_Chi_Minh`);
-      const d=await r.json();
-      setWeather({name,current:d.current,hourly:d.hourly});setActiveCity(name);
-    }catch(e){alert('Lỗi tải thời tiết');}
-    setLoading(false);
-  };
-  const myLoc=async()=>{
-    setLoading(true);
-    try{
-      const r=await fetch('https://ipapi.co/json/');
-      const d=await r.json();
-      if(d.latitude)getW(d.latitude,d.longitude,`📍 ${d.city||'Vị trí'}`);
-    }catch(e){alert('Lỗi check vị trí');}
-    setLoading(false);
-  };
-  useEffect(()=>{getW(cities[0].lat,cities[0].lon,cities[0].name);},[]);
-  const codeMap={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',80:'🌧',95:'⛈'};
-  return(
-    <div className="glass p-5 rounded-2xl animate-fade-in">
-      <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="cloud-sun" size="22" className="text-blue-500"/> Thời tiết</h2>
-      <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
-        {cities.map(c=>(
-          <button key={c.name} onClick={()=>getW(c.lat,c.lon,c.name)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold ${activeCity===c.name?'bg-blue-500 text-white':'glass-strong'}`}>{c.name}</button>
-        ))}
-        <button onClick={myLoc} className="whitespace-nowrap bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-          <i data-lucide="map-pin" size="12"/> Vị trí của tôi
-        </button>
-      </div>
-      {loading?<p className="text-sm text-center py-3 animate-pulse">Đang tải...</p>:weather&&(
-        <div className="mt-3 space-y-3">
-          <div className="glass-strong p-4 rounded-xl flex justify-between items-center">
-            <div>
-              <p className="font-bold">{weather.name}</p>
-              <p className="text-xs text-gray-500">Độ ẩm: {weather.current.relative_humidity_2m}% • Gió: {weather.current.wind_speed_10m} km/h</p>
-            </div>
-            <div className="text-right">
-              <p className="text-4xl">{codeMap[weather.current.weather_code]||'🌤'}</p>
-              <p className="text-2xl font-extrabold text-blue-500">{weather.current.temperature_2m}°C</p>
-            </div>
-          </div>
-          <div>
-            <p className="text-xs font-bold mb-2 text-gray-500">Dự báo 24H</p>
-            <div className="overflow-x-auto no-scrollbar flex gap-3 glass-strong p-3 rounded-xl">
-              {weather.hourly.time.slice(0,12).map((time,i)=>(
-                <div key={i} className="text-center min-w-[60px]">
-                  <p className="text-[10px] text-gray-500">{time.split('T')[1]}</p>
-                  <p className="font-bold text-sm">{weather.hourly.temperature_2m[i]}°</p>
-                  <p className="text-[10px] text-blue-500">{weather.hourly.precipitation_probability[i]}%</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-3 rounded-xl text-sm">
-            <p className="font-bold text-red-600 dark:text-red-400 flex items-center gap-1"><i data-lucide="alert-triangle" size="16"/> Cảnh báo Miền Trung</p>
-            <p className="mt-1 text-gray-700 dark:text-gray-300 text-xs leading-relaxed"><strong>Nguyên nhân:</strong> Mưa lớn do bão/áp thấp nhiệt đới, địa hình dốc gây lũ quét, sạt lở đất.<br/><strong>Cách phòng tránh:</strong> Gia cố nhà cửa; không qua suối/rốn khi mưa lớn; chuẩn bị đèn pin, lương thực, thuốc; theo dõi tin bão; sơ tán khi có lệnh.</p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+        const CATEGORIES = [
+            { name: "Shop Liên Quân", subs: [] },
+            { name: "Shop Free Fire", subs: [] },
+            { name: "Support Social", subs: ["Meta", "TikTok", "Google"] },
+            { name: "Proxy / VPN", subs: [] },
+            { name: "IPA / Antiban", subs: [] },
+            { name: "Source / Raw", subs: [] },
+            { name: "Bypass / Tool", subs: [] }
+        ];
 
-/* ===== SPEED TEST ===== */
-function SpeedTest(){
-  const [speed,setSpeed]=useState(null);
-  const [testing,setTesting]=useState(false);
-  const [netInfo,setNetInfo]=useState(null);
-  const test=async()=>{
-    setTesting(true);setSpeed(null);
-    const c=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
-    if(c)setNetInfo({type:c.effectiveType,down:c.downlink,type2:c.type||'unknown'});
-    const start=performance.now();
-    try{
-      await fetch('https://upload.wikimedia.org/wikipedia/commons/3/3d/LARGE_elevation.jpg?cache='+Date.now(),{cache:'no-store'});
-      const dur=(performance.now()-start)/1000;
-      setSpeed(((5000000*8)/(dur*1000000)).toFixed(2));
-    }catch(e){alert('Lỗi test mạng');}
-    setTesting(false);
-  };
-  return(
-    <div className="glass p-5 rounded-2xl animate-fade-in">
-      <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="wifi" size="22" className="text-purple-500"/> Check 4G / 5G / WiFi</h2>
-      <button onClick={test} disabled={testing} className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2.5 rounded-xl font-bold shadow-lg shadow-purple-500/30 transition">
-        {testing?'Đang test...':'Bắt đầu test'}
-      </button>
-      {netInfo&&(
-        <div className="mt-3 glass-strong p-3 rounded-xl text-xs space-y-1">
-          <div className="flex justify-between"><span className="text-gray-500">Loại kết nối:</span><span className="font-bold">{netInfo.type?.toUpperCase()||'N/A'}</span></div>
-          <div className="flex justify-between"><span className="text-gray-500">Loại thiết bị:</span><span className="font-bold">{netInfo.type2}</span></div>
-          <div className="flex justify-between"><span className="text-gray-500">Ước tính:</span><span className="font-bold">{netInfo.down} Mbps</span></div>
-        </div>
-      )}
-      {speed&&(
-        <div className="mt-3 glass-strong p-4 rounded-xl text-center">
-          <p className="text-xs text-gray-500">Tốc độ tải xuống</p>
-          <p className="text-3xl font-extrabold text-purple-500">{speed} <span className="text-lg">Mbps</span></p>
-        </div>
-      )}
-    </div>
-  );
-}
+        /* ================= UTILS ================= */
+        const ls = {
+            get: (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+            set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) { alert("Bộ nhớ đầy, vui lòng xoá bớt ảnh!"); } },
+            del: (k) => localStorage.removeItem(k)
+        };
 
-/* ===== IP CHECK ===== */
-function IpCheck(){
-  const [ip,setIp]=useState(null);
-  const [loading,setLoading]=useState(false);
-  const check=async()=>{
-    setLoading(true);setIp(null);
-    try{
-      const r=await fetch('https://ipapi.co/json/');
-      const d=await r.json();
-      setIp(d);
-    }catch(e){alert('Lỗi check IP, thử lại sau!');}
-    setLoading(false);
-  };
-  return(
-    <div className="glass p-5 rounded-2xl animate-fade-in">
-      <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="globe" size="22" className="text-blue-500"/> Check IP</h2>
-      <button onClick={check} disabled={loading} className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition">
-        {loading?'Đang check...':'Check IP Ngay'}
-      </button>
-      {ip&&(
-        <div className="mt-3 glass-strong p-4 rounded-xl text-xs space-y-2">
-          <div className="flex justify-between border-b border-white/30 pb-1"><span className="text-gray-500">IP:</span><span className="font-bold">{ip.ip}</span></div>
-          <div className="flex justify-between border-b border-white/30 pb-1"><span className="text-gray-500">Loại:</span><span className="font-bold">{ip.country_code==='VN'?'Local (VN)':'Proxy / VPN'}</span></div>
-          <div className="flex justify-between border-b border-white/30 pb-1"><span className="text-gray-500">Thành phố:</span><span className="font-bold">{ip.city||'N/A'}</span></div>
-          <div className="flex justify-between border-b border-white/30 pb-1"><span className="text-gray-500">Vùng:</span><span className="font-bold">{ip.region||'N/A'}</span></div>
-          <div className="flex justify-between border-b border-white/30 pb-1"><span className="text-gray-500">Mã bưu chính:</span><span className="font-bold">{ip.postal||'N/A'}</span></div>
-          <div className="flex justify-between"><span className="text-gray-500">Quốc gia:</span><span className="font-bold">{ip.country_name}</span></div>
-        </div>
-      )}
-    </div>
-  );
-}
+        // Nén ảnh trước khi lưu LocalStorage để tránh tràn bộ nhớ
+        const compressImage = (file, maxW = 400, q = 0.7) => new Promise(res => {
+            const r = new FileReader();
+            r.onload = e => {
+                const img = new Image();
+                img.onload = () => {
+                    const c = document.createElement('canvas');
+                    let w = img.width, h = img.height;
+                    if (w > maxW) { h = h * maxW / w; w = maxW; }
+                    c.width = w; c.height = h;
+                    c.getContext('2d').drawImage(img, 0, 0, w, h);
+                    res(c.toDataURL('image/jpeg', q));
+                };
+                img.src = e.target.result;
+            };
+            r.readAsDataURL(file);
+        });
 
-/* ===== NOTES ===== */
-function Notes(){
-  const [notes,setNotes]=useState(()=>ls.get('notes',[]));
-  const [input,setInput]=useState('');
-  const add=()=>{
-    if(!input.trim())return;
-    const n=[...notes,{id:Date.now(),text:input}];
-    setNotes(n);ls.set('notes',n);setInput('');
-  };
-  const del=id=>{const n=notes.filter(x=>x.id!==id);setNotes(n);ls.set('notes',n);};
-  return(
-    <div className="glass p-5 rounded-2xl animate-fade-in">
-      <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="sticky-note" size="22" className="text-yellow-500"/> Ghi chú</h2>
-      <div className="flex gap-2">
-        <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&add()} placeholder="Nhập ghi chú..." className="flex-1 glass-strong rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 ring-blue-500"/>
-        <button onClick={add} className="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded-xl font-bold">+</button>
-      </div>
-      <ul className="mt-3 space-y-2 max-h-60 overflow-y-auto no-scrollbar">
-        {notes.map(n=>(
-          <li key={n.id} className="glass-strong rounded-xl p-2 flex justify-between items-center text-sm">
-            <span>{n.text}</span>
-            <button onClick={()=>del(n.id)} className="text-red-500 p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded"><i data-lucide="trash-2" size="16"/></button>
-          </li>
-        ))}
-        {notes.length===0&&<p className="text-sm text-center text-gray-500 py-3">Chưa có ghi chú</p>}
-      </ul>
-    </div>
-  );
-}
+        /* ================= ICON FIX HOOK ================= */
+        // Fix triệt để lỗi icon không render khi DOM thay đổi
+        function useLucide() {
+            useEffect(() => {
+                let scheduled = false;
+                const run = () => {
+                    if (!window.lucide) return;
+                    if (!document.querySelector('[data-lucide]')) return;
+                    window.lucide.createIcons();
+                };
+                const schedule = () => {
+                    if (scheduled) return;
+                    scheduled = true;
+                    requestAnimationFrame(() => { scheduled = false; run(); });
+                };
+                run();
+                const obs = new MutationObserver(schedule);
+                obs.observe(document.body, { childList: true, subtree: true });
+                return () => obs.disconnect();
+            }, []);
+        }
 
-/* ===== TEMPMAIL ===== */
-function TempMail(){
-  const [mail,setMail]=useState(()=>ls.get('tempmail',null));
-  const [messages,setMessages]=useState([]);
-  const [loading,setLoading]=useState(false);
-  const [showDetail,setShowDetail]=useState(null);
-  const create=async()=>{
-    setLoading(true);
-    try{
-      const dr=await fetch('https://api.mail.tm/domains');
-      const dd=await dr.json();
-      const domain=dd['hydra:member'][0].domain;
-      const address=`user${Math.floor(Math.random()*1000000)}@${domain}`;
-      const password='Password123!';
-      const cr=await fetch('https://api.mail.tm/accounts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({address,password})});
-      if(!cr.ok)throw new Error();
-      const tr=await fetch('https://api.mail.tm/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({address,password})});
-      const td=await tr.json();
-      const m={address,token:td.token};
-      ls.set('tempmail',m);setMail(m);
-    }catch(e){alert('Lỗi tạo mail, thử lại!');}
-    setLoading(false);
-  };
-  const fetchM=async()=>{
-    if(!mail)return;
-    try{
-      const r=await fetch('https://api.mail.tm/messages',{headers:{Authorization:`Bearer ${mail.token}`}});
-      const d=await r.json();
-      setMessages(d['hydra:member']||[]);
-    }catch(e){alert('Lỗi tải mail');}
-  };
-  const viewM=async(m)=>{
-    try{
-      const r=await fetch(`https://api.mail.tm/messages/${m.id}`,{headers:{Authorization:`Bearer ${mail.token}`}});
-      const d=await r.json();
-      setShowDetail(d);
-    }catch{}
-  };
-  const del=()=>{ls.del('tempmail');setMail(null);setMessages([]);setShowDetail(null);};
-  return(
-    <div className="glass p-5 rounded-2xl animate-fade-in">
-      <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="mail" size="22" className="text-orange-500"/> Email Tạm</h2>
-      {!mail?(
-        <button onClick={create} disabled={loading} className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl font-bold shadow-lg shadow-orange-500/30">
-          {loading?'Đang tạo...':'Tạo Mail Tạm'}
-        </button>
-      ):(
-        <div className="glass-strong p-3 rounded-xl text-sm">
-          <p className="font-bold text-orange-500 break-all">{mail.address}</p>
-          <div className="flex gap-2 mt-2">
-            <button onClick={fetchM} className="flex-1 glass-strong py-1.5 rounded-lg text-xs font-bold">Tải hộp thư</button>
-            <button onClick={del} className="flex-1 bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 py-1.5 rounded-lg text-xs font-bold">Xoá</button>
-          </div>
-          {messages.length>0&&(
-            <ul className="mt-3 space-y-1 max-h-48 overflow-y-auto no-scrollbar">
-              {messages.map(m=>(
-                <li key={m.id} onClick={()=>viewM(m)} className="border-b border-white/30 pb-1 text-xs cursor-pointer hover:text-blue-500">
-                  <p className="font-semibold">{m.subject||'(Không tiêu đề)'}</p>
-                  <p className="text-gray-500 text-[10px]">Từ: {m.from?.address}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-          {showDetail&&(
-            <div className="mt-3 p-3 glass rounded-xl text-xs max-h-60 overflow-y-auto">
-              <div className="flex justify-between mb-2">
-                <p className="font-bold">{showDetail.subject}</p>
-                <button onClick={()=>setShowDetail(null)} className="text-red-500"><i data-lucide="x" size="14"/></button>
-              </div>
-              <p className="text-gray-500 mb-2 text-[10px]">{showDetail.from?.address}</p>
-              <div dangerouslySetInnerHTML={{__html:Array.isArray(showDetail.html)?showDetail.html[0]:showDetail.html||showDetail.text||''}} className="prose prose-sm max-w-none"/>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
+        /* ================= EFFECTS ================= */
+        function Effects({ type }) {
+            useEffect(() => {
+                const layer = document.getElementById('effect-layer');
+                if (!layer) return;
+                layer.innerHTML = '';
+                if (type === 'none') return;
+                
+                let interval;
+                const timeouts = [];
+                
+                const add = (html, cls, style, dur) => {
+                    const el = document.createElement('div');
+                    el.innerHTML = html; el.className = cls;
+                    Object.assign(el.style, style);
+                    layer.appendChild(el);
+                    timeouts.push(setTimeout(() => el.remove(), dur));
+                };
 
-/* ===== POSTS ===== */
-function PostsPage({posts}){
-  return(
-    <div className="animate-fade-in space-y-4">
-      <h2 className="text-2xl font-bold">Bài Viết</h2>
-      {posts.length===0&&<p className="text-center text-gray-500 py-10">Chưa có bài viết</p>}
-      {[...posts].reverse().map(p=>(
-        <div key={p.id} className="glass p-5 rounded-2xl">
-          {p.image&&<img src={p.image} className="w-full h-48 object-cover rounded-xl mb-3" alt=""/>}
-          <h3 className="font-bold text-lg text-blue-500">{p.title}</h3>
-          <p className="text-xs text-gray-500 mt-1">{new Date(p.date).toLocaleDateString('vi-VN')}</p>
-          <p className="text-sm mt-2 text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{p.content}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
+                if (type === 'snow') {
+                    interval = setInterval(() => {
+                        add('❄', 'snowflake', {
+                            left: Math.random() * 100 + 'vw',
+                            animationDuration: (Math.random() * 4 + 4) + 's',
+                            opacity: Math.random() * 0.7 + 0.3,
+                            fontSize: (Math.random() * 10 + 12) + 'px'
+                        }, 8000);
+                    }, 300);
+                } else if (type === 'flower') {
+                    const flowers = ['🌸', '🌺', '🌼', '🌷', '🍁', '🍂'];
+                    interval = setInterval(() => {
+                        add(flowers[Math.floor(Math.random() * flowers.length)], 'flower', {
+                            left: Math.random() * 100 + 'vw',
+                            animationDuration: (Math.random() * 4 + 5) + 's',
+                            fontSize: (Math.random() * 12 + 14) + 'px'
+                        }, 9000);
+                    }, 500);
+                } else if (type === 'lava') {
+                    interval = setInterval(() => {
+                        const size = Math.random() * 6 + 4;
+                        add('', 'lava', {
+                            left: Math.random() * 100 + 'vw',
+                            animationDuration: (Math.random() * 3 + 4) + 's',
+                            width: size + 'px', height: size + 'px',
+                            background: `radial-gradient(circle, hsl(${Math.random() * 30 + 15}, 100%, 60%), hsl(${Math.random() * 20}, 100%, 40%))`
+                        }, 7000);
+                    }, 150);
+                } else if (type === 'fog') {
+                    layer.innerHTML = '<div class="fog"></div>';
+                }
 
-/* ===== NOTIFICATIONS ===== */
-function NotificationsPage({notifications}){
-  return(
-    <div className="animate-fade-in space-y-3">
-      <h2 className="text-2xl font-bold">Thông Báo</h2>
-      {notifications.length===0&&<p className="text-center text-gray-500 py-10">Không có thông báo</p>}
-      {[...notifications].reverse().map(n=>(
-        <div key={n.id} className="glass p-4 rounded-2xl flex gap-3">
-          <i data-lucide="bell" size="20" className="text-blue-500 flex-shrink-0 mt-1"/>
-          <div className="flex-1">
-            <p className="text-sm">{n.text}</p>
-            <p className="text-xs text-gray-500 mt-1">{new Date(n.createdAt).toLocaleString('vi-VN')}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
+                return () => {
+                    if (interval) clearInterval(interval);
+                    timeouts.forEach(t => clearTimeout(t));
+                    layer.innerHTML = '';
+                };
+            }, [type]);
+            return null;
+        }
 
-/* ===== CONTACT ===== */
-function ContactPage({profile}){
-  const c=profile.contact;
-  const items=[
-    {icon:'send',label:'Telegram',value:`@${c.telegram}`,link:`https://t.me/${c.telegram}`,color:'text-blue-500'},
-    {icon:'facebook',label:'Facebook',value:`@${c.facebook}`,link:`https://facebook.com/${c.facebook}`,color:'text-blue-600'},
-    {icon:'phone',label:'Điện thoại',value:c.phone,link:`tel:${c.phone}`,color:'text-green-500'},
-    {icon:'mail',label:'Email',value:c.email,link:`mailto:${c.email}`,color:'text-red-500'},
-    {icon:'message-square',label:'Discord',value:c.discord,link:`https://discord.com/users/${c.discord}`,color:'text-indigo-500'}
-  ];
-  return(
-    <div className="animate-fade-in space-y-4">
-      <div className="glass p-6 rounded-2xl text-center">
-        <img src={profile.avatar} alt="" className="w-20 h-20 rounded-full mx-auto border-4 border-blue-500 shadow-lg"/>
-        <h2 className="text-xl font-bold mt-3 flex items-center justify-center gap-1.5">{profile.name}{profile.verified&&<Verified size={18}/>}</h2>
-        <p className="text-sm text-gray-500 mt-1">Liên hệ để được hỗ trợ 24/7</p>
-      </div>
-      <div className="space-y-2">
-        {items.map((it,i)=>(
-          <a key={i} href={it.link} target="_blank" rel="noreferrer" className="glass rounded-2xl p-4 flex items-center gap-3 hover:bg-white/80 dark:hover:bg-slate-700/60 transition">
-            <div className={`w-10 h-10 rounded-xl glass-strong flex items-center justify-center ${it.color}`}>
-              <i data-lucide={it.icon} size="20"/>
-            </div>
-            <div className="flex-1">
-              <p className="text-xs text-gray-500">{it.label}</p>
-              <p className="text-sm font-bold break-all">{it.value}</p>
-            </div>
-            <i data-lucide="chevron-right" size="16" className="text-gray-400"/>
-          </a>
-        ))}
-      </div>
-    </div>
-  );
-}
+        /* ================= COMPONENTS ================= */
+        const VerifiedIcon = ({ size = 20 }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="inline-block text-blue-500 ml-1">
+                <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2ZM16.707 9.707C17.098 9.316 17.098 8.684 16.707 8.293C16.316 7.902 15.684 7.902 15.293 8.293L10.5 13.086L8.707 11.293C8.316 10.902 7.684 10.902 7.293 11.293C6.902 11.684 6.902 12.316 7.293 12.707L10.5 15.914L16.707 9.707Z" fill="currentColor"/>
+            </svg>
+        );
 
-/* ===== ADMIN LOGIN ===== */
-function AdminLogin({onLogin}){
-  const [u,setU]=useState('');
-  const [p,setP]=useState('');
-  const [show,setShow]=useState(false);
-  const [err,setErr]=useState('');
-  const submit=e=>{
-    e.preventDefault();
-    if(u===ADMIN_USERNAME&&p===ADMIN_PASSWORD){onLogin();}
-    else setErr('Sai tài khoản hoặc mật khẩu!');
-  };
-  return(
-    <div className="animate-fade-in max-w-md mx-auto">
-      <div className="glass p-6 rounded-2xl">
-        <div className="text-center mb-5">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 mx-auto flex items-center justify-center">
-            <i data-lucide="shield" size="32" className="text-white"/>
-          </div>
-          <h2 className="text-xl font-bold mt-3">Đăng nhập Admin</h2>
-          <p className="text-xs text-gray-500">Chỉ admin mới có quyền truy cập</p>
-        </div>
-        <form onSubmit={submit} className="space-y-3">
-          <input value={u} onChange={e=>setU(e.target.value)} placeholder="Tài khoản" className="w-full glass-strong rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500"/>
-          <div className="relative">
-            <input type={show?'text':'password'} value={p} onChange={e=>setP(e.target.value)} placeholder="Mật khẩu" className="w-full glass-strong rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 pr-10"/>
-            <button type="button" onClick={()=>setShow(!show)} className="absolute right-3 top-2.5 text-gray-500">
-              <i data-lucide={show?'eye-off':'eye'} size="18"/>
-            </button>
-          </div>
-          {err&&<p className="text-xs text-red-500 text-center">{err}</p>}
-          <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition">Đăng nhập</button>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-/* ===== ADMIN PANEL ===== */
-function AdminPanel({data,setData,onLogout}){
-  const [tab,setTab]=useState('profile');
-  const tabs=[
-    {id:'profile',label:'Profile',icon:'user'},
-    {id:'site',label:'Cài đặt web',icon:'settings'},
-    {id:'products',label:'Sản phẩm',icon:'shopping-bag'},
-    {id:'posts',label:'Bài viết',icon:'newspaper'},
-    {id:'notifs',label:'Thông báo',icon:'bell'},
-    {id:'contact',label:'Liên hệ',icon:'phone'}
-  ];
-  return(
-    <div className="animate-fade-in">
-      <div className="glass p-3 rounded-2xl mb-4 flex items-center justify-between">
-        <h2 className="font-bold text-lg flex items-center gap-2"><i data-lucide="shield-check" size="20" className="text-red-500"/> Admin Dashboard</h2>
-        <button onClick={onLogout} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1">
-          <i data-lucide="log-out" size="14"/> Thoát
-        </button>
-      </div>
-      <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4">
-        {tabs.map(t=>(
-          <button key={t.id} onClick={()=>setTab(t.id)} className={`whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 ${tab===t.id?'bg-blue-500 text-white':'glass-strong'}`}>
-            <i data-lucide={t.icon} size="14"/> {t.label}
-          </button>
-        ))}
-      </div>
-      {tab==='profile'&&<AdminProfile data={data} setData={setData}/>}
-      {tab==='site'&&<AdminSite data={data} setData={setData}/>}
-      {tab==='products'&&<AdminProducts data={data} setData={setData}/>}
-      {tab==='posts'&&<AdminPosts data={data} setData={setData}/>}
-      {tab==='notifs'&&<AdminNotifs data={data} setData={setData}/>}
-      {tab==='contact'&&<AdminContact data={data} setData={setData}/>}
-    </div>
-  );
-}
-
-function AdminProfile({data,setData}){
-  const p=data.profile;
-  const upd=(k,v)=>setData({...data,profile:{...p,[k]:v}});
-  const updImg=async(e,k)=>{
-    const f=e.target.files[0];if(!f)return;
-    const b64=await compressImage(f,500,.7);upd(k,b64);
-  };
-  return(
-    <div className="glass p-5 rounded-2xl space-y-3">
-      <div>
-        <label className="text-xs font-bold text-gray-500">Tên</label>
-        <input value={p.name} onChange={e=>upd('name',e.target.value)} className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none"/>
-      </div>
-      <div className="flex items-center gap-2">
-        <input type="checkbox" checked={p.verified} onChange={e=>upd('verified',e.target.checked)} id="vf"/>
-        <label htmlFor="vf" className="text-sm">Hiện tick xanh</label>
-      </div>
-      <div>
-        <label className="text-xs font-bold text-gray-500">Bio / Giới thiệu</label>
-        <textarea value={p.bio} onChange={e=>upd('bio',e.target.value)} rows="3" className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none"/>
-      </div>
-      <div>
-        <label className="text-xs font-bold text-gray-500">Ảnh đại diện</label>
-        <div className="flex items-center gap-2">
-          <img src={p.avatar} className="w-12 h-12 rounded-full object-cover"/>
-          <input type="file" accept="image/*" onChange={e=>updImg(e,'avatar')} className="text-xs"/>
-        </div>
-      </div>
-      <div>
-        <label className="text-xs font-bold text-gray-500">Ảnh bìa</label>
-        <div className="space-y-1">
-          <img src={p.cover} className="w-full h-20 object-cover rounded-lg"/>
-          <input type="file" accept="image/*" onChange={e=>updImg(e,'cover')} className="text-xs"/>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function AdminSite({data,setData}){
-  return(
-    <div className="glass p-5 rounded-2xl space-y-3">
-      <div>
-        <label className="text-xs font-bold text-gray-500">Tên Web (khác tên Profile)</label>
-        <input value={data.siteName} onChange={e=>setData({...data,siteName:e.target.value})} className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none"/>
-      </div>
-      <div>
-        <label className="text-xs font-bold text-gray-500">Hiệu ứng mặc định</label>
-        <select value={data.defaultEffect} onChange={e=>setData({...data,defaultEffect:e.target.value})} className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none">
-          <option value="none">Không</option>
-          <option value="snow">Tuyết rơi</option>
-          <option value="flower">Hoa rơi</option>
-          <option value="fog">Sương mờ</option>
-          <option value="lava">Núi lửa</option>
-          <option value="bubbles">Bong bóng</option>
-        </select>
-      </div>
-    </div>
-  );
-}
-
-function AdminProducts({data,setData}){
-  const [edit,setEdit]=useState(null);
-  const [form,setForm]=useState({category:'',subcategory:'',name:'',price:'',desc:'',stock:0,image:''});
-  const updImg=async e=>{const f=e.target.files[0];if(!f)return;const b64=await compressImage(f,400,.7);setForm({...form,image:b64});};
-  const save=()=>{
-    if(!form.name||!form.price)return alert('Nhập tên & giá');
-    const list=data.products||[];
-    if(edit){
-      const n=list.map(x=>x.id===edit?{...form,id:edit}:x);
-      setData({...data,products:n});
-    }else{
-      setData({...data,products:[...list,{...form,id:Date.now()}]});
-    }
-    setForm({category:'',subcategory:'',name:'',price:'',desc:'',stock:0,image:''});setEdit(null);
-  };
-  const del=id=>{if(confirm('Xóa sản phẩm?'))setData({...data,products:data.products.filter(x=>x.id!==id)});};
-  const editP=p=>{setForm(p);setEdit(p.id);};
-  return(
-    <div className="space-y-3">
-      <div className="glass p-5 rounded-2xl space-y-2">
-        <h3 className="font-bold">Thêm/Sửa sản phẩm</h3>
-        <select value={form.category} onChange={e=>setForm({...form,category:e.target.value,subcategory:''})} className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none">
-          <option value="">-- Danh mục --</option>
-          {PRODUCT_CATEGORIES.map(c=><option key={c.name} value={c.name}>{c.name}</option>)}
-        </select>
-        {PRODUCT_CATEGORIES.find(c=>c.name===form.category)?.subs?.length>0&&(
-          <select value={form.subcategory} onChange={e=>setForm({...form,subcategory:e.target.value})} className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none">
-            <option value="">-- Danh mục con --</option>
-            {PRODUCT_CATEGORIES.find(c=>c.name===form.category).subs.map(s=><option key={s} value={s}>{s}</option>)}
-          </select>
-        )}
-        <input value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Tên" className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none"/>
-        <div className="flex gap-2">
-          <input value={form.price} onChange={e=>setForm({...form,price:e.target.value})} placeholder="Giá" className="w-1/2 glass-strong rounded-xl px-3 py-2 text-sm outline-none"/>
-          <input type="number" value={form.stock} onChange={e=>setForm({...form,stock:Number(e.target.value)})} placeholder="Kho" className="w-1/2 glass-strong rounded-xl px-3 py-2 text-sm outline-none"/>
-        </div>
-        <input value={form.desc} onChange={e=>setForm({...form,desc:e.target.value})} placeholder="Mô tả" className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none"/>
-        <div>
-          <label className="text-xs text-gray-500">Ảnh sản phẩm</label>
-          <div className="flex items-center gap-2 mt-1">
-            {form.image&&<img src={form.image} className="w-12 h-12 rounded object-cover"/>}
-            <input type="file" accept="image/*" onChange={updImg} className="text-xs"/>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={save} className="flex-1 bg-blue-500 text-white py-2 rounded-xl font-bold text-sm">{edit?'Cập nhật':'Thêm'}</button>
-          {edit&&<button onClick={()=>{setEdit(null);setForm({category:'',subcategory:'',name:'',price:'',desc:'',stock:0,image:''});}} className="bg-gray-500 text-white py-2 px-4 rounded-xl text-sm">Hủy</button>}
-        </div>
-      </div>
-      <div className="glass p-5 rounded-2xl">
-        <h3 className="font-bold mb-2">Danh sách ({data.products.length})</h3>
-        <div className="space-y-2 max-h-96 overflow-y-auto no-scrollbar">
-          {data.products.map(p=>(
-            <div key={p.id} className="glass-strong p-2 rounded-xl flex items-center gap-2">
-              {p.image?<img src={p.image} className="w-10 h-10 rounded object-cover"/>:<div className="w-10 h-10 rounded bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-500"><i data-lucide="package" size="16"/></div>}
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold truncate">{p.name}</p>
-                <p className="text-[10px] text-gray-500">{p.price} • Kho: {p.stock}</p>
-              </div>
-              <button onClick={()=>editP(p)} className="text-blue-500 p-1"><i data-lucide="edit" size="16"/></button>
-              <button onClick={()=>del(p.id)} className="text-red-500 p-1"><i data-lucide="trash-2" size="16"/></button>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function AdminPosts({data,setData}){
-  const [edit,setEdit]=useState(null);
-  const [form,setForm]=useState({title:'',content:'',image:''});
-  const save=()=>{
-    if(!form.title||!form.content)return alert('Nhập tiêu đề & nội dung');
-    if(edit){
-      setData({...data,posts:data.posts.map(p=>p.id===edit?{...form,id:edit,date:p.date}:p)});
-    }else{
-      setData({...data,posts:[...data.posts,{...form,id:Date.now(),date:new Date().toISOString()}]});
-    }
-    setForm({title:'',content:'',image:''});setEdit(null);
-  };
-  const updImg=async e=>{const f=e.target.files[0];if(!f)return;const b64=await compressImage(f,600,.7);setForm({...form,image:b64});};
-  return(
-    <div className="space-y-3">
-      <div className="glass p-5 rounded-2xl space-y-2">
-        <input value={form.title} onChange={e=>setForm({...form,title:e.target.value})} placeholder="Tiêu đề" className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none"/>
-        <textarea value={form.content} onChange={e=>setForm({...form,content:e.target.value})} placeholder="Nội dung..." rows="4" className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none"/>
-        <div className="flex items-center gap-2">
-          {form.image&&<img src={form.image} className="w-12 h-12 rounded object-cover"/>}
-          <input type="file" accept="image/*" onChange={updImg} className="text-xs"/>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={save} className="flex-1 bg-green-500 text-white py-2 rounded-xl font-bold text-sm">{edit?'Cập nhật':'Đăng'}</button>
-          {edit&&<button onClick={()=>{setEdit(null);setForm({title:'',content:'',image:''});}} className="bg-gray-500 text-white py-2 px-4 rounded-xl text-sm">Hủy</button>}
-        </div>
-      </div>
-      <div className="glass p-5 rounded-2xl">
-        <div className="space-y-2 max-h-96 overflow-y-auto no-scrollbar">
-          {data.posts.map(p=>(
-            <div key={p.id} className="glass-strong p-2 rounded-xl flex items-center gap-2">
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold truncate">{p.title}</p>
-                <p className="text-[10px] text-gray-500 line-clamp-2">{p.content}</p>
-              </div>
-              <button onClick={()=>{setForm(p);setEdit(p.id);}} className="text-blue-500 p-1"><i data-lucide="edit" size="16"/></button>
-              <button onClick={()=>confirm('Xóa?')&&setData({...data,posts:data.posts.filter(x=>x.id!==p.id)})} className="text-red-500 p-1"><i data-lucide="trash-2" size="16"/></button>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function AdminNotifs({data,setData}){
-  const [text,setText]=useState('');
-  return(
-    <div className="glass p-5 rounded-2xl space-y-3">
-      <div className="flex gap-2">
-        <input value={text} onChange={e=>setText(e.target.value)} placeholder="Thông báo mới..." className="flex-1 glass-strong rounded-xl px-3 py-2 text-sm outline-none"/>
-        <button onClick={()=>{if(!text.trim())return;setData({...data,notifications:[...data.notifications,{id:Date.now(),text,createdAt:Date.now()}]});setText('');}} className="bg-blue-500 text-white px-4 rounded-xl font-bold">+</button>
-      </div>
-      <div className="space-y-2">
-        {data.notifications.map(n=>(
-          <div key={n.id} className="glass-strong p-2 rounded-xl flex items-center gap-2">
-            <p className="flex-1 text-xs">{n.text}</p>
-            <button onClick={()=>setData({...data,notifications:data.notifications.filter(x=>x.id!==n.id)})} className="text-red-500 p-1"><i data-lucide="trash-2" size="14"/></button>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function AdminContact({data,setData}){
-  const upd=(k,v)=>setData({...data,profile:{...data.profile,contact:{...data.profile.contact,[k]:v}}});
-  return(
-    <div className="glass p-5 rounded-2xl space-y-2">
-      {['telegram','facebook','phone','email','discord'].map(k=>(
-        <div key={k}>
-          <label className="text-xs font-bold text-gray-500 capitalize">{k}</label>
-          <input value={data.profile.contact[k]||''} onChange={e=>upd(k,e.target.value)} className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none"/>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* ===== DRAWER MENU ===== */
-function Drawer({open,onClose,activePage,onNavigate,data,isAdmin,onAdmin}){
-  const [expanded,setExpanded]=useState(null);
-  const items=[
-    {id:'profile',label:'Tài khoản / Profile',icon:'user'},
-    {id:'products',label:'Sản phẩm',icon:'shopping-bag',expandable:true},
-    {id:'notifications',label:'Thông báo',icon:'bell'},
-    {id:'posts',label:'Bài viết',icon:'newspaper'},
-    {id:'ipcheck',label:'Check IP',icon:'globe'},
-    {id:'weather',label:'Thời tiết',icon:'cloud-sun'},
-    {id:'notes',label:'Ghi chú',icon:'sticky-note'},
-    {id:'tempmail',label:'Email Tạm',icon:'mail'},
-    {id:'speedtest',label:'Check 4G/5G/WiFi',icon:'wifi'},
-    {id:'contact',label:'Contact Support',icon:'phone'}
-  ];
-  return(
-    <>
-      {open&&<div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" onClick={onClose}/>}
-      <div className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] glass-strong z-50 transform transition-transform duration-300 ${open?'translate-x-0':'-translate-x-full'} flex flex-col`}>
-        <div className="p-4 flex items-center gap-3 border-b border-white/20">
-          <img src={data.profile.avatar} className="w-12 h-12 rounded-full object-cover border-2 border-blue-500"/>
-          <div className="flex-1 min-w-0">
-            <p className="font-bold flex items-center gap-1 text-sm truncate">{data.profile.name}{data.profile.verified&&<Verified size={14}/>}</p>
-            <p className="text-[10px] text-gray-500 truncate">@{ADMIN_USERNAME}</p>
-          </div>
-          <button onClick={onClose} className="p-1"><i data-lucide="x" size="20"/></button>
-        </div>
-        <div className="flex-1 overflow-y-auto p-3 space-y-1">
-          {items.map(it=>(
-            <div key={it.id}>
-              <button onClick={()=>{
-                if(it.expandable)setExpanded(expanded===it.id?null:it.id);
-                else{onNavigate(it.id);onClose();}
-              }} className={`drawer-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium ${activePage===it.id?'bg-blue-500/20 text-blue-500':''}`}>
-                <i data-lucide={it.icon} size="18" className="text-blue-500"/>
-                <span className="flex-1 text-left">{it.label}</span>
-                {it.expandable&&<i data-lucide={expanded===it.id?'chevron-down':'chevron-right'} size="16"/>}
-              </button>
-              {it.expandable&&expanded===it.id&&(
-                <div className="ml-6 mt-1 space-y-0.5">
-                  {PRODUCT_CATEGORIES.map(c=>(
-                    <div key={c.name}>
-                      <button onClick={()=>{onNavigate('shop',c.name);onClose();}} className="w-full text-left px-2 py-1.5 rounded text-xs hover:bg-blue-500/10 flex items-center justify-between">
-                        <span>{c.name}</span>
-                      </button>
-                      {c.subs.length>0&&(
-                        <div className="ml-3">
-                          {c.subs.map(s=>(
-                            <button key={s} onClick={()=>{onNavigate('shop',s);onClose();}} className="w-full text-left px-2 py-1 rounded text-[11px] hover:bg-blue-500/10 text-gray-600 dark:text-gray-400">• {s}</button>
-                          ))}
+        function ProfileHome({ profile, posts, onNavigate }) {
+            return (
+                <div className="animate-fade-in space-y-4">
+                    <div className="relative rounded-3xl overflow-hidden glass">
+                        <div className="h-40 md:h-56 relative bg-gradient-to-r from-blue-500 to-cyan-400">
+                            {profile.cover && <img src={profile.cover} className="w-full h-full object-cover" alt="Cover" />}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
                         </div>
-                      )}
+                        <div className="px-5 pb-6 -mt-14 relative">
+                            <img src={profile.avatar} className="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-white dark:border-slate-800 object-cover shadow-lg bg-white" alt="Avatar" />
+                            <div className="mt-3">
+                                <h2 className="text-2xl font-extrabold flex items-center">
+                                    {profile.name} {profile.verified && <VerifiedIcon size={24} />}
+                                </h2>
+                                <p className="text-xs text-gray-500 mt-0.5">@{ADMIN_USER} • MMO Provider</p>
+                            </div>
+                            <p className="mt-3 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{profile.bio}</p>
+                            
+                            <div className="flex gap-2 mt-5">
+                                <button onClick={() => onNavigate('shop')} className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 transition">Xem Shop</button>
+                                <button onClick={() => onNavigate('contact')} className="flex-1 glass-strong py-2.5 rounded-xl text-sm font-bold hover:bg-white/80 transition">Liên Hệ</button>
+                            </div>
+                        </div>
                     </div>
-                  ))}
+
+                    <div className="glass rounded-2xl p-5">
+                        <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
+                            <i data-lucide="newspaper" size="18" className="text-blue-500"></i> Bài viết mới
+                        </h3>
+                        <div className="space-y-2">
+                            {posts.slice(-3).reverse().map(p => (
+                                <div key={p.id} onClick={() => onNavigate('posts')} className="glass-strong rounded-xl p-3 cursor-pointer hover:bg-white/90 dark:hover:bg-slate-700/80 transition">
+                                    <p className="font-semibold text-sm">{p.title}</p>
+                                    <p className="text-xs text-gray-500 line-clamp-2 mt-1">{p.content}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
-              )}
-            </div>
-          ))}
-          <div className="pt-2 border-t border-white/20 mt-2">
-            {isAdmin?(
-              <button onClick={()=>{onNavigate('admin');onClose();}} className="drawer-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-500">
-                <i data-lucide="shield-check" size="18"/> Admin Panel
-              </button>
-            ):(
-              <button onClick={()=>{onNavigate('admin-login');onClose();}} className="drawer-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium">
-                <i data-lucide="lock" size="18" className="text-gray-500"/> Đăng nhập Admin
-              </button>
-            )}
-          </div>
-        </div>
-        <div className="p-3 border-t border-white/20 text-[10px] text-center text-gray-500">
-          © Thao Service {new Date().getFullYear()}
-        </div>
-      </div>
-    </>
-  );
-}
+            );
+        }
 
-/* ===== ACCESSIBILITY PANEL (gộp nhạc + menu) ===== */
-function Accessibility({effect,setEffect,musicOn,setMusicOn,track,setTrack}){
-  const [open,setOpen]=useState(false);
-  const effects=['none','snow','flower','fog','lava','bubbles'];
-  const scrollTop=()=>window.scrollTo({top:0,behavior:'smooth'});
-  const scrollBot=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
-  const search=()=>{
-    const q=prompt('Từ khóa cần tìm:');
-    if(q){
-      const found=window.find(q);
-      if(!found)alert('Không tìm thấy!');
-    }
-  };
-  const savePos=()=>{
-    ls.set('readPos',{url:location.href,pos:window.scrollY,time:Date.now()});
-    alert('Đã lưu vị trí đọc!');
-  };
-  return(
-    <>
-      <button onClick={()=>setOpen(!open)} className="fixed top-20 right-4 z-40 w-12 h-12 rounded-2xl glass-strong flex items-center justify-center shadow-xl hover:scale-105 transition" title="Trợ năng">
-        <i data-lucide="sparkles" size="22" className="text-blue-500"/>
-      </button>
-      {open&&(
-        <div className="fixed top-36 right-4 z-40 w-72 glass-strong rounded-2xl p-3 animate-fade-in shadow-2xl">
-          <div className="flex justify-between items-center mb-2">
-            <p className="text-xs font-bold">Tiện ích</p>
-            <button onClick={()=>setOpen(false)}><i data-lucide="x" size="16"/></button>
-          </div>
-          <div className="grid grid-cols-4 gap-1.5 mb-2">
-            <button onClick={scrollTop} title="Lên đầu" className="glass rounded-xl p-2 flex flex-col items-center"><i data-lucide="arrow-up" size="16"/></button>
-            <button onClick={scrollBot} title="Xuống cuối" className="glass rounded-xl p-2 flex flex-col items-center"><i data-lucide="arrow-down" size="16"/></button>
-            <button onClick={search} title="Tìm kiếm" className="glass rounded-xl p-2 flex flex-col items-center"><i data-lucide="search" size="16"/></button>
-            <button onClick={savePos} title="Lưu vị trí đọc" className="glass rounded-xl p-2 flex flex-col items-center"><i data-lucide="bookmark" size="16"/></button>
-          </div>
-          <div className="mb-2">
-            <p className="text-[10px] font-bold text-gray-500 mb-1">Hiệu ứng</p>
-            <div className="grid grid-cols-3 gap-1">
-              {effects.map(e=>(
-                <button key={e} onClick={()=>setEffect(e)} className={`text-[10px] py-1 rounded-lg ${effect===e?'bg-blue-500 text-white':'glass'}`}>{e==='none'?'Tắt':e}</button>
-              ))}
-            </div>
-          </div>
-          <div className="mb-2">
-            <p className="text-[10px] font-bold text-gray-500 mb-1 flex items-center justify-between">
-              <span>Nhạc nền</span>
-              <button onClick={()=>setMusicOn(!musicOn)} className={`px-2 py-0.5 rounded-full text-[10px] ${musicOn?'bg-green-500 text-white':'bg-gray-300'}`}>{musicOn?'BẬT':'TẮT'}</button>
-            </p>
-            {musicOn&&(
-              <div className="space-y-1">
-                <iframe width="100%" height="120" scrolling="no" frameBorder="no" allow="autoplay" src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(SC_TRACKS[track])}&color=%233b82f6&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false&show_artwork=true`}></iframe>
-                <button onClick={()=>setTrack((track+1)%SC_TRACKS.length)} className="w-full glass rounded-lg py-1 text-[10px] font-bold flex items-center justify-center gap-1"><i data-lucide="skip-forward" size="12"/> Bài kế tiếp</button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
+        function Shop({ products, filter, setFilter }) {
+            const [search, setSearch] = useState('');
+            let list = products.filter(p => {
+                if (filter && p.category !== filter && p.subcategory !== filter) return false;
+                if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
+                return true;
+            });
 
-/* ===== BOTTOM NAV (chỉ 3 nút) ===== */
-function BottomNav({active,onClick}){
-  const items=[
-    {id:'menu',icon:'menu',label:'Menu'},
-    {id:'shop',icon:'shopping-bag',label:'Shop'},
-    {id:'contact',icon:'phone',label:'Contact'}
-  ];
-  return(
-    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[92%] max-w-md glass-strong rounded-3xl p-2 flex justify-around items-center z-30 shadow-2xl">
-      {items.map(it=>(
-        <button key={it.id} onClick={()=>onClick(it.id)} className={`dock-item flex flex-col items-center p-2 px-4 ${active===it.id?'text-blue-500':'text-gray-500'}`}>
-          <i data-lucide={it.icon} size="22"/>
-          <span className="text-[10px] font-bold mt-1">{it.label}</span>
-        </button>
-      ))}
-    </nav>
-  );
-}
+            return (
+                <div className="animate-fade-in">
+                    <div className="glass rounded-2xl p-4 mb-4">
+                        <div className="flex gap-2 mb-3">
+                            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Tìm sản phẩm..." className="flex-1 glass-strong rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 ring-blue-500" />
+                        </div>
+                        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                            <button onClick={() => setFilter('')} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold ${!filter ? 'bg-blue-500 text-white' : 'glass-strong'}`}>Tất cả</button>
+                            {["Shop Liên Quân", "Shop Free Fire", "Support Social", "Proxy / VPN", "Bypass / Tool"].map(c => (
+                                <button key={c} onClick={() => setFilter(c)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold ${filter === c ? 'bg-blue-500 text-white' : 'glass-strong'}`}>{c}</button>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {list.map(p => (
+                            <div key={p.id} className="glass rounded-2xl overflow-hidden flex flex-col">
+                                {p.image ? <img src={p.image} className="h-40 w-full object-cover" alt="" /> :
+                                    <div className="h-40 bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-white"><i data-lucide="package" size="48"></i></div>}
+                                <div className="p-4 flex-1 flex flex-col">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <span className="text-[10px] font-bold text-blue-500 bg-blue-100 dark:bg-blue-900/50 px-2 py-0.5 rounded-full">{p.subcategory || p.category}</span>
+                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${p.stock > 0 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+                                            {p.stock > 0 ? `Kho: ${p.stock}` : 'Hết'}
+                                        </span>
+                                    </div>
+                                    <h3 className="font-bold text-base">{p.name}</h3>
+                                    <p className="text-xs text-gray-500 mt-1 flex-1">{p.desc}</p>
+                                    <div className="mt-3 flex justify-between items-center">
+                                        <span className="font-bold text-red-500">{p.price}</span>
+                                        <button disabled={p.stock <= 0} className={`px-4 py-1.5 rounded-lg text-xs font-bold text-white ${p.stock > 0 ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400'}`}>Mua</button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
 
-/* ===== HEADER ===== */
-function Header({siteName,darkMode,setDarkMode,lang,setLang,onMenuOpen}){
-  return(
-    <header className="glass sticky top-3 z-20 rounded-2xl p-3 mb-4 flex justify-between items-center">
-      <button onClick={onMenuOpen} className="p-2"><i data-lucide="menu" size="22" className="text-blue-500"/></button>
-      <h1 className="text-base font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-cyan-400">{siteName}</h1>
-      <div className="flex gap-1">
-        <button onClick={()=>setLang(lang==='vi'?'en':'vi')} className="p-2 glass-strong rounded-full text-xs font-bold">{lang.toUpperCase()}</button>
-        <button onClick={()=>setDarkMode(!darkMode)} className="p-2 glass-strong rounded-full">
-          <i data-lucide={darkMode?'sun':'moon'} size="18"/>
-        </button>
-      </div>
-    </header>
-  );
-}
+        function Weather() {
+            const [weather, setWeather] = useState(null);
+            const [loading, setLoading] = useState(false);
+            const [activeCity, setActiveCity] = useState('');
+            
+            const cities = [
+                { name: "Quy Nhơn", lat: 13.78, lon: 109.22 },
+                { name: "Nha Trang", lat: 12.24, lon: 109.19 },
+                { name: "Đà Nẵng", lat: 16.05, lon: 108.20 },
+                { name: "Hà Nội", lat: 21.03, lon: 105.85 },
+                { name: "HCM", lat: 10.82, lon: 106.63 }
+            ];
 
-/* ===== NOTIFICATION BANNER (dismiss 12h) ===== */
-function NotifBanner({notifications}){
-  const [dismissed,setDismissed]=useState(()=>ls.get('notifDismissed',{}));
-  const [visible,setVisible]=useState([]);
-  useEffect(()=>{
-    const now=Date.now();
-    const arr=notifications.filter(n=>(dismissed[n.id]||0)<now);
-    setVisible(arr);
-  },[notifications,dismissed]);
-  if(visible.length===0)return null;
-  const dismiss=id=>{
-    const nd={...dismissed,[id]:Date.now()+12*60*60*1000};
-    ls.set('notifDismissed',nd);setDismissed(nd);
-  };
-  return(
-    <div className="space-y-2 mb-4">
-      {visible.map(n=>(
-        <div key={n.id} className="glass rounded-xl p-3 flex items-start gap-2 animate-slide-up">
-          <i data-lucide="bell" size="16" className="text-blue-500 mt-0.5 flex-shrink-0"/>
-          <p className="flex-1 text-xs">{n.text}</p>
-          <button onClick={()=>dismiss(n.id)} className="text-gray-400 hover:text-red-500 p-0.5"><i data-lucide="x" size="14"/></button>
-        </div>
-      ))}
-    </div>
-  );
-}
+            const getW = async (lat, lon, name) => {
+                setLoading(true);
+                try {
+                    const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability&timezone=Asia/Ho_Chi_Minh`);
+                    const d = await r.json();
+                    setWeather({ name, current: d.current, hourly: d.hourly });
+                    setActiveCity(name);
+                } catch (e) { alert('Lỗi tải thời tiết'); }
+                setLoading(false);
+            };
 
-/* ===== MAIN APP ===== */
-function App(){
-  useLucide();
-  const [darkMode,setDarkMode]=useState(()=>ls.get('darkMode',true));
-  const [lang,setLang]=useState(()=>ls.get('lang','vi'));
-  const [effect,setEffect]=useState(()=>ls.get('effect','snow'));
-  const [musicOn,setMusicOn]=useState(()=>ls.get('musicOn',false));
-  const [track,setTrack]=useState(0);
-  const [activePage,setActivePage]=useState('profile');
-  const [shopFilter,setShopFilter]=useState('');
-  const [drawerOpen,setDrawerOpen]=useState(false);
-  const [isAdmin,setIsAdmin]=useState(()=>ls.get('isAdmin',false));
-  
-  const [data,setDataState]=useState(()=>({
-    profile:ls.get('profile',DEFAULT_PROFILE),
-    products:ls.get('products',DEFAULT_PRODUCTS),
-    posts:ls.get('posts',DEFAULT_POSTS),
-    notifications:ls.get('notifications',DEFAULT_NOTIFICATIONS),
-    siteName:ls.get('siteName','Thao Service'),
-    defaultEffect:ls.get('defaultEffect','snow')
-  }));
-  
-  const setData=(d)=>{
-    setDataState(d);
-    ls.set('profile',d.profile);ls.set('products',d.products);ls.set('posts',d.posts);
-    ls.set('notifications',d.notifications);ls.set('siteName',d.siteName);ls.set('defaultEffect',d.defaultEffect);
-  };
-  
-  useEffect(()=>{
-    ls.set('darkMode',darkMode);
-    document.documentElement.classList.toggle('dark',darkMode);
-  },[darkMode]);
-  useEffect(()=>ls.set('lang',lang),[lang]);
-  useEffect(()=>ls.set('effect',effect),[effect]);
-  useEffect(()=>ls.set('musicOn',musicOn),[musicOn]);
-  useEffect(()=>ls.set('isAdmin',isAdmin),[isAdmin]);
-  
-  // restore read position
-  useEffect(()=>{
-    const rp=ls.get('readPos',null);
-    if(rp&&rp.url===location.href&&Date.now()-rp.time<24*3600*1000)setTimeout(()=>window.scrollTo({top:rp.pos,behavior:'smooth'}),500);
-  },[]);
-  
-  const navigate=(page,filter)=>{
-    setActivePage(page);
-    if(filter!==undefined)setShopFilter(filter);
-    if(page==='shop'&&!filter)setShopFilter('');
-    window.scrollTo({top:0,behavior:'smooth'});
-  };
-  
-  const bottomClick=(id)=>{
-    if(id==='menu')setDrawerOpen(true);
-    else navigate(id);
-  };
-  
-  return(
-    <div className="max-w-4xl mx-auto p-3 pb-32">
-      <Effects type={effect}/>
-      <Header siteName={data.siteName} darkMode={darkMode} setDarkMode={setDarkMode} lang={lang} setLang={setLang} onMenuOpen={()=>setDrawerOpen(true)}/>
-      <NotifBanner notifications={data.notifications}/>
-      
-      <div className="min-h-[60vh]">
-        {activePage==='profile'&&<ProfileHome profile={data.profile} posts={data.posts} products={data.products} onNavigate={navigate}/>}
-        {activePage==='shop'&&<Shop products={data.products} filter={shopFilter} setFilter={setShopFilter}/>}
-        {activePage==='posts'&&<PostsPage posts={data.posts}/>}
-        {activePage==='notifications'&&<NotificationsPage notifications={data.notifications}/>}
-        {activePage==='weather'&&<Weather/>}
-        {activePage==='ipcheck'&&<IpCheck/>}
-        {activePage==='speedtest'&&<SpeedTest/>}
-        {activePage==='notes'&&<Notes/>}
-        {activePage==='tempmail'&&<TempMail/>}
-        {activePage==='contact'&&<ContactPage profile={data.profile}/>}
-        {activePage==='admin-login'&&<AdminLogin onLogin={()=>{setIsAdmin(true);navigate('admin');}}/>}
-        {activePage==='admin'&&(isAdmin?<AdminPanel data={data} setData={setData} onLogout={()=>{setIsAdmin(false);navigate('profile');}}/>:<AdminLogin onLogin={()=>{setIsAdmin(true);navigate('admin');}}/>)}
-      </div>
-      
-      <Drawer open={drawerOpen} onClose={()=>setDrawerOpen(false)} activePage={activePage} onNavigate={navigate} data={data} isAdmin={isAdmin} onAdmin={()=>navigate('admin')}/>
-      
-      <Accessibility effect={effect} setEffect={setEffect} musicOn={musicOn} setMusicOn={setMusicOn} track={track} setTrack={setTrack}/>
-      
-      <BottomNav active={activePage==='shop'?'shop':activePage==='contact'?'contact':'menu'} onClick={bottomClick}/>
-    </div>
-  );
-}
+            const myLoc = async () => {
+                setLoading(true);
+                try {
+                    const r = await fetch('https://ipwho.is/');
+                    const d = await r.json();
+                    if(d.latitude) getW(d.latitude, d.longitude, `📍 ${d.city}`);
+                } catch (e) { alert('Lỗi check vị trí'); }
+                setLoading(false);
+            };
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
-</script>
+            useEffect(() => { getW(cities[0].lat, cities[0].lon, cities[0].name); }, []);
+
+            const codeMap = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',51:'🌦',61:'🌧',80:'🌧',95:'⛈'};
+
+            return (
+                <div className="glass p-5 rounded-2xl animate-fade-in">
+                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="cloud-sun" size="22" className="text-blue-500"></i> Thời tiết</h2>
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+                        {cities.map(c => (
+                            <button key={c.name} onClick={() => getW(c.lat, c.lon, c.name)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold ${activeCity === c.name ? 'bg-blue-500 text-white' : 'glass-strong'}`}>{c.name}</button>
+                        ))}
+                        <button onClick={myLoc} className="whitespace-nowrap bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                            <i data-lucide="map-pin" size="12"></i> Vị trí của tôi
+                        </button>
+                    </div>
+                    
+                    {loading ? <p className="text-sm text-center py-3 animate-pulse">Đang tải...</p> : weather && (
+                        <div className="mt-3 space-y-3">
+                            <div className="glass-strong p-4 rounded-xl flex justify-between items-center">
+                                <div>
+                                    <p className="font-bold">{weather.name}</p>
+                                    <p className="text-xs text-gray-500">Độ ẩm: {weather.current.relative_humidity_2m}% • Gió: {weather.current.wind_speed_10m} km/h</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-4xl">{codeMap[weather.current.weather_code] || '🌤'}</p>
+                                    <p className="text-2xl font-extrabold text-blue-500">{weather.current.temperature_2m}°C</p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <p className="text-xs font-bold mb-2 text-gray-500">Dự báo 24H</p>
+                                <div className="overflow-x-auto no-scrollbar flex gap-3 glass-strong p-3 rounded-xl">
+                                    {weather.hourly.time.slice(0, 12).map((time, i) => (
+                                        <div key={i} className="text-center min-w-[60px]">
+                                            <p className="text-[10px] text-gray-500">{time.split('T')[1]}</p>
+                                            <p className="font-bold text-sm">{weather.hourly.temperature_2m[i]}°</p>
+                                            <p className="text-[10px] text-blue-500">{weather.hourly.precipitation_probability[i]}%</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-3 rounded-xl text-sm">
+                                <p className="font-bold text-red-600 dark:text-red-400 flex items-center gap-1"><i data-lucide="alert-triangle" size="16"></i> Cảnh báo Miền Trung</p>
+                                <p className="mt-1 text-gray-700 dark:text-gray-300 text-xs leading-relaxed"><strong>Nguyên nhân:</strong> Mưa lớn do bão/áp thấp, địa hình dốc gây lũ quét, sạt lở đất.<br/><strong>Cách phòng tránh:</strong> Gia cố nhà cửa; không qua suối/rốn khi mưa lớn; chuẩn bị đèn pin, lương thực; theo dõi tin bão; sơ tán khi có lệnh.</p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function IpCheck() {
+            const [ip, setIp] = useState(null);
+            const [loading, setLoading] = useState(false);
+            
+            const check = async () => {
+                setLoading(true); setIp(null);
+                try {
+                    // Đã fix lỗi API ipwho.is (ổn định hơn ipapi.co)
+                    const r = await fetch('https://ipwho.is/');
+                    const d = await r.json();
+                    if(d.success) setIp(d);
+                    else alert('Lỗi check IP');
+                } catch (e) { alert('Lỗi mạng, thử lại sau!'); }
+                setLoading(false);
+            };
+
+            return (
+                <div className="glass p-5 rounded-2xl animate-fade-in">
+                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="globe" size="22" className="text-blue-500"></i> Check IP</h2>
+                    <button onClick={check} disabled={loading} className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition">
+                        {loading ? 'Đang check...' : 'Check IP Ngay'}
+                    </button>
+                    
+                    {ip && (
+                        <div className="mt-3 glass-strong p-4 rounded-xl text-xs space-y-2">
+                            <div className="flex justify-between border-b border-white/30 pb-1"><span className="text-gray-500">IP:</span><span className="font-bold">{ip.ip}</span></div>
+                            <div className="flex justify-between border-b border-white/30 pb-1"><span className="text-gray-500">Loại:</span><span className="font-bold">{ip.country_code === 'VN' ? 'Local (VN)' : 'Proxy / VPN'}</span></div>
+                            <div className="flex justify-between border-b border-white/30 pb-1"><span className="text-gray-500">Thành phố:</span><span className="font-bold">{ip.city || 'N/A'}</span></div>
+                            <div className="flex justify-between border-b border-white/30 pb-1"><span className="text-gray-500">Mã bưu chính:</span><span className="font-bold">{ip.postal || 'N/A'}</span></div>
+                            <div className="flex justify-between"><span className="text-gray-500">Quốc gia:</span><span className="font-bold">{ip.country}</span></div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function SpeedTest() {
+            const [speed, setSpeed] = useState(null);
+            const [testing, setTesting] = useState(false);
+            const [netInfo, setNetInfo] = useState(null);
+
+            const test = async () => {
+                setTesting(true); setSpeed(null);
+                const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                if (c) setNetInfo({ type: c.effectiveType, down: c.downlink });
+                
+                const start = performance.now();
+                try {
+                    // Dùng file test tốc độ của Cloudflare
+                    await fetch('https://speed.cloudflare.com/__down?bytes=2000000&cache=' + Date.now(), { cache: 'no-store' });
+                    const dur = (performance.now() - start) / 1000;
+                    setSpeed(((2000000 * 8) / (dur * 1000000)).toFixed(2));
+                } catch (e) { alert('Lỗi test mạng'); }
+                setTesting(false);
+            };
+
+            return (
+                <div className="glass p-5 rounded-2xl animate-fade-in">
+                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="wifi" size="22" className="text-purple-500"></i> Check 4G / 5G / WiFi</h2>
+                    <button onClick={test} disabled={testing} className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2.5 rounded-xl font-bold shadow-lg shadow-purple-500/30 transition">
+                        {testing ? 'Đang test...' : 'Bắt đầu test'}
+                    </button>
+                    
+                    {netInfo && (
+                        <div className="mt-3 glass-strong p-3 rounded-xl text-xs space-y-1">
+                            <div className="flex justify-between"><span className="text-gray-500">Loại kết nối:</span><span className="font-bold">{netInfo.type?.toUpperCase() || 'N/A'}</span></div>
+                            <div className="flex justify-between"><span className="text-gray-500">Ước tính:</span><span className="font-bold">{netInfo.down} Mbps</span></div>
+                        </div>
+                    )}
+                    {speed && (
+                        <div className="mt-3 glass-strong p-4 rounded-xl text-center">
+                            <p className="text-xs text-gray-500">Tốc độ tải xuống</p>
+                            <p className="text-3xl font-extrabold text-purple-500">{speed} <span className="text-lg">Mbps</span></p>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function Notes() {
+            const [notes, setNotes] = useState(() => ls.get('notes', []));
+            const [input, setInput] = useState('');
+            
+            const add = () => {
+                if (!input.trim()) return;
+                const n = [...notes, { id: Date.now(), text: input }];
+                setNotes(n); ls.set('notes', n); setInput('');
+            };
+            const del = id => { const n = notes.filter(x => x.id !== id); setNotes(n); ls.set('notes', n); };
+            
+            return (
+                <div className="glass p-5 rounded-2xl animate-fade-in">
+                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="sticky-note" size="22" className="text-yellow-500"></i> Ghi chú</h2>
+                    <div className="flex gap-2">
+                        <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && add()} placeholder="Nhập ghi chú..." className="flex-1 glass-strong rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 ring-blue-500" />
+                        <button onClick={add} className="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded-xl font-bold">+</button>
+                    </div>
+                    <ul className="mt-3 space-y-2 max-h-60 overflow-y-auto no-scrollbar">
+                        {notes.map(n => (
+                            <li key={n.id} className="glass-strong rounded-xl p-2 flex justify-between items-center text-sm">
+                                <span>{n.text}</span>
+                                <button onClick={() => del(n.id)} className="text-red-500 p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded"><i data-lucide="trash-2" size="16"></i></button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        }
+
+        function TempMail() {
+            const [mail, setMail] = useState(() => ls.get('tempmail', null));
+            const [messages, setMessages] = useState([]);
+            const [loading, setLoading] = useState(false);
+
+            const create = async () => {
+                setLoading(true);
+                try {
+                    const dr = await fetch('https://api.mail.tm/domains');
+                    const dd = await dr.json();
+                    const domain = dd['hydra:member'][0].domain;
+                    const address = `user${Math.floor(Math.random() * 1000000)}@${domain}`;
+                    const password = 'Password123!';
+                    
+                    const cr = await fetch('https://api.mail.tm/accounts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password }) });
+                    if (!cr.ok) throw new Error();
+                    
+                    const tr = await fetch('https://api.mail.tm/token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password }) });
+                    const td = await tr.json();
+                    
+                    const m = { address, token: td.token };
+                    ls.set('tempmail', m); setMail(m);
+                } catch (e) { alert('Lỗi tạo mail, thử lại!'); }
+                setLoading(false);
+            };
+
+            const fetchM = async () => {
+                if (!mail) return;
+                try {
+                    const r = await fetch('https://api.mail.tm/messages', { headers: { Authorization: `Bearer ${mail.token}` } });
+                    const d = await r.json();
+                    setMessages(d['hydra:member'] || []);
+                } catch (e) { alert('Lỗi tải mail'); }
+            };
+
+            return (
+                <div className="glass p-5 rounded-2xl animate-fade-in">
+                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="mail" size="22" className="text-orange-500"></i> Email Tạm</h2>
+                    {!mail ? (
+                        <button onClick={create} disabled={loading} className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl font-bold shadow-lg shadow-orange-500/30">
+                            {loading ? 'Đang tạo...' : 'Tạo Mail Tạm'}
+                        </button>
+                    ) : (
+                        <div className="glass-strong p-3 rounded-xl text-sm">
+                            <p className="font-bold text-orange-500 break-all">{mail.address}</p>
+                            <div className="flex gap-2 mt-2">
+                                <button onClick={fetchM} className="flex-1 glass-strong py-1.5 rounded-lg text-xs font-bold">Tải hộp thư</button>
+                                <button onClick={() => { ls.del('tempmail'); setMail(null); setMessages([]); }} className="flex-1 bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 py-1.5 rounded-lg text-xs font-bold">Xoá</button>
+                            </div>
+                            {messages.length > 0 && (
+                                <ul className="mt-3 space-y-1 max-h-48 overflow-y-auto no-scrollbar">
+                                    {messages.map(m => (
+                                        <li key={m.id} className="border-b border-white/30 pb-1 text-xs">
+                                            <p className="font-semibold">{m.subject || '(Không tiêu đề)'}</p>
+                                            <p className="text-gray-500 text-[10px]">Từ: {m.from?.address}</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function PostsPage({ posts }) {
+            return (
+                <div className="animate-fade-in space-y-4">
+                    <h2 className="text-2xl font-bold">Bài Viết</h2>
+                    {posts.length === 0 && <p className="text-center text-gray-500 py-10">Chưa có bài viết</p>}
+                    {[...posts].reverse().map(p => (
+                        <div key={p.id} className="glass p-5 rounded-2xl">
+                            {p.image && <img src={p.image} className="w-full h-48 object-cover rounded-xl mb-3" alt="" />}
+                            <h3 className="font-bold text-lg text-blue-500">{p.title}</h3>
+                            <p className="text-xs text-gray-500 mt-1">{new Date(p.date).toLocaleDateString('vi-VN')}</p>
+                            <p className="text-sm mt-2 text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{p.content}</p>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        function NotificationsPage({ notifications }) {
+            return (
+                <div className="animate-fade-in space-y-3">
+                    <h2 className="text-2xl font-bold">Thông Báo</h2>
+                    {notifications.length === 0 && <p className="text-center text-gray-500 py-10">Không có thông báo</p>}
+                    {[...notifications].reverse().map(n => (
+                        <div key={n.id} className="glass p-4 rounded-2xl flex gap-3">
+                            <i data-lucide="bell" size="20" className="text-blue-500 flex-shrink-0 mt-1"></i>
+                            <div className="flex-1">
+                                <p className="text-sm">{n.text}</p>
+                                <p className="text-xs text-gray-500 mt-1">{new Date(n.createdAt).toLocaleString('vi-VN')}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        function ContactPage({ profile }) {
+            const c = profile.contact;
+            const items = [
+                { icon: 'send', label: 'Telegram', value: `@${c.telegram}`, link: `https://t.me/${c.telegram}`, color: 'text-blue-500' },
+                { icon: 'facebook', label: 'Facebook', value: `@${c.facebook}`, link: `https://facebook.com/${c.facebook}`, color: 'text-blue-600' },
+                { icon: 'phone', label: 'Điện thoại', value: c.phone, link: `tel:${c.phone}`, color: 'text-green-500' },
+                { icon: 'mail', label: 'Email', value: c.email, link: `mailto:${c.email}`, color: 'text-red-500' },
+                { icon: 'message-square', label: 'Discord', value: c.discord, link: `https://discord.com/users/${c.discord}`, color: 'text-indigo-500' }
+            ];
+            return (
+                <div className="animate-fade-in space-y-4">
+                    <div className="glass p-6 rounded-2xl text-center">
+                        <img src={profile.avatar} alt="" className="w-20 h-20 rounded-full mx-auto border-4 border-blue-500 shadow-lg" />
+                        <h2 className="text-xl font-bold mt-3 flex items-center justify-center">{profile.name}{profile.verified && <VerifiedIcon size={18} />}</h2>
+                        <p className="text-sm text-gray-500 mt-1">Liên hệ để được hỗ trợ 24/7</p>
+                    </div>
+                    <div className="space-y-2">
+                        {items.map((it, i) => (
+                            <a key={i} href={it.link} target="_blank" rel="noreferrer" className="glass rounded-2xl p-4 flex items-center gap-3 hover:bg-white/80 dark:hover:bg-slate-700/60 transition">
+                                <div className={`w-10 h-10 rounded-xl glass-strong flex items-center justify-center ${it.color}`}>
+                                    <i data-lucide={it.icon} size="20"></i>
+                                </div>
+                                <div className="flex-1">
+                                    <p className="text-xs text-gray-500">{it.label}</p>
+                                    <p className="text-sm font-bold break-all">{it.value}</p>
+                                </div>
+                                <i data-lucide="chevron-right" size="16" className="text-gray-400"></i>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        /* ================= ADMIN PANEL ================= */
+        function AdminLogin({ onLogin }) {
+            const [u, setU] = useState('');
+            const [p, setP] = useState('');
+            const [show, setShow] = useState(false);
+            const [err, setErr] = useState('');
+
+            const submit = e => {
+                e.preventDefault();
+                if (u === ADMIN_USER && p === ADMIN_PASS) onLogin();
+                else setErr('Sai tài khoản hoặc mật khẩu!');
+            };
+
+            return (
+                <div className="animate-fade-in max-w-md mx-auto mt-10">
+                    <div className="glass p-6 rounded-2xl">
+                        <div className="text-center mb-5">
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 mx-auto flex items-center justify-center">
+                                <i data-lucide="shield" size="32" className="text-white"></i>
+                            </div>
+                            <h2 className="text-xl font-bold mt-3">Đăng nhập Admin</h2>
+                            <p className="text-xs text-gray-500">Chỉ admin mới có quyền truy cập</p>
+                        </div>
+                        <form onSubmit={submit} className="space-y-3">
+                            <input value={u} onChange={e => setU(e.target.value)} placeholder="Tài khoản" className="w-full glass-strong rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500" />
+                            <div className="relative">
+                                <input type={show ? 'text' : 'password'} value={p} onChange={e => setP(e.target.value)} placeholder="Mật khẩu" className="w-full glass-strong rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 pr-10" />
+                                <button type="button" onClick={() => setShow(!show)} className="absolute right-3 top-2.5 text-gray-500">
+                                    <i data-lucide={show ? 'eye-off' : 'eye'} size="18"></i>
+                                </button>
+                            </div>
+                            {err && <p className="text-xs text-red-500 text-center">{err}</p>}
+                            <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition">Đăng nhập</button>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        function AdminPanel({ data, setData, onLogout }) {
+            const [tab, setTab] = useState('profile');
+            const [form, setForm] = useState({});
+            const [editId, setEditId] = useState(null);
+
+            const tabs = [
+                { id: 'profile', label: 'Profile', icon: 'user' },
+                { id: 'site', label: 'Web', icon: 'settings' },
+                { id: 'products', label: 'Sản phẩm', icon: 'shopping-bag' },
+                { id: 'posts', label: 'Bài viết', icon: 'newspaper' },
+                { id: 'notifs', label: 'Thông báo', icon: 'bell' }
+            ];
+
+            const updImg = async (e, k, cb) => {
+                const f = e.target.files[0]; if (!f) return;
+                const b64 = await compressImage(f, 500, 0.7);
+                cb(k, b64);
+            };
+
+            // --- Sub-tabs ---
+            const ProfileTab = () => {
+                const p = data.profile;
+                const upd = (k, v) => setData({ ...data, profile: { ...p, [k]: v } });
+                return (
+                    <div className="space-y-3">
+                        <div><label className="text-xs font-bold text-gray-500">Tên Profile</label>
+                        <input value={p.name} onChange={e => upd('name', e.target.value)} className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none" /></div>
+                        <div className="flex items-center gap-2">
+                            <input type="checkbox" checked={p.verified} onChange={e => upd('verified', e.target.checked)} id="vf" />
+                            <label htmlFor="vf" className="text-sm">Hiện tick xanh</label>
+                        </div>
+                        <div><label className="text-xs font-bold text-gray-500">Bio</label>
+                        <textarea value={p.bio} onChange={e => upd('bio', e.target.value)} rows="3" className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none" /></div>
+                        <div><label className="text-xs font-bold text-gray-500">Avatar</label>
+                        <div className="flex items-center gap-2 mt-1">
+                            <img src={p.avatar} className="w-12 h-12 rounded-full object-cover" />
+                            <input type="file" accept="image/*" onChange={e => updImg(e, 'avatar', upd)} className="text-xs" />
+                        </div></div>
+                        <div><label className="text-xs font-bold text-gray-500">Ảnh bìa</label>
+                        <div className="mt-1"><img src={p.cover} className="w-full h-20 object-cover rounded-lg mb-1" />
+                        <input type="file" accept="image/*" onChange={e => updImg(e, 'cover', upd)} className="text-xs" /></div></div>
+                    </div>
+                );
+            };
+
+            const SiteTab = () => (
+                <div className="space-y-3">
+                    <div><label className="text-xs font-bold text-gray-500">Tên Web (Khác tên Profile)</label>
+                    <input value={data.siteName} onChange={e => setData({ ...data, siteName: e.target.value })} className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none" /></div>
+                    <div><label className="text-xs font-bold text-gray-500">Hiệu ứng mặc định</label>
+                    <select value={data.defaultEffect} onChange={e => setData({ ...data, defaultEffect: e.target.value })} className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none">
+                        <option value="none">Không</option><option value="snow">Tuyết</option><option value="flower">Hoa</option><option value="fog">Sương</option><option value="lava">Núi lửa</option>
+                    </select></div>
+                </div>
+            );
+
+            const ProductsTab = () => {
+                const save = () => {
+                    if (!form.name || !form.price) return alert('Nhập tên & giá');
+                    const list = data.products || [];
+                    if (editId) setData({ ...data, products: list.map(x => x.id === editId ? { ...form, id: editId } : x) });
+                    else setData({ ...data, products: [...list, { ...form, id: Date.now() }] });
+                    setForm({}); setEditId(null);
+                };
+                return (
+                    <div className="space-y-3">
+                        <div className="glass-strong p-3 rounded-xl space-y-2">
+                            <select value={form.category || ''} onChange={e => setForm({ ...form, category: e.target.value, subcategory: '' })} className="w-full p-2 rounded text-sm outline-none">
+                                <option value="">-- Danh mục --</option>
+                                {CATEGORIES.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
+                            </select>
+                            {CATEGORIES.find(c => c.name === form.category)?.subs.length > 0 && (
+                                <select value={form.subcategory || ''} onChange={e => setForm({ ...form, subcategory: e.target.value })} className="w-full p-2 rounded text-sm outline-none">
+                                    <option value="">-- Danh mục con --</option>
+                                    {CATEGORIES.find(c => c.name === form.category).subs.map(s => <option key={s} value={s}>{s}</option>)}
+                                </select>
+                            )}
+                            <input value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Tên SP" className="w-full p-2 rounded text-sm outline-none" />
+                            <div className="flex gap-2">
+                                <input value={form.price || ''} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="Giá" className="w-1/2 p-2 rounded text-sm outline-none" />
+                                <input type="number" value={form.stock || 0} onChange={e => setForm({ ...form, stock: Number(e.target.value) })} placeholder="Kho" className="w-1/2 p-2 rounded text-sm outline-none" />
+                            </div>
+                            <input value={form.desc || ''} onChange={e => setForm({ ...form, desc: e.target.value })} placeholder="Mô tả" className="w-full p-2 rounded text-sm outline-none" />
+                            <div className="flex items-center gap-2">
+                                {form.image && <img src={form.image} className="w-10 h-10 rounded object-cover" />}
+                                <input type="file" accept="image/*" onChange={e => updImg(e, 'image', (k, v) => setForm({ ...form, [k]: v }))} className="text-xs" />
+                            </div>
+                            <div className="flex gap-2">
+                                <button onClick={save} className="flex-1 bg-blue-500 text-white py-2 rounded font-bold text-sm">{editId ? 'Cập nhật' : 'Thêm'}</button>
+                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-500 text-white px-3 rounded text-sm">Hủy</button>}
+                            </div>
+                        </div>
+                        <div className="space-y-1 max-h-60 overflow-y-auto">
+                            {data.products.map(p => (
+                                <div key={p.id} className="glass-strong p-2 rounded-xl flex items-center gap-2 text-xs">
+                                    <div className="flex-1 truncate">{p.name} - {p.price} (Kho: {p.stock})</div>
+                                    <button onClick={() => { setForm(p); setEditId(p.id); }} className="text-blue-500"><i data-lucide="edit" size="14"></i></button>
+                                    <button onClick={() => setData({ ...data, products: data.products.filter(x => x.id !== p.id) })} className="text-red-500"><i data-lucide="trash-2" size="14"></i></button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            };
+
+            const PostsTab = () => {
+                const save = () => {
+                    if (!form.title || !form.content) return alert('Nhập tiêu đề & nội dung');
+                    if (editId) setData({ ...data, posts: data.posts.map(p => p.id === editId ? { ...form, id: editId, date: p.date } : p) });
+                    else setData({ ...data, posts: [...data.posts, { ...form, id: Date.now(), date: new Date().toISOString() }] });
+                    setForm({}); setEditId(null);
+                };
+                return (
+                    <div className="space-y-3">
+                        <div className="glass-strong p-3 rounded-xl space-y-2">
+                            <input value={form.title || ''} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Tiêu đề" className="w-full p-2 rounded text-sm outline-none" />
+                            <textarea value={form.content || ''} onChange={e => setForm({ ...form, content: e.target.value })} placeholder="Nội dung" rows="3" className="w-full p-2 rounded text-sm outline-none" />
+                            <div className="flex items-center gap-2">
+                                {form.image && <img src={form.image} className="w-10 h-10 rounded object-cover" />}
+                                <input type="file" accept="image/*" onChange={e => updImg(e, 'image', (k, v) => setForm({ ...form, [k]: v }))} className="text-xs" />
+                            </div>
+                            <div className="flex gap-2">
+                                <button onClick={save} className="flex-1 bg-green-500 text-white py-2 rounded font-bold text-sm">{editId ? 'Cập nhật' : 'Đăng'}</button>
+                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-500 text-white px-3 rounded text-sm">Hủy</button>}
+                            </div>
+                        </div>
+                        <div className="space-y-1 max-h-60 overflow-y-auto">
+                            {data.posts.map(p => (
+                                <div key={p.id} className="glass-strong p-2 rounded-xl flex items-center gap-2 text-xs">
+                                    <div className="flex-1 truncate">{p.title}</div>
+                                    <button onClick={() => { setForm(p); setEditId(p.id); }} className="text-blue-500"><i data-lucide="edit" size="14"></i></button>
+                                    <button onClick={() => setData({ ...data, posts: data.posts.filter(x => x.id !== p.id) })} className="text-red-500"><i data-lucide="trash-2" size="14"></i></button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            };
+
+            const NotifsTab = () => {
+                const [text, setText] = useState('');
+                return (
+                    <div className="space-y-3">
+                        <div className="flex gap-2">
+                            <input value={text} onChange={e => setText(e.target.value)} placeholder="Thông báo mới..." className="flex-1 p-2 rounded-xl text-sm outline-none glass-strong" />
+                            <button onClick={() => { if(!text)return; setData({ ...data, notifications: [...data.notifications, { id: Date.now(), text, createdAt: Date.now() }] }); setText(''); }} className="bg-blue-500 text-white px-4 rounded-xl font-bold">+</button>
+                        </div>
+                        <div className="space-y-1">
+                            {data.notifications.map(n => (
+                                <div key={n.id} className="glass-strong p-2 rounded-xl flex items-center gap-2 text-xs">
+                                    <div className="flex-1 truncate">{n.text}</div>
+                                    <button onClick={() => setData({ ...data, notifications: data.notifications.filter(x => x.id !== n.id) })} className="text-red-500"><i data-lucide="trash-2" size="14"></i></button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="animate-fade-in">
+                    <div className="glass p-3 rounded-2xl mb-4 flex justify-between items-center">
+                        <h2 className="font-bold text-lg flex items-center gap-2"><i data-lucide="shield-check" size="20" className="text-red-500"></i> Dashboard</h2>
+                        <button onClick={onLogout} className="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold">Thoát</button>
+                    </div>
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4">
+                        {tabs.map(t => (
+                            <button key={t.id} onClick={() => { setTab(t.id); setForm({}); setEditId(null); }} className={`whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 ${tab === t.id ? 'bg-blue-500 text-white' : 'glass-strong'}`}>
+                                <i data-lucide={t.icon} size="14"></i> {t.label}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="glass p-4 rounded-2xl">
+                        {tab === 'profile' && <ProfileTab />}
+                        {tab === 'site' && <SiteTab />}
+                        {tab === 'products' && <ProductsTab />}
+                        {tab === 'posts' && <PostsTab />}
+                        {tab === 'notifs' && <NotifsTab />}
+                    </div>
+                </div>
+            );
+        }
+
+        /* ================= DRAWER & NAV ================= */
+        function Drawer({ open, onClose, activePage, onNavigate, data, isAdmin }) {
+            const [expanded, setExpanded] = useState(null);
+            const items = [
+                { id: 'profile', label: 'Tài khoản / Profile', icon: 'user' },
+                { id: 'shop', label: 'Sản phẩm', icon: 'shopping-bag', expandable: true },
+                { id: 'notifications', label: 'Thông báo', icon: 'bell' },
+                { id: 'posts', label: 'Bài viết', icon: 'newspaper' },
+                { id: 'ipcheck', label: 'Check IP', icon: 'globe' },
+                { id: 'weather', label: 'Thời tiết', icon: 'cloud-sun' },
+                { id: 'notes', label: 'Ghi chú', icon: 'sticky-note' },
+                { id: 'tempmail', label: 'Email Tạm', icon: 'mail' },
+                { id: 'speedtest', label: 'Check 4G/5G/WiFi', icon: 'wifi' },
+                { id: 'contact', label: 'Contact Support', icon: 'phone' }
+            ];
+
+            return (
+                <>
+                    {open && <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" onClick={onClose}></div>}
+                    <div className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] glass-strong z-50 transform transition-transform duration-300 ${open ? 'translate-x-0' : '-translate-x-full'} flex flex-col`}>
+                        <div className="p-4 flex items-center gap-3 border-b border-white/20">
+                            <img src={data.profile.avatar} className="w-12 h-12 rounded-full object-cover border-2 border-blue-500" alt="Avt" />
+                            <div className="flex-1 min-w-0">
+                                <p className="font-bold flex items-center text-sm truncate">{data.profile.name}{data.profile.verified && <VerifiedIcon size={14} />}</p>
+                                <p className="text-[10px] text-gray-500 truncate">@{ADMIN_USER}</p>
+                            </div>
+                            <button onClick={onClose} className="p-1"><i data-lucide="x" size="20"></i></button>
+                        </div>
+                        
+                        <div className="flex-1 overflow-y-auto p-3 space-y-1 no-scrollbar">
+                            {items.map(it => (
+                                <div key={it.id}>
+                                    <button onClick={() => {
+                                        if (it.expandable) setExpanded(expanded === it.id ? null : it.id);
+                                        else { onNavigate(it.id); onClose(); }
+                                    }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-blue-500/10 transition ${activePage === it.id ? 'text-blue-500' : ''}`}>
+                                        <i data-lucide={it.icon} size="18" className="text-blue-500"></i>
+                                        <span className="flex-1 text-left">{it.label}</span>
+                                        {it.expandable && <i data-lucide={expanded === it.id ? 'chevron-down' : 'chevron-right'} size="16"></i>}
+                                    </button>
+                                    
+                                    {it.expandable && expanded === it.id && (
+                                        <div className="ml-6 mt-1 space-y-0.5">
+                                            {CATEGORIES.map(c => (
+                                                <div key={c.name}>
+                                                    <button onClick={() => { onNavigate('shop', c.name); onClose(); }} className="w-full text-left px-2 py-1.5 rounded text-xs hover:bg-blue-500/10">
+                                                        {c.name}
+                                                    </button>
+                                                    {c.subs.length > 0 && (
+                                                        <div className="ml-3">
+                                                            {c.subs.map(s => (
+                                                                <button key={s} onClick={() => { onNavigate('shop', s); onClose(); }} className="w-full text-left px-2 py-1 rounded text-[11px] hover:bg-blue-500/10 text-gray-600 dark:text-gray-400">• {s}</button>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                            
+                            <div className="pt-2 border-t border-white/20 mt-2">
+                                {isAdmin ? (
+                                    <button onClick={() => { onNavigate('admin'); onClose(); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-500/10">
+                                        <i data-lucide="shield-check" size="18"></i> Admin Panel
+                                    </button>
+                                ) : (
+                                    <button onClick={() => { onNavigate('admin-login'); onClose(); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-500/10">
+                                        <i data-lucide="lock" size="18"></i> Đăng nhập Admin
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </>
+            );
+        }
+
+        function Accessibility({ effect, setEffect, musicOn, setMusicOn, track, setTrack }) {
+            const [open, setOpen] = useState(false);
+            const effects = ['none', 'snow', 'flower', 'fog', 'lava'];
+            
+            return (
+                <>
+                    <button onClick={() => setOpen(!open)} className="fixed top-20 right-4 z-40 w-12 h-12 rounded-2xl glass-strong flex items-center justify-center shadow-xl hover:scale-105 transition">
+                        <i data-lucide="sparkles" size="22" className="text-blue-500"></i>
+                    </button>
+                    
+                    {open && (
+                        <div className="fixed top-36 right-4 z-40 w-72 glass-strong rounded-2xl p-3 animate-fade-in shadow-2xl">
+                            <div className="flex justify-between items-center mb-2">
+                                <p className="text-xs font-bold">Tiện ích</p>
+                                <button onClick={() => setOpen(false)}><i data-lucide="x" size="16"></i></button>
+                            </div>
+                            
+                            <div className="grid grid-cols-4 gap-1.5 mb-2">
+                                <button onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} title="Lên đầu" className="glass rounded-xl p-2 flex justify-center"><i data-lucide="arrow-up" size="16"></i></button>
+                                <button onClick={() => window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})} title="Xuống cuối" className="glass rounded-xl p-2 flex justify-center"><i data-lucide="arrow-down" size="16"></i></button>
+                                <button onClick={() => { const q=prompt("Tìm kiếm:"); if(q) window.find(q); }} title="Tìm kiếm" className="glass rounded-xl p-2 flex justify-center"><i data-lucide="search" size="16"></i></button>
+                                <button onClick={() => { ls.set('readPos', {url: location.href, pos: window.scrollY, time: Date.now()}); alert('Đã lưu vị trí!'); }} title="Lưu vị trí" className="glass rounded-xl p-2 flex justify-center"><i data-lucide="bookmark" size="16"></i></button>
+                            </div>
+
+                            <div className="mb-2">
+                                <p className="text-[10px] font-bold text-gray-500 mb-1">Hiệu ứng</p>
+                                <div className="grid grid-cols-3 gap-1">
+                                    {effects.map(e => (
+                                        <button key={e} onClick={() => setEffect(e)} className={`text-[10px] py-1 rounded-lg capitalize ${effect === e ? 'bg-blue-500 text-white' : 'glass'}`}>{e === 'none' ? 'Tắt' : e}</button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="mb-2">
+                                <div className="flex justify-between items-center mb-1">
+                                    <p className="text-[10px] font-bold text-gray-500">Nhạc nền</p>
+                                    <button onClick={() => setMusicOn(!musicOn)} className={`px-2 py-0.5 rounded-full text-[10px] ${musicOn ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>{musicOn ? 'BẬT' : 'TẮT'}</button>
+                                </div>
+                                {musicOn && (
+                                    <div className="space-y-1">
+                                        <div className="rounded-xl overflow-hidden">
+                                            <iframe width="100%" height="60" scrolling="no" frameBorder="no" allow="autoplay" src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(SC_TRACKS[track])}&color=%233b82f6&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false`}></iframe>
+                                        </div>
+                                        <button onClick={() => setTrack((track + 1) % SC_TRACKS.length)} className="w-full glass rounded-lg py-1 text-[10px] font-bold flex justify-center items-center gap-1">
+                                            <i data-lucide="skip-forward" size="12"></i> Bài kế tiếp
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </>
+            );
+        }
+
+        /* ================= MAIN APP ================= */
+        function App() {
+            useLucide();
+            const [darkMode, setDarkMode] = useState(() => ls.get('darkMode', true));
+            const [effect, setEffect] = useState(() => ls.get('effect', 'snow'));
+            const [musicOn, setMusicOn] = useState(() => ls.get('musicOn', false));
+            const [track, setTrack] = useState(0);
+            const [activePage, setActivePage] = useState('profile');
+            const [shopFilter, setShopFilter] = useState('');
+            const [drawerOpen, setDrawerOpen] = useState(false);
+            const [isAdmin, setIsAdmin] = useState(() => ls.get('isAdmin', false));
+
+            // State dữ liệu chính
+            const [data, setDataState] = useState(() => ({
+                profile: ls.get('profile', DEFAULT_PROFILE),
+                products: ls.get('products', DEFAULT_PRODUCTS),
+                posts: ls.get('posts', DEFAULT_POSTS),
+                notifications: ls.get('notifications', DEFAULT_NOTIFS),
+                siteName: ls.get('siteName', 'Thao Service'),
+                defaultEffect: ls.get('defaultEffect', 'snow')
+            }));
+
+            const setData = (d) => {
+                setDataState(d);
+                ls.set('profile', d.profile); ls.set('products', d.products); ls.set('posts', d.posts);
+                ls.set('notifications', d.notifications); ls.set('siteName', d.siteName); ls.set('defaultEffect', d.defaultEffect);
+            };
+
+            useEffect(() => { ls.set('darkMode', darkMode); document.documentElement.classList.toggle('dark', darkMode); }, [darkMode]);
+            useEffect(() => { ls.set('effect', effect); }, [effect]);
+            useEffect(() => { ls.set('musicOn', musicOn); }, [musicOn]);
+            useEffect(() => { ls.set('isAdmin', isAdmin); }, [isAdmin]);
+
+            const navigate = (page, filter) => {
+                setActivePage(page);
+                if (filter !== undefined) setShopFilter(filter);
+                if (page === 'shop' && !filter) setShopFilter('');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            // Notif 12H
+            const [dismissed, setDismissed] = useState(() => ls.get('notifDismissed', {}));
+            const visibleNotifs = data.notifications.filter(n => (dismissed[n.id] || 0) < Date.now());
+
+            return (
+                <div className="max-w-4xl mx-auto p-3 pb-32">
+                    <Effects type={effect} />
+                    
+                    {/* Header */}
+                    <header className="glass sticky top-3 z-20 rounded-2xl p-3 mb-4 flex justify-between items-center">
+                        <button onClick={() => setDrawerOpen(true)} className="p-2"><i data-lucide="menu" size="22" className="text-blue-500"></i></button>
+                        <h1 className="text-base font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-cyan-400">{data.siteName}</h1>
+                        <div className="flex gap-1">
+                            <button onClick={() => setDarkMode(!darkMode)} className="p-2 glass-strong rounded-full">
+                                <i data-lucide={darkMode ? 'sun' : 'moon'} size="18"></i>
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* Notification Banners */}
+                    {visibleNotifs.length > 0 && (
+                        <div className="space-y-2 mb-4">
+                            {visibleNotifs.map(n => (
+                                <div key={n.id} className="glass rounded-xl p-3 flex items-start gap-2 animate-fade-in">
+                                    <i data-lucide="bell" size="16" className="text-blue-500 mt-0.5"></i>
+                                    <p className="flex-1 text-xs">{n.text}</p>
+                                    <button onClick={() => { const nd = { ...dismissed, [n.id]: Date.now() + 12 * 3600 * 1000 }; ls.set('notifDismissed', nd); setDismissed(nd); }} className="text-gray-400 hover:text-red-500"><i data-lucide="x" size="14"></i></button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Page Content */}
+                    <div className="min-h-[60vh]">
+                        {activePage === 'profile' && <ProfileHome profile={data.profile} posts={data.posts} onNavigate={navigate} />}
+                        {activePage === 'shop' && <Shop products={data.products} filter={shopFilter} setFilter={setShopFilter} />}
+                        {activePage === 'posts' && <PostsPage posts={data.posts} />}
+                        {activePage === 'notifications' && <NotificationsPage notifications={data.notifications} />}
+                        {activePage === 'weather' && <Weather />}
+                        {activePage === 'ipcheck' && <IpCheck />}
+                        {activePage === 'speedtest' && <SpeedTest />}
+                        {activePage === 'notes' && <Notes />}
+                        {activePage === 'tempmail' && <TempMail />}
+                        {activePage === 'contact' && <ContactPage profile={data.profile} />}
+                        {activePage === 'admin-login' && <AdminLogin onLogin={() => { setIsAdmin(true); navigate('admin'); }} />}
+                        {activePage === 'admin' && (isAdmin ? <AdminPanel data={data} setData={setData} onLogout={() => { setIsAdmin(false); navigate('profile'); }} /> : <AdminLogin onLogin={() => { setIsAdmin(true); navigate('admin'); }} />)}
+                    </div>
+
+                    {/* Floating Tools */}
+                    <Accessibility effect={effect} setEffect={setEffect} musicOn={musicOn} setMusicOn={setMusicOn} track={track} setTrack={setTrack} />
+                    
+                    {/* Drawer Menu */}
+                    <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} activePage={activePage} onNavigate={navigate} data={data} isAdmin={isAdmin} />
+
+                    {/* Bottom Nav (Chỉ 3 nút) */}
+                    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[92%] max-w-md glass-strong rounded-3xl p-2 flex justify-around items-center z-30 shadow-2xl">
+                        <button onClick={() => setDrawerOpen(true)} className={`dock-item flex flex-col items-center p-2 px-4 ${drawerOpen ? 'text-blue-500' : 'text-gray-500'}`}>
+                            <i data-lucide="menu" size="22"></i><span className="text-[10px] font-bold mt-1">Menu</span>
+                        </button>
+                        <button onClick={() => navigate('shop')} className={`dock-item flex flex-col items-center p-2 px-4 ${activePage === 'shop' ? 'text-blue-500' : 'text-gray-500'}`}>
+                            <i data-lucide="shopping-bag" size="22"></i><span className="text-[10px] font-bold mt-1">Shop</span>
+                        </button>
+                        <button onClick={() => navigate('contact')} className={`dock-item flex flex-col items-center p-2 px-4 ${activePage === 'contact' ? 'text-blue-500' : 'text-gray-500'}`}>
+                            <i data-lucide="phone" size="22"></i><span className="text-[10px] font-bold mt-1">Contact</span>
+                        </button>
+                    </nav>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
 </body>
 </html>
