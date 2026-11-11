@@ -14,9 +14,11 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- SweetAlert2 (Thông báo đẹp) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
         body { 
             font-family: 'Inter', sans-serif; 
@@ -24,6 +26,7 @@
             transition: background 0.3s, color 0.3s; 
             background-color: #f8fafc;
             color: #0f172a;
+            padding-bottom: 90px; /* Tránh bị menu đè */
         }
         .dark body {
             background-color: #0f172a;
@@ -32,66 +35,63 @@
 
         /* Liquid Glass Effect */
         .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
         }
         .dark .glass {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(30, 41, 59, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
         }
 
-        /* Animations */
+        /* Bottom Sheet Animation */
+        .bottom-sheet { transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .bottom-sheet.open { transform: translateY(0); }
+
+        /* Snow & Flower Effect */
         .snowflake { position: fixed; top: -10px; color: #fff; font-size: 1em; pointer-events: none; animation: fall linear forwards; z-index: 0; }
         @keyframes fall { to { transform: translateY(105vh); } }
         
         .flower { position: fixed; top: -10px; font-size: 1.5em; pointer-events: none; animation: fall linear forwards; z-index: 0; }
-        .fog { position: fixed; bottom: 0; left: 0; width: 100%; height: 30vh; background: linear-gradient(to top, rgba(255,255,255,0.8), transparent); pointer-events: none; z-index: 0; }
-        .dark .fog { background: linear-gradient(to top, rgba(15,23,42,0.8), transparent); }
+        .fog { position: fixed; bottom: 0; left: 0; width: 100%; height: 30vh; background: linear-gradient(to top, rgba(255,255,255,0.9), transparent); pointer-events: none; z-index: 0; }
+        .dark .fog { background: linear-gradient(to top, rgba(15,23,42,0.9), transparent); }
 
         /* Hide Scrollbar */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* iPhone Dock Animation */
-        .dock-item { transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .dock-item { transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s; }
         .dock-item:active { transform: scale(0.85); }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+        .dock-item.active { color: #3b82f6; }
     </style>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: { primary: '#3b82f6', darkBg: '#0f172a' }
-                }
-            }
-        }
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#3b82f6', darkBg: '#0f172a' } } } }
     </script>
 </head>
-<body class="min-h-screen pb-24 md:pb-0 relative">
+<body class="min-h-screen relative">
 
-    <!-- Background Effects Layer -->
     <div id="effect-layer" class="fixed inset-0 pointer-events-none z-0"></div>
-
-    <!-- React Root -->
     <div id="root" class="relative z-10"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect } = React;
 
-        // --- DATA MẶC ĐỊNH ---
+        // --- DỮ LIỆU MẶC ĐỊNH ---
+        const DEFAULT_PROFILE = {
+            name: "Nguyễn Lê Thảo",
+            title: "Service Processing Support",
+            bio: "Chuyên cung cấp dịch vụ MMO, Support Meta, TikTok, Google, Tool & Bypass. Uy tín - Tốc độ - Bảo mật.",
+            avatar: "https://ui-avatars.com/api/?name=Nguyen+Le+Thao&background=3b82f6&color=fff&size=200"
+        };
+
         const DEFAULT_PRODUCTS = [
-            { id: 1, category: "Shop Liên Quân", name: "Acc Kim Cương 100+", price: "500.000đ", desc: "Full tướng, ngọc đỏ", stock: 5 },
-            { id: 2, category: "Shop Free Fire", name: "Acc FF Thách Đấu", price: "300.000đ", desc: "Full nhân vật, súng đẹp", stock: 2 },
-            { id: 3, category: "Meta", name: "UNLOCK 282", price: "150.000đ", desc: "Mở khóa tính năng 282", stock: 10 },
-            { id: 4, category: "TikTok", name: "UNLOCK LIVE", price: "200.000đ", desc: "Mở live tiktok", stock: 0 }
+            { id: 1, category: "Shop Liên Quân", name: "Acc Kim Cương 100+", price: "500.000đ", desc: "Full tướng, ngọc đỏ", stock: 5, image: "https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?w=400&q=80" },
+            { id: 2, category: "Shop Free Fire", name: "Acc FF Thách Đấu", price: "300.000đ", desc: "Full nhân vật, súng đẹp", stock: 2, image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80" },
+            { id: 3, category: "Meta", name: "UNLOCK 282", price: "150.000đ", desc: "Mở khóa tính năng 282", stock: 10, image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&q=80" }
         ];
 
         const DEFAULT_POSTS = [
@@ -99,21 +99,17 @@
             { id: 2, title: "Cập nhật bảo mật Meta", content: "Hệ thống đã cập nhật quy trình mới cho UNLOCK 956." }
         ];
 
-        // Nhạc SoundCloud (Đã lấy link gốc từ yêu cầu của bạn)
         const SC_TRACKS = [
-            "https://soundcloud.com/quang-huynhh/v-b-n-anh-remix-jack-j97-x", // Bài 1
-            "https://soundcloud.com/doyu-358490204/jack-j97-ng-i-d-ng-wen-remix", // Bài 2
-            "https://soundcloud.com/khôi/luu-nien-x-thoi-di-vay" 
+            "https://soundcloud.com/quang-huynhh/v-b-n-anh-remix-jack-j97-x",
+            "https://soundcloud.com/doyu-358490204/jack-j97-ng-i-d-ng-wen-remix"
         ];
 
         // --- COMPONENTS ---
-        
-        // 1. Quản lý hiệu ứng
         function EffectManager({ type }) {
             useEffect(() => {
                 const layer = document.getElementById('effect-layer');
                 if(!layer) return;
-                layer.innerHTML = ''; // Clear cũ
+                layer.innerHTML = '';
                 
                 if (type === 'snow') {
                     const interval = setInterval(() => {
@@ -126,8 +122,7 @@
                         setTimeout(() => el.remove(), 5000);
                     }, 200);
                     return () => clearInterval(interval);
-                } 
-                else if (type === 'flower') {
+                } else if (type === 'flower') {
                     const flowers = ['🌸', '🌺', '🌼', '🍁'];
                     const interval = setInterval(() => {
                         const el = document.createElement('div');
@@ -138,25 +133,17 @@
                         setTimeout(() => el.remove(), 7000);
                     }, 400);
                     return () => clearInterval(interval);
-                }
-                else if (type === 'fog') {
+                } else if (type === 'fog') {
                     layer.innerHTML = '<div class="fog"></div>';
                 }
             }, [type]);
             return null;
         }
 
-        // 2. Tiện ích Thời tiết (Full tính năng)
         function WeatherWidget({ t }) {
             const [weather, setWeather] = useState(null);
             const [loading, setLoading] = useState(false);
-            const cities = [
-                { name: "Quy Nhơn", lat: 13.78, lon: 109.22 },
-                { name: "Nha Trang", lat: 12.24, lon: 109.19 },
-                { name: "Đà Nẵng", lat: 16.05, lon: 108.20 },
-                { name: "Hà Nội", lat: 21.03, lon: 105.85 },
-                { name: "HCM", lat: 10.82, lon: 106.63 }
-            ];
+            const cities = [{ name: "Quy Nhơn", lat: 13.78, lon: 109.22 }, { name: "Nha Trang", lat: 12.24, lon: 109.19 }, { name: "Đà Nẵng", lat: 16.05, lon: 108.20 }, { name: "Hà Nội", lat: 21.03, lon: 105.85 }, { name: "HCM", lat: 10.82, lon: 106.63 }];
 
             const getWeather = async (lat, lon, name) => {
                 setLoading(true);
@@ -179,81 +166,38 @@
             };
 
             return (
-                <div className="glass p-5 rounded-2xl mb-4">
-                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="cloud-sun"></i> {t.weather}</h2>
+                <div className="glass p-4 rounded-2xl mb-4">
+                    <h2 className="text-lg font-bold mb-3 flex items-center gap-2"><i data-lucide="cloud-sun" className="text-blue-500"></i> {t.weather}</h2>
                     <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
                         {cities.map(c => (
-                            <button key={c.name} onClick={() => getWeather(c.lat, c.lon, c.name)} className="whitespace-nowrap bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-semibold">{c.name}</button>
+                            <button key={c.name} onClick={() => getWeather(c.lat, c.lon, c.name)} className="whitespace-nowrap bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-3 py-1.5 rounded-full text-xs font-semibold">{c.name}</button>
                         ))}
-                        <button onClick={checkMyLocation} className="whitespace-nowrap bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1"><i data-lucide="map-pin" size="14"></i> {t.myLocation}</button>
+                        <button onClick={checkMyLocation} className="whitespace-nowrap bg-green-500 text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1"><i data-lucide="map-pin" size="14"></i> Vị trí</button>
                     </div>
-                    {loading ? <p className="mt-3 text-sm text-center animate-pulse">Đang tải...</p> : weather && (
-                        <div className="mt-4 space-y-4">
-                            <div className="bg-white/50 dark:bg-black/20 p-4 rounded-xl flex justify-between items-center">
+                    {loading ? <div className="text-center py-4"><i data-lucide="loader" className="animate-spin inline"></i></div> : weather && (
+                        <div className="mt-2 space-y-3">
+                            <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-xl flex justify-between items-center">
                                 <div>
-                                    <p className="font-bold text-lg">{weather.name}</p>
-                                    <p className="text-xs text-gray-500">Độ ẩm: {weather.current.relative_humidity_2m}% | Gió: {weather.current.wind_speed_10m} km/h</p>
+                                    <p className="font-bold text-sm">{weather.name}</p>
+                                    <p className="text-[10px] text-gray-500">Độ ẩm: {weather.current.relative_humidity_2m}% | Gió: {weather.current.wind_speed_10m}km/h</p>
                                 </div>
-                                <p className="text-4xl font-extrabold text-blue-500">{weather.current.temperature_2m}°C</p>
+                                <p className="text-2xl font-extrabold text-blue-500">{weather.current.temperature_2m}°C</p>
                             </div>
-                            {/* Dự báo 24H */}
-                            <div className="overflow-x-auto no-scrollbar flex gap-4 bg-white/30 dark:bg-black/10 p-3 rounded-xl">
-                                {weather.hourly.time.slice(0, 12).map((time, idx) => (
-                                    <div key={idx} className="text-center min-w-[60px]">
-                                        <p className="text-xs text-gray-500">{time.split('T')[1]}</p>
-                                        <p className="font-bold">{weather.hourly.temperature_2m[idx]}°</p>
-                                        <p className="text-[10px] text-blue-500">{weather.hourly.precipitation_probability[idx]}% mưa</p>
+                            <div className="overflow-x-auto no-scrollbar flex gap-3 bg-white/40 dark:bg-black/20 p-2 rounded-xl">
+                                {weather.hourly.time.slice(0, 8).map((time, idx) => (
+                                    <div key={idx} className="text-center min-w-[50px]">
+                                        <p className="text-[10px] text-gray-500">{time.split('T')[1]}</p>
+                                        <p className="font-bold text-sm">{weather.hourly.temperature_2m[idx]}°</p>
+                                        <p className="text-[9px] text-blue-500">{weather.hourly.precipitation_probability[idx]}%</p>
                                     </div>
                                 ))}
                             </div>
-                            {/* Cảnh báo thiên tai Miền Trung */}
-                            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-3 rounded-xl text-sm">
-                                <p className="font-bold text-red-600 dark:text-red-400 flex items-center gap-1"><i data-lucide="alert-triangle" size="16"></i> Cảnh báo khu vực Miền Trung</p>
-                                <p className="mt-1 text-gray-700 dark:text-gray-300">Thường xuyên có mưa lớn, lũ quét, sạt lở đất vào cuối năm. <strong>Cách phòng tránh:</strong> Gia cố nhà cửa, không đi qua suối/rốn khi trời mưa lớn, chuẩn bị đèn pin và lương thực.</p>
-                            </div>
                         </div>
                     )}
                 </div>
             );
         }
 
-        // 3. Check Tốc độ mạng
-        function SpeedTestWidget({ t }) {
-            const [speed, setSpeed] = useState(null);
-            const [testing, setTesting] = useState(false);
-
-            const testSpeed = async () => {
-                setTesting(true); setSpeed(null);
-                const startTime = performance.now();
-                try {
-                    // Tải 1 file ảnh 5MB từ CDN để test
-                    await fetch('https://upload.wikimedia.org/wikipedia/commons/3/3d/LARGE_elevation.jpg?cache=' + Date.now(), { cache: 'no-store' });
-                    const endTime = performance.now();
-                    const duration = (endTime - startTime) / 1000;
-                    const fileSize = 5000000; // 5MB
-                    const speedMbps = ((fileSize * 8) / (duration * 1000000)).toFixed(2);
-                    setSpeed(speedMbps);
-                } catch (e) { alert("Lỗi test mạng!"); }
-                setTesting(false);
-            };
-
-            return (
-                <div className="glass p-5 rounded-2xl mb-4">
-                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="wifi"></i> {t.speedTest}</h2>
-                    <button onClick={testSpeed} disabled={testing} className="w-full bg-purple-500 text-white py-2 rounded-lg font-bold shadow-lg shadow-purple-500/30">
-                        {testing ? 'Đang test...' : 'Bắt đầu test (WiFi/4G)'}
-                    </button>
-                    {speed && (
-                        <div className="mt-4 text-center bg-white/50 dark:bg-black/20 p-4 rounded-xl">
-                            <p className="text-sm text-gray-500">Tốc độ tải xuống</p>
-                            <p className="text-3xl font-extrabold text-purple-500">{speed} <span className="text-lg">Mbps</span></p>
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        // 4. Check IP
         function IpCheckWidget({ t }) {
             const [ip, setIp] = useState(null);
             const check = async () => {
@@ -262,261 +206,234 @@
                 setIp(data);
             };
             return (
-                <div className="glass p-5 rounded-2xl mb-4">
-                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="globe"></i> {t.ipCheck}</h2>
-                    <button onClick={check} className="w-full bg-blue-500 text-white py-2 rounded-lg font-bold shadow-lg shadow-blue-500/30">Check IP Ngay</button>
+                <div className="glass p-4 rounded-2xl mb-4">
+                    <h2 className="text-lg font-bold mb-3 flex items-center gap-2"><i data-lucide="globe" className="text-purple-500"></i> {t.ipCheck}</h2>
+                    <button onClick={check} className="w-full bg-purple-500 text-white py-2 rounded-xl text-sm font-bold shadow-lg shadow-purple-500/30">Check IP Của Tôi</button>
                     {ip && (
-                        <div className="mt-4 text-sm space-y-2 bg-white/50 dark:bg-black/20 p-4 rounded-xl">
-                            <div className="flex justify-between border-b pb-1"><span className="text-gray-500">IP:</span> <span className="font-bold">{ip.ip}</span></div>
-                            <div className="flex justify-between border-b pb-1"><span className="text-gray-500">Local/Proxy:</span> <span>{ip.country_code === 'VN' ? 'Local (VN)' : 'Proxy/VPN'}</span></div>
-                            <div className="flex justify-between border-b pb-1"><span className="text-gray-500">Thành phố:</span> <span>{ip.city}</span></div>
-                            <div className="flex justify-between border-b pb-1"><span className="text-gray-500">Mã bưu chính:</span> <span>{ip.postal}</span></div>
-                            <div className="flex justify-between"><span className="text-gray-500">Quốc gia:</span> <span>{ip.country_name}</span></div>
+                        <div className="mt-3 text-xs space-y-1.5 bg-white/50 dark:bg-black/20 p-3 rounded-xl">
+                            <p className="flex justify-between"><span className="text-gray-500">IP:</span> <span className="font-bold">{ip.ip}</span></p>
+                            <p className="flex justify-between"><span className="text-gray-500">Mạng:</span> <span>{ip.org}</span></p>
+                            <p className="flex justify-between"><span className="text-gray-500">Quốc gia:</span> <span>{ip.country_name}</span></p>
+                            <p className="flex justify-between"><span className="text-gray-500">Thành phố:</span> <span>{ip.city}</span></p>
                         </div>
                     )}
                 </div>
             );
         }
 
-        // 5. Note (Ghi chú)
+        function SpeedTestWidget({ t }) {
+            const [speed, setSpeed] = useState(null);
+            const [testing, setTesting] = useState(false);
+            const testSpeed = async () => {
+                setTesting(true); setSpeed(null);
+                const start = performance.now();
+                try {
+                    await fetch('https://upload.wikimedia.org/wikipedia/commons/3/3d/LARGE_elevation.jpg?cache=' + Date.now(), { cache: 'no-store' });
+                    const duration = (performance.now() - start) / 1000;
+                    setSpeed(((5000000 * 8) / (duration * 1000000)).toFixed(2));
+                } catch (e) { alert("Lỗi test!"); }
+                setTesting(false);
+            };
+            return (
+                <div className="glass p-4 rounded-2xl mb-4">
+                    <h2 className="text-lg font-bold mb-3 flex items-center gap-2"><i data-lucide="wifi" className="text-green-500"></i> Tốc độ mạng</h2>
+                    <button onClick={testSpeed} disabled={testing} className="w-full bg-green-500 text-white py-2 rounded-xl text-sm font-bold shadow-lg shadow-green-500/30">
+                        {testing ? 'Đang test...' : 'Test Wifi / 4G'}
+                    </button>
+                    {speed && <p className="text-center mt-3 font-bold text-xl text-green-500">{speed} Mbps</p>}
+                </div>
+            );
+        }
+
         function NoteWidget({ t }) {
             const [notes, setNotes] = useState(() => JSON.parse(localStorage.getItem('notes') || '[]'));
             const [input, setInput] = useState('');
-            
-            const addNote = () => {
-                if(!input) return;
-                const newNotes = [...notes, { id: Date.now(), text: input }];
-                setNotes(newNotes); localStorage.setItem('notes', JSON.stringify(newNotes)); setInput('');
-            };
-            const delNote = (id) => {
-                const newNotes = notes.filter(n => n.id !== id);
-                setNotes(newNotes); localStorage.setItem('notes', JSON.stringify(newNotes));
-            };
+            const add = () => { if(!input) return; const n = [...notes, { id: Date.now(), text: input }]; setNotes(n); localStorage.setItem('notes', JSON.stringify(n)); setInput(''); };
+            const del = (id) => { const n = notes.filter(x => x.id !== id); setNotes(n); localStorage.setItem('notes', JSON.stringify(n)); };
             return (
-                <div className="glass p-5 rounded-2xl mb-4">
-                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="sticky-note"></i> {t.notes}</h2>
+                <div className="glass p-4 rounded-2xl mb-4">
+                    <h2 className="text-lg font-bold mb-3 flex items-center gap-2"><i data-lucide="sticky-note" className="text-yellow-500"></i> Ghi chú</h2>
                     <div className="flex gap-2">
-                        <input value={input} onChange={e=>setInput(e.target.value)} className="flex-1 bg-white/50 dark:bg-black/20 border border-gray-300 dark:border-gray-700 rounded-lg p-2 text-sm outline-none focus:ring-2 ring-blue-500" placeholder="Nhập ghi chú..." />
-                        <button onClick={addNote} className="bg-blue-500 text-white px-4 rounded-lg font-bold">+</button>
+                        <input value={input} onChange={e=>setInput(e.target.value)} className="flex-1 bg-white/50 dark:bg-black/20 border border-gray-300 dark:border-gray-700 rounded-xl p-2 text-sm outline-none" placeholder="Nhập..." />
+                        <button onClick={add} className="bg-yellow-500 text-white px-3 rounded-xl font-bold">+</button>
                     </div>
-                    <ul className="mt-3 space-y-2 max-h-40 overflow-y-auto no-scrollbar">
-                        {notes.map(n => (
-                            <li key={n.id} className="flex justify-between items-center bg-white/50 dark:bg-black/20 p-2 rounded text-sm">
-                                <span>{n.text}</span>
-                                <button onClick={()=>delNote(n.id)} className="text-red-500 p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded"><i data-lucide="trash-2" size="16"></i></button>
-                            </li>
-                        ))}
+                    <ul className="mt-2 space-y-1 max-h-32 overflow-y-auto no-scrollbar">
+                        {notes.map(n => <li key={n.id} className="flex justify-between bg-white/50 dark:bg-black/20 p-2 rounded-lg text-sm">{n.text} <button onClick={()=>del(n.id)} className="text-red-500"><i data-lucide="x" size="14"></i></button></li>)}
                     </ul>
                 </div>
             );
         }
 
-        // 6. Mail Tạm
         function TempMailWidget({ t }) {
-            const [mail, setMail] = useState(null);
-            const [messages, setMessages] = useState([]);
+            const [mail, setMail] = useState(() => JSON.parse(localStorage.getItem('tempmail') || 'null'));
             const [loading, setLoading] = useState(false);
-            
-            const createMail = async () => {
+            const create = async () => {
                 setLoading(true);
                 try {
-                    const domainsRes = await fetch('https://api.mail.tm/domains');
-                    const domains = await domainsRes.json();
-                    const domain = domains['hydra:member'][0].domain;
-                    const address = `user${Math.floor(Math.random()*100000)}@${domain}`;
-                    const password = 'Password123!';
-                    
-                    await fetch('https://api.mail.tm/accounts', {
-                        method: 'POST', headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({address, password})
-                    });
-                    
-                    const tokenRes = await fetch('https://api.mail.tm/token', {
-                        method: 'POST', headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({address, password})
-                    });
-                    const tokenData = await tokenRes.json();
-                    
-                    localStorage.setItem('tempmail', JSON.stringify({ address, token: tokenData.token }));
-                    setMail({ address, token: tokenData.token });
-                } catch (e) { alert("Lỗi tạo mail, thử lại sau!"); }
+                    const d = await (await fetch('https://api.mail.tm/domains')).json();
+                    const address = `user${Math.floor(Math.random()*99999)}@${d['hydra:member'][0].domain}`;
+                    const password = 'Pass123!';
+                    await fetch('https://api.mail.tm/accounts', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({address, password}) });
+                    const tokenData = await (await fetch('https://api.mail.tm/token', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({address, password}) })).json();
+                    const m = { address, token: tokenData.token }; setMail(m); localStorage.setItem('tempmail', JSON.stringify(m));
+                } catch (e) { alert("Lỗi API!"); }
                 setLoading(false);
             };
-
-            const fetchMails = async () => {
-                if(!mail) return;
-                const res = await fetch('https://api.mail.tm/messages', {
-                    headers: { Authorization: `Bearer ${mail.token}` }
-                });
-                const data = await res.json();
-                setMessages(data['hydra:member'] || []);
-            };
-
-            const delMail = () => {
-                localStorage.removeItem('tempmail');
-                setMail(null); setMessages([]);
-            };
-
-            useEffect(() => {
-                const saved = localStorage.getItem('tempmail');
-                if (saved) setMail(JSON.parse(saved));
-            }, []);
-
             return (
-                <div className="glass p-5 rounded-2xl mb-4">
-                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="mail"></i> {t.tempMail}</h2>
-                    {!mail ? (
-                        <button onClick={createMail} disabled={loading} className="w-full bg-orange-500 text-white py-2 rounded-lg font-bold shadow-lg shadow-orange-500/30">
-                            {loading ? 'Đang tạo...' : 'Tạo Mail Tạm'}
-                        </button>
-                    ) : (
+                <div className="glass p-4 rounded-2xl mb-4">
+                    <h2 className="text-lg font-bold mb-3 flex items-center gap-2"><i data-lucide="mail" className="text-orange-500"></i> Mail Tạm</h2>
+                    {!mail ? <button onClick={create} disabled={loading} className="w-full bg-orange-500 text-white py-2 rounded-xl text-sm font-bold">{loading ? 'Đang tạo...' : 'Tạo Mail Mới'}</button> : (
                         <div className="bg-white/50 dark:bg-black/20 p-3 rounded-xl text-sm">
-                            <p className="font-bold text-lg text-orange-500">{mail.address}</p>
-                            <div className="flex gap-2 mt-2">
-                                <button onClick={fetchMails} className="flex-1 bg-gray-200 dark:bg-gray-700 py-1 rounded">Tải hộp thư</button>
-                                <button onClick={delMail} className="flex-1 bg-red-100 text-red-600 dark:bg-red-900/30 py-1 rounded">Xóa Mail</button>
-                            </div>
-                            {messages.length > 0 && (
-                                <ul className="mt-3 space-y-1">
-                                    {messages.map(m => <li key={m.id} className="border-b pb-1">{m.subject}</li>)}
-                                </ul>
-                            )}
+                            <p className="font-bold text-orange-500 break-all">{mail.address}</p>
+                            <button onClick={()=>{localStorage.removeItem('tempmail'); setMail(null);}} className="mt-2 text-red-500 text-xs">Xóa Mail</button>
                         </div>
                     )}
                 </div>
             );
         }
 
-        // 7. Admin Panel
-        function AdminPanel({ products, setProducts, posts, setPosts, notification, setNotification, siteName, setSiteName, avatar, setAvatar, lang, setLang, effect, setEffect }) {
+        function MmoTools() {
+            return (
+                <div className="glass p-4 rounded-2xl mb-4">
+                    <h2 className="text-lg font-bold mb-3 flex items-center gap-2"><i data-lucide="facebook" className="text-blue-600"></i> Facebook MMO Tools</h2>
+                    <div className="grid grid-cols-2 gap-2">
+                        <button onClick={()=>Swal.fire('Thông báo', 'Tính năng Check ID đang bảo trì!', 'info')} className="bg-blue-50 dark:bg-gray-800 p-2 rounded-xl text-xs font-semibold flex flex-col items-center gap-1"><i data-lucide="search"></i> Check ID</button>
+                        <button onClick={()=>Swal.fire('Thông báo', 'Tính năng lấy Avatar đang bảo trì!', 'info')} className="bg-blue-50 dark:bg-gray-800 p-2 rounded-xl text-xs font-semibold flex flex-col items-center gap-1"><i data-lucide="image"></i> Lấy Avatar</button>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- MAIN COMPONENTS ---
+        
+        function HomeTab({ profile, posts, t }) {
+            return (
+                <div className="animate-fade-in space-y-4">
+                    {/* Profile Card */}
+                    <div className="glass p-6 rounded-3xl text-center relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-blue-400 to-cyan-400 opacity-20"></div>
+                        <img src={profile.avatar} className="w-24 h-24 rounded-full mx-auto border-4 border-white dark:border-gray-800 shadow-xl relative z-10 object-cover" />
+                        <h2 className="text-2xl font-extrabold mt-3">{profile.name}</h2>
+                        <p className="text-blue-500 font-semibold text-sm">{profile.title}</p>
+                        <p className="text-gray-500 text-sm mt-2 px-4">{profile.bio}</p>
+                        <div className="flex justify-center gap-3 mt-4">
+                            <a href="https://t.me/usertaiwan8686" target="_blank" className="bg-blue-500 text-white p-2 rounded-full shadow-lg"><i data-lucide="send" size="18"></i></a>
+                            <a href="https://facebook.com/nguyenlethaoservice" target="_blank" className="bg-blue-600 text-white p-2 rounded-full shadow-lg"><i data-lucide="facebook" size="18"></i></a>
+                        </div>
+                    </div>
+                    
+                    {/* Latest Posts */}
+                    <h3 className="font-bold text-lg ml-2 mt-6">Bài viết mới nhất</h3>
+                    {posts.slice(0, 2).map(post => (
+                        <div key={post.id} className="glass p-4 rounded-2xl">
+                            <h4 className="font-bold text-blue-500">{post.title}</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">{post.content}</p>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        function ShopTab({ products, t }) {
+            return (
+                <div className="animate-fade-in">
+                    <h2 className="text-xl font-bold mb-4 ml-1">Gian Hàng</h2>
+                    <div className="grid grid-cols-2 gap-3">
+                        {products.map(p => (
+                            <div key={p.id} className="glass rounded-2xl overflow-hidden flex flex-col">
+                                <img src={p.image || "https://via.placeholder.com/200"} className="w-full h-32 object-cover" />
+                                <div className="p-3 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <p className="text-[10px] font-bold text-blue-500 uppercase">{p.category}</p>
+                                        <h3 className="font-bold text-sm leading-tight mt-1">{p.name}</h3>
+                                        <p className="text-xs text-gray-500 line-clamp-1">{p.desc}</p>
+                                    </div>
+                                    <div className="mt-2 flex justify-between items-center">
+                                        <span className="font-bold text-red-500 text-sm">{p.price}</span>
+                                        <button className="bg-blue-500 text-white px-2 py-1 rounded-lg text-xs font-bold">Mua</button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        function ContactTab({ t }) {
+            return (
+                <div className="animate-fade-in glass p-6 rounded-3xl text-center space-y-4">
+                    <h2 className="text-2xl font-bold">Liên Hệ Hỗ Trợ</h2>
+                    <p className="text-sm text-gray-500">Vui lòng liên hệ qua các kênh dưới đây để được giải đáp.</p>
+                    <div className="grid grid-cols-1 gap-3 mt-4">
+                        <a href="https://t.me/usertaiwan8686" target="_blank" className="flex items-center gap-3 bg-blue-50 dark:bg-gray-800 p-3 rounded-xl hover:bg-blue-100 transition"><i data-lucide="send" className="text-blue-500"></i> <span className="font-semibold">Telegram: usertaiwan8686</span></a>
+                        <a href="https://facebook.com/nguyenlethaoservice" target="_blank" className="flex items-center gap-3 bg-blue-50 dark:bg-gray-800 p-3 rounded-xl hover:bg-blue-100 transition"><i data-lucide="facebook" className="text-blue-600"></i> <span className="font-semibold">Facebook: @nguyenlethaoservice</span></a>
+                        <a href="tel:0898666218" className="flex items-center gap-3 bg-blue-50 dark:bg-gray-800 p-3 rounded-xl hover:bg-blue-100 transition"><i data-lucide="phone" className="text-green-500"></i> <span className="font-semibold">Call: 0898666218</span></a>
+                        <a href="mailto:nguyenlethao.profile08@gmail.com" className="flex items-center gap-3 bg-blue-50 dark:bg-gray-800 p-3 rounded-xl hover:bg-blue-100 transition"><i data-lucide="mail" className="text-red-500"></i> <span className="font-semibold">Email Support</span></a>
+                        <span className="flex items-center gap-3 bg-blue-50 dark:bg-gray-800 p-3 rounded-xl"><i data-lucide="message-square" className="text-indigo-500"></i> <span className="font-semibold">Discord: nguyenlethao.service</span></span>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- ADMIN PANEL ---
+        function AdminPanel({ products, setProducts, posts, setPosts, profile, setProfile, notification, setNotification, onLogout }) {
             const [name, setName] = useState('');
             const [price, setPrice] = useState('');
             const [desc, setDesc] = useState('');
             const [stock, setStock] = useState(0);
+            const [img, setImg] = useState('');
             
-            const [postTitle, setPostTitle] = useState('');
-            const [postContent, setPostContent] = useState('');
-
             const addProduct = (e) => {
                 e.preventDefault();
-                const newP = [...products, { id: Date.now(), category: "Shop Khác", name, price, desc, stock: Number(stock) }];
+                const newP = [...products, { id: Date.now(), category: "Hệ thống", name, price, desc, stock: Number(stock), image: img }];
                 setProducts(newP); localStorage.setItem('products', JSON.stringify(newP));
-                setName(''); setPrice(''); setDesc(''); setStock(0);
+                setName(''); setPrice(''); setDesc(''); setStock(0); setImg('');
+                Swal.fire('Thành công', 'Đã thêm sản phẩm!', 'success');
             };
 
-            const delProduct = (id) => {
-                const newP = products.filter(p => p.id !== id);
-                setProducts(newP); localStorage.setItem('products', JSON.stringify(newP));
-            };
-
-            const addPost = (e) => {
-                e.preventDefault();
-                const newP = [...posts, { id: Date.now(), title: postTitle, content: postContent }];
-                setPosts(newP); localStorage.setItem('posts', JSON.stringify(newP));
-                setPostTitle(''); setPostContent('');
-            };
+            const delProduct = (id) => { const newP = products.filter(p => p.id !== id); setProducts(newP); localStorage.setItem('products', JSON.stringify(newP)); };
 
             return (
-                <div className="glass p-5 rounded-2xl mb-4 border-2 border-red-500/50">
-                    <h2 className="text-xl font-bold mb-4 text-red-500 flex items-center gap-2"><i data-lucide="shield-alert"></i> Admin Dashboard</h2>
-                    
+                <div className="animate-fade-in border-2 border-red-500/30 p-4 rounded-3xl bg-red-50/10">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-bold text-red-500 flex items-center gap-2"><i data-lucide="shield"></i> Admin Dashboard</h2>
+                        <button onClick={onLogout} className="text-xs bg-red-100 text-red-600 px-3 py-1 rounded-full font-bold">Đăng Xuất</button>
+                    </div>
+
                     <div className="space-y-4">
-                        {/* Cài đặt chung */}
-                        <div className="bg-white/50 dark:bg-black/20 p-3 rounded-xl">
-                            <h3 className="font-bold mb-2">Cài đặt Web</h3>
-                            <input value={siteName} onChange={e=>{setSiteName(e.target.value); localStorage.setItem('siteName', e.target.value);}} className="w-full p-2 mb-2 rounded bg-white dark:bg-gray-800 text-sm" placeholder="Tên Web"/>
-                            <input value={avatar} onChange={e=>{setAvatar(e.target.value); localStorage.setItem('avatar', e.target.value);}} className="w-full p-2 mb-2 rounded bg-white dark:bg-gray-800 text-sm" placeholder="Link ảnh đại diện (URL)"/>
-                            <textarea value={notification} onChange={e=>{setNotification(e.target.value); localStorage.setItem('notification', e.target.value);}} className="w-full p-2 rounded bg-white dark:bg-gray-800 text-sm" rows="2" placeholder="Thông báo toàn web..."></textarea>
+                        {/* Profile Settings */}
+                        <div className="glass p-4 rounded-xl">
+                            <h3 className="font-bold text-sm mb-2 text-blue-500">Cài đặt Profile</h3>
+                            <input value={profile.name} onChange={e=>setProfile({...profile, name: e.target.value})} className="w-full p-2 mb-2 rounded-lg text-sm bg-white dark:bg-gray-800" placeholder="Tên Admin"/>
+                            <input value={profile.avatar} onChange={e=>setProfile({...profile, avatar: e.target.value})} className="w-full p-2 mb-2 rounded-lg text-sm bg-white dark:bg-gray-800" placeholder="Link ảnh đại diện (URL)"/>
+                            <textarea value={profile.bio} onChange={e=>setProfile({...profile, bio: e.target.value})} className="w-full p-2 rounded-lg text-sm bg-white dark:bg-gray-800" rows="2" placeholder="Giới thiệu bản thân"></textarea>
+                            <button onClick={()=>{localStorage.setItem('profile', JSON.stringify(profile)); Swal.fire('Đã lưu!','','success')}} className="mt-2 w-full bg-blue-500 text-white py-1.5 rounded-lg text-sm font-bold">Lưu Profile</button>
                         </div>
 
-                        {/* Quản lý Sản phẩm */}
-                        <div className="bg-white/50 dark:bg-black/20 p-3 rounded-xl">
-                            <h3 className="font-bold mb-2">Thêm Sản Phẩm</h3>
+                        {/* Product Management */}
+                        <div className="glass p-4 rounded-xl">
+                            <h3 className="font-bold text-sm mb-2 text-blue-500">Thêm Sản Phẩm</h3>
                             <form onSubmit={addProduct} className="space-y-2">
-                                <input value={name} onChange={e=>setName(e.target.value)} placeholder="Tên" className="w-full p-2 rounded bg-white dark:bg-gray-800 text-sm" required/>
+                                <input value={name} onChange={e=>setName(e.target.value)} placeholder="Tên sản phẩm" className="w-full p-2 rounded-lg text-sm bg-white dark:bg-gray-800" required/>
                                 <div className="flex gap-2">
-                                    <input value={price} onChange={e=>setPrice(e.target.value)} placeholder="Giá" className="w-1/2 p-2 rounded bg-white dark:bg-gray-800 text-sm" required/>
-                                    <input type="number" value={stock} onChange={e=>setStock(e.target.value)} placeholder="Kho" className="w-1/2 p-2 rounded bg-white dark:bg-gray-800 text-sm" required/>
+                                    <input value={price} onChange={e=>setPrice(e.target.value)} placeholder="Giá" className="w-1/2 p-2 rounded-lg text-sm bg-white dark:bg-gray-800" required/>
+                                    <input type="number" value={stock} onChange={e=>setStock(e.target.value)} placeholder="Kho" className="w-1/2 p-2 rounded-lg text-sm bg-white dark:bg-gray-800" required/>
                                 </div>
-                                <input value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Mô tả" className="w-full p-2 rounded bg-white dark:bg-gray-800 text-sm" />
-                                <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded text-sm font-bold">Lưu Sản Phẩm</button>
+                                <input value={img} onChange={e=>setImg(e.target.value)} placeholder="Link ảnh sản phẩm (URL)" className="w-full p-2 rounded-lg text-sm bg-white dark:bg-gray-800" />
+                                <input value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Mô tả ngắn" className="w-full p-2 rounded-lg text-sm bg-white dark:bg-gray-800" />
+                                <button type="submit" className="w-full bg-green-500 text-white py-2 rounded-lg text-sm font-bold shadow-lg shadow-green-500/30">Thêm Ngay</button>
                             </form>
-                            <div className="mt-3 space-y-1 max-h-32 overflow-y-auto">
+                            <div className="mt-3 space-y-1 max-h-32 overflow-y-auto no-scrollbar">
                                 {products.map(p => (
-                                    <div key={p.id} className="flex justify-between items-center bg-white dark:bg-gray-800 p-2 rounded text-xs">
-                                        <span>{p.name} - {p.price} (Kho: {p.stock})</span>
-                                        <button onClick={()=>delProduct(p.id)} className="text-red-500"><i data-lucide="x" size="14"></i></button>
+                                    <div key={p.id} className="flex justify-between items-center bg-white dark:bg-gray-800 p-2 rounded-lg text-xs">
+                                        <span className="truncate pr-2">{p.name}</span>
+                                        <button onClick={()=>delProduct(p.id)} className="text-red-500"><i data-lucide="trash-2" size="14"></i></button>
                                     </div>
                                 ))}
                             </div>
                         </div>
-
-                        {/* Quản lý Bài viết */}
-                        <div className="bg-white/50 dark:bg-black/20 p-3 rounded-xl">
-                            <h3 className="font-bold mb-2">Thêm Bài Viết</h3>
-                            <form onSubmit={addPost} className="space-y-2">
-                                <input value={postTitle} onChange={e=>setPostTitle(e.target.value)} placeholder="Tiêu đề" className="w-full p-2 rounded bg-white dark:bg-gray-800 text-sm" required/>
-                                <textarea value={postContent} onChange={e=>setPostContent(e.target.value)} placeholder="Nội dung..." className="w-full p-2 rounded bg-white dark:bg-gray-800 text-sm" required></textarea>
-                                <button type="submit" className="w-full bg-green-500 text-white py-2 rounded text-sm font-bold">Đăng Bài</button>
-                            </form>
-                        </div>
                     </div>
-                </div>
-            );
-        }
-
-        // 8. Music Player
-        function MusicPlayer({ t }) {
-            const [track, setTrack] = useState(0);
-            const [isPlaying, setIsPlaying] = useState(false);
-
-            // Xử lý SoundCloud Embed
-            const embedUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(SC_TRACKS[track])}&color=%233b82f6&auto_play=${isPlaying}&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
-
-            return (
-                <div className="fixed bottom-24 md:bottom-4 right-4 w-64 z-50 glass p-2 rounded-2xl shadow-2xl flex flex-col gap-2">
-                    <div className="flex justify-between items-center px-1">
-                        <span className="text-xs font-bold text-blue-500 flex items-center gap-1"><i data-lucide="music" size="12"></i> Nhạc Chill</span>
-                        <button onClick={()=>setTrack((track+1)%SC_TRACKS.length)} className="text-gray-500 hover:text-blue-500"><i data-lucide="skip-forward" size="16"></i></button>
-                    </div>
-                    <div className="rounded-xl overflow-hidden">
-                        <iframe width="100%" height="60" scrolling="no" frameBorder="no" allow="autoplay" src={embedUrl}></iframe>
-                    </div>
-                </div>
-            );
-        }
-
-        // 9. Menu Trợ năng (Floating Button)
-        function AccessibilityMenu({ t, setEffect, effect }) {
-            const [open, setOpen] = useState(false);
-            
-            const scrollToTop = () => window.scrollTo({top: 0, behavior: 'smooth'});
-            const scrollToBottom = () => window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
-            const searchPage = () => {
-                const query = prompt("Nhập từ khóa cần tìm:");
-                if(query) alert(`Đang tìm kiếm: ${query} (Tính năng demo)`);
-            };
-
-            return (
-                <div className="fixed bottom-24 md:bottom-4 left-4 z-50 flex flex-col-reverse gap-2">
-                    <button onClick={()=>setOpen(!open)} className="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition">
-                        <i data-lucide="accessibility" size="24"></i>
-                    </button>
-                    
-                    {open && (
-                        <div className="glass p-2 rounded-2xl flex flex-col gap-2 animate-fade-in">
-                            <button onClick={scrollToTop} className="p-2 bg-white/50 dark:bg-black/50 rounded-xl hover:bg-blue-100" title="Lên đầu trang"><i data-lucide="arrow-up"></i></button>
-                            <button onClick={scrollToBottom} className="p-2 bg-white/50 dark:bg-black/50 rounded-xl hover:bg-blue-100" title="Xuống cuối trang"><i data-lucide="arrow-down"></i></button>
-                            <button onClick={searchPage} className="p-2 bg-white/50 dark:bg-black/50 rounded-xl hover:bg-blue-100" title="Tìm kiếm"><i data-lucide="search"></i></button>
-                            <button onClick={()=>{
-                                const effects = ['none', 'snow', 'flower', 'fog'];
-                                const next = effects[(effects.indexOf(effect)+1)%effects.length];
-                                setEffect(next);
-                            }} className="p-2 bg-white/50 dark:bg-black/50 rounded-xl hover:bg-blue-100 text-xs" title="Đổi hiệu ứng">
-                                <i data-lucide="sparkles"></i>
-                            </button>
-                        </div>
-                    )}
                 </div>
             );
         }
@@ -525,171 +442,162 @@
         function App() {
             const [lang, setLang] = useState('vi');
             const [darkMode, setDarkMode] = useState(true);
-            const [activeTab, setActiveTab] = useState('home'); // home, shop, posts, tools, admin
-            const [effect, setEffect] = useState('snow');
+            const [activeTab, setActiveTab] = useState('home');
             
-            // Dữ liệu lưu trữ LocalStorage
-            const [siteName, setSiteName] = useState(() => localStorage.getItem('siteName') || "Service Support");
-            const [avatar, setAvatar] = useState(() => localStorage.getItem('avatar') || "https://ui-avatars.com/api/?name=Admin&background=3b82f6&color=fff");
+            // Settings & Data
+            const [effect, setEffect] = useState('snow');
+            const [profile, setProfile] = useState(() => JSON.parse(localStorage.getItem('profile')) || DEFAULT_PROFILE);
             const [notification, setNotification] = useState(() => localStorage.getItem('notification') || "Chào mừng bạn đến với Service Processing Support!");
             const [showNotif, setShowNotif] = useState(true);
-            const [products, setProducts] = useState(() => JSON.parse(localStorage.getItem('products') || JSON.stringify(DEFAULT_PRODUCTS)));
-            const [posts, setPosts] = useState(() => JSON.parse(localStorage.getItem('posts') || JSON.stringify(DEFAULT_POSTS)));
+            const [products, setProducts] = useState(() => JSON.parse(localStorage.getItem('products')) || DEFAULT_PRODUCTS);
+            const [posts, setPosts] = useState(() => JSON.parse(localStorage.getItem('posts')) || DEFAULT_POSTS);
+            
+            // Admin Auth State
+            const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem('isAdmin') === 'true');
+            const [showLogin, setShowLogin] = useState(false);
+            const [fabOpen, setFabOpen] = useState(false);
+            const [track, setTrack] = useState(0);
 
-            // Translations
             const t = {
-                vi: { home: "Trang chủ", shop: "Sản phẩm", posts: "Bài viết", tools: "Tiện ích", admin: "Admin", weather: "Thời tiết", myLocation: "Vị trí của tôi", speedTest: "Tốc độ mạng", ipCheck: "Check IP", notes: "Ghi chú", tempMail: "Mail Tạm", contact: "Liên hệ" },
-                en: { home: "Home", shop: "Shop", posts: "Posts", tools: "Tools", admin: "Admin", weather: "Weather", myLocation: "My Location", speedTest: "Speed Test", ipCheck: "IP Check", notes: "Notes", tempMail: "Temp Mail", contact: "Contact" }
+                vi: { home: "Trang chủ", shop: "Gian hàng", tools: "Tiện ích", contact: "Liên hệ", admin: "Admin", weather: "Thời tiết", ipCheck: "Check IP" },
+                en: { home: "Home", shop: "Shop", tools: "Tools", contact: "Contact", admin: "Admin", weather: "Weather", ipCheck: "IP Check" }
             }[lang];
 
-            // Toggle Dark Mode
             useEffect(() => {
                 if (darkMode) document.documentElement.classList.add('dark');
                 else document.documentElement.classList.remove('dark');
-                lucide.createIcons(); // Render icons
+                lucide.createIcons();
             });
 
-            // Tắt thông báo 12H
-            const handleDismissNotif = () => {
-                setShowNotif(false);
-                setTimeout(() => setShowNotif(true), 12 * 60 * 60 * 1000); 
+            const handleDismissNotif = () => { setShowNotif(false); setTimeout(() => setShowNotif(true), 12 * 60 * 60 * 1000); };
+
+            const handleLogin = (e) => {
+                e.preventDefault();
+                const user = e.target.username.value;
+                const pass = e.target.password.value;
+                if (user === 'admin' && pass === '123456') {
+                    setIsAdmin(true); localStorage.setItem('isAdmin', 'true'); setShowLogin(false); setActiveTab('admin');
+                    Swal.fire({title: 'Đăng nhập thành công!', icon: 'success', timer: 1500, showConfirmButton: false});
+                } else {
+                    Swal.fire('Lỗi', 'Sai tài khoản hoặc mật khẩu!', 'error');
+                }
             };
 
+            const handleLogout = () => { setIsAdmin(false); localStorage.removeItem('isAdmin'); setActiveTab('home'); Swal.fire('Đã đăng xuất', '', 'success'); };
+
+            const embedUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(SC_TRACKS[track])}&color=%233b82f6&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
+
             return (
-                <div className="max-w-4xl mx-auto p-4">
+                <div className="max-w-md mx-auto p-4 pb-24">
                     <EffectManager type={effect} />
                     
                     {/* Header */}
-                    <header className="flex justify-between items-center mb-6 glass p-4 rounded-2xl sticky top-4 z-40">
-                        <div className="flex items-center gap-3">
-                            <img src={avatar} alt="Avatar" className="w-10 h-10 rounded-full border-2 border-blue-500" />
-                            <div>
-                                <h1 className="text-lg font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-cyan-400">{siteName}</h1>
-                                <p className="text-xs text-gray-500">Processing Support</p>
-                            </div>
+                    <header className="flex justify-between items-center mb-6 glass p-3 rounded-2xl sticky top-2 z-40">
+                        <div className="flex items-center gap-2">
+                            <img src={profile.avatar} alt="Avatar" className="w-8 h-8 rounded-full border-2 border-blue-500" />
+                            <h1 className="text-sm font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-cyan-400">{profile.name}</h1>
                         </div>
                         <div className="flex gap-2">
-                            <button onClick={()=>setLang(lang==='vi'?'en':'vi')} className="p-2 bg-gray-200 dark:bg-gray-800 rounded-full text-xs font-bold">{lang.toUpperCase()}</button>
-                            <button onClick={()=>setDarkMode(!darkMode)} className="p-2 bg-gray-200 dark:bg-gray-800 rounded-full">
-                                <i data-lucide={darkMode ? "sun" : "moon"} size="18"></i>
+                            <button onClick={()=>setLang(lang==='vi'?'en':'vi')} className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg text-xs font-bold">{lang.toUpperCase()}</button>
+                            <button onClick={()=>setDarkMode(!darkMode)} className="p-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                <i data-lucide={darkMode ? "sun" : "moon"} size="16"></i>
                             </button>
                         </div>
                     </header>
 
                     {/* Notification */}
                     {showNotif && notification && (
-                        <div className="bg-blue-100 dark:bg-blue-900/40 border border-blue-300 dark:border-blue-700 text-blue-800 dark:text-blue-200 p-3 rounded-xl mb-4 flex justify-between items-center text-sm animate-slide-down">
-                            <span><i data-lucide="bell" size="14" className="inline mr-1"></i> {notification}</span>
-                            <button onClick={handleDismissNotif} className="p-1 hover:bg-blue-200 dark:hover:bg-blue-800 rounded"><i data-lucide="x" size="16"></i></button>
+                        <div className="bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 p-3 rounded-xl mb-4 flex justify-between items-center text-xs font-medium animate-fade-in">
+                            <span><i data-lucide="bell" size="12" className="inline mr-1"></i> {notification}</span>
+                            <button onClick={handleDismissNotif} className="p-1 hover:bg-blue-500/20 rounded"><i data-lucide="x" size="14"></i></button>
                         </div>
                     )}
 
                     {/* Main Content Area */}
-                    <div className="mb-24">
-                        {activeTab === 'home' && (
-                            <div className="space-y-4 animate-fade-in">
-                                <div className="glass p-6 rounded-2xl text-center">
-                                    <h2 className="text-3xl font-extrabold mb-2">Dịch Vụ Hỗ Trợ Xử Lý</h2>
-                                    <p className="text-gray-500 mb-4">Chuyên cung cấp Acc Game, Support Meta, TikTok, Google và các Tool hỗ trợ.</p>
-                                    <button onClick={()=>setActiveTab('shop')} className="bg-blue-500 text-white px-6 py-2 rounded-full font-bold shadow-lg shadow-blue-500/30">Xem Sản Phẩm</button>
-                                </div>
-                                <WeatherWidget t={t} />
-                            </div>
-                        )}
-
+                    <div className="mb-6 min-h-[60vh]">
+                        {activeTab === 'home' && <HomeTab profile={profile} posts={posts} t={t} />}
+                        {activeTab === 'shop' && <ShopTab products={products} t={t} />}
+                        {activeTab === 'contact' && <ContactTab t={t} />}
                         {activeTab === 'tools' && (
-                            <div className="space-y-4 animate-fade-in">
+                            <div className="space-y-4">
                                 <WeatherWidget t={t} />
                                 <IpCheckWidget t={t} />
                                 <SpeedTestWidget t={t} />
                                 <NoteWidget t={t} />
                                 <TempMailWidget t={t} />
+                                <MmoTools />
                             </div>
                         )}
-
-                        {activeTab === 'shop' && (
-                            <div className="space-y-4 animate-fade-in">
-                                <h2 className="text-2xl font-bold mb-4">Sản Phẩm / Gian Hàng</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {products.map(p => (
-                                        <div key={p.id} className="glass p-4 rounded-xl flex flex-col justify-between">
-                                            <div>
-                                                <div className="flex justify-between items-start">
-                                                    <span className="text-xs font-bold text-blue-500 bg-blue-100 dark:bg-blue-900/50 px-2 py-1 rounded-full">{p.category}</span>
-                                                    <span className={`text-xs font-bold px-2 py-1 rounded-full ${p.stock > 0 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
-                                                        {p.stock > 0 ? `Kho: ${p.stock}` : 'Hết hàng'}
-                                                    </span>
-                                                </div>
-                                                <h3 className="font-bold text-lg mt-2">{p.name}</h3>
-                                                <p className="text-sm text-gray-500">{p.desc}</p>
-                                            </div>
-                                            <div className="mt-4 flex justify-between items-center">
-                                                <span className="font-bold text-red-500">{p.price}</span>
-                                                <button disabled={p.stock <= 0} className={`px-4 py-1 rounded-lg text-sm font-bold text-white ${p.stock > 0 ? 'bg-blue-500' : 'bg-gray-400 cursor-not-allowed'}`}>Mua Ngay</button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {activeTab === 'posts' && (
-                            <div className="space-y-4 animate-fade-in">
-                                <h2 className="text-2xl font-bold mb-4">Bài Viết / Blog</h2>
-                                {posts.map(post => (
-                                    <div key={post.id} className="glass p-5 rounded-xl">
-                                        <h3 className="font-bold text-lg text-blue-500">{post.title}</h3>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">{post.content}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-
                         {activeTab === 'admin' && (
-                            <AdminPanel 
-                                products={products} setProducts={setProducts} 
-                                posts={posts} setPosts={setPosts}
-                                notification={notification} setNotification={setNotification}
-                                siteName={siteName} setSiteName={setSiteName}
-                                avatar={avatar} setAvatar={setAvatar}
-                                lang={lang} setLang={setLang}
-                                effect={effect} setEffect={setEffect}
-                            />
+                            isAdmin ? <AdminPanel products={products} setProducts={setProducts} posts={posts} setPosts={posts} profile={profile} setProfile={setProfile} notification={notification} setNotification={setNotification} onLogout={handleLogout} /> 
+                            : <div className="text-center py-10 glass rounded-3xl"><i data-lucide="lock" className="mx-auto text-gray-400 mb-2" size="48"></i><p className="text-gray-500">Vui lòng đăng nhập để truy cập.</p></div>
                         )}
                     </div>
 
-                    {/* Footer Contact */}
-                    <footer className="glass p-6 rounded-2xl text-center space-y-3 mb-6">
-                        <h3 className="font-bold text-lg">Contact Support</h3>
-                        <div className="flex flex-wrap justify-center gap-3 text-sm">
-                            <a href="https://t.me/usertaiwan8686" target="_blank" className="flex items-center gap-1 bg-blue-50 dark:bg-gray-800 px-3 py-1 rounded-full hover:bg-blue-100"><i data-lucide="send" size="14" className="text-blue-500"></i> Telegram</a>
-                            <a href="https://facebook.com/nguyenlethaoservice" target="_blank" className="flex items-center gap-1 bg-blue-50 dark:bg-gray-800 px-3 py-1 rounded-full hover:bg-blue-100"><i data-lucide="facebook" size="14" className="text-blue-600"></i> Facebook</a>
-                            <a href="tel:0898666218" className="flex items-center gap-1 bg-blue-50 dark:bg-gray-800 px-3 py-1 rounded-full hover:bg-blue-100"><i data-lucide="phone" size="14" className="text-green-500"></i> 0898666218</a>
-                            <a href="mailto:nguyenlethao.profile08@gmail.com" className="flex items-center gap-1 bg-blue-50 dark:bg-gray-800 px-3 py-1 rounded-full hover:bg-blue-100"><i data-lucide="mail" size="14" className="text-red-500"></i> Email</a>
-                            <span className="flex items-center gap-1 bg-blue-50 dark:bg-gray-800 px-3 py-1 rounded-full"><i data-lucide="message-square" size="14" className="text-indigo-500"></i> Discord: nguyenlethao.service</span>
-                        </div>
-                    </footer>
+                    {/* Floating Action Button (FAB - Trợ năng & Nhạc) */}
+                    <button onClick={() => setFabOpen(!fabOpen)} className="fixed bottom-24 right-4 bg-gradient-to-tr from-blue-600 to-cyan-500 text-white p-4 rounded-full shadow-xl shadow-blue-500/40 z-50 transition-transform active:scale-90">
+                        <i data-lucide="sparkles" size="24"></i>
+                    </button>
 
-                    {/* Accessibility & Music */}
-                    <AccessibilityMenu t={t} effect={effect} setEffect={setEffect} />
-                    <MusicPlayer t={t} />
+                    {/* FAB Menu (Bottom Sheet) */}
+                    <div className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity ${fabOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setFabOpen(false)}>
+                        <div className={`absolute bottom-0 left-0 w-full glass rounded-t-3xl p-6 transition-transform duration-300 ${fabOpen ? 'translate-y-0' : 'translate-y-full'}`} onClick={e => e.stopPropagation()}>
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="font-bold text-lg flex items-center gap-2"><i data-lucide="settings" className="text-blue-500"></i> Trợ Năng & Tiện Ích</h3>
+                                <button onClick={()=>setFabOpen(false)} className="p-1 bg-gray-200 dark:bg-gray-800 rounded-full"><i data-lucide="x" size="20"></i></button>
+                            </div>
+                            
+                            {/* Music Player in FAB */}
+                            <div className="mb-4 bg-white/50 dark:bg-black/30 rounded-xl p-2">
+                                <div className="flex justify-between items-center px-2 mb-1">
+                                    <span className="text-xs font-bold text-blue-500"><i data-lucide="music" size="12" className="inline mr-1"></i>Nhạc Chill</span>
+                                    <button onClick={()=>setTrack((track+1)%SC_TRACKS.length)} className="text-gray-500"><i data-lucide="skip-forward" size="14"></i></button>
+                                </div>
+                                <iframe width="100%" height="60" scrolling="no" frameBorder="no" allow="autoplay" src={embedUrl} className="rounded-lg"></iframe>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-2">
+                                <button onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} className="bg-white/50 dark:bg-gray-800 p-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1"><i data-lucide="arrow-up" size="14"></i> Lên đầu</button>
+                                <button onClick={()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})} className="bg-white/50 dark:bg-gray-800 p-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1"><i data-lucide="arrow-down" size="14"></i> Xuống cuối</button>
+                                <button onClick={()=>{
+                                    const effects = ['none', 'snow', 'flower', 'fog'];
+                                    setEffect(effects[(effects.indexOf(effect)+1)%effects.length]);
+                                }} className="col-span-2 bg-blue-500 text-white p-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 shadow-lg shadow-blue-500/30"><i data-lucide="sparkles" size="14"></i> Đổi hiệu ứng: {effect.toUpperCase()}</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Login Modal */}
+                    {showLogin && (
+                        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+                            <div className="glass p-6 rounded-3xl w-full max-w-sm animate-fade-in relative">
+                                <button onClick={()=>setShowLogin(false)} className="absolute top-3 right-3 text-gray-500"><i data-lucide="x"></i></button>
+                                <h2 className="text-xl font-bold text-center mb-4">Đăng Nhập Admin</h2>
+                                <form onSubmit={handleLogin} className="space-y-3">
+                                    <input name="username" placeholder="Tài khoản (admin)" className="w-full p-3 rounded-xl bg-white/50 dark:bg-black/20 border border-gray-300 dark:border-gray-700 outline-none text-sm" required/>
+                                    <input name="password" type="password" placeholder="Mật khẩu (123456)" className="w-full p-3 rounded-xl bg-white/50 dark:bg-black/20 border border-gray-300 dark:border-gray-700 outline-none text-sm" required/>
+                                    <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-500/30">Đăng Nhập</button>
+                                </form>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Bottom Navigation Dock (iPhone Style) */}
-                    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[95%] md:w-[500px] glass rounded-3xl p-2 flex justify-around items-center z-50 shadow-2xl">
-                        <button onClick={()=>setActiveTab('home')} className={`dock-item flex flex-col items-center p-2 ${activeTab==='home'?'text-blue-500':'text-gray-500'}`}>
-                            <i data-lucide="home" size="22"></i><span className="text-[10px] font-bold mt-1">{t.home}</span>
+                    <nav className="fixed bottom-3 left-1/2 -translate-x-1/2 w-[92%] max-w-sm glass rounded-2xl py-2 px-1 flex justify-around items-center z-40 shadow-xl border border-white/20">
+                        <button onClick={()=>setActiveTab('home')} className={`dock-item flex flex-col items-center p-1 ${activeTab==='home'?'active':'text-gray-500'}`}>
+                            <i data-lucide="user" size="20"></i><span className="text-[9px] font-bold mt-1">{t.home}</span>
                         </button>
-                        <button onClick={()=>setActiveTab('shop')} className={`dock-item flex flex-col items-center p-2 ${activeTab==='shop'?'text-blue-500':'text-gray-500'}`}>
-                            <i data-lucide="shopping-bag" size="22"></i><span className="text-[10px] font-bold mt-1">{t.shop}</span>
+                        <button onClick={()=>setActiveTab('shop')} className={`dock-item flex flex-col items-center p-1 ${activeTab==='shop'?'active':'text-gray-500'}`}>
+                            <i data-lucide="shopping-bag" size="20"></i><span className="text-[9px] font-bold mt-1">{t.shop}</span>
                         </button>
-                        <button onClick={()=>setActiveTab('tools')} className={`dock-item flex flex-col items-center p-2 ${activeTab==='tools'?'text-blue-500':'text-gray-500'}`}>
-                            <i data-lucide="wrench" size="22"></i><span className="text-[10px] font-bold mt-1">{t.tools}</span>
+                        <button onClick={()=>setActiveTab('tools')} className={`dock-item flex flex-col items-center p-1 ${activeTab==='tools'?'active':'text-gray-500'}`}>
+                            <i data-lucide="layout-grid" size="20"></i><span className="text-[9px] font-bold mt-1">{t.tools}</span>
                         </button>
-                        <button onClick={()=>setActiveTab('posts')} className={`dock-item flex flex-col items-center p-2 ${activeTab==='posts'?'text-blue-500':'text-gray-500'}`}>
-                            <i data-lucide="file-text" size="22"></i><span className="text-[10px] font-bold mt-1">{t.posts}</span>
+                        <button onClick={()=>setActiveTab('contact')} className={`dock-item flex flex-col items-center p-1 ${activeTab==='contact'?'active':'text-gray-500'}`}>
+                            <i data-lucide="phone" size="20"></i><span className="text-[9px] font-bold mt-1">{t.contact}</span>
                         </button>
-                        <button onClick={()=>setActiveTab('admin')} className={`dock-item flex flex-col items-center p-2 ${activeTab==='admin'?'text-red-500':'text-gray-500'}`}>
-                            <i data-lucide="settings" size="22"></i><span className="text-[10px] font-bold mt-1">{t.admin}</span>
+                        <button onClick={()=>{ isAdmin ? setActiveTab('admin') : setShowLogin(true) }} className={`dock-item flex flex-col items-center p-1 ${activeTab==='admin'?'text-red-500':'text-gray-500'}`}>
+                            <i data-lucide="shield" size="20"></i><span className="text-[9px] font-bold mt-1">{t.admin}</span>
                         </button>
                     </nav>
                 </div>
