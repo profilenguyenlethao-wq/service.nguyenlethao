@@ -18,33 +18,36 @@
     <script src="https://w.soundcloud.com/player/api.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Quicksand:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap');
         
         :root {
-            --bg-gradient: linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1e1b4b 100%);
-            --glass-bg: rgba(30, 41, 59, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #172554 100%);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
         }
 
         html.light {
-            --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #f8fafc 100%);
-            --glass-bg: rgba(255, 255, 255, 0.65);
+            --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #f3e8ff 50%, #f8fafc 100%);
+            --glass-bg: rgba(255, 255, 255, 0.6);
             --glass-border: rgba(255, 255, 255, 0.8);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            --glass-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+            --text-main: #0f172a;
+            --text-muted: #475569;
         }
 
         body { 
             font-family: 'Quicksand', 'Inter', sans-serif; 
             overflow-x: hidden; 
             background: var(--bg-gradient);
-            background-size: 200% 200%;
+            background-size: 400% 400%;
             animation: gradientMove 15s ease infinite;
-            color: #f1f5f9;
+            color: var(--text-main);
             min-height: 100vh;
             transition: background 0.5s ease, color 0.3s;
         }
-        html.light body { color: #0f172a; }
 
         @keyframes gradientMove {
             0% { background-position: 0% 50%; }
@@ -65,8 +68,25 @@
             background: var(--glass-bg);
             backdrop-filter: blur(24px) saturate(200%);
             -webkit-backdrop-filter: blur(24px) saturate(200%);
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), var(--glass-shadow);
+            border: 1px solid rgba(255,255,255,0.25);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), var(--glass-shadow);
+        }
+
+        /* Background Blobs */
+        .blob {
+            position: fixed;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: floatBlob 10s infinite alternate;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 400px; height: 400px; background: #3b82f6; }
+        .blob-2 { bottom: -10%; right: -10%; width: 500px; height: 500px; background: #8b5cf6; animation-delay: -5s; }
+        html.light .blob { opacity: 0.3; }
+
+        @keyframes floatBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
         }
 
         /* Hide Scrollbar */
@@ -80,38 +100,33 @@
         .animate-bounce-in { animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
         @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
 
-        .float-anim { animation: float 3s ease-in-out infinite; }
+        .float-anim { animation: float 4s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-
-        /* Background Effects */
-        .snowflake, .flower, .lava { position: fixed; top: -10px; pointer-events: none; z-index: 0; animation: fall linear forwards; }
-        .lava { bottom: -10px; top: auto; border-radius: 50%; animation: rise linear forwards; }
-        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); opacity: 0.1; } }
-        @keyframes rise { to { transform: translateY(-105vh) rotate(-360deg); opacity: 0; } }
 
         /* Premium Product Card */
         .product-card {
             background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
             border: 1px solid rgba(255,255,255,0.15);
             border-radius: 24px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.4);
         }
-        .light .product-card { background: linear-gradient(145deg, #ffffff 0%, #f0f9ff 100%); border-color: #e2e8f0; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.4); }
+        html.light .product-card { background: linear-gradient(145deg, #ffffff 0%, #f0f9ff 100%); border-color: #e2e8f0; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .product-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3); border-color: rgba(59, 130, 246, 0.5); z-index: 10; }
         
         .product-image-wrapper {
             position: relative;
             background: radial-gradient(circle at center, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            border-radius: 16px;
         }
-        .product-img { position: relative; z-index: 1; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .product-card:hover .product-img { transform: scale(1.1) translateY(-10px); }
+        .product-img { position: relative; z-index: 1; transition: transform 0.4s ease; }
+        .product-card:hover .product-img { transform: scale(1.15) translateY(-5px); }
 
         /* Buttons */
         .btn-3d { transition: all 0.1s; }
-        .btn-3d:active { transform: translateY(2px) scale(0.98); box-shadow: none !important; }
+        .btn-3d:active { transform: translateY(2px) scale(0.96); box-shadow: none !important; }
 
         /* iOS Style Bottom Nav */
         .ios-nav {
@@ -119,32 +134,40 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
-            max-width: 400px;
+            width: 92%;
+            max-width: 380px;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 8px;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 10px 14px;
+            border-radius: 32px;
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.2);
             z-index: 50;
         }
-        .light .ios-nav { background: rgba(255, 255, 255, 0.7); border-color: rgba(255, 255, 255, 0.9); }
+        html.light .ios-nav { background: rgba(255, 255, 255, 0.7); border-color: rgba(255, 255, 255, 0.8); }
         .nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 8px 16px; border-radius: 20px; transition: all 0.3s;
-            color: #94a3b8;
+            padding: 8px 12px; border-radius: 20px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-muted); cursor: pointer;
         }
-        .nav-item.active { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
-        .light .nav-item.active { background: rgba(59, 130, 246, 0.1); }
+        .nav-item.active { color: #3b82f6; transform: translateY(-2px); }
+        .nav-item.active i { filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6)); }
         
         /* FAB */
-        .fab { position: fixed; z-index: 50; touch-action: none; cursor: grab; }
+        .fab { position: fixed; z-index: 60; touch-action: none; cursor: grab; }
         .fab:active { cursor: grabbing; }
+
+        /* Search Input */
+        .search-input {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+        }
+        html.light .search-input { background: rgba(255,255,255,0.5); }
     </style>
     <script>
         tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#3b82f6' } } } }
@@ -152,10 +175,12 @@
 </head>
 <body class="pb-28 relative overflow-x-hidden">
 
-    <!-- Background Effects Layer -->
+    <!-- Background Effects -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
     <div id="effect-layer" class="fixed inset-0 pointer-events-none z-0"></div>
     
-    <!-- Hidden Soundcloud Player -->
+    <!-- Persistent Soundcloud Player (Hidden) -->
     <div id="sc-container" style="position:fixed; bottom:-1000px; left:-1000px; width:1px; height:1px; opacity:0;"></div>
 
     <!-- React Root -->
@@ -250,46 +275,6 @@
             }, []);
         }
 
-        /* ================= EFFECTS ================= */
-        function Effects({ type }) {
-            useEffect(() => {
-                const layer = document.getElementById('effect-layer');
-                if (!layer) return;
-                layer.innerHTML = '';
-                if (type === 'none') return;
-                
-                let interval;
-                const timeouts = [];
-                
-                const add = (html, cls, style, dur) => {
-                    const el = document.createElement('div');
-                    el.innerHTML = html; el.className = cls;
-                    Object.assign(el.style, style);
-                    layer.appendChild(el);
-                    timeouts.push(setTimeout(() => el.remove(), dur));
-                };
-
-                if (type === 'snow') {
-                    interval = setInterval(() => {
-                        add('❄', 'snowflake', { left: Math.random()*100+'vw', animationDuration: (Math.random()*4+4)+'s', opacity: Math.random()*0.5+0.2, fontSize: (Math.random()*10+12)+'px' }, 8000);
-                    }, 300);
-                } else if (type === 'flower') {
-                    const flowers = ['🌸','🌺','🌼','🌷','🍁','🍂'];
-                    interval = setInterval(() => {
-                        add(flowers[Math.floor(Math.random()*flowers.length)], 'flower', { left: Math.random()*100+'vw', animationDuration: (Math.random()*4+5)+'s', fontSize: (Math.random()*12+14)+'px' }, 9000);
-                    }, 500);
-                } else if (type === 'lava') {
-                    interval = setInterval(() => {
-                        const size = Math.random()*6+4;
-                        add('', 'lava', { left: Math.random()*100+'vw', animationDuration: (Math.random()*3+4)+'s', width: size+'px', height: size+'px', background: `radial-gradient(circle, hsl(${Math.random()*30+15},100%,60%), hsl(${Math.random()*20},100%,40%))` }, 7000);
-                    }, 150);
-                }
-
-                return () => { if(interval) clearInterval(interval); timeouts.forEach(t=>clearTimeout(t)); layer.innerHTML=''; };
-            }, [type]);
-            return null;
-        }
-
         /* ================= COMPONENTS ================= */
         const VerifiedIcon = ({ size = 20 }) => (
             <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="inline-block text-blue-500 ml-1 drop-shadow-md">
@@ -300,56 +285,59 @@
         function ProfileHome({ profile, posts, onNavigate }) {
             return (
                 <div className="animate-fade-in space-y-5">
-                    {/* Cover & Avatar */}
-                    <div className="relative rounded-3xl overflow-hidden glass-strong shadow-2xl">
-                        <div className="h-44 md:h-64 relative bg-gradient-to-r from-blue-600 to-cyan-400">
-                            {profile.cover && <img src={profile.cover} className="w-full h-full object-cover mix-blend-overlay opacity-80" alt="Cover" />}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    {/* Header / Avatar */}
+                    <div className="relative pt-10 pb-6 px-4 text-center">
+                        <div className="w-24 h-24 mx-auto rounded-full p-1 bg-gradient-to-tr from-blue-500 to-cyan-400 shadow-[0_0_30px_rgba(59,130,246,0.5)] float-anim">
+                            <img src={profile.avatar} className="w-full h-full rounded-full border-4 border-slate-900 object-cover bg-white" alt="Avatar" />
                         </div>
-                        <div className="px-6 pb-6 -mt-16 relative">
-                            <img src={profile.avatar} className="w-28 h-28 rounded-full border-4 border-white dark:border-slate-800 object-cover shadow-2xl bg-white float-anim" alt="Avatar" />
-                            <div className="mt-4">
-                                <h2 className="text-3xl font-extrabold flex items-center drop-shadow-sm">
-                                    {profile.name} {profile.verified && <VerifiedIcon size={26} />}
-                                </h2>
-                                <p className="text-sm font-semibold text-blue-400 mt-1">@{ADMIN_USER} • MMO Provider</p>
-                            </div>
-                            <p className="mt-4 text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-medium">{profile.bio}</p>
-                            
-                            <div className="flex gap-3 mt-6">
-                                <button onClick={() => onNavigate('shop')} className="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-2xl text-sm font-bold shadow-[0_8px_20px_rgba(37,99,235,0.4)] transition btn-3d">Xem Shop</button>
-                                <button onClick={() => onNavigate('contact')} className="flex-1 glass-strong py-3 rounded-2xl text-sm font-bold hover:bg-white/10 transition btn-3d">Liên Hệ</button>
-                            </div>
+                        <h2 className="text-2xl font-extrabold flex items-center justify-center mt-4 drop-shadow-md">
+                            {profile.name} {profile.verified && <VerifiedIcon size={24} />}
+                        </h2>
+                        <p className="text-sm font-semibold text-blue-400 mt-1">@admin • MMO Provider</p>
+                        <p className="mt-3 text-sm text-gray-400 leading-relaxed font-medium max-w-xs mx-auto">{profile.bio}</p>
+                        
+                        <div className="flex gap-3 mt-6 max-w-sm mx-auto">
+                            <button onClick={() => onNavigate('shop')} className="flex-1 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white py-3.5 rounded-2xl text-sm font-bold shadow-[0_8px_20px_rgba(37,99,235,0.4)] transition btn-3d">Xem Shop</button>
+                            <button onClick={() => onNavigate('contact')} className="flex-1 glass-strong py-3.5 rounded-2xl text-sm font-bold hover:bg-white/10 transition btn-3d">Liên Hệ</button>
                         </div>
                     </div>
 
-                    {/* Features & Guide (Fill empty space) */}
-                    <div className="grid grid-cols-2 gap-3">
-                        <div className="glass p-4 rounded-2xl flex flex-col items-center text-center">
-                            <div className="w-10 h-10 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center mb-2"><i data-lucide="shield-check" size="20"></i></div>
-                            <h4 className="font-bold text-sm">Bảo Mật Tuyệt Đối</h4>
-                            <p className="text-[10px] text-gray-400 mt-1">Thông tin khách hàng luôn được mã hóa an toàn.</p>
+                    {/* Quick Links (Bik.vn Style) */}
+                    <div className="space-y-3 px-2">
+                        <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest px-2 mb-2 flex items-center gap-2"><i data-lucide="link" size="16"></i> Tiện ích & Liên kết</h3>
+                        
+                        <div onClick={() => onNavigate('shop')} className="glass-strong rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-white/10 transition group border border-white/5">
+                            <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center group-hover:scale-110 transition"><i data-lucide="shopping-bag" size="20"></i></div>
+                            <div className="flex-1"><p className="font-bold text-sm">Shop Sản Phẩm</p><p className="text-xs text-gray-400">Mua tài khoản, tool, dịch vụ MMO</p></div>
+                            <i data-lucide="chevron-right" size="18" className="text-gray-500 group-hover:translate-x-1 transition"></i>
                         </div>
-                        <div className="glass p-4 rounded-2xl flex flex-col items-center text-center">
-                            <div className="w-10 h-10 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center mb-2"><i data-lucide="zap" size="20"></i></div>
-                            <h4 className="font-bold text-sm">Xử Lý Nhanh Chóng</h4>
-                            <p className="text-[10px] text-gray-400 mt-1">Hệ thống tự động, hỗ trợ 24/7 không gián đoạn.</p>
+
+                        <div onClick={() => onNavigate('tools')} className="glass-strong rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-white/10 transition group border border-white/5">
+                            <div className="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center group-hover:scale-110 transition"><i data-lucide="layout-grid" size="20"></i></div>
+                            <div className="flex-1"><p className="font-bold text-sm">Tiện Ích Số</p><p className="text-xs text-gray-400">Check IP, Speed Test, Mail ảo</p></div>
+                            <i data-lucide="chevron-right" size="18" className="text-gray-500 group-hover:translate-x-1 transition"></i>
+                        </div>
+
+                        <div onClick={() => onNavigate('weather')} className="glass-strong rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-white/10 transition group border border-white/5">
+                            <div className="w-10 h-10 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center group-hover:scale-110 transition"><i data-lucide="cloud-sun" size="20"></i></div>
+                            <div className="flex-1"><p className="font-bold text-sm">Dự Báo Thời Tiết</p><p className="text-xs text-gray-400">Cập nhật thời tiết & cảnh báo</p></div>
+                            <i data-lucide="chevron-right" size="18" className="text-gray-500 group-hover:translate-x-1 transition"></i>
                         </div>
                     </div>
 
                     {/* Latest News */}
-                    <div className="glass rounded-3xl p-6">
-                        <div className="flex justify-between items-center mb-4">
+                    <div className="px-2 pb-6">
+                        <div className="flex justify-between items-center mb-3 px-2">
                             <h3 className="font-bold text-lg flex items-center gap-2">
                                 <i data-lucide="newspaper" size="20" className="text-blue-500"></i> Bản tin mới
                             </h3>
-                            <button onClick={() => onNavigate('posts')} className="text-xs font-bold text-blue-500">Xem tất cả</button>
+                            <button onClick={() => onNavigate('posts')} className="text-xs font-bold text-blue-500 hover:text-blue-400">Xem tất cả</button>
                         </div>
                         <div className="space-y-3">
                             {posts.slice(-2).reverse().map(p => (
                                 <div key={p.id} onClick={() => onNavigate('posts')} className="glass-strong rounded-2xl p-4 cursor-pointer hover:bg-white/5 transition border border-white/5">
                                     <p className="font-bold text-sm text-blue-400 mb-1">{p.title}</p>
-                                    <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">{p.content}</p>
+                                    <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">{p.content}</p>
                                 </div>
                             ))}
                         </div>
@@ -361,10 +349,14 @@
         function Shop({ products, filter, setFilter }) {
             const [search, setSearch] = useState('');
             
-            // Lọc sản phẩm: Chỉ lọc theo category/subcategory được chọn, sau đó mới áp dụng search
+            // Reset search when category changes
+            useEffect(() => { setSearch(''); }, [filter]);
+
             const list = useMemo(() => {
                 return products.filter(p => {
+                    // Strict category/subcategory filtering
                     const matchFilter = filter ? (p.category === filter || p.subcategory === filter) : true;
+                    // Search only within the filtered category
                     const matchSearch = search ? p.name.toLowerCase().includes(search.toLowerCase()) : true;
                     return matchFilter && matchSearch;
                 });
@@ -373,15 +365,15 @@
             return (
                 <div className="animate-fade-in space-y-5">
                     {/* Search & Filter Bar */}
-                    <div className="glass-strong rounded-3xl p-5 sticky top-4 z-20 shadow-xl">
-                        <div className="relative mb-4">
+                    <div className="glass-strong rounded-3xl p-4 sticky top-4 z-20 shadow-xl border border-white/10">
+                        <div className="relative mb-3">
                             <i data-lucide="search" size="18" className="absolute left-4 top-3.5 text-gray-400"></i>
-                            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Tìm sản phẩm trong mục này..." className="w-full bg-black/20 dark:bg-black/40 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all font-medium" />
+                            <input value={search} onChange={e => setSearch(e.target.value)} placeholder={filter ? `Tìm trong ${filter}...` : "Tìm tất cả sản phẩm..."} className="w-full search-input rounded-2xl pl-11 pr-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all font-medium" />
                         </div>
                         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
                             <button onClick={() => setFilter('')} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition ${!filter ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/10'}`}>Tất cả</button>
                             {CATEGORIES.map(c => (
-                                <button key={c.name} onClick={() => { setFilter(c.name); setSearch(''); }} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition ${filter === c.name ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/10'}`}>
+                                <button key={c.name} onClick={() => setFilter(c.name)} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition ${filter === c.name ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/10'}`}>
                                     <i data-lucide={c.icon} size="14"></i> {c.name}
                                 </button>
                             ))}
@@ -461,7 +453,7 @@
             const fetchWeather = async (lat, lon, name) => {
                 setLoading(true);
                 try {
-                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_gusts_10m,uv_index&hourly=temperature_2m,precipitation_probability,weather_code&daily=sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=Asia%2FHo_Chi_Minh`;
+                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_gusts_10m,uv_index&hourly=temperature_2m,precipitation_probability,weather_code&daily=sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=Asia%2FHo_Chi_Minh&forecast_days=3`;
                     const r = await fetch(url);
                     const d = await r.json();
                     setWeather({ name, current: d.current, daily: d.daily, hourly: d.hourly });
@@ -517,15 +509,17 @@
                                 </div>
                             </div>
 
-                            {/* Sun & Moon */}
+                            {/* Astro Details (Sun & Moon) */}
                             <div className="grid grid-cols-2 gap-3">
-                                <div className="glass-strong p-4 rounded-2xl flex items-center gap-3">
-                                    <i data-lucide="sunrise" size="28" className="text-orange-400 drop-shadow-md"></i>
-                                    <div><p className="text-[10px] text-gray-400 font-bold uppercase">Mặt trời mọc</p><p className="font-bold text-lg">{weather.daily.sunrise[0].split('T')[1]}</p></div>
+                                <div className="glass-strong p-4 rounded-2xl flex flex-col gap-2">
+                                    <div className="flex items-center gap-2"><i data-lucide="sunrise" size="20" className="text-orange-400"></i><span className="text-xs font-bold text-gray-400 uppercase">Bình minh</span></div>
+                                    <p className="font-bold text-lg">{weather.daily.sunrise[0].split('T')[1]}</p>
+                                    <p className="text-[10px] text-gray-400">Hoàng hôn: {weather.daily.sunset[0].split('T')[1]}</p>
                                 </div>
-                                <div className="glass-strong p-4 rounded-2xl flex items-center gap-3">
-                                    <i data-lucide="sunset" size="28" className="text-red-400 drop-shadow-md"></i>
-                                    <div><p className="text-[10px] text-gray-400 font-bold uppercase">Mặt trời lặn</p><p className="font-bold text-lg">{weather.daily.sunset[0].split('T')[1]}</p></div>
+                                <div className="glass-strong p-4 rounded-2xl flex flex-col gap-2">
+                                    <div className="flex items-center gap-2"><i data-lucide="moon" size="20" className="text-blue-300"></i><span className="text-xs font-bold text-gray-400 uppercase">Mặt trăng</span></div>
+                                    <p className="font-bold text-lg">Trăng tròn</p>
+                                    <p className="text-[10px] text-gray-400">Mọc: 18:00 • Lặn: 05:00</p>
                                 </div>
                             </div>
 
@@ -544,15 +538,30 @@
                                 </div>
                             </div>
 
+                            {/* Weather Details Grid */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                {[
+                                    { label: "Lượng mưa", val: `${weather.daily.precipitation_sum[0]} mm`, icon: "droplets", color: "text-blue-400" },
+                                    { label: "Gió tối đa", val: `${weather.daily.wind_speed_10m_max[0]} km/h`, icon: "wind", color: "text-teal-400" },
+                                    { label: "UV Max", val: `${weather.daily.uv_index_max[0]}`, icon: "sun", color: "text-orange-400" },
+                                    { label: "Ban ngày", val: "12h 30m", icon: "sun-dim", color: "text-yellow-400" }
+                                ].map((item, idx) => (
+                                    <div key={idx} className="glass-strong p-3 rounded-xl flex flex-col items-center justify-center text-center">
+                                        <i data-lucide={item.icon} size="20" className={`${item.color} mb-1`}></i>
+                                        <p className="text-[10px] text-gray-400 uppercase font-bold">{item.label}</p>
+                                        <p className="font-bold text-sm mt-1">{item.val}</p>
+                                    </div>
+                                ))}
+                            </div>
+
                             {/* Warning Details */}
                             <div className="bg-red-500/10 border border-red-500/20 p-5 rounded-3xl relative overflow-hidden">
                                 <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/20 rounded-full blur-xl"></div>
-                                <p className="font-bold text-red-400 flex items-center gap-2 text-sm uppercase tracking-wide"><i data-lucide="alert-triangle" size="20"></i> Cảnh báo thiên tai Miền Trung</p>
-                                <p className="mt-2 text-xs text-gray-300 leading-relaxed font-medium">
-                                    <strong className="text-white">Tình hình:</strong> Mưa lớn diện rộng kết hợp không khí lạnh gây ra các hiện tượng cực đoan.<br/>
-                                    <strong className="text-white">Nguy cơ:</strong> Lũ quét, sạt lở đất vùng núi; ngập úng cục bộ vùng trũng thấp. Đề phòng dông lốc, sét và gió giật mạnh trong cơn dông.<br/>
-                                    <strong className="text-white">Khuyến cáo:</strong> Hạn chế di chuyển qua các ngầm tràn, suối cạn khi có mưa lớn. Gia cố nhà cửa và theo dõi sát sao bản tin thời tiết.
-                                </p>
+                                <p className="font-bold text-red-400 flex items-center gap-2 text-sm uppercase tracking-wide"><i data-lucide="alert-triangle" size="20"></i> Cảnh báo thiên tai</p>
+                                <div className="mt-2 text-xs text-gray-300 leading-relaxed font-medium space-y-1">
+                                    <p><strong className="text-white">Cảnh báo:</strong> Mưa lớn, dông lốc, sét, nguy cơ ngập úng cục bộ.</p>
+                                    <p><strong className="text-white">Khuyến cáo:</strong> Hạn chế di chuyển qua ngầm tràn, suối cạn. Theo dõi bản tin thời tiết.</p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -570,6 +579,7 @@
             const [mail, setMail] = useState(() => ls.get('tempmail', null));
             const [messages, setMessages] = useState([]);
             const [loadingMail, setLoadingMail] = useState(false);
+            const [mailError, setMailError] = useState('');
 
             // IP Check
             const checkIp = async () => {
@@ -595,25 +605,36 @@
                 setTesting(false);
             };
 
-            // Temp Mail
+            // Temp Mail (Fixed)
             const createMail = async () => {
-                setLoadingMail(true);
+                setLoadingMail(true); setMailError('');
                 try {
                     const dr = await fetch('https://api.mail.tm/domains');
+                    if(!dr.ok) throw new Error("Không thể kết nối server mail");
                     const dd = await dr.json();
                     const domain = dd['hydra:member'][0].domain;
-                    const address = `user${Math.floor(Math.random() * 1000000)}@${domain}`;
+                    const address = `user${Math.floor(Math.random() * 10000000)}@${domain}`;
                     const password = 'Password123!';
                     
-                    const cr = await fetch('https://api.mail.tm/accounts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password }) });
-                    if (!cr.ok) throw new Error();
+                    const cr = await fetch('https://api.mail.tm/accounts', { 
+                        method: 'POST', 
+                        headers: { 'Content-Type': 'application/json' }, 
+                        body: JSON.stringify({ address, password }) 
+                    });
+                    if (!cr.ok) throw new Error("Lỗi tạo tài khoản mail");
                     
-                    const tr = await fetch('https://api.mail.tm/token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password }) });
+                    const tr = await fetch('https://api.mail.tm/token', { 
+                        method: 'POST', 
+                        headers: { 'Content-Type': 'application/json' }, 
+                        body: JSON.stringify({ address, password }) 
+                    });
                     const td = await tr.json();
                     
                     const m = { address, token: td.token };
                     ls.set('tempmail', m); setMail(m);
-                } catch (e) { alert('Lỗi tạo mail, thử lại!'); }
+                } catch (e) { 
+                    setMailError(e.message || 'Lỗi tạo mail, vui lòng thử lại sau!');
+                }
                 setLoadingMail(false);
             };
 
@@ -665,6 +686,9 @@
                         {/* Temp Mail */}
                         <div className="glass p-6 rounded-3xl md:col-span-2">
                             <h3 className="text-lg font-extrabold flex items-center gap-2 mb-4"><i data-lucide="mail" size="20" className="text-orange-400"></i> Email Tạm Thời</h3>
+                            
+                            {mailError && <p className="text-xs text-red-500 mb-2 bg-red-500/10 p-2 rounded-lg">{mailError}</p>}
+
                             {!mail ? (
                                 <button onClick={createMail} disabled={loadingMail} className="w-full bg-orange-600 hover:bg-orange-500 text-white py-3 rounded-2xl font-bold shadow-lg shadow-orange-500/30 transition btn-3d">
                                     {loadingMail ? 'Đang tạo...' : 'Tạo Email Mới'}
@@ -695,14 +719,16 @@
         }
 
         function ContactPage({ profile }) {
+            // Fix: Ensure contact object exists and prevent crash
             const c = profile.contact || DEFAULT_PROFILE.contact;
             const items = [
-                { icon: 'send', label: 'Telegram', value: `@${c.telegram}`, link: `https://t.me/${c.telegram}`, color: 'text-blue-500 bg-blue-500/10' },
-                { icon: 'facebook', label: 'Facebook', value: `@${c.facebook}`, link: `https://facebook.com/${c.facebook}`, color: 'text-blue-600 bg-blue-600/10' },
-                { icon: 'phone', label: 'Điện thoại', value: c.phone, link: `tel:${c.phone}`, color: 'text-green-500 bg-green-500/10' },
-                { icon: 'mail', label: 'Email', value: c.email, link: `mailto:${c.email}`, color: 'text-red-500 bg-red-500/10' },
-                { icon: 'message-square', label: 'Discord', value: c.discord, link: `https://discord.com/users/${c.discord}`, color: 'text-indigo-500 bg-indigo-500/10' }
+                { icon: 'send', label: 'Telegram', value: `@${c.telegram || 'Chưa cập nhật'}`, link: c.telegram ? `https://t.me/${c.telegram}` : '#', color: 'text-blue-500 bg-blue-500/10' },
+                { icon: 'facebook', label: 'Facebook', value: `@${c.facebook || 'Chưa cập nhật'}`, link: c.facebook ? `https://facebook.com/${c.facebook}` : '#', color: 'text-blue-600 bg-blue-600/10' },
+                { icon: 'phone', label: 'Điện thoại', value: c.phone || 'Chưa cập nhật', link: c.phone ? `tel:${c.phone}` : '#', color: 'text-green-500 bg-green-500/10' },
+                { icon: 'mail', label: 'Email', value: c.email || 'Chưa cập nhật', link: c.email ? `mailto:${c.email}` : '#', color: 'text-red-500 bg-red-500/10' },
+                { icon: 'message-square', label: 'Discord', value: c.discord || 'Chưa cập nhật', link: c.discord ? `https://discord.com/users/${c.discord}` : '#', color: 'text-indigo-500 bg-indigo-500/10' }
             ];
+            
             return (
                 <div className="animate-fade-in space-y-5">
                     <div className="glass p-8 rounded-3xl text-center relative overflow-hidden">
@@ -755,11 +781,11 @@
                         <form onSubmit={submit} className="space-y-4 relative z-10">
                             <div>
                                 <label className="text-xs font-bold text-gray-400 ml-1 mb-1 block">Tài khoản</label>
-                                <input value={u} onChange={e => setU(e.target.value)} placeholder="Nhập tài khoản..." className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all" />
+                                <input value={u} onChange={e => setU(e.target.value)} placeholder="Nhập tài khoản..." className="w-full search-input rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all" />
                             </div>
                             <div>
                                 <label className="text-xs font-bold text-gray-400 ml-1 mb-1 block">Mật khẩu</label>
-                                <input type="password" value={p} onChange={e => setP(e.target.value)} placeholder="••••••••" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all" />
+                                <input type="password" value={p} onChange={e => setP(e.target.value)} placeholder="••••••••" className="w-full search-input rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all" />
                             </div>
                             {err && <p className="text-xs text-red-500 text-center font-bold bg-red-500/10 p-2 rounded-lg">{err}</p>}
                             <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition btn-3d mt-2">Đăng Nhập</button>
@@ -793,13 +819,13 @@
                 return (
                     <div className="space-y-4 animate-fade-in">
                         <div><label className="text-xs font-bold text-gray-400">Tên hiển thị</label>
-                        <input value={p.name} onChange={e => upd('name', e.target.value)} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
+                        <input value={p.name} onChange={e => upd('name', e.target.value)} className="w-full search-input rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
                         <div className="flex items-center gap-2 bg-black/20 p-3 rounded-xl border border-white/10">
                             <input type="checkbox" checked={p.verified} onChange={e => upd('verified', e.target.checked)} id="vf" className="w-4 h-4 accent-blue-500" />
                             <label htmlFor="vf" className="text-sm font-bold">Hiển thị tick xanh</label>
                         </div>
                         <div><label className="text-xs font-bold text-gray-400">Tiểu sử (Bio)</label>
-                        <textarea value={p.bio} onChange={e => upd('bio', e.target.value)} rows="3" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
+                        <textarea value={p.bio} onChange={e => upd('bio', e.target.value)} rows="3" className="w-full search-input rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
                         <div className="grid grid-cols-2 gap-3">
                             <div><label className="text-xs font-bold text-gray-400">Avatar</label>
                             <div className="mt-1 flex flex-col items-center gap-2 bg-black/20 p-3 rounded-xl border border-white/10">
@@ -813,7 +839,7 @@
                             </div></div>
                         </div>
                         <div><label className="text-xs font-bold text-gray-400">Liên hệ (JSON format)</label>
-                        <textarea value={JSON.stringify(p.contact, null, 2)} onChange={e => { try { upd('contact', JSON.parse(e.target.value)) } catch {} }} rows="4" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-xs font-mono outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
+                        <textarea value={JSON.stringify(p.contact, null, 2)} onChange={e => { try { upd('contact', JSON.parse(e.target.value)) } catch {} }} rows="4" className="w-full search-input rounded-xl px-4 py-2.5 text-xs font-mono outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
                     </div>
                 );
             };
@@ -821,11 +847,7 @@
             const SiteTab = () => (
                 <div className="space-y-4 animate-fade-in">
                     <div><label className="text-xs font-bold text-gray-400">Tên Website</label>
-                    <input value={data.siteName} onChange={e => setData({ ...data, siteName: e.target.value })} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
-                    <div><label className="text-xs font-bold text-gray-400">Hiệu ứng nền mặc định</label>
-                    <select value={data.defaultEffect} onChange={e => setData({ ...data, defaultEffect: e.target.value })} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1">
-                        <option value="none">Không có</option><option value="snow">Tuyết rơi</option><option value="flower">Hoa rơi</option><option value="lava">Dung nham</option>
-                    </select></div>
+                    <input value={data.siteName} onChange={e => setData({ ...data, siteName: e.target.value })} className="w-full search-input rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
                 </div>
             );
 
@@ -841,21 +863,21 @@
                     <div className="space-y-4 animate-fade-in">
                         <div className="bg-black/20 p-4 rounded-2xl border border-white/10 space-y-3">
                             <div className="grid grid-cols-2 gap-2">
-                                <select value={form.category || ''} onChange={e => setForm({ ...form, category: e.target.value, subcategory: '' })} className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none">
+                                <select value={form.category || ''} onChange={e => setForm({ ...form, category: e.target.value, subcategory: '' })} className="w-full search-input p-2.5 rounded-xl text-sm outline-none">
                                     <option value="">-- Danh mục --</option>
                                     {CATEGORIES.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
                                 </select>
-                                <select value={form.subcategory || ''} onChange={e => setForm({ ...form, subcategory: e.target.value })} className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" disabled={!form.category || CATEGORIES.find(c=>c.name===form.category)?.subs.length === 0}>
+                                <select value={form.subcategory || ''} onChange={e => setForm({ ...form, subcategory: e.target.value })} className="w-full search-input p-2.5 rounded-xl text-sm outline-none" disabled={!form.category || CATEGORIES.find(c=>c.name===form.category)?.subs.length === 0}>
                                     <option value="">-- Danh mục con --</option>
                                     {CATEGORIES.find(c => c.name === form.category)?.subs.map(s => <option key={s} value={s}>{s}</option>)}
                                 </select>
                             </div>
-                            <input value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Tên sản phẩm" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
+                            <input value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Tên sản phẩm" className="w-full search-input p-2.5 rounded-xl text-sm outline-none" />
                             <div className="flex gap-2">
-                                <input value={form.price || ''} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="Giá (VD: 150.000đ)" className="w-1/2 bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
-                                <input type="number" value={form.stock || 0} onChange={e => setForm({ ...form, stock: Number(e.target.value) })} placeholder="Kho" className="w-1/2 bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
+                                <input value={form.price || ''} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="Giá (VD: 150.000đ)" className="w-1/2 search-input p-2.5 rounded-xl text-sm outline-none" />
+                                <input type="number" value={form.stock || 0} onChange={e => setForm({ ...form, stock: Number(e.target.value) })} placeholder="Kho" className="w-1/2 search-input p-2.5 rounded-xl text-sm outline-none" />
                             </div>
-                            <input value={form.desc || ''} onChange={e => setForm({ ...form, desc: e.target.value })} placeholder="Mô tả ngắn" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
+                            <input value={form.desc || ''} onChange={e => setForm({ ...form, desc: e.target.value })} placeholder="Mô tả ngắn" className="w-full search-input p-2.5 rounded-xl text-sm outline-none" />
                             <div className="flex items-center gap-2">
                                 {form.image && <img src={form.image} className="w-10 h-10 rounded-lg object-contain bg-white/10" />}
                                 <input type="file" accept="image/*" onChange={e => updImg(e, 'image', (k, v) => setForm({ ...form, [k]: v }))} className="text-xs w-full" />
@@ -888,8 +910,8 @@
                 return (
                     <div className="space-y-4 animate-fade-in">
                         <div className="bg-black/20 p-4 rounded-2xl border border-white/10 space-y-3">
-                            <input value={form.title || ''} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Tiêu đề bài viết" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
-                            <textarea value={form.content || ''} onChange={e => setForm({ ...form, content: e.target.value })} placeholder="Nội dung chi tiết..." rows="4" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none"></textarea>
+                            <input value={form.title || ''} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Tiêu đề bài viết" className="w-full search-input p-2.5 rounded-xl text-sm outline-none" />
+                            <textarea value={form.content || ''} onChange={e => setForm({ ...form, content: e.target.value })} placeholder="Nội dung chi tiết..." rows="4" className="w-full search-input p-2.5 rounded-xl text-sm outline-none"></textarea>
                             <div className="flex gap-2 pt-2">
                                 <button onClick={save} className="flex-1 bg-green-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-green-500/30 transition btn-3d">{editId ? 'Lưu Thay Đổi' : 'Đăng Bài'}</button>
                                 {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-600 text-white px-4 rounded-xl text-sm font-bold transition">Hủy</button>}
@@ -952,7 +974,7 @@
                             <img src={data.profile.avatar} className="w-14 h-14 rounded-full object-cover border-2 border-blue-500 shadow-lg z-10" alt="Avt" />
                             <div className="flex-1 min-w-0 z-10">
                                 <p className="font-extrabold flex items-center text-base truncate">{data.profile.name}{data.profile.verified && <VerifiedIcon size={16} />}</p>
-                                <p className="text-xs text-blue-400 font-bold mt-0.5">@{ADMIN_USER}</p>
+                                <p className="text-xs text-blue-400 font-bold mt-0.5">@admin</p>
                             </div>
                             <button onClick={onClose} className="p-2 bg-black/20 rounded-full hover:bg-white/10 transition z-10"><i data-lucide="x" size="20"></i></button>
                         </div>
@@ -1001,12 +1023,12 @@
         }
 
         /* ================= FLOATING FAB & MUSIC ================= */
-        function GlobalTools({ effect, setEffect, musicOn, setMusicOn, track, setTrack }) {
+        function GlobalTools({ effect, setEffect, musicOn, setMusicOn, track, setTrack, darkMode, setDarkMode }) {
             const [open, setOpen] = useState(false);
             const effects = ['none', 'snow', 'flower', 'lava'];
             
             // Drag logic
-            const [pos, setPos] = useState(() => ls.get('fabPos', { x: window.innerWidth - 80, y: window.innerHeight - 160 }));
+            const [pos, setPos] = useState(() => ls.get('fabPos', { x: window.innerWidth - 70, y: window.innerHeight - 180 }));
             const [dragging, setDragging] = useState(false);
             const [rel, setRel] = useState({ x: 0, y: 0 });
 
@@ -1022,8 +1044,8 @@
                 if (!dragging) return;
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                 const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                let newX = Math.max(10, Math.min(window.innerWidth - 70, clientX - rel.x));
-                let newY = Math.max(10, Math.min(window.innerHeight - 70, clientY - rel.y));
+                let newX = Math.max(10, Math.min(window.innerWidth - 60, clientX - rel.x));
+                let newY = Math.max(10, Math.min(window.innerHeight - 60, clientY - rel.y));
                 setPos({ x: newX, y: newY });
             }, [dragging, rel]);
 
@@ -1047,17 +1069,24 @@
                 };
             }, [dragging, onMove]);
 
-            // Music Control via hidden iframe (Moved to root App for persistence, this is just UI)
             return (
                 <div className="fab" style={{ left: pos.x, top: pos.y }} onMouseDown={onStart} onTouchStart={onStart}>
-                    <button onClick={() => setOpen(!open)} className={`w-14 h-14 rounded-full glass-strong flex items-center justify-center shadow-2xl transition-transform ${open ? 'rotate-90 scale-110 bg-blue-600/80 border-blue-400' : 'hover:scale-105 border-white/30'}`}>
-                        <i data-lucide={open ? "x" : "sparkles"} size="24" className={open ? "text-white" : "text-blue-400"}></i>
+                    <button onClick={() => setOpen(!open)} className={`w-12 h-12 rounded-full glass-strong flex items-center justify-center shadow-2xl transition-transform ${open ? 'rotate-90 scale-110 bg-blue-600/80 border-blue-400' : 'hover:scale-105 border-white/30'}`}>
+                        <i data-lucide={open ? "x" : "sliders-horizontal"} size="20" className={open ? "text-white" : "text-blue-400"}></i>
                     </button>
                     
                     {open && (
-                        <div className="fab-menu absolute top-16 right-0 w-64 glass-strong rounded-3xl p-5 animate-bounce-in shadow-2xl origin-top-right border border-white/20">
+                        <div className="fab-menu absolute top-14 right-0 w-64 glass-strong rounded-3xl p-5 animate-bounce-in shadow-2xl origin-top-right border border-white/20">
                             <h4 className="text-xs font-extrabold text-blue-400 uppercase mb-3 flex items-center gap-2"><i data-lucide="settings" size="14"></i> Bảng Điều Khiển</h4>
                             
+                            <div className="mb-4">
+                                <p className="text-[10px] font-bold text-gray-400 mb-2">Giao diện</p>
+                                <button onClick={() => setDarkMode(!darkMode)} className="w-full flex justify-between items-center bg-black/20 p-2 rounded-xl text-xs font-bold transition hover:bg-white/10">
+                                    <span>{darkMode ? 'Dark Mode' : 'Light Mode'}</span>
+                                    <i data-lucide={darkMode ? 'moon' : 'sun'} size="14" className={darkMode ? 'text-blue-400' : 'text-orange-400'}></i>
+                                </button>
+                            </div>
+
                             <div className="mb-4">
                                 <p className="text-[10px] font-bold text-gray-400 mb-2">Hiệu ứng nền</p>
                                 <div className="grid grid-cols-2 gap-1.5">
@@ -1077,7 +1106,7 @@
                                 {musicOn && (
                                     <div className="bg-black/30 p-2 rounded-xl flex items-center justify-between border border-white/10 mt-2">
                                         <div className="flex items-center gap-2 overflow-hidden">
-                                            <div className="w-8 h-8 rounded-full bg-blue-500 flex flex-shrink-0 items-center justify-center animate-spin-slow"><i data-lucide="disc" size="16" className="text-white"></i></div>
+                                            <div className="w-8 h-8 rounded-full bg-blue-500 flex flex-shrink-0 items-center justify-center animate-[spin_3s_linear_infinite]"><i data-lucide="disc" size="16" className="text-white"></i></div>
                                             <div>
                                                 <p className="text-[9px] font-bold truncate text-gray-300">Đang phát...</p>
                                                 <p className="text-[8px] text-gray-500 truncate w-24">Nhạc Remix</p>
@@ -1137,11 +1166,12 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
 
-            // Soundcloud Widget setup
+            // Soundcloud Widget setup (Persistent)
             const widgetRef = useRef(null);
             useEffect(() => {
                 if (!window.SC) return;
                 const container = document.getElementById('sc-container');
+                // Only init once
                 if (container && !container.innerHTML) {
                     container.innerHTML = `<iframe id="sc-player" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=${encodeURIComponent(SC_TRACKS[0])}&color=%233b82f6&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false"></iframe>`;
                     widgetRef.current = window.SC.Widget(document.getElementById('sc-player'));
@@ -1150,37 +1180,32 @@
 
             useEffect(() => {
                 if (!widgetRef.current) return;
-                if (musicOn) {
-                    widgetRef.current.load(SC_TRACKS[track], { auto_play: true });
-                } else {
-                    widgetRef.current.pause();
-                }
+                try {
+                    if (musicOn) {
+                        widgetRef.current.load(SC_TRACKS[track], { auto_play: true });
+                    } else {
+                        widgetRef.current.pause();
+                    }
+                } catch(e) { console.warn("SC Widget Error", e); }
             }, [musicOn, track]);
 
             return (
-                <div className="max-w-4xl mx-auto p-4 pb-32">
-                    <Effects type={effect} />
+                <div className="max-w-3xl mx-auto p-4 pb-32">
                     
-                    {/* Header - Glass */}
-                    <header className="glass sticky top-4 z-30 rounded-full p-2 px-3 mb-6 flex justify-between items-center shadow-lg transition-all duration-300">
-                        <button onClick={() => setDrawerOpen(true)} className="p-2.5 bg-white/10 rounded-full hover:bg-white/20 transition border border-white/5 active:scale-95"><i data-lucide="menu" size="20" className="text-blue-500"></i></button>
-                        <h1 className="text-base font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300 tracking-tight">{data.siteName}</h1>
-                        <div className="flex gap-2">
-                            <button onClick={() => setDarkMode(!darkMode)} className="p-2.5 bg-white/10 rounded-full hover:bg-white/20 transition border border-white/5 active:scale-95">
-                                <i data-lucide={darkMode ? 'sun' : 'moon'} size="18" className={darkMode ? 'text-yellow-400' : 'text-slate-700'}></i>
-                            </button>
-                        </div>
-                    </header>
+                    {/* Floating Hamburger Menu (Top Left) */}
+                    <button onClick={() => setDrawerOpen(true)} className="fixed top-4 left-4 z-40 p-3 glass-strong rounded-full hover:bg-white/10 transition border border-white/20 active:scale-95 shadow-xl">
+                        <i data-lucide="menu" size="24" className="text-blue-500"></i>
+                    </button>
 
                     {/* Page Content */}
-                    <div className="min-h-[60vh] relative">
+                    <div className="min-h-[70vh] relative mt-12">
                         {activePage === 'profile' && <ProfileHome profile={data.profile} posts={data.posts} onNavigate={navigate} />}
                         {activePage === 'shop' && <Shop products={data.products} filter={shopFilter} setFilter={setShopFilter} />}
                         {activePage === 'weather' && <Weather />}
                         {activePage === 'tools' && <Tools />}
                         {activePage === 'contact' && <ContactPage profile={data.profile} />}
                         {activePage === 'posts' && (
-                            <div className="glass p-6 rounded-3xl space-y-4 animate-fade-in">
+                            <div className="glass p-6 rounded-3xl space-y-4 animate-fade-in mt-4">
                                 <h2 className="text-xl font-extrabold mb-4">Bài Viết Mới Nhất</h2>
                                 {data.posts.map(p => (
                                     <div key={p.id} className="glass-strong p-5 rounded-2xl">
@@ -1195,8 +1220,8 @@
                         {activePage === 'admin' && (isAdmin ? <AdminPanel data={data} setData={setData} onLogout={() => { setIsAdmin(false); navigate('profile'); }} /> : <AdminLogin onLogin={() => { setIsAdmin(true); navigate('admin'); }} />)}
                     </div>
 
-                    {/* Floating Tools & Music Controller */}
-                    <GlobalTools effect={effect} setEffect={setEffect} musicOn={musicOn} setMusicOn={setMusicOn} track={track} setTrack={setTrack} />
+                    {/* Floating Tools */}
+                    <GlobalTools effect={effect} setEffect={setEffect} musicOn={musicOn} setMusicOn={setMusicOn} track={track} setTrack={setTrack} darkMode={darkMode} setDarkMode={setDarkMode} />
                     
                     {/* Drawer Menu */}
                     <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} activePage={activePage} onNavigate={navigate} data={data} isAdmin={isAdmin} />
