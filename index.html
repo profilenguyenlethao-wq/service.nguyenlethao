@@ -6,52 +6,120 @@
 <meta name="description" content="SPS – Service Processing Support. Nền tảng MMO, công cụ tiện ích, dịch vụ số.">
 <meta property="og:title" content="SPS – Service Processing Support">
 <meta property="og:description" content="Bộ công cụ MMO, PDF, Weather, Business và dịch vụ số chuyên nghiệp.">
+<meta property="og:type" content="website">
 <title>SPS – Service Processing Support</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%234d7bff'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>S</text></svg>">
 <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <style>
+/* ============ DESIGN SYSTEM ============ */
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#05070d;--bg-2:#0a0f1a;--glass:rgba(255,255,255,.06);--glass-2:rgba(255,255,255,.1);--border:rgba(255,255,255,.12);--text:#eaf0ff;--muted:#8b98b0;--primary:#4d7bff;--secondary:#a855f7;--accent:#22d3ee;--success:#22c55e;--danger:#ef4444;--warning:#f59e0b;--radius:18px;--blur:20px;--shadow:0 8px 32px rgba(0,0,0,.4);--fs:16px;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif}
-[data-theme="light"]{--bg:#eef2f9;--bg-2:#e4eaf5;--glass:rgba(255,255,255,.6);--glass-2:rgba(255,255,255,.85);--border:rgba(10,20,40,.08);--text:#0b1425;--muted:#59677f;--shadow:0 8px 32px rgba(30,50,90,.1)}
+:root{
+  --bg:#05070d;--bg-2:#0a0f1a;
+  --glass:rgba(255,255,255,.06);--glass-2:rgba(255,255,255,.1);
+  --border:rgba(255,255,255,.12);--text:#eaf0ff;--muted:#8b98b0;
+  --primary:#4d7bff;--secondary:#a855f7;--accent:#22d3ee;
+  --success:#22c55e;--danger:#ef4444;--warning:#f59e0b;
+  --radius:18px;--blur:20px;
+  --shadow:0 8px 32px rgba(0,0,0,.4);
+  --fs:16px;--anim:1;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+}
+[data-theme="light"]{
+  --bg:#eef2f9;--bg-2:#e4eaf5;
+  --glass:rgba(255,255,255,.6);--glass-2:rgba(255,255,255,.85);
+  --border:rgba(10,20,40,.08);--text:#0b1425;--muted:#59677f;
+  --shadow:0 8px 32px rgba(30,50,90,.1);
+}
 html,body{height:100%}
-body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:var(--fs);overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.55;transition:background .3s,color .3s}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--text);
+  font-size:var(--fs);overflow-x:hidden;min-height:100vh;
+  -webkit-font-smoothing:antialiased;line-height:1.55;
+  transition:background .3s,color .3s;
+}
 #bg-layer{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
-#bg-layer::before{content:'';position:absolute;inset:-20%;background:radial-gradient(circle at 15% 20%,rgba(77,123,255,.25),transparent 45%),radial-gradient(circle at 85% 80%,rgba(168,85,247,.2),transparent 45%),radial-gradient(circle at 60% 40%,rgba(34,211,238,.15),transparent 50%);animation:bgMove 30s ease-in-out infinite}
+#bg-layer::before{
+  content:'';position:absolute;inset:-20%;
+  background:
+    radial-gradient(circle at 15% 20%,rgba(77,123,255,.25),transparent 45%),
+    radial-gradient(circle at 85% 80%,rgba(168,85,247,.2),transparent 45%),
+    radial-gradient(circle at 60% 40%,rgba(34,211,238,.15),transparent 50%);
+  animation:bgMove 30s ease-in-out infinite;
+}
 @keyframes bgMove{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(3%,-3%) scale(1.08)}}
 [data-reduce-motion="1"] *{animation-duration:.01ms !important;transition-duration:.01ms !important}
-.glass{background:var(--glass);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);position:relative;overflow:hidden}
-.glass::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 40%)}
-header.topbar{position:sticky;top:0;z-index:100;background:var(--glass);backdrop-filter:blur(calc(var(--blur) * 1.2));border-bottom:1px solid var(--border);transition:all .3s}
+
+/* ============ GLASS ============ */
+.glass{
+  background:var(--glass);backdrop-filter:blur(var(--blur));
+  -webkit-backdrop-filter:blur(var(--blur));
+  border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.glass::after{
+  content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 40%);
+}
+
+/* ============ HEADER ============ */
+header.topbar{
+  position:sticky;top:0;z-index:100;
+  background:var(--glass);backdrop-filter:blur(calc(var(--blur) * 1.2));
+  border-bottom:1px solid var(--border);
+  transition:all .3s;
+}
 header.topbar.scrolled{box-shadow:var(--shadow);background:var(--glass-2)}
 .nav-wrap{max-width:1400px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:14px}
 .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;cursor:pointer;user-select:none}
-.logo-icon{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:800;font-size:19px;box-shadow:0 4px 16px rgba(77,123,255,.5)}
+.logo-icon{
+  width:36px;height:36px;border-radius:11px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  color:#fff;font-weight:800;font-size:19px;box-shadow:0 4px 16px rgba(77,123,255,.5);
+}
 nav.desktop-nav{display:flex;gap:2px;flex:1;margin-left:12px}
-nav.desktop-nav a{padding:8px 12px;border-radius:10px;color:var(--muted);font-size:14px;text-decoration:none;cursor:pointer;transition:all .18s;font-weight:500}
+nav.desktop-nav a{
+  padding:8px 12px;border-radius:10px;color:var(--muted);font-size:14px;
+  text-decoration:none;cursor:pointer;transition:all .18s;font-weight:500;
+}
 nav.desktop-nav a:hover,nav.desktop-nav a.active{background:var(--glass-2);color:var(--text)}
 .nav-actions{display:flex;gap:6px;align-items:center}
-.icon-btn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--glass);border:1px solid var(--border);color:var(--text);cursor:pointer;transition:all .18s}
+.icon-btn{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  background:var(--glass);border:1px solid var(--border);color:var(--text);
+  cursor:pointer;transition:all .18s;
+}
 .icon-btn:hover{background:var(--glass-2);transform:translateY(-1px)}
 .icon-btn:active{transform:scale(.96)}
+
+/* ============ MAIN ============ */
 main{max-width:1400px;margin:0 auto;padding:20px 18px 100px}
 .page-title{font-size:clamp(24px,4vw,36px);font-weight:800;margin-bottom:6px;letter-spacing:-.02em}
 .page-sub{color:var(--muted);margin-bottom:22px;font-size:15px}
 .section{margin:28px 0}
 .section h2{font-size:22px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+
+/* Hero */
 .hero{padding:60px 30px;text-align:center;position:relative;overflow:hidden}
 .hero h1{font-size:clamp(30px,5.5vw,54px);font-weight:800;line-height:1.1;margin-bottom:16px;letter-spacing:-.03em}
 .hero h1 .grad{background:linear-gradient(135deg,var(--primary),var(--secondary),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .hero p{color:var(--muted);font-size:17px;max-width:640px;margin:0 auto 24px}
 .btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.btn{padding:12px 22px;border-radius:13px;border:1px solid var(--border);background:var(--glass);color:var(--text);font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px;font-family:inherit;text-decoration:none}
+.btn{
+  padding:12px 22px;border-radius:13px;border:1px solid var(--border);
+  background:var(--glass);color:var(--text);font-size:15px;font-weight:600;
+  cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px;
+  font-family:inherit;text-decoration:none;
+}
 .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
 .btn:active{transform:scale(.97)}
 .btn-primary{background:linear-gradient(135deg,var(--primary),var(--secondary));border:none;color:#fff;box-shadow:0 6px 22px rgba(77,123,255,.4)}
 .btn-primary:hover{filter:brightness(1.1)}
 .btn-sm{padding:8px 14px;font-size:13px;border-radius:10px}
 .btn-danger{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4);color:#ff8585}
+
+/* Cards grid */
 .grid{display:grid;gap:16px}
 .grid-2{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
 .grid-3{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
@@ -61,60 +129,136 @@ main{max-width:1400px;margin:0 auto;padding:20px 18px 100px}
 .card h3{font-size:16px;font-weight:700;margin-bottom:6px}
 .card p{font-size:13px;color:var(--muted);line-height:1.5}
 .card .icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;margin-bottom:14px;background:linear-gradient(135deg,rgba(77,123,255,.25),rgba(168,85,247,.25));color:var(--primary)}
+
+/* Forms */
 .form-group{margin-bottom:16px}
 .form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--muted)}
-input,textarea,select{width:100%;padding:11px 14px;border-radius:11px;background:var(--glass);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:14px;transition:border .18s,box-shadow .18s}
-input:focus,textarea:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(77,123,255,.15)}
+input,textarea,select{
+  width:100%;padding:11px 14px;border-radius:11px;
+  background:var(--glass);border:1px solid var(--border);
+  color:var(--text);font-family:inherit;font-size:14px;
+  transition:border .18s,box-shadow .18s;
+}
+input:focus,textarea:focus,select:focus{
+  outline:none;border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(77,123,255,.15);
+}
 textarea{min-height:100px;resize:vertical}
 .input-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:600px){.input-row{grid-template-columns:1fr}}
+
+/* Table */
 .tbl{width:100%;border-collapse:collapse;font-size:14px}
 .tbl th,.tbl td{padding:11px 10px;text-align:left;border-bottom:1px solid var(--border)}
 .tbl th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.03em}
 .tbl tr:hover td{background:var(--glass)}
-.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:1000;display:grid;place-items:center;padding:16px;animation:fadeIn .2s}
-.modal{width:100%;max-width:560px;max-height:88vh;overflow-y:auto;padding:24px;background:var(--bg-2);border:1px solid var(--border);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:slideUp .25s}
+
+/* Modal */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  z-index:1000;display:grid;place-items:center;padding:16px;animation:fadeIn .2s;
+}
+.modal{
+  width:100%;max-width:560px;max-height:88vh;overflow-y:auto;padding:24px;
+  background:var(--bg-2);border:1px solid var(--border);border-radius:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);animation:slideUp .25s;
+}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .modal h3{font-size:20px;margin-bottom:16px}
+
+/* Toast */
 #toast-container{position:fixed;top:80px;right:16px;z-index:2000;display:flex;flex-direction:column;gap:8px;max-width:360px}
-.toast{padding:12px 18px;border-radius:12px;background:var(--bg-2);border:1px solid var(--border);color:var(--text);font-size:14px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.3);animation:slideIn .25s;display:flex;align-items:center;gap:10px}
+.toast{
+  padding:12px 18px;border-radius:12px;background:var(--bg-2);border:1px solid var(--border);
+  color:var(--text);font-size:14px;font-weight:500;
+  box-shadow:0 8px 24px rgba(0,0,0,.3);animation:slideIn .25s;
+  display:flex;align-items:center;gap:10px;
+}
 .toast.success{border-left:3px solid var(--success)}
 .toast.error{border-left:3px solid var(--danger)}
 .toast.info{border-left:3px solid var(--primary)}
 @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-nav.mobile-nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:none;gap:4px;padding:8px;background:var(--glass-2);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);z-index:150;max-width:calc(100vw - 24px)}
-nav.mobile-nav a{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;color:var(--muted);cursor:pointer;transition:all .18s;position:relative}
+
+/* Mobile nav */
+nav.mobile-nav{
+  position:fixed;bottom:14px;left:50%;transform:translateX(-50%);
+  display:none;gap:4px;padding:8px;
+  background:var(--glass-2);backdrop-filter:blur(24px);
+  border:1px solid var(--border);border-radius:20px;
+  box-shadow:var(--shadow);z-index:150;max-width:calc(100vw - 24px);
+}
+nav.mobile-nav a{
+  width:52px;height:52px;border-radius:14px;display:grid;place-items:center;
+  color:var(--muted);cursor:pointer;transition:all .18s;position:relative;
+}
 nav.mobile-nav a.active{color:var(--primary);background:rgba(77,123,255,.15)}
 nav.mobile-nav a span{position:absolute;bottom:3px;font-size:9px;font-weight:600;opacity:0}
 nav.mobile-nav a.active span{opacity:1}
-@media(max-width:900px){nav.desktop-nav{display:none}nav.mobile-nav{display:flex}main{padding-bottom:120px}}
+@media(max-width:900px){
+  nav.desktop-nav{display:none}
+  nav.mobile-nav{display:flex}
+  main{padding-bottom:120px}
+}
+
+/* Effects canvas */
 #effects-canvas{position:fixed;inset:0;pointer-events:none;z-index:0}
-.fab{position:fixed;z-index:200;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));border:none;color:#fff;cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 24px rgba(77,123,255,.5);transition:transform .2s}
+
+/* FAB & Accessibility Panel */
+.fab{
+  position:fixed;z-index:200;width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  border:none;color:#fff;cursor:pointer;display:grid;place-items:center;
+  box-shadow:0 8px 24px rgba(77,123,255,.5);transition:transform .2s;
+}
 .fab:hover{transform:scale(1.08)}
 .fab:active{transform:scale(.95)}
-.a11y-panel{position:fixed;z-index:210;width:320px;max-height:80vh;overflow-y:auto;padding:20px;background:var(--glass-2);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);display:none}
+.a11y-panel{
+  position:fixed;z-index:210;width:320px;max-height:80vh;overflow-y:auto;
+  padding:20px;background:var(--glass-2);backdrop-filter:blur(24px);
+  border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);
+  display:none;
+}
 .a11y-panel.open{display:block;animation:slideUp .25s}
 .a11y-panel h4{font-size:15px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
 .a11y-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
 .a11y-row:last-child{border:none}
 .a11y-row input[type="range"]{width:110px}
+.a11y-row select{padding:5px 8px;font-size:12px;width:auto}
 .switch{position:relative;width:38px;height:22px;flex-shrink:0}
 .switch input{opacity:0;width:0;height:0}
-.switch span{position:absolute;inset:0;background:var(--border);border-radius:22px;cursor:pointer;transition:.2s}
-.switch span::before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.switch span{
+  position:absolute;inset:0;background:var(--border);border-radius:22px;
+  cursor:pointer;transition:.2s;
+}
+.switch span::before{
+  content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;
+  background:#fff;border-radius:50%;transition:.2s;
+}
 .switch input:checked + span{background:var(--primary)}
 .switch input:checked + span::before{transform:translateX(16px)}
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+
+/* Status badges */
+.badge{
+  display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;
+  font-weight:600;text-transform:uppercase;letter-spacing:.03em;
+}
 .badge-success{background:rgba(34,197,94,.15);color:#4ade80}
 .badge-warn{background:rgba(245,158,11,.15);color:#fbbf24}
 .badge-danger{background:rgba(239,68,68,.15);color:#f87171}
 .badge-info{background:rgba(77,123,255,.15);color:#93c5fd}
+
+/* Product card */
 .product-card{padding:0;overflow:hidden;display:flex;flex-direction:column}
-.product-img{aspect-ratio:16/9;background:linear-gradient(135deg,rgba(77,123,255,.3),rgba(168,85,247,.3));display:grid;place-items:center;font-size:40px;color:var(--primary)}
+.product-img{
+  aspect-ratio:16/9;background:linear-gradient(135deg,rgba(77,123,255,.3),rgba(168,85,247,.3));
+  display:grid;place-items:center;font-size:40px;color:var(--primary);
+}
 .product-body{padding:16px;flex:1;display:flex;flex-direction:column;gap:8px}
 .product-body .price{font-size:18px;font-weight:800;color:var(--primary)}
 .product-body .price s{font-size:13px;color:var(--muted);font-weight:400;margin-left:6px}
+
+/* Utility */
 .hidden{display:none !important}
 .center{text-align:center}
 .mt-2{margin-top:16px}
@@ -126,13 +270,24 @@ nav.mobile-nav a.active span{opacity:1}
 .justify-between{justify-content:space-between}
 .muted{color:var(--muted)}
 .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.totp-display{font-size:44px;font-weight:800;letter-spacing:8px;font-family:'SF Mono',Menlo,monospace;text-align:center;padding:20px;color:var(--primary)}
+
+/* TOTP display */
+.totp-display{
+  font-size:44px;font-weight:800;letter-spacing:8px;font-family:'SF Mono',Menlo,monospace;
+  text-align:center;padding:20px;color:var(--primary);
+}
 .totp-bar{height:4px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:10px}
 .totp-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .3s linear}
+
+/* Notes */
 .note-card{padding:14px;min-height:120px;cursor:pointer}
 .note-card textarea{background:transparent;border:none;width:100%;resize:none;color:inherit;font-family:inherit;font-size:14px;min-height:80px}
+
+/* QR container */
 #qr-output{display:grid;place-items:center;padding:16px;background:#fff;border-radius:14px;min-height:180px;margin-top:10px}
 #qr-output img{max-width:100%}
+
+/* Weather */
 .weather-hero{padding:30px;text-align:center;margin-bottom:20px}
 .weather-hero .temp{font-size:72px;font-weight:800;line-height:1;background:linear-gradient(135deg,#fff,var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .weather-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:20px}
@@ -140,17 +295,38 @@ nav.mobile-nav a.active span{opacity:1}
 .weather-detail .label{font-size:12px;color:var(--muted);margin-bottom:4px}
 .weather-detail .val{font-size:16px;font-weight:700}
 .hourly-scroll{display:flex;gap:10px;overflow-x:auto;padding:14px 0}
-.hourly-item{min-width:80px;padding:12px;border-radius:12px;background:var(--glass);border:1px solid var(--border);text-align:center;font-size:12px}
+.hourly-item{
+  min-width:80px;padding:12px;border-radius:12px;background:var(--glass);
+  border:1px solid var(--border);text-align:center;font-size:12px;
+}
 .hourly-item .hour{font-size:11px;color:var(--muted);margin-bottom:6px}
 .hourly-item .h-temp{font-size:16px;font-weight:700}
+
+/* Admin */
 .admin-tabs{display:flex;gap:4px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px}
-.admin-tabs button{padding:9px 16px;border-radius:11px;border:1px solid var(--border);background:var(--glass);color:var(--muted);cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;transition:.18s;font-family:inherit}
+.admin-tabs button{
+  padding:9px 16px;border-radius:11px;border:1px solid var(--border);
+  background:var(--glass);color:var(--muted);cursor:pointer;font-size:13px;
+  font-weight:600;white-space:nowrap;transition:.18s;font-family:inherit;
+}
 .admin-tabs button.active{background:var(--primary);border-color:var(--primary);color:#fff}
-.music-widget{position:fixed;bottom:80px;right:16px;z-index:180;width:300px;padding:14px;background:var(--glass-2);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);display:none}
+
+/* SoundCloud player */
+.music-widget{
+  position:fixed;bottom:80px;right:16px;z-index:180;
+  width:300px;padding:14px;background:var(--glass-2);backdrop-filter:blur(24px);
+  border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);
+  display:none;
+}
 .music-widget.open{display:block}
 @media(max-width:900px){.music-widget{bottom:90px;width:calc(100vw - 32px);right:16px}}
 .music-widget iframe{width:100%;border:none;border-radius:10px;height:100px}
-@media(max-width:600px){.hero{padding:40px 18px}.page-title{font-size:24px}}
+
+@media(max-width:600px){
+  .hero{padding:40px 18px}
+  .page-title{font-size:24px}
+  .input-row{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -165,15 +341,24 @@ nav.mobile-nav a.active span{opacity:1}
     </div>
     <nav class="desktop-nav" id="desktop-nav"></nav>
     <div class="nav-actions">
-      <button class="icon-btn" id="lang-btn" title="Language"><i data-lucide="languages"></i></button>
-      <button class="icon-btn" onclick="SPS.toggleTheme()" title="Theme"><i data-lucide="sun-moon"></i></button>
-      <button class="icon-btn" id="music-btn" title="Music"><i data-lucide="music"></i></button>
-      <button class="icon-btn" onclick="SPS.nav('admin')" title="Admin"><i data-lucide="shield"></i></button>
+      <button class="icon-btn" id="lang-btn" title="Language">
+        <i data-lucide="languages"></i>
+      </button>
+      <button class="icon-btn" onclick="SPS.toggleTheme()" title="Theme">
+        <i data-lucide="sun-moon"></i>
+      </button>
+      <button class="icon-btn" id="music-btn" title="Music">
+        <i data-lucide="music"></i>
+      </button>
+      <button class="icon-btn" onclick="SPS.nav('admin')" title="Admin">
+        <i data-lucide="shield"></i>
+      </button>
     </div>
   </div>
 </header>
 
 <main id="main"></main>
+
 <nav class="mobile-nav" id="mobile-nav"></nav>
 
 <button class="fab" id="a11y-fab" style="right:16px;bottom:24px" title="Accessibility">
@@ -194,7 +379,9 @@ nav.mobile-nav a.active span{opacity:1}
     <button class="btn btn-sm" id="music-next">▶</button>
   </div>
   <div id="music-iframe-wrap"></div>
-  <div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center">SoundCloud Embed · Không tự động phát</div>
+  <div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center">
+    SoundCloud Embed · Không tự động phát
+  </div>
 </div>
 
 <div id="toast-container"></div>
@@ -202,20 +389,33 @@ nav.mobile-nav a.active span{opacity:1}
 
 <script>
 /* ======================================================
-   SPS – Service Processing Support (Full build)
+   SPS – Service Processing Support
+   Single-file app: HTML + CSS + JS
    ====================================================== */
 
 const SPS = {
+  // ---------- STATE ----------
   state: {
-    lang: 'vi', theme: 'dark', page: 'home', admin: null,
-    effects: { stars: true, snow: false, rain: false, speed: 1, density: 1, brightness: 1 },
+    lang: 'vi',
+    theme: 'dark',
+    page: 'home',
+    admin: null,
+    effects: { stars: true, snow: false, rain: false, flowers: false, volcano: false, speed: 1, density: 1, brightness: 1 },
     reduceMotion: false,
-    music: { open: false, track: 0 },
-    products: [], blog: [], orders: [], settings: {},
-    notes: [], todos: [], events: [],
+    music: { open: false, track: 0, playing: false },
+    a11y: { pos: { right: 16, bottom: 24 }, hidden: false },
+    products: [],
+    blog: [],
+    orders: [],
+    settings: {},
+    notes: [],
+    todos: [],
+    events: [],
+    cart: null,
     pageData: {}
   },
 
+  // ---------- STORAGE ----------
   store: {
     key: 'sps_v1',
     save() {
@@ -228,19 +428,21 @@ const SPS = {
       try {
         const raw = localStorage.getItem(this.key);
         if (!raw) return false;
-        Object.assign(SPS.state, JSON.parse(raw));
+        const d = JSON.parse(raw);
+        Object.assign(SPS.state, d);
         return true;
       } catch (e) { console.warn('Load failed', e); return false; }
     },
     export() {
       const data = localStorage.getItem(this.key) || '{}';
-      SPS.download(new Blob([data], { type: 'application/json' }), 'sps-backup-' + new Date().toISOString().slice(0, 10) + '.json');
+      const blob = new Blob([data], { type: 'application/json' });
+      SPS.download(blob, 'sps-backup-' + new Date().toISOString().slice(0, 10) + '.json');
     },
     async import(file) {
       const text = await file.text();
       try {
         const obj = JSON.parse(text);
-        if (typeof obj !== 'object' || Array.isArray(obj)) throw new Error('Invalid backup');
+        if (typeof obj !== 'object' || Array.isArray(obj)) throw new Error('Invalid backup file');
         localStorage.setItem(this.key, JSON.stringify(obj));
         SPS.toast('Đã phục hồi. Đang tải lại...', 'success');
         setTimeout(() => location.reload(), 800);
@@ -248,19 +450,46 @@ const SPS = {
     }
   },
 
-  /* ==================== I18N (7 languages) ==================== */
+  // ---------- I18N ----------
   i18n: {
-    vi: { home: 'Trang chủ', products: 'Sản phẩm', services: 'Dịch vụ', tools: 'Công cụ', blog: 'Blog', support: 'Hỗ trợ', admin: 'Quản trị', profile: 'Hồ sơ', search: 'Tìm kiếm...', login: 'Đăng nhập', logout: 'Đăng xuất', hero_title: 'Nền tảng MMO đa năng cho người sáng tạo', hero_desc: 'Bộ công cụ tiện ích, dịch vụ số và bảng điều khiển SaaS được thiết kế cho cộng đồng MMO Việt Nam.', explore_tools: 'Khám phá công cụ', view_services: 'Xem dịch vụ', featured_services: 'Dịch vụ nổi bật', featured_products: 'Sản phẩm nổi bật', latest_updates: 'Cập nhật mới', why_sps: 'Vì sao chọn SPS', save: 'Lưu', cancel: 'Hủy', delete: 'Xóa', edit: 'Sửa', add: 'Thêm', copy: 'Sao chép', download: 'Tải xuống', send: 'Gửi', close: 'Đóng', confirm: 'Xác nhận', notes: 'Ghi chú', currency: 'Chuyển đổi tiền tệ', qr: 'QR Generator', totp: 'TOTP Auth', ip: 'Thông tin IP', weather: 'Thời tiết', crypto: 'Giá Crypto', calculator: 'Máy tính kinh doanh', todo: 'Công việc', calendar: 'Lịch', pdf_tools: 'Công cụ PDF' },
-    en: { home: 'Home', products: 'Products', services: 'Services', tools: 'Tools', blog: 'Blog', support: 'Support', admin: 'Admin', profile: 'Profile', search: 'Search...', login: 'Login', logout: 'Logout', hero_title: 'Multi-purpose MMO platform for creators', hero_desc: 'Utility tools, digital services and SaaS dashboard designed for the Vietnamese MMO community.', explore_tools: 'Explore Tools', view_services: 'View Services', featured_services: 'Featured Services', featured_products: 'Featured Products', latest_updates: 'Latest Updates', why_sps: 'Why Choose SPS', save: 'Save', cancel: 'Cancel', delete: 'Delete', edit: 'Edit', add: 'Add', copy: 'Copy', download: 'Download', send: 'Send', close: 'Close', confirm: 'Confirm', notes: 'Notes', currency: 'Currency Converter', qr: 'QR Generator', totp: 'TOTP Auth', ip: 'IP Information', weather: 'Weather', crypto: 'Crypto Prices', calculator: 'Business Calculator', todo: 'To-do', calendar: 'Calendar', pdf_tools: 'PDF Tools' },
-    'zh-CN': { home: '首页', products: '产品', services: '服务', tools: '工具', blog: '博客', support: '支持', admin: '管理', profile: '个人资料', search: '搜索...', login: '登录', logout: '退出', hero_title: '面向创作者的多功能 MMO 平台', hero_desc: '为越南 MMO 社区设计的实用工具、数字服务和 SaaS 仪表板。', explore_tools: '探索工具', view_services: '查看服务', featured_services: '精选服务', featured_products: '精选产品', latest_updates: '最新更新', why_sps: '为什么选择 SPS', save: '保存', cancel: '取消', delete: '删除', edit: '编辑', add: '添加', copy: '复制', download: '下载', send: '发送', close: '关闭', confirm: '确认', notes: '笔记', currency: '货币转换器', qr: '二维码生成器', totp: 'TOTP 验证', ip: 'IP 信息', weather: '天气', crypto: '加密货币价格', calculator: '商业计算器', todo: '待办事项', calendar: '日历', pdf_tools: 'PDF 工具' },
-    'zh-TW': { home: '首頁', products: '產品', services: '服務', tools: '工具', blog: '部落格', support: '支援', admin: '管理', profile: '個人資料', search: '搜尋...', login: '登入', logout: '登出', hero_title: '面向創作者的多功能 MMO 平台', hero_desc: '為越南 MMO 社群設計的實用工具、數位服務和 SaaS 儀表板。', explore_tools: '探索工具', view_services: '查看服務', featured_services: '精選服務', featured_products: '精選產品', latest_updates: '最新更新', why_sps: '為什麼選擇 SPS', save: '儲存', cancel: '取消', delete: '刪除', edit: '編輯', add: '新增', copy: '複製', download: '下載', send: '傳送', close: '關閉', confirm: '確認', notes: '筆記', currency: '貨幣轉換器', qr: '二維碼生成器', totp: 'TOTP 驗證', ip: 'IP 資訊', weather: '天氣', crypto: '加密貨幣價格', calculator: '商業計算器', todo: '待辦事項', calendar: '日曆', pdf_tools: 'PDF 工具' },
-    ja: { home: 'ホーム', products: '製品', services: 'サービス', tools: 'ツール', blog: 'ブログ', support: 'サポート', admin: '管理', profile: 'プロフィール', search: '検索...', login: 'ログイン', logout: 'ログアウト', hero_title: 'クリエイターのための多機能 MMO プラットフォーム', hero_desc: 'ベトナムの MMO コミュニティ向けに設計されたユーティリティツール、デジタルサービス、SaaS ダッシュボード。', explore_tools: 'ツールを探す', view_services: 'サービスを見る', featured_services: '注目のサービス', featured_products: '注目の製品', latest_updates: '最新情報', why_sps: 'SPS を選ぶ理由', save: '保存', cancel: 'キャンセル', delete: '削除', edit: '編集', add: '追加', copy: 'コピー', download: 'ダウンロード', send: '送信', close: '閉じる', confirm: '確認', notes: 'メモ', currency: '通貨コンバーター', qr: 'QR コード生成', totp: 'TOTP 認証', ip: 'IP 情報', weather: '天気', crypto: '暗号通貨価格', calculator: 'ビジネス計算機', todo: 'ToDo', calendar: 'カレンダー', pdf_tools: 'PDF ツール' },
-    de: { home: 'Startseite', products: 'Produkte', services: 'Dienste', tools: 'Werkzeuge', blog: 'Blog', support: 'Support', admin: 'Admin', profile: 'Profil', search: 'Suchen...', login: 'Anmelden', logout: 'Abmelden', hero_title: 'Multifunktionale MMO-Plattform für Kreative', hero_desc: 'Dienstprogramme, digitale Dienste und SaaS-Dashboard für die vietnamesische MMO-Community.', explore_tools: 'Tools entdecken', view_services: 'Dienste ansehen', featured_services: 'Ausgewählte Dienste', featured_products: 'Ausgewählte Produkte', latest_updates: 'Neueste Updates', why_sps: 'Warum SPS', save: 'Speichern', cancel: 'Abbrechen', delete: 'Löschen', edit: 'Bearbeiten', add: 'Hinzufügen', copy: 'Kopieren', download: 'Herunterladen', send: 'Senden', close: 'Schließen', confirm: 'Bestätigen', notes: 'Notizen', currency: 'Währungsumrechner', qr: 'QR-Generator', totp: 'TOTP-Authentifizierung', ip: 'IP-Informationen', weather: 'Wetter', crypto: 'Krypto-Preise', calculator: 'Business-Rechner', todo: 'To-do', calendar: 'Kalender', pdf_tools: 'PDF-Tools' },
-    ru: { home: 'Главная', products: 'Продукты', services: 'Услуги', tools: 'Инструменты', blog: 'Блог', support: 'Поддержка', admin: 'Админ', profile: 'Профиль', search: 'Поиск...', login: 'Войти', logout: 'Выйти', hero_title: 'Многофункциональная MMO-платформа для создателей', hero_desc: 'Утилиты, цифровые услуги и SaaS-панель для вьетнамского MMO-сообщества.', explore_tools: 'Исследовать инструменты', view_services: 'Посмотреть услуги', featured_services: 'Избранные услуги', featured_products: 'Избранные продукты', latest_updates: 'Последние обновления', why_sps: 'Почему SPS', save: 'Сохранить', cancel: 'Отмена', delete: 'Удалить', edit: 'Редактировать', add: 'Добавить', copy: 'Копировать', download: 'Скачать', send: 'Отправить', close: 'Закрыть', confirm: 'Подтвердить', notes: 'Заметки', currency: 'Конвертер валют', qr: 'QR-генератор', totp: 'TOTP-аутентификация', ip: 'Информация об IP', weather: 'Погода', crypto: 'Цены криптовалют', calculator: 'Бизнес-калькулятор', todo: 'Список дел', calendar: 'Календарь', pdf_tools: 'PDF-инструменты' }
+    vi: {
+      home: 'Trang chủ', products: 'Sản phẩm', services: 'Dịch vụ', tools: 'Công cụ',
+      blog: 'Blog', support: 'Hỗ trợ', admin: 'Quản trị', profile: 'Hồ sơ',
+      search: 'Tìm kiếm...', login: 'Đăng nhập', logout: 'Đăng xuất',
+      hero_title: 'Nền tảng MMO đa năng cho người sáng tạo',
+      hero_desc: 'Bộ công cụ tiện ích, dịch vụ số và bảng điều khiển SaaS được thiết kế cho cộng đồng MMO Việt Nam.',
+      explore_tools: 'Khám phá công cụ', view_services: 'Xem dịch vụ',
+      featured_services: 'Dịch vụ nổi bật', featured_products: 'Sản phẩm nổi bật',
+      latest_updates: 'Cập nhật mới', why_sps: 'Vì sao chọn SPS',
+      save: 'Lưu', cancel: 'Hủy', delete: 'Xóa', edit: 'Sửa', add: 'Thêm', copy: 'Sao chép',
+      download: 'Tải xuống', send: 'Gửi', close: 'Đóng', confirm: 'Xác nhận',
+      notes: 'Ghi chú', currency: 'Chuyển đổi tiền tệ', qr: 'QR Generator',
+      totp: 'TOTP Auth', ip: 'Thông tin IP', weather: 'Thời tiết',
+      crypto: 'Giá Crypto', calculator: 'Máy tính kinh doanh',
+      todo: 'Công việc', calendar: 'Lịch', pdf_tools: 'Công cụ PDF'
+    },
+    en: {
+      home: 'Home', products: 'Products', services: 'Services', tools: 'Tools',
+      blog: 'Blog', support: 'Support', admin: 'Admin', profile: 'Profile',
+      search: 'Search...', login: 'Login', logout: 'Logout',
+      hero_title: 'Multi-purpose MMO platform for creators',
+      hero_desc: 'Utility tools, digital services and SaaS dashboard designed for the Vietnamese MMO community.',
+      explore_tools: 'Explore Tools', view_services: 'View Services',
+      featured_services: 'Featured Services', featured_products: 'Featured Products',
+      latest_updates: 'Latest Updates', why_sps: 'Why Choose SPS',
+      save: 'Save', cancel: 'Cancel', delete: 'Delete', edit: 'Edit', add: 'Add', copy: 'Copy',
+      download: 'Download', send: 'Send', close: 'Close', confirm: 'Confirm',
+      notes: 'Notes', currency: 'Currency Converter', qr: 'QR Generator',
+      totp: 'TOTP Auth', ip: 'IP Information', weather: 'Weather',
+      crypto: 'Crypto Prices', calculator: 'Business Calculator',
+      todo: 'To-do', calendar: 'Calendar', pdf_tools: 'PDF Tools'
+    }
   },
-  t(key) { return (this.i18n[this.state.lang] || {})[key] || this.i18n.en[key] || key; },
+  t(key) {
+    return (this.i18n[this.state.lang] && this.i18n[this.state.lang][key]) || this.i18n.en[key] || key;
+  },
 
-  /* ==================== UTILS ==================== */
+  // ---------- TOAST ----------
   toast(msg, type = 'info', duration = 3500) {
     const el = document.createElement('div');
     el.className = 'toast ' + type;
@@ -270,7 +499,9 @@ const SPS = {
     if (window.lucide) lucide.createIcons();
     setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, duration);
   },
-  esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); },
+
+  // ---------- HELPERS ----------
+  esc(str) { return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); },
   id() { return Math.random().toString(36).slice(2, 10); },
   download(blob, filename) {
     const url = URL.createObjectURL(blob);
@@ -281,18 +512,17 @@ const SPS = {
   },
   copy(text) {
     if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(text).then(() => this.toast('Đã sao chép', 'success')).catch(() => this.fallbackCopy(text));
-    } else this.fallbackCopy(text);
+      navigator.clipboard.writeText(text).then(() => this.toast('Đã sao chép', 'success'));
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); this.toast('Đã sao chép', 'success'); }
+      catch (e) { this.toast('Không thể sao chép', 'error'); }
+      ta.remove();
+    }
   },
-  fallbackCopy(text) {
-    const ta = document.createElement('textarea');
-    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); this.toast('Đã sao chép', 'success'); }
-    catch (e) { this.toast('Không thể sao chép', 'error'); }
-    ta.remove();
-  },
-  async fetchJSON(url, timeout = 12000) {
+  async fetchJSON(url, timeout = 10000) {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), timeout);
     try {
@@ -302,7 +532,7 @@ const SPS = {
       return await r.json();
     } catch (e) { clearTimeout(t); throw e; }
   },
-  modal(html) {
+  modal(html, opts = {}) {
     const root = document.getElementById('modal-root');
     const wrap = document.createElement('div');
     wrap.className = 'modal-backdrop';
@@ -312,8 +542,12 @@ const SPS = {
     if (window.lucide) lucide.createIcons();
     return wrap;
   },
-  closeModal() { document.getElementById('modal-root').innerHTML = ''; },
+  closeModal() {
+    const root = document.getElementById('modal-root');
+    root.innerHTML = '';
+  },
 
+  // ---------- THEME / I18N / EFFECTS ----------
   toggleTheme() {
     this.state.theme = this.state.theme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', this.state.theme);
@@ -324,26 +558,34 @@ const SPS = {
     this.state.lang = lang;
     document.documentElement.setAttribute('lang', lang);
     this.store.save();
-    this.renderNav(); this.render();
+    this.renderNav();
+    this.render();
     this.toast('Language: ' + lang.toUpperCase(), 'success');
   },
   openLangPicker() {
     const langs = [
-      { code: 'vi', name: 'Tiếng Việt' }, { code: 'en', name: 'English' },
-      { code: 'zh-CN', name: '中文简体' }, { code: 'zh-TW', name: '中文繁體' },
-      { code: 'ja', name: '日本語' }, { code: 'de', name: 'Deutsch' },
-      { code: 'ru', name: 'Русский' }
+      { code: 'vi', name: 'Tiếng Việt' },
+      { code: 'en', name: 'English' }
     ];
-    this.modal(
-      '<h3>🌐 Ngôn ngữ</h3>' +
-      langs.map(l => '<button class="btn" style="width:100%;margin-bottom:8px;justify-content:space-between" onclick="SPS.setLang(\'' + l.code + '\');SPS.closeModal()">' +
-        '<span>' + l.name + '</span>' + (this.state.lang === l.code ? '<span class="badge badge-success">✓</span>' : '') + '</button>').join('')
-    );
+    const html = '<h3>🌐 ' + this.t('search').replace('...','') + '</h3>' +
+      langs.map(l => '<button class="btn" style="width:100%;margin-bottom:8px;justify-content:' + (this.state.lang === l.code ? 'space-between' : 'flex-start') + '" onclick="SPS.setLang(\'' + l.code + '\');SPS.closeModal()">' +
+        '<span>' + l.name + '</span>' + (this.state.lang === l.code ? '<span class="badge badge-success">Active</span>' : '') + '</button>').join('') +
+      '<p class="muted" style="margin-top:12px;font-size:12px">Thêm ngôn ngữ khác: mở rộng object SPS.i18n.</p>';
+    this.modal(html);
   },
 
-  nav(page) { if (location.hash === '#/' + page) { this.render(); return; } location.hash = '#/' + page; },
-  parseRoute() { const h = location.hash.replace(/^#\/?/, '') || 'home'; const [page, ...params] = h.split('/'); return { page, params }; },
+  // ---------- ROUTER ----------
+  nav(page) {
+    if (location.hash === '#/' + page) { this.render(); return; }
+    location.hash = '#/' + page;
+  },
+  parseRoute() {
+    const h = location.hash.replace(/^#\/?/, '') || 'home';
+    const [page, ...rest] = h.split('/');
+    return { page, params: rest };
+  },
 
+  // ---------- NAV RENDER ----------
   navItems() {
     return [
       { id: 'home', label: this.t('home'), icon: 'home' },
@@ -357,26 +599,42 @@ const SPS = {
   renderNav() {
     const items = this.navItems();
     const current = this.parseRoute().page;
-    document.getElementById('desktop-nav').innerHTML = items.map(it => '<a class="' + (current === it.id ? 'active' : '') + '" onclick="SPS.nav(\'' + it.id + '\')">' + it.label + '</a>').join('');
-    document.getElementById('mobile-nav').innerHTML = items.map(it => '<a class="' + (current === it.id ? 'active' : '') + '" onclick="SPS.nav(\'' + it.id + '\')" title="' + it.label + '"><i data-lucide="' + it.icon + '"></i><span>' + it.label.slice(0, 3) + '</span></a>').join('');
+    document.getElementById('desktop-nav').innerHTML = items.map(it =>
+      '<a class="' + (current === it.id ? 'active' : '') + '" onclick="SPS.nav(\'' + it.id + '\')">' + it.label + '</a>'
+    ).join('');
+    document.getElementById('mobile-nav').innerHTML = items.map(it =>
+      '<a class="' + (current === it.id ? 'active' : '') + '" onclick="SPS.nav(\'' + it.id + '\')" title="' + it.label + '">' +
+      '<i data-lucide="' + it.icon + '"></i><span>' + it.label.slice(0, 3) + '</span></a>'
+    ).join('');
     if (window.lucide) lucide.createIcons();
   },
+
+  // ---------- MAIN RENDER ----------
   render() {
     const { page, params } = this.parseRoute();
     this.state.page = page;
     this.renderNav();
     const main = document.getElementById('main');
     const renderer = this.pages[page] || this.pages.notfound;
-    try { main.innerHTML = ''; renderer.call(this, main, params); }
-    catch (e) { console.error(e); main.innerHTML = '<div class="glass" style="padding:24px"><h2>Lỗi tải trang</h2><p class="muted">' + this.esc(e.message) + '</p></div>'; }
+    try {
+      main.innerHTML = '';
+      renderer.call(this, main, params);
+    } catch (e) {
+      console.error(e);
+      main.innerHTML = '<div class="glass" style="padding:24px"><h2>Lỗi tải trang</h2><p class="muted">' + this.esc(e.message) + '</p></div>';
+    }
     if (window.lucide) lucide.createIcons();
     window.scrollTo({ top: 0, behavior: this.state.reduceMotion ? 'auto' : 'smooth' });
   },
 
-  /* ==================== PAGES ==================== */
+  // ======================================================
+  // PAGES
+  // ======================================================
   pages: {
+
+    // -------- HOME --------
     home(main) {
-      const featured = (this.state.products || []).filter(p => p.featured).slice(0, 4);
+      const products = (this.state.products || []).filter(p => p.featured).slice(0, 4);
       const services = [
         { icon: 'smartphone', name: 'Shop Liên Quân', desc: 'Acc giá rẻ, uy tín' },
         { icon: 'flame', name: 'Shop Free Fire', desc: 'Kim cương, acc VIP' },
@@ -395,23 +653,54 @@ const SPS = {
             <button class="btn" onclick="SPS.nav('services')"><i data-lucide="briefcase"></i> ${this.t('view_services')}</button>
           </div>
         </div>
-        <div class="section"><h2><i data-lucide="sparkles" style="color:var(--primary)"></i> ${this.t('featured_services')}</h2>
-          <div class="grid grid-3">${services.map(s => `<div class="card glass" onclick="SPS.nav('services')"><div class="icon"><i data-lucide="${s.icon}"></i></div><h3>${s.name}</h3><p>${s.desc}</p></div>`).join('')}</div>
+
+        <div class="section">
+          <h2><i data-lucide="sparkles" style="color:var(--primary)"></i> ${this.t('featured_services')}</h2>
+          <div class="grid grid-3">
+            ${services.map(s => `
+              <div class="card glass" onclick="SPS.nav('services')">
+                <div class="icon"><i data-lucide="${s.icon}"></i></div>
+                <h3>${s.name}</h3>
+                <p>${s.desc}</p>
+              </div>
+            `).join('')}
+          </div>
         </div>
-        ${featured.length ? `<div class="section"><h2><i data-lucide="star" style="color:var(--warning)"></i> ${this.t('featured_products')}</h2><div class="grid grid-3">${featured.map(p => this.renderProductCard(p)).join('')}</div></div>` : ''}
-        <div class="section"><h2><i data-lucide="zap" style="color:var(--accent)"></i> ${this.t('why_sps')}</h2>
-          <div class="grid grid-4">${[
-            { i: 'shield-check', t: 'Bảo mật', d: 'Dữ liệu lưu trên máy bạn' },
-            { i: 'rocket', t: 'Nhanh', d: 'Xử lý client-side' },
-            { i: 'globe', t: 'Đa ngôn ngữ', d: 'Hỗ trợ 7 ngôn ngữ' },
-            { i: 'heart', t: 'Miễn phí', d: 'Hầu hết công cụ' }
-          ].map(x => `<div class="card glass"><div class="icon"><i data-lucide="${x.i}"></i></div><h3>${x.t}</h3><p>${x.d}</p></div>`).join('')}</div>
+
+        ${products.length ? `
+        <div class="section">
+          <h2><i data-lucide="star" style="color:var(--warning)"></i> ${this.t('featured_products')}</h2>
+          <div class="grid grid-3">${products.map(p => this.renderProductCard(p)).join('')}</div>
+        </div>` : ''}
+
+        <div class="section">
+          <h2><i data-lucide="zap" style="color:var(--accent)"></i> ${this.t('why_sps')}</h2>
+          <div class="grid grid-4">
+            ${[
+              { i: 'shield-check', t: 'Bảo mật', d: 'Dữ liệu lưu trên máy bạn' },
+              { i: 'rocket', t: 'Nhanh', d: 'Xử lý client-side' },
+              { i: 'globe', t: 'Đa ngôn ngữ', d: 'Hỗ trợ VI/EN' },
+              { i: 'heart', t: 'Miễn phí', d: 'Hầu hết công cụ' }
+            ].map(x => `<div class="card glass"><div class="icon"><i data-lucide="${x.i}"></i></div><h3>${x.t}</h3><p>${x.d}</p></div>`).join('')}
+          </div>
         </div>
-        <div class="section"><h2><i data-lucide="newspaper" style="color:var(--secondary)"></i> ${this.t('latest_updates')}</h2>
-          <div class="grid grid-2">${(this.state.blog || []).slice(0, 4).map(b => `<div class="card glass" onclick="SPS.nav('blog/${b.id}')"><span class="badge badge-info">${this.esc(b.category || 'Blog')}</span><h3 style="margin-top:8px">${this.esc(b.title)}</h3><p>${this.esc((b.excerpt || b.content || '').slice(0, 100))}...</p></div>`).join('') || '<p class="muted">Chưa có bài viết. Thêm trong Admin.</p>'}</div>
-        </div>`;
+
+        <div class="section">
+          <h2><i data-lucide="newspaper" style="color:var(--secondary)"></i> ${this.t('latest_updates')}</h2>
+          <div class="grid grid-2">
+            ${(this.state.blog || []).slice(0, 4).map(b => `
+              <div class="card glass" onclick="SPS.nav('blog/${b.id}')">
+                <span class="badge badge-info">${this.esc(b.category || 'Blog')}</span>
+                <h3 style="margin-top:8px">${this.esc(b.title)}</h3>
+                <p>${this.esc((b.excerpt || b.content || '').slice(0, 100))}...</p>
+              </div>
+            `).join('') || '<p class="muted">Chưa có bài viết. Thêm trong Admin.</p>'}
+          </div>
+        </div>
+      `;
     },
 
+    // -------- PRODUCTS --------
     products(main) {
       const cats = [...new Set((this.state.products || []).map(p => p.category).filter(Boolean))];
       main.innerHTML = `
@@ -423,19 +712,32 @@ const SPS = {
             <select id="p-cat" onchange="SPS.filterProducts()"><option value="">Tất cả danh mục</option>${cats.map(c => `<option>${this.esc(c)}</option>`).join('')}</select>
           </div>
           <div class="input-row mt-2">
-            <select id="p-sort" onchange="SPS.filterProducts()"><option value="new">Mới nhất</option><option value="price-asc">Giá tăng dần</option><option value="price-desc">Giá giảm dần</option></select>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px"><input type="checkbox" id="p-featured" onchange="SPS.filterProducts()" style="width:auto"> Chỉ nổi bật</label>
+            <select id="p-sort" onchange="SPS.filterProducts()">
+              <option value="new">Mới nhất</option>
+              <option value="price-asc">Giá tăng dần</option>
+              <option value="price-desc">Giá giảm dần</option>
+            </select>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px">
+              <input type="checkbox" id="p-featured" onchange="SPS.filterProducts()" style="width:auto"> Chỉ nổi bật
+            </label>
           </div>
         </div>
-        <div id="products-grid" class="grid grid-3"></div>`;
+        <div id="products-grid" class="grid grid-3"></div>
+      `;
       this.filterProducts();
     },
+
     filterProducts() {
       const q = (document.getElementById('p-search')?.value || '').toLowerCase();
       const cat = document.getElementById('p-cat')?.value || '';
       const sort = document.getElementById('p-sort')?.value || 'new';
-      const feat = document.getElementById('p-featured')?.checked;
-      let list = (this.state.products || []).filter(p => (!q || (p.name || '').toLowerCase().includes(q)) && (!cat || p.category === cat) && (!feat || p.featured));
+      const featuredOnly = document.getElementById('p-featured')?.checked;
+      let list = (this.state.products || []).filter(p => {
+        if (q && !(p.name || '').toLowerCase().includes(q)) return false;
+        if (cat && p.category !== cat) return false;
+        if (featuredOnly && !p.featured) return false;
+        return true;
+      });
       if (sort === 'price-asc') list.sort((a, b) => (+a.price || 0) - (+b.price || 0));
       else if (sort === 'price-desc') list.sort((a, b) => (+b.price || 0) - (+a.price || 0));
       else list.sort((a, b) => (b.created || 0) - (a.created || 0));
@@ -444,23 +746,44 @@ const SPS = {
       grid.innerHTML = list.length ? list.map(p => this.renderProductCard(p)).join('') : '<p class="muted">Không có sản phẩm.</p>';
       if (window.lucide) lucide.createIcons();
     },
+
     renderProductCard(p) {
-      return `<div class="card glass product-card"><div class="product-img"><i data-lucide="package"></i></div><div class="product-body">${p.featured ? '<span class="badge badge-warn">★ Nổi bật</span>' : ''}<h3>${this.esc(p.name || '')}</h3><p>${this.esc(p.category || '')}</p><div class="price">${(+p.price || 0).toLocaleString('vi-VN')}₫ ${p.sale ? `<s>${(+p.sale).toLocaleString('vi-VN')}₫</s>` : ''}</div><button class="btn btn-primary btn-sm" onclick="SPS.openOrder('${p.id}')"><i data-lucide="shopping-cart"></i> Đặt hàng</button></div></div>`;
+      return `
+        <div class="card glass product-card">
+          <div class="product-img"><i data-lucide="package"></i></div>
+          <div class="product-body">
+            ${p.featured ? '<span class="badge badge-warn">★ Nổi bật</span>' : ''}
+            <h3>${this.esc(p.name || 'Sản phẩm')}</h3>
+            <p>${this.esc(p.category || '')}</p>
+            <div class="price">${(+p.price || 0).toLocaleString('vi-VN')}₫ ${p.sale ? `<s>${(+p.sale).toLocaleString('vi-VN')}₫</s>` : ''}</div>
+            <button class="btn btn-primary btn-sm" onclick="SPS.openOrder('${p.id}')"><i data-lucide="shopping-cart"></i> Đặt hàng</button>
+          </div>
+        </div>
+      `;
     },
+
     openOrder(id) {
       const p = (this.state.products || []).find(x => x.id === id);
       if (!p) return;
-      this.modal(`
+      const html = `
         <h3>🛒 Đặt hàng</h3>
-        <div class="glass" style="padding:14px;margin-bottom:14px"><strong>${this.esc(p.name)}</strong><br><span class="muted">${this.esc(p.category || '')}</span><br><span style="color:var(--primary);font-size:18px;font-weight:700">${(+p.price || 0).toLocaleString('vi-VN')}₫</span></div>
+        <div class="glass" style="padding:14px;margin-bottom:14px">
+          <strong>${this.esc(p.name)}</strong><br>
+          <span class="muted">${this.esc(p.category || '')}</span><br>
+          <span style="color:var(--primary);font-size:18px;font-weight:700">${(+p.price || 0).toLocaleString('vi-VN')}₫</span>
+        </div>
         <div class="form-group"><label>Số lượng</label><input type="number" id="ord-qty" value="1" min="1" oninput="SPS.updateOrderTotal('${p.id}')"></div>
-        <div class="form-group"><label>Họ tên</label><input id="ord-name"></div>
-        <div class="form-group"><label>SĐT / Email</label><input id="ord-contact"></div>
+        <div class="form-group"><label>Họ tên</label><input id="ord-name" placeholder="Nguyễn Văn A"></div>
+        <div class="form-group"><label>SĐT / Email</label><input id="ord-contact" placeholder="0912345678"></div>
         <div class="form-group"><label>Ghi chú</label><textarea id="ord-note" rows="2"></textarea></div>
         <div class="glass" style="padding:12px;margin-bottom:14px">Tổng: <strong id="ord-total" style="color:var(--primary);font-size:18px">${(+p.price || 0).toLocaleString('vi-VN')}₫</strong></div>
-        <div class="row"><button class="btn btn-primary" onclick="SPS.submitOrder('${p.id}')">Xác nhận đơn</button><button class="btn" onclick="SPS.closeModal()">Hủy</button></div>
-        <p class="muted" style="font-size:12px;margin-top:14px">⚠️ Đơn được lưu local. KHÔNG tự xác nhận thanh toán.</p>
-      `);
+        <div class="row">
+          <button class="btn btn-primary" onclick="SPS.submitOrder('${p.id}')">Xác nhận đơn</button>
+          <button class="btn" onclick="SPS.closeModal()">Hủy</button>
+        </div>
+        <p class="muted" style="font-size:12px;margin-top:14px">⚠️ Đơn hàng được lưu local. KHÔNG tự xác nhận thanh toán — admin liên hệ xác nhận thủ công.</p>
+      `;
+      this.modal(html);
     },
     updateOrderTotal(id) {
       const p = (this.state.products || []).find(x => x.id === id);
@@ -472,91 +795,148 @@ const SPS = {
       const qty = +document.getElementById('ord-qty').value || 1;
       const name = document.getElementById('ord-name').value.trim();
       const contact = document.getElementById('ord-contact').value.trim();
+      const note = document.getElementById('ord-note').value.trim();
       if (!name || !contact) return this.toast('Vui lòng nhập tên và liên hệ', 'error');
-      const order = { id: 'ORD' + Date.now().toString(36).toUpperCase(), productId: p.id, productName: p.name, price: +p.price || 0, qty, total: (+p.price || 0) * qty, name, contact, note: document.getElementById('ord-note').value.trim(), status: 'pending', created: Date.now() };
+      const order = {
+        id: 'ORD' + Date.now().toString(36).toUpperCase(),
+        productId: p.id, productName: p.name, price: +p.price || 0, qty,
+        total: (+p.price || 0) * qty, name, contact, note,
+        status: 'pending', created: Date.now()
+      };
       this.state.orders = this.state.orders || [];
       this.state.orders.push(order);
       this.store.save();
       this.closeModal();
       this.toast('Đã tạo đơn: ' + order.id, 'success');
       setTimeout(() => {
-        this.modal(`<h3>✅ Đơn hàng đã tạo</h3><p>Mã đơn: <strong>${order.id}</strong></p><p>Tổng: <strong>${order.total.toLocaleString('vi-VN')}₫</strong></p><p class="muted">Vui lòng liên hệ Admin/Zalo để thanh toán.</p><button class="btn btn-primary mt-2" onclick="SPS.closeModal();SPS.nav('support')">Liên hệ hỗ trợ</button>`);
+        this.modal(`
+          <h3>✅ Đơn hàng đã tạo</h3>
+          <p>Mã đơn: <strong>${order.id}</strong></p>
+          <p>Tổng: <strong>${order.total.toLocaleString('vi-VN')}₫</strong></p>
+          <p class="muted">Vui lòng liên hệ Admin/Zalo để thanh toán. Đơn chưa được xác nhận thanh toán.</p>
+          <button class="btn btn-primary mt-2" onclick="SPS.closeModal();SPS.nav('support')">Liên hệ hỗ trợ</button>
+        `);
       }, 400);
     },
 
+    // -------- SERVICES --------
     services(main) {
-      main.innerHTML = `<h1 class="page-title">${this.t('services')}</h1><p class="page-sub">Danh mục dịch vụ MMO và hỗ trợ nền tảng.</p>
-        <div class="grid grid-2">${[
-          { i: 'smartphone', n: 'Shop Liên Quân', d: 'Acc game, skin, rank' },
-          { i: 'flame', n: 'Shop Free Fire', d: 'Kim cương, acc giá rẻ' },
-          { i: 'facebook', n: 'Support Meta', d: 'Facebook, Instagram, WhatsApp Business' },
-          { i: 'search', n: 'Support Google', d: 'Gmail, Google Business, Ads' },
-          { i: 'music-2', n: 'Support TikTok', d: 'Tăng follow, view, tương tác' },
-          { i: 'code', n: 'Source Code', d: 'Website, tool, bot MMO' },
-          { i: 'lock', n: 'VPN / Proxy', d: 'IP sạch, tốc độ cao' },
-          { i: 'file-code', n: 'IPA / RAW', d: 'Tài nguyên, file gốc' }
-        ].map(s => `<div class="card glass" onclick="SPS.toast('Liên hệ Admin để đặt dịch vụ: ${s.n}','info')"><div class="icon"><i data-lucide="${s.i}"></i></div><h3>${s.n}</h3><p>${s.d}</p></div>`).join('')}</div>`;
+      main.innerHTML = `
+        <h1 class="page-title">${this.t('services')}</h1>
+        <p class="page-sub">Danh mục dịch vụ MMO và hỗ trợ nền tảng.</p>
+        <div class="grid grid-2">
+          ${[
+            { i: 'smartphone', n: 'Shop Liên Quân', d: 'Acc game, skin, rank' },
+            { i: 'flame', n: 'Shop Free Fire', d: 'Kim cương, acc giá rẻ' },
+            { i: 'facebook', n: 'Support Meta', d: 'Facebook, Instagram, WhatsApp Business' },
+            { i: 'search', n: 'Support Google', d: 'Gmail, Google Business, Ads' },
+            { i: 'music-2', n: 'Support TikTok', d: 'Tăng follow, view, tương tác' },
+            { i: 'code', n: 'Source Code', d: 'Website, tool, bot MMO' },
+            { i: 'lock', n: 'VPN / Proxy', d: 'IP sạch, tốc độ cao' },
+            { i: 'file-code', n: 'IPA / RAW', d: 'Tài nguyên, file gốc' }
+          ].map(s => `
+            <div class="card glass" onclick="SPS.toast('Liên hệ Admin để đặt dịch vụ: ${s.n}','info')">
+              <div class="icon"><i data-lucide="${s.i}"></i></div>
+              <h3>${s.n}</h3>
+              <p>${s.d}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
     },
 
-    tools(main, params) {
-      if (!params || !params[0]) {
-        const tools = [
-          { id: 'note', i: 'sticky-note', n: 'Ghi chú', d: 'Tạo ghi chú tự động lưu' },
-          { id: 'totp', i: 'key-round', n: 'TOTP Auth', d: 'Tạo mã 2FA 6 số' },
-          { id: 'qr', i: 'qr-code', n: 'QR Generator', d: 'Tạo QR URL, text, SĐT' },
-          { id: 'currency', i: 'coins', n: 'Chuyển tiền tệ', d: 'Tỷ giá realtime' },
-          { id: 'ip', i: 'globe', n: 'Thông tin IP', d: 'IP, quốc gia, ISP' },
-          { id: 'weather', i: 'cloud-sun', n: 'Thời tiết', d: 'Dự báo + cảnh báo' },
-          { id: 'crypto', i: 'bitcoin', n: 'Giá Crypto', d: 'Bitcoin, ETH, BNB' },
-          { id: 'calc', i: 'calculator', n: 'Máy tính KD', d: 'Lợi nhuận, chiết khấu' },
-          { id: 'invoice', i: 'file-invoice', n: 'Hóa đơn / Báo giá', d: 'Tạo PDF chuyên nghiệp' },
-          { id: 'todo', i: 'check-square', n: 'To-do', d: 'Quản lý công việc' },
-          { id: 'calendar', i: 'calendar', n: 'Lịch', d: 'Lịch tháng + sự kiện' },
-          { id: 'pdf', i: 'file-text', n: 'Công cụ PDF', d: 'Merge, split, text' },
-          { id: 'imgur', i: 'image', n: 'Image to Link', d: 'Upload ảnh (ImgBB/Cloudinary)' },
-          { id: 'shortener', i: 'link', n: 'Rút gọn URL', d: 'is.gd – không cần key' },
-          { id: 'facebook', i: 'facebook', n: 'Facebook Checker', d: 'Kiểm tra link FB' }
-        ];
-        main.innerHTML = `<h1 class="page-title">${this.t('tools')}</h1><p class="page-sub">Bộ công cụ xử lý ngay trên trình duyệt.</p>
-          <div class="grid grid-3">${tools.map(t => `<div class="card glass" onclick="SPS.nav('tools/${t.id}')"><div class="icon"><i data-lucide="${t.i}"></i></div><h3>${t.n}</h3><p>${t.d}</p></div>`).join('')}</div>`;
-        return;
-      }
-      const fn = this.toolPages[params[0]];
-      if (fn) fn.call(this, main); else main.innerHTML = '<h1 class="page-title">Tool không tồn tại</h1>';
+    // -------- TOOLS HUB --------
+    tools(main) {
+      const tools = [
+        { id: 'note', i: 'sticky-note', n: 'Ghi chú', d: 'Tạo ghi chú tự động lưu' },
+        { id: 'totp', i: 'key-round', n: 'TOTP Auth', d: 'Tạo mã 2FA 6 số' },
+        { id: 'qr', i: 'qr-code', n: 'QR Generator', d: 'Tạo QR URL, text, SĐT' },
+        { id: 'currency', i: 'coins', n: 'Chuyển tiền tệ', d: 'Tỷ giá thời gian thực' },
+        { id: 'ip', i: 'globe', n: 'Thông tin IP', d: 'IP, quốc gia, ISP' },
+        { id: 'weather', i: 'cloud-sun', n: 'Thời tiết', d: 'Dự báo, thời tiết hiện tại' },
+        { id: 'crypto', i: 'bitcoin', n: 'Giá Crypto', d: 'Bitcoin, ETH, BNB...' },
+        { id: 'calc', i: 'calculator', n: 'Máy tính KD', d: 'Lợi nhuận, chiết khấu' },
+        { id: 'todo', i: 'check-square', n: 'To-do', d: 'Quản lý công việc' },
+        { id: 'calendar', i: 'calendar', n: 'Lịch', d: 'Lịch tháng + sự kiện' },
+        { id: 'pdf', i: 'file-text', n: 'Công cụ PDF', d: 'Merge, split, text-to-pdf' },
+        { id: 'shortener', i: 'link', n: 'Rút gọn URL', d: 'Cần API TinyURL' },
+        { id: 'imgur', i: 'image', n: 'Image to Link', d: 'Cần API ImgBB' }
+      ];
+      main.innerHTML = `
+        <h1 class="page-title">${this.t('tools')}</h1>
+        <p class="page-sub">Bộ công cụ tiện ích xử lý ngay trên trình duyệt.</p>
+        <div class="grid grid-3">
+          ${tools.map(t => `
+            <div class="card glass" onclick="SPS.nav('tools/${t.id}')">
+              <div class="icon"><i data-lucide="${t.i}"></i></div>
+              <h3>${t.n}</h3>
+              <p>${t.d}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
     },
 
+    // -------- BLOG --------
     blog(main, params) {
       if (params && params[0]) return this.pages.blogDetail.call(this, main, params[0]);
+      const posts = this.state.blog || [];
       const q = this.state.pageData.blogQuery || '';
-      const filtered = (this.state.blog || []).filter(p => !q || (p.title || '').toLowerCase().includes(q.toLowerCase()));
-      main.innerHTML = `<h1 class="page-title">${this.t('blog')}</h1><p class="page-sub">Tin tức, hướng dẫn và bài viết mới.</p>
-        <div class="glass" style="padding:14px;margin-bottom:20px"><input id="blog-search" placeholder="Tìm bài viết..." value="${this.esc(q)}" oninput="SPS.state.pageData.blogQuery=this.value;SPS.render()"></div>
-        <div class="grid grid-2">${filtered.length ? filtered.map(b => `<div class="card glass" onclick="SPS.nav('blog/${b.id}')"><span class="badge badge-info">${this.esc(b.category || 'Blog')}</span><h3 style="margin-top:8px">${this.esc(b.title)}</h3><p class="muted">${new Date(b.created || Date.now()).toLocaleDateString('vi-VN')}</p><p>${this.esc((b.content || '').slice(0, 120))}...</p></div>`).join('') : '<p class="muted">Chưa có bài viết.</p>'}</div>`;
+      const filtered = posts.filter(p => !q || (p.title || '').toLowerCase().includes(q.toLowerCase()));
+      main.innerHTML = `
+        <h1 class="page-title">${this.t('blog')}</h1>
+        <p class="page-sub">Tin tức, hướng dẫn và bài viết mới.</p>
+        <div class="glass" style="padding:14px;margin-bottom:20px">
+          <input id="blog-search" placeholder="Tìm bài viết..." value="${this.esc(q)}" oninput="SPS.state.pageData.blogQuery=this.value;SPS.render()">
+        </div>
+        <div class="grid grid-2">
+          ${filtered.length ? filtered.map(b => `
+            <div class="card glass" onclick="SPS.nav('blog/${b.id}')">
+              <span class="badge badge-info">${this.esc(b.category || 'Blog')}</span>
+              <h3 style="margin-top:8px">${this.esc(b.title)}</h3>
+              <p class="muted">${new Date(b.created || Date.now()).toLocaleDateString('vi-VN')}</p>
+              <p>${this.esc((b.excerpt || b.content || '').slice(0, 120))}...</p>
+            </div>
+          `).join('') : '<p class="muted">Chưa có bài viết. Thêm trong Admin.</p>'}
+        </div>
+      `;
     },
     blogDetail(main, id) {
       const b = (this.state.blog || []).find(x => x.id === id);
       if (!b) { main.innerHTML = '<h1 class="page-title">Không tìm thấy bài viết</h1>'; return; }
-      main.innerHTML = `<button class="btn btn-sm" onclick="SPS.nav('blog')"><i data-lucide="arrow-left"></i> Quay lại</button>
+      main.innerHTML = `
+        <button class="btn btn-sm" onclick="SPS.nav('blog')"><i data-lucide="arrow-left"></i> Quay lại</button>
         <article class="glass" style="padding:24px;margin-top:16px">
           <span class="badge badge-info">${this.esc(b.category || 'Blog')}</span>
           <h1 class="page-title" style="margin-top:10px">${this.esc(b.title)}</h1>
           <p class="muted" style="margin-bottom:16px">${this.esc(b.author || 'Admin')} · ${new Date(b.created || Date.now()).toLocaleDateString('vi-VN')}</p>
           <div style="line-height:1.8;white-space:pre-wrap">${this.esc(b.content || '')}</div>
-        </article>`;
+        </article>
+      `;
     },
 
+    // -------- SUPPORT --------
     support(main) {
-      main.innerHTML = `<h1 class="page-title">${this.t('support')}</h1><p class="page-sub">Gửi yêu cầu hỗ trợ hoặc xem FAQ.</p>
+      main.innerHTML = `
+        <h1 class="page-title">${this.t('support')}</h1>
+        <p class="page-sub">Gửi yêu cầu hỗ trợ hoặc xem câu hỏi thường gặp.</p>
         <div class="grid grid-2">
           <div class="glass" style="padding:24px">
             <h2 style="margin-bottom:16px">📩 Gửi yêu cầu</h2>
-            <div class="form-group"><label>Họ tên</label><input id="s-name"></div>
-            <div class="form-group"><label>Email</label><input id="s-email" type="email"></div>
-            <div class="form-group"><label>SĐT</label><input id="s-phone"></div>
-            <div class="form-group"><label>Chủ đề</label><select id="s-topic"><option>Hỗ trợ kỹ thuật</option><option>Thanh toán</option><option>Đơn hàng</option><option>Khác</option></select></div>
-            <div class="form-group"><label>Nội dung</label><textarea id="s-msg"></textarea></div>
+            <div class="form-group"><label>Họ tên</label><input id="s-name" placeholder="Nguyễn Văn A"></div>
+            <div class="form-group"><label>Email</label><input id="s-email" type="email" placeholder="you@example.com"></div>
+            <div class="form-group"><label>SĐT</label><input id="s-phone" placeholder="0912345678"></div>
+            <div class="form-group"><label>Chủ đề</label>
+              <select id="s-topic">
+                <option>Hỗ trợ kỹ thuật</option>
+                <option>Thanh toán</option>
+                <option>Đơn hàng</option>
+                <option>Khác</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Nội dung</label><textarea id="s-msg" placeholder="Mô tả vấn đề..."></textarea></div>
             <button class="btn btn-primary" onclick="SPS.submitSupport()"><i data-lucide="send"></i> Gửi</button>
-            <p class="muted" style="font-size:12px;margin-top:12px">⚠️ Không có backend — yêu cầu được sao chép để gửi qua Zalo/Messenger.</p>
+            <p class="muted" style="font-size:12px;margin-top:12px">⚠️ Không có backend — yêu cầu được lưu local và sao chép nội dung để gửi qua Zalo/Messenger.</p>
           </div>
           <div class="glass" style="padding:24px">
             <h2 style="margin-bottom:16px">❓ FAQ</h2>
@@ -566,146 +946,343 @@ const SPS = {
               ['Dữ liệu lưu ở đâu?', 'LocalStorage trên trình duyệt. Không đồng bộ giữa thiết bị.'],
               ['Có hỗ trợ hoàn tiền không?', 'Xem Chính sách hoàn tiền. Liên hệ Admin.'],
               ['Làm sao liên hệ nhanh?', 'Zalo hoặc Messenger bên dưới.']
-            ].map(([q, a]) => `<div class="glass" style="padding:14px;margin-bottom:10px"><strong>${q}</strong><p class="muted" style="margin-top:6px;font-size:13px">${a}</p></div>`).join('')}
-            <div class="row mt-2"><a class="btn" href="https://zalo.me" target="_blank" rel="noopener"><i data-lucide="message-circle"></i> Zalo</a><a class="btn" href="https://m.me" target="_blank" rel="noopener"><i data-lucide="message-square"></i> Messenger</a></div>
+            ].map(([q, a]) => `
+              <div class="glass" style="padding:14px;margin-bottom:10px">
+                <strong>${q}</strong>
+                <p class="muted" style="margin-top:6px;font-size:13px">${a}</p>
+              </div>
+            `).join('')}
+            <div class="row mt-2">
+              <a class="btn" href="https://zalo.me" target="_blank" rel="noopener"><i data-lucide="message-circle"></i> Zalo</a>
+              <a class="btn" href="https://m.me" target="_blank" rel="noopener"><i data-lucide="message-square"></i> Messenger</a>
+            </div>
           </div>
-        </div>`;
+        </div>
+      `;
     },
     submitSupport() {
       const name = document.getElementById('s-name').value.trim();
+      const email = document.getElementById('s-email').value.trim();
       const msg = document.getElementById('s-msg').value.trim();
       if (!name || !msg) return this.toast('Vui lòng nhập tên và nội dung', 'error');
-      const text = `SPS Support\nTên: ${name}\nEmail: ${document.getElementById('s-email').value}\nSĐT: ${document.getElementById('s-phone').value}\nChủ đề: ${document.getElementById('s-topic').value}\nNội dung: ${msg}`;
+      const text = `SPS Support\nTên: ${name}\nEmail: ${email}\nSĐT: ${document.getElementById('s-phone').value}\nChủ đề: ${document.getElementById('s-topic').value}\nNội dung: ${msg}`;
       this.copy(text);
       this.toast('Đã sao chép nội dung. Dán vào Zalo/Messenger để gửi.', 'success');
     },
 
+    // -------- PROFILE --------
     profile(main) {
       const s = this.state.settings || {};
-      main.innerHTML = `<div class="glass" style="padding:0;overflow:hidden"><div style="height:160px;background:linear-gradient(135deg,var(--primary),var(--secondary))"></div>
-        <div style="padding:24px;margin-top:-60px"><div class="logo-icon" style="width:100px;height:100px;font-size:44px;border-radius:24px;border:4px solid var(--bg)"></div>
-          <h1 class="page-title" style="margin-top:14px">${this.esc(s.profileName || 'SPS Admin')}</h1>
-          <p class="muted">${this.esc(s.profileTitle || 'Full-Stack Developer & MMO Specialist')}</p>
-          <p style="margin-top:14px">${this.esc(s.profileBio || 'Chào mừng đến với SPS.')}</p>
+      main.innerHTML = `
+        <div class="glass" style="padding:0;overflow:hidden">
+          <div style="height:160px;background:linear-gradient(135deg,var(--primary),var(--secondary))"></div>
+          <div style="padding:24px;margin-top:-60px">
+            <div class="logo-icon" style="width:100px;height:100px;font-size:44px;border-radius:24px;border:4px solid var(--bg)"></div>
+            <h1 class="page-title" style="margin-top:14px">${this.esc(s.profileName || 'SPS Admin')}</h1>
+            <p class="muted">${this.esc(s.profileTitle || 'Full-Stack Developer & MMO Specialist')}</p>
+            <p style="margin-top:14px">${this.esc(s.profileBio || 'Chào mừng đến với SPS. Mình xây dựng công cụ và dịch vụ số cho cộng đồng MMO.')}</p>
+          </div>
         </div>
-      </div>`;
+        <div class="section">
+          <h2>🛠️ Kỹ năng</h2>
+          <div class="row">
+            ${['HTML/CSS/JS', 'React', 'Node.js', 'Python', 'MMO', 'UI/UX'].map(k => `<span class="badge badge-info" style="padding:6px 14px;font-size:13px">${k}</span>`).join('')}
+          </div>
+        </div>
+      `;
     },
 
+    // -------- ADMIN --------
     admin(main) {
       if (!this.state.admin || !this.state.admin.loggedIn) return this.renderAdminLogin(main);
       this.renderAdminDashboard(main);
     },
+
     renderAdminLogin(main) {
-      main.innerHTML = `<div style="max-width:420px;margin:40px auto"><div class="glass" style="padding:30px">
-        <h2 style="margin-bottom:6px">🔐 Đăng nhập Admin</h2>
-        <p class="muted" style="font-size:13px;margin-bottom:20px">⚠️ Auth client-side chỉ là cổng UI, KHÔNG bảo mật thật. Cần Firebase Auth / Supabase cho production.</p>
-        <div class="form-group"><label>Tài khoản</label><input id="lg-user" placeholder="admin"></div>
-        <div class="form-group"><label>Mật khẩu</label><div style="position:relative"><input id="lg-pass" type="password" style="padding-right:44px" onkeydown="if(event.key==='Enter')SPS.doLogin()"><button class="icon-btn" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);width:34px;height:34px" onclick="SPS.togglePass('lg-pass')" type="button"><i data-lucide="eye"></i></button></div></div>
-        <button class="btn btn-primary" style="width:100%" onclick="SPS.doLogin()">Đăng nhập</button>
-        <p class="muted" style="font-size:11px;margin-top:14px">Mặc định: admin / sps2024 (đổi trong Settings sau khi đăng nhập)</p>
-      </div></div>`;
+      main.innerHTML = `
+        <div style="max-width:420px;margin:40px auto">
+          <div class="glass" style="padding:30px">
+            <h2 style="margin-bottom:6px">🔐 Đăng nhập Admin</h2>
+            <p class="muted" style="font-size:13px;margin-bottom:20px">Bảo mật thật cần backend. Đây chỉ là cổng UI.</p>
+            <div class="form-group"><label>Tài khoản</label><input id="lg-user" placeholder="admin"></div>
+            <div class="form-group"><label>Mật khẩu</label>
+              <div style="position:relative">
+                <input id="lg-pass" type="password" placeholder="••••••••" style="padding-right:44px" onkeydown="if(event.key==='Enter')SPS.doLogin()">
+                <button class="icon-btn" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);width:34px;height:34px" onclick="SPS.togglePass('lg-pass')" type="button"><i data-lucide="eye"></i></button>
+              </div>
+            </div>
+            <button class="btn btn-primary" style="width:100%" onclick="SPS.doLogin()">Đăng nhập</button>
+            <p class="muted" style="font-size:11px;margin-top:14px">Mặc định: admin / sps2024 (đổi trong Settings sau khi đăng nhập)</p>
+          </div>
+        </div>
+      `;
     },
-    togglePass(id) { const el = document.getElementById(id); el.type = el.type === 'password' ? 'text' : 'password'; },
-    doLogin() {
+    togglePass(id) {
+      const el = document.getElementById(id);
+      el.type = el.type === 'password' ? 'text' : 'password';
+    },
+    async doLogin() {
       const u = document.getElementById('lg-user').value.trim();
       const p = document.getElementById('lg-pass').value;
-      const cfg = (this.state.settings || {}).adminCreds || { user: 'admin', pass: 'sps2024' };
+      const cfg = this.state.settings.adminCreds || { user: 'admin', pass: 'sps2024' };
       if (u === cfg.user && p === cfg.pass) {
         this.state.admin = { loggedIn: true, user: u, since: Date.now() };
-        this.store.save(); this.toast('Đăng nhập thành công', 'success'); this.render();
-      } else this.toast('Sai tài khoản hoặc mật khẩu', 'error');
+        this.store.save();
+        this.toast('Đăng nhập thành công', 'success');
+        this.render();
+      } else {
+        this.toast('Sai tài khoản hoặc mật khẩu', 'error');
+      }
     },
-    doLogout() { this.state.admin = null; this.store.save(); this.render(); this.toast('Đã đăng xuất', 'info'); },
+    doLogout() {
+      this.state.admin = null;
+      this.store.save();
+      this.render();
+      this.toast('Đã đăng xuất', 'info');
+    },
+
     renderAdminDashboard(main) {
       const tab = this.state.pageData.adminTab || 'overview';
-      const tabs = [['overview', 'Tổng quan'], ['products', 'Sản phẩm'], ['blog', 'Blog'], ['orders', 'Đơn hàng'], ['settings', 'Cài đặt'], ['data', 'Dữ liệu']];
-      main.innerHTML = `<div class="row justify-between" style="margin-bottom:16px"><div><h1 class="page-title">Admin Dashboard</h1><p class="muted">Xin chào, ${this.esc(this.state.admin.user)}</p></div><button class="btn btn-danger btn-sm" onclick="SPS.doLogout()"><i data-lucide="log-out"></i> Đăng xuất</button></div>
-        <div class="admin-tabs">${tabs.map(([id, label]) => `<button class="${tab === id ? 'active' : ''}" onclick="SPS.state.pageData.adminTab='${id}';SPS.render()">${label}</button>`).join('')}</div>
-        <div id="admin-content"></div>`;
-      const c = document.getElementById('admin-content');
-      if (tab === 'overview') this.adminOverview(c);
-      else if (tab === 'products') this.adminProducts(c);
-      else if (tab === 'blog') this.adminBlog(c);
-      else if (tab === 'orders') this.adminOrders(c);
-      else if (tab === 'settings') this.adminSettings(c);
-      else if (tab === 'data') this.adminData(c);
+      const tabs = [
+        ['overview', 'Tổng quan'], ['products', 'Sản phẩm'], ['blog', 'Blog'],
+        ['orders', 'Đơn hàng'], ['settings', 'Cài đặt'], ['data', 'Dữ liệu']
+      ];
+      main.innerHTML = `
+        <div class="row justify-between" style="margin-bottom:16px">
+          <div>
+            <h1 class="page-title">Admin Dashboard</h1>
+            <p class="muted">Xin chào, ${this.esc(this.state.admin.user)}</p>
+          </div>
+          <button class="btn btn-danger btn-sm" onclick="SPS.doLogout()"><i data-lucide="log-out"></i> Đăng xuất</button>
+        </div>
+        <div class="admin-tabs">
+          ${tabs.map(([id, label]) => `<button class="${tab === id ? 'active' : ''}" onclick="SPS.state.pageData.adminTab='${id}';SPS.render()">${label}</button>`).join('')}
+        </div>
+        <div id="admin-content"></div>
+      `;
+      const content = document.getElementById('admin-content');
+      if (tab === 'overview') this.adminOverview(content);
+      else if (tab === 'products') this.adminProducts(content);
+      else if (tab === 'blog') this.adminBlog(content);
+      else if (tab === 'orders') this.adminOrders(content);
+      else if (tab === 'settings') this.adminSettings(content);
+      else if (tab === 'data') this.adminData(content);
     },
     adminOverview(el) {
       const s = this.state;
-      el.innerHTML = `<div class="grid grid-4">${[
-        ['Sản phẩm', (s.products || []).length, 'package'],
-        ['Bài viết', (s.blog || []).length, 'newspaper'],
-        ['Đơn hàng', (s.orders || []).length, 'shopping-cart'],
-        ['Doanh thu', (s.orders || []).reduce((a, o) => a + (o.total || 0), 0).toLocaleString('vi-VN') + '₫', 'trending-up']
-      ].map(([l, v, i]) => `<div class="glass" style="padding:18px"><div class="muted" style="font-size:13px">${l}</div><div style="font-size:22px;font-weight:700;margin-top:6px">${v}</div></div>`).join('')}</div>
-        <div class="glass" style="padding:20px;margin-top:16px"><h3>Đơn hàng gần đây</h3>
-          ${(s.orders || []).slice(-5).reverse().map(o => `<div class="glass" style="padding:10px;margin-top:6px;font-size:13px"><strong>${o.id}</strong> - ${this.esc(o.productName)} - ${(o.total || 0).toLocaleString('vi-VN')}₫ <span class="badge ${o.status === 'pending' ? 'badge-warn' : 'badge-success'}">${o.status}</span></div>`).join('') || '<p class="muted">Chưa có đơn.</p>'}
-        </div>`;
+      el.innerHTML = `
+        <div class="grid grid-4">
+          ${[
+            ['Sản phẩm', (s.products || []).length, 'package', 'primary'],
+            ['Bài viết', (s.blog || []).length, 'newspaper', 'secondary'],
+            ['Đơn hàng', (s.orders || []).length, 'shopping-cart', 'accent'],
+            ['Doanh thu', (s.orders || []).reduce((a, o) => a + (o.total || 0), 0).toLocaleString('vi-VN') + '₫', 'trending-up', 'success']
+          ].map(([l, v, i, c]) => `
+            <div class="glass" style="padding:18px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <span class="muted" style="font-size:13px">${l}</span>
+                <i data-lucide="${i}" style="color:var(--${c})"></i>
+              </div>
+              <div style="font-size:22px;font-weight:700">${v}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="section glass" style="padding:20px">
+          <h3>Hoạt động gần đây</h3>
+          <p class="muted" style="font-size:13px;margin-top:8px">Đơn hàng mới nhất:</p>
+          ${(this.state.orders || []).slice(-5).reverse().map(o => `
+            <div class="glass" style="padding:10px;margin-top:6px;font-size:13px">
+              <strong>${o.id}</strong> - ${this.esc(o.productName)} - ${(o.total || 0).toLocaleString('vi-VN')}₫
+              <span class="badge ${o.status === 'pending' ? 'badge-warn' : 'badge-success'}">${o.status}</span>
+            </div>
+          `).join('') || '<p class="muted">Chưa có đơn.</p>'}
+        </div>
+      `;
     },
     adminProducts(el) {
-      el.innerHTML = `<div class="row justify-between" style="margin-bottom:12px"><h3>Quản lý sản phẩm</h3><button class="btn btn-primary btn-sm" onclick="SPS.editProduct()"><i data-lucide="plus"></i> Thêm</button></div>
-        <div class="glass" style="padding:14px;overflow-x:auto"><table class="tbl"><thead><tr><th>Tên</th><th>Danh mục</th><th>Giá</th><th>Nổi bật</th><th></th></tr></thead><tbody>
-          ${(this.state.products || []).map(p => `<tr><td>${this.esc(p.name)}</td><td>${this.esc(p.category || '')}</td><td>${(+p.price || 0).toLocaleString('vi-VN')}₫</td><td>${p.featured ? '★' : ''}</td><td style="white-space:nowrap"><button class="btn btn-sm" onclick="SPS.editProduct('${p.id}')">Sửa</button> <button class="btn btn-sm btn-danger" onclick="SPS.deleteProduct('${p.id}')">Xóa</button></td></tr>`).join('') || '<tr><td colspan="5" class="muted">Chưa có sản phẩm.</td></tr>'}
-        </tbody></table></div>`;
+      el.innerHTML = `
+        <div class="row justify-between" style="margin-bottom:12px">
+          <h3>Quản lý sản phẩm</h3>
+          <button class="btn btn-primary btn-sm" onclick="SPS.editProduct()"><i data-lucide="plus"></i> Thêm</button>
+        </div>
+        <div class="glass" style="padding:14px;overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Tên</th><th>Danh mục</th><th>Giá</th><th>Nổi bật</th><th></th></tr></thead>
+            <tbody>
+              ${(this.state.products || []).map(p => `
+                <tr>
+                  <td>${this.esc(p.name)}</td>
+                  <td>${this.esc(p.category || '')}</td>
+                  <td>${(+p.price || 0).toLocaleString('vi-VN')}₫</td>
+                  <td>${p.featured ? '★' : ''}</td>
+                  <td style="white-space:nowrap">
+                    <button class="btn btn-sm" onclick="SPS.editProduct('${p.id}')">Sửa</button>
+                    <button class="btn btn-sm btn-danger" onclick="SPS.deleteProduct('${p.id}')">Xóa</button>
+                  </td>
+                </tr>
+              `).join('') || '<tr><td colspan="5" class="muted">Chưa có sản phẩm.</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+      `;
     },
     editProduct(id) {
       const p = id ? (this.state.products || []).find(x => x.id === id) : {};
-      this.modal(`<h3>${id ? 'Sửa' : 'Thêm'} sản phẩm</h3>
+      this.modal(`
+        <h3>${id ? 'Sửa' : 'Thêm'} sản phẩm</h3>
         <div class="form-group"><label>Tên</label><input id="pr-name" value="${this.esc(p.name || '')}"></div>
         <div class="form-group"><label>Danh mục</label><input id="pr-cat" value="${this.esc(p.category || '')}"></div>
-        <div class="input-row"><div class="form-group"><label>Giá</label><input id="pr-price" type="number" value="${p.price || 0}"></div><div class="form-group"><label>Giá KM</label><input id="pr-sale" type="number" value="${p.sale || ''}"></div></div>
+        <div class="input-row">
+          <div class="form-group"><label>Giá</label><input id="pr-price" type="number" value="${p.price || 0}"></div>
+          <div class="form-group"><label>Giá KM</label><input id="pr-sale" type="number" value="${p.sale || ''}"></div>
+        </div>
         <div class="form-group"><label><input type="checkbox" id="pr-featured" ${p.featured ? 'checked' : ''} style="width:auto"> Nổi bật</label></div>
-        <div class="row"><button class="btn btn-primary" onclick="SPS.saveProduct('${id || ''}')">Lưu</button><button class="btn" onclick="SPS.closeModal()">Hủy</button></div>`);
+        <div class="row">
+          <button class="btn btn-primary" onclick="SPS.saveProduct('${id || ''}')">Lưu</button>
+          <button class="btn" onclick="SPS.closeModal()">Hủy</button>
+        </div>
+      `);
     },
     saveProduct(id) {
-      const data = { name: document.getElementById('pr-name').value.trim(), category: document.getElementById('pr-cat').value.trim(), price: +document.getElementById('pr-price').value || 0, sale: +document.getElementById('pr-sale').value || null, featured: document.getElementById('pr-featured').checked };
+      const data = {
+        name: document.getElementById('pr-name').value.trim(),
+        category: document.getElementById('pr-cat').value.trim(),
+        price: +document.getElementById('pr-price').value || 0,
+        sale: +document.getElementById('pr-sale').value || null,
+        featured: document.getElementById('pr-featured').checked
+      };
       if (!data.name) return this.toast('Nhập tên', 'error');
       this.state.products = this.state.products || [];
-      if (id) Object.assign(this.state.products.find(x => x.id === id), data);
-      else this.state.products.push({ id: this.id(), ...data, created: Date.now() });
-      this.store.save(); this.closeModal(); this.render(); this.toast('Đã lưu', 'success');
+      if (id) {
+        const p = this.state.products.find(x => x.id === id);
+        Object.assign(p, data);
+      } else {
+        this.state.products.push({ id: this.id(), ...data, created: Date.now() });
+      }
+      this.store.save();
+      this.closeModal();
+      this.render();
+      this.toast('Đã lưu', 'success');
     },
-    deleteProduct(id) { if (!confirm('Xóa sản phẩm này?')) return; this.state.products = (this.state.products || []).filter(x => x.id !== id); this.store.save(); this.render(); this.toast('Đã xóa', 'success'); },
+    deleteProduct(id) {
+      if (!confirm('Xóa sản phẩm này?')) return;
+      this.state.products = (this.state.products || []).filter(x => x.id !== id);
+      this.store.save();
+      this.render();
+      this.toast('Đã xóa', 'success');
+    },
     adminBlog(el) {
-      el.innerHTML = `<div class="row justify-between" style="margin-bottom:12px"><h3>Quản lý Blog</h3><button class="btn btn-primary btn-sm" onclick="SPS.editBlog()"><i data-lucide="plus"></i> Thêm bài</button></div>
-        <div class="grid grid-2">${(this.state.blog || []).map(b => `<div class="glass" style="padding:16px"><span class="badge badge-info">${this.esc(b.category || 'Blog')}</span><h4 style="margin-top:6px">${this.esc(b.title)}</h4><p class="muted" style="font-size:12px;margin:6px 0">${new Date(b.created || Date.now()).toLocaleDateString('vi-VN')}</p><div class="row"><button class="btn btn-sm" onclick="SPS.editBlog('${b.id}')">Sửa</button><button class="btn btn-sm btn-danger" onclick="SPS.deleteBlog('${b.id}')">Xóa</button></div></div>`).join('') || '<p class="muted">Chưa có bài viết.</p>'}</div>`;
+      el.innerHTML = `
+        <div class="row justify-between" style="margin-bottom:12px">
+          <h3>Quản lý Blog</h3>
+          <button class="btn btn-primary btn-sm" onclick="SPS.editBlog()"><i data-lucide="plus"></i> Thêm bài</button>
+        </div>
+        <div class="grid grid-2">
+          ${(this.state.blog || []).map(b => `
+            <div class="glass" style="padding:16px">
+              <span class="badge badge-info">${this.esc(b.category || 'Blog')}</span>
+              <h4 style="margin-top:6px">${this.esc(b.title)}</h4>
+              <p class="muted" style="font-size:12px;margin:6px 0">${new Date(b.created || Date.now()).toLocaleDateString('vi-VN')}</p>
+              <div class="row">
+                <button class="btn btn-sm" onclick="SPS.editBlog('${b.id}')">Sửa</button>
+                <button class="btn btn-sm btn-danger" onclick="SPS.deleteBlog('${b.id}')">Xóa</button>
+              </div>
+            </div>
+          `).join('') || '<p class="muted">Chưa có bài viết.</p>'}
+        </div>
+      `;
     },
     editBlog(id) {
       const b = id ? (this.state.blog || []).find(x => x.id === id) : {};
-      this.modal(`<h3>${id ? 'Sửa' : 'Thêm'} bài viết</h3>
+      this.modal(`
+        <h3>${id ? 'Sửa' : 'Thêm'} bài viết</h3>
         <div class="form-group"><label>Tiêu đề</label><input id="bl-title" value="${this.esc(b.title || '')}"></div>
         <div class="form-group"><label>Danh mục</label><input id="bl-cat" value="${this.esc(b.category || 'Blog')}"></div>
         <div class="form-group"><label>Tác giả</label><input id="bl-author" value="${this.esc(b.author || 'Admin')}"></div>
         <div class="form-group"><label>Nội dung</label><textarea id="bl-content" rows="8">${this.esc(b.content || '')}</textarea></div>
-        <div class="row"><button class="btn btn-primary" onclick="SPS.saveBlog('${id || ''}')">Lưu</button><button class="btn" onclick="SPS.closeModal()">Hủy</button></div>`);
+        <div class="row">
+          <button class="btn btn-primary" onclick="SPS.saveBlog('${id || ''}')">Lưu</button>
+          <button class="btn" onclick="SPS.closeModal()">Hủy</button>
+        </div>
+      `);
     },
     saveBlog(id) {
-      const data = { title: document.getElementById('bl-title').value.trim(), category: document.getElementById('bl-cat').value.trim(), author: document.getElementById('bl-author').value.trim(), content: document.getElementById('bl-content').value.trim() };
+      const data = {
+        title: document.getElementById('bl-title').value.trim(),
+        category: document.getElementById('bl-cat').value.trim(),
+        author: document.getElementById('bl-author').value.trim(),
+        content: document.getElementById('bl-content').value.trim()
+      };
       if (!data.title) return this.toast('Nhập tiêu đề', 'error');
       this.state.blog = this.state.blog || [];
       if (id) Object.assign(this.state.blog.find(x => x.id === id), data);
       else this.state.blog.unshift({ id: this.id(), ...data, created: Date.now() });
-      this.store.save(); this.closeModal(); this.render(); this.toast('Đã lưu', 'success');
+      this.store.save();
+      this.closeModal();
+      this.render();
+      this.toast('Đã lưu', 'success');
     },
-    deleteBlog(id) { if (!confirm('Xóa bài viết?')) return; this.state.blog = (this.state.blog || []).filter(x => x.id !== id); this.store.save(); this.render(); this.toast('Đã xóa', 'success'); },
+    deleteBlog(id) {
+      if (!confirm('Xóa bài viết?')) return;
+      this.state.blog = (this.state.blog || []).filter(x => x.id !== id);
+      this.store.save();
+      this.render();
+      this.toast('Đã xóa', 'success');
+    },
     adminOrders(el) {
-      el.innerHTML = `<h3>Quản lý đơn hàng</h3><div class="glass" style="padding:14px;margin-top:12px;overflow-x:auto"><table class="tbl"><thead><tr><th>Mã</th><th>Sản phẩm</th><th>SL</th><th>Tổng</th><th>KH</th><th>Trạng thái</th><th></th></tr></thead><tbody>
-        ${(this.state.orders || []).map(o => `<tr><td>${o.id}</td><td>${this.esc(o.productName)}</td><td>${o.qty}</td><td>${(o.total || 0).toLocaleString('vi-VN')}₫</td><td>${this.esc(o.name)}<br><small class="muted">${this.esc(o.contact)}</small></td><td><span class="badge ${o.status === 'pending' ? 'badge-warn' : 'badge-success'}">${o.status}</span></td><td>${o.status === 'pending' ? `<button class="btn btn-sm" onclick="SPS.markPaid('${o.id}')">Xác nhận</button>` : ''} <button class="btn btn-sm btn-danger" onclick="SPS.deleteOrder('${o.id}')">Xóa</button></td></tr>`).join('') || '<tr><td colspan="7" class="muted">Chưa có đơn.</td></tr>'}
-      </tbody></table></div>`;
+      el.innerHTML = `
+        <h3>Quản lý đơn hàng</h3>
+        <div class="glass" style="padding:14px;margin-top:12px;overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Mã</th><th>Sản phẩm</th><th>SL</th><th>Tổng</th><th>KH</th><th>Trạng thái</th><th></th></tr></thead>
+            <tbody>
+              ${(this.state.orders || []).map(o => `
+                <tr>
+                  <td>${o.id}</td>
+                  <td>${this.esc(o.productName)}</td>
+                  <td>${o.qty}</td>
+                  <td>${(o.total || 0).toLocaleString('vi-VN')}₫</td>
+                  <td>${this.esc(o.name)}<br><small class="muted">${this.esc(o.contact)}</small></td>
+                  <td><span class="badge ${o.status === 'pending' ? 'badge-warn' : 'badge-success'}">${o.status}</span></td>
+                  <td>
+                    ${o.status === 'pending' ? `<button class="btn btn-sm" onclick="SPS.markPaid('${o.id}')">Xác nhận</button>` : ''}
+                    <button class="btn btn-sm btn-danger" onclick="SPS.deleteOrder('${o.id}')">Xóa</button>
+                  </td>
+                </tr>
+              `).join('') || '<tr><td colspan="7" class="muted">Chưa có đơn.</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+      `;
     },
-    markPaid(id) { const o = this.state.orders.find(x => x.id === id); if (o) { o.status = 'paid'; this.store.save(); this.render(); this.toast('Đã xác nhận', 'success'); } },
-    deleteOrder(id) { if (!confirm('Xóa đơn?')) return; this.state.orders = this.state.orders.filter(x => x.id !== id); this.store.save(); this.render(); },
+    markPaid(id) {
+      const o = this.state.orders.find(x => x.id === id);
+      if (o) { o.status = 'paid'; this.store.save(); this.render(); this.toast('Đã xác nhận', 'success'); }
+    },
+    deleteOrder(id) {
+      if (!confirm('Xóa đơn?')) return;
+      this.state.orders = this.state.orders.filter(x => x.id !== id);
+      this.store.save(); this.render();
+    },
     adminSettings(el) {
       const s = this.state.settings || {};
-      el.innerHTML = `<h3>Cài đặt website</h3><div class="glass" style="padding:20px;margin-top:12px">
-        <div class="form-group"><label>Tên website</label><input id="st-name" value="${this.esc(s.siteName || 'SPS')}"></div>
-        <div class="form-group"><label>SEO Description</label><input id="st-desc" value="${this.esc(s.siteDesc || '')}"></div>
-        <div class="form-group"><label>Profile - Tên</label><input id="st-pname" value="${this.esc(s.profileName || 'SPS Admin')}"></div>
-        <div class="form-group"><label>Profile - Chức danh</label><input id="st-ptitle" value="${this.esc(s.profileTitle || '')}"></div>
-        <div class="form-group"><label>Profile - Bio</label><textarea id="st-pbio" rows="3">${this.esc(s.profileBio || '')}</textarea></div>
-        <hr style="border-color:var(--border);margin:16px 0"><h4 style="margin-bottom:12px">Đổi mật khẩu Admin</h4>
-        <div class="input-row"><div class="form-group"><label>User mới</label><input id="st-user" placeholder="(giữ nguyên)"></div><div class="form-group"><label>Pass mới</label><input id="st-pass" type="password" placeholder="(giữ nguyên)"></div></div>
-        <button class="btn btn-primary" onclick="SPS.saveSettings()">Lưu cài đặt</button></div>`;
+      el.innerHTML = `
+        <h3>Cài đặt website</h3>
+        <div class="glass" style="padding:20px;margin-top:12px">
+          <div class="form-group"><label>Tên website</label><input id="st-name" value="${this.esc(s.siteName || 'SPS')}"></div>
+          <div class="form-group"><label>SEO Description</label><input id="st-desc" value="${this.esc(s.siteDesc || '')}"></div>
+          <div class="form-group"><label>Profile - Tên hiển thị</label><input id="st-pname" value="${this.esc(s.profileName || 'SPS Admin')}"></div>
+          <div class="form-group"><label>Profile - Chức danh</label><input id="st-ptitle" value="${this.esc(s.profileTitle || 'Full-Stack Developer')}"></div>
+          <div class="form-group"><label>Profile - Bio</label><textarea id="st-pbio" rows="3">${this.esc(s.profileBio || '')}</textarea></div>
+          <hr style="border-color:var(--border);margin:16px 0">
+          <h4 style="margin-bottom:12px">Đổi mật khẩu Admin</h4>
+          <div class="input-row">
+            <div class="form-group"><label>User mới</label><input id="st-user" placeholder="(giữ nguyên)"></div>
+            <div class="form-group"><label>Pass mới</label><input id="st-pass" type="password" placeholder="(giữ nguyên)"></div>
+          </div>
+          <button class="btn btn-primary" onclick="SPS.saveSettings()">Lưu cài đặt</button>
+        </div>
+      `;
     },
     saveSettings() {
       const s = this.state.settings || {};
@@ -716,69 +1293,204 @@ const SPS = {
       s.profileBio = document.getElementById('st-pbio').value.trim();
       const nu = document.getElementById('st-user').value.trim();
       const np = document.getElementById('st-pass').value;
-      if (nu || np) s.adminCreds = { user: nu || (s.adminCreds?.user || 'admin'), pass: np || (s.adminCreds?.pass || 'sps2024') };
-      this.state.settings = s; this.store.save(); this.toast('Đã lưu', 'success');
+      if (nu || np) {
+        s.adminCreds = {
+          user: nu || (s.adminCreds?.user || 'admin'),
+          pass: np || (s.adminCreds?.pass || 'sps2024')
+        };
+      }
+      this.state.settings = s;
+      this.store.save();
+      this.toast('Đã lưu', 'success');
     },
     adminData(el) {
-      el.innerHTML = `<h3>Quản lý dữ liệu</h3><div class="glass" style="padding:20px;margin-top:12px"><p class="muted">Dữ liệu lưu trong localStorage.</p>
-        <div class="row mt-2"><button class="btn btn-primary" onclick="SPS.store.export()"><i data-lucide="download"></i> Export</button><button class="btn" onclick="document.getElementById('import-input').click()"><i data-lucide="upload"></i> Import</button><input type="file" id="import-input" accept="application/json" style="display:none" onchange="SPS.store.import(this.files[0])"><button class="btn btn-danger" onclick="SPS.resetData()"><i data-lucide="trash-2"></i> Xóa toàn bộ</button></div></div>`;
+      el.innerHTML = `
+        <h3>Quản lý dữ liệu</h3>
+        <div class="glass" style="padding:20px;margin-top:12px">
+          <p class="muted">Dữ liệu lưu trong localStorage của trình duyệt này.</p>
+          <div class="row mt-2">
+            <button class="btn btn-primary" onclick="SPS.store.export()"><i data-lucide="download"></i> Export JSON</button>
+            <button class="btn" onclick="document.getElementById('import-input').click()"><i data-lucide="upload"></i> Import JSON</button>
+            <input type="file" id="import-input" accept="application/json" style="display:none" onchange="SPS.store.import(this.files[0])">
+            <button class="btn btn-danger" onclick="SPS.resetData()"><i data-lucide="trash-2"></i> Xóa toàn bộ</button>
+          </div>
+        </div>
+      `;
     },
-    resetData() { if (!confirm('XÓA TOÀN BỘ DỮ LIỆU?')) return; localStorage.removeItem('sps_v1'); location.reload(); },
+    resetData() {
+      if (!confirm('XÓA TOÀN BỘ DỮ LIỆU? Không thể hoàn tác.')) return;
+      localStorage.removeItem('sps_v1');
+      location.reload();
+    },
 
-    notfound(main) { main.innerHTML = `<div class="glass" style="padding:60px 24px;text-align:center"><h1 class="page-title">404</h1><p class="muted">Trang không tồn tại.</p><button class="btn btn-primary mt-3" onclick="SPS.nav('home')">Về trang chủ</button></div>`; }
+    // -------- TOOL ROUTER --------
+    tools(main, params) {
+      if (!params || !params[0]) {
+        const tools = [
+          { id: 'note', i: 'sticky-note', n: 'Ghi chú', d: 'Tạo ghi chú tự động lưu' },
+          { id: 'totp', i: 'key-round', n: 'TOTP Auth', d: 'Tạo mã 2FA 6 số' },
+          { id: 'qr', i: 'qr-code', n: 'QR Generator', d: 'Tạo QR URL, text, SĐT' },
+          { id: 'currency', i: 'coins', n: 'Chuyển tiền tệ', d: 'Tỷ giá realtime' },
+          { id: 'ip', i: 'globe', n: 'Thông tin IP', d: 'IP, quốc gia, ISP' },
+          { id: 'weather', i: 'cloud-sun', n: 'Thời tiết', d: 'Dự báo, hiện tại' },
+          { id: 'crypto', i: 'bitcoin', n: 'Giá Crypto', d: 'Bitcoin, ETH, BNB' },
+          { id: 'calc', i: 'calculator', n: 'Máy tính KD', d: 'Lợi nhuận, chiết khấu' },
+          { id: 'todo', i: 'check-square', n: 'To-do', d: 'Quản lý công việc' },
+          { id: 'calendar', i: 'calendar', n: 'Lịch', d: 'Lịch tháng + sự kiện' },
+          { id: 'pdf', i: 'file-text', n: 'Công cụ PDF', d: 'Merge, split, text' },
+          { id: 'shortener', i: 'link', n: 'Rút gọn URL', d: 'Cần API (chưa cấu hình)' },
+          { id: 'imgur', i: 'image', n: 'Image to Link', d: 'Cần API (chưa cấu hình)' }
+        ];
+        main.innerHTML = `
+          <h1 class="page-title">${this.t('tools')}</h1>
+          <p class="page-sub">Bộ công cụ xử lý ngay trên trình duyệt, miễn phí.</p>
+          <div class="grid grid-3">
+            ${tools.map(t => `
+              <div class="card glass" onclick="SPS.nav('tools/${t.id}')">
+                <div class="icon"><i data-lucide="${t.i}"></i></div>
+                <h3>${t.n}</h3>
+                <p>${t.d}</p>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        return;
+      }
+      const id = params[0];
+      const fn = this.toolPages[id];
+      if (fn) fn.call(this, main);
+      else main.innerHTML = '<h1 class="page-title">Tool không tồn tại</h1>';
+    },
+
+    // -------- NOT FOUND --------
+    notfound(main) {
+      main.innerHTML = `
+        <div class="glass" style="padding:60px 24px;text-align:center">
+          <h1 class="page-title">404</h1>
+          <p class="muted">Trang không tồn tại.</p>
+          <button class="btn btn-primary mt-3" onclick="SPS.nav('home')">Về trang chủ</button>
+        </div>
+      `;
+    }
   },
 
-  /* ==================== TOOL PAGES ==================== */
+  // ======================================================
+  // TOOL PAGES
+  // ======================================================
   toolPages: {
+
+    // -------- NOTES --------
     note(main) {
-      main.innerHTML = `<h1 class="page-title">📝 Ghi chú</h1><p class="page-sub">Tự động lưu khi gõ.</p>
-        <div class="row" style="margin-bottom:16px"><input id="note-input" placeholder="Nội dung..." style="flex:1"><button class="btn btn-primary" onclick="SPS.notes.add()"><i data-lucide="plus"></i> Thêm</button></div>
-        <div id="notes-grid" class="grid grid-3"></div>`;
+      main.innerHTML = `
+        <h1 class="page-title">📝 Ghi chú</h1>
+        <p class="page-sub">Tự động lưu khi bạn gõ.</p>
+        <div class="row" style="margin-bottom:16px">
+          <input id="note-input" placeholder="Nội dung ghi chú..." style="flex:1">
+          <button class="btn btn-primary" onclick="SPS.notes.add()"><i data-lucide="plus"></i> Thêm</button>
+        </div>
+        <div id="notes-grid" class="grid grid-3"></div>
+      `;
       this.notes.render();
     },
+
+    // -------- TOTP --------
     totp(main) {
-      main.innerHTML = `<h1 class="page-title">🔐 TOTP Auth</h1><p class="page-sub">Tạo mã 2FA 6 số (RFC 6238, Base32, SHA-1). Xử lý 100% local.</p>
+      main.innerHTML = `
+        <h1 class="page-title">🔐 TOTP Authentication Generator</h1>
+        <p class="page-sub">Tạo mã 2FA 6 số từ Secret Key (Base32, RFC 6238). Xử lý hoàn toàn trên trình duyệt — không gửi lên máy chủ.</p>
         <div class="glass" style="padding:20px;max-width:560px;margin:0 auto">
-          <div class="form-group"><label>Secret Key (Base32)</label><div style="position:relative"><input id="totp-secret" placeholder="JBSWY3DPEHPK3PXP" style="padding-right:44px" oninput="SPS.totp.start()"><button class="icon-btn" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);width:34px;height:34px" onclick="SPS.totp.toggle()" type="button"><i data-lucide="eye"></i></button></div></div>
+          <div class="form-group">
+            <label>Secret Key (Base32, 16-32+ ký tự)</label>
+            <div style="position:relative">
+              <input id="totp-secret" placeholder="JBSWY3DPEHPK3PXP" style="padding-right:44px" oninput="SPS.totp.start()">
+              <button class="icon-btn" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);width:34px;height:34px" onclick="SPS.totp.toggle()" type="button"><i data-lucide="eye"></i></button>
+            </div>
+          </div>
           <div class="totp-display" id="totp-code">------</div>
           <div class="totp-bar"><div class="totp-bar-fill" id="totp-bar" style="width:0%"></div></div>
           <p class="muted center mt-2" id="totp-timer">--s</p>
-          <div class="row mt-2"><button class="btn btn-primary" onclick="SPS.totp.copy()" style="flex:1"><i data-lucide="copy"></i> Sao chép</button></div>
-          <p class="muted mt-2" style="font-size:12px">⚠️ Không dán secret của người khác. Công cụ không gửi dữ liệu lên server.</p>
-        </div>`;
+          <div class="row mt-2">
+            <button class="btn btn-primary" onclick="SPS.totp.copy()" style="flex:1"><i data-lucide="copy"></i> Sao chép mã</button>
+          </div>
+          <p class="muted mt-2" style="font-size:12px">⚠️ Chỉ nhập secret từ nguồn tin cậy. Không dán secret của người khác. Công cụ xử lý local 100%.</p>
+        </div>
+      `;
       this.totp.init();
     },
+
+    // -------- QR --------
     qr(main) {
-      main.innerHTML = `<h1 class="page-title">📱 QR Generator</h1><p class="page-sub">Tạo QR cho URL, text, SĐT.</p>
+      main.innerHTML = `
+        <h1 class="page-title">📱 QR Code Generator</h1>
+        <p class="page-sub">Tạo QR cho URL, văn bản, SĐT, thông tin thanh toán.</p>
         <div class="grid grid-2">
           <div class="glass" style="padding:20px">
-            <div class="form-group"><label>Loại</label><select id="qr-type"><option value="url">URL</option><option value="text">Văn bản</option><option value="phone">Số điện thoại</option></select></div>
-            <div class="form-group"><label>Nội dung</label><textarea id="qr-data" rows="3" oninput="SPS.qrRender()">https://example.com</textarea></div>
-            <div class="input-row"><div class="form-group"><label>Màu</label><input type="color" id="qr-color" value="#000000" oninput="SPS.qrRender()" style="height:44px"></div><div class="form-group"><label>Kích thước</label><input type="number" id="qr-size" value="300" min="100" max="800" oninput="SPS.qrRender()"></div></div>
+            <div class="form-group"><label>Loại</label>
+              <select id="qr-type">
+                <option value="url">URL</option>
+                <option value="text">Văn bản</option>
+                <option value="phone">Số điện thoại</option>
+                <option value="payment">Thông tin thanh toán</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Nội dung</label><textarea id="qr-data" rows="3" placeholder="https://example.com" oninput="SPS.qrRender()">https://example.com</textarea></div>
+            <div class="input-row">
+              <div class="form-group"><label>Màu</label><input type="color" id="qr-color" value="#000000" oninput="SPS.qrRender()" style="height:44px"></div>
+              <div class="form-group"><label>Kích thước</label><input type="number" id="qr-size" value="300" min="100" max="800" oninput="SPS.qrRender()"></div>
+            </div>
             <button class="btn btn-primary" onclick="SPS.qrRender()"><i data-lucide="refresh-cw"></i> Tạo lại</button>
           </div>
-          <div class="glass" style="padding:20px"><h3 style="margin-bottom:10px">Kết quả</h3><div id="qr-output"></div><button class="btn btn-primary mt-2" style="width:100%" onclick="SPS.qr.qrDownload()"><i data-lucide="download"></i> Tải PNG</button></div>
-        </div>`;
-      setTimeout(() => this.qr.qrRender(), 100);
+          <div class="glass" style="padding:20px">
+            <h3 style="margin-bottom:10px">Kết quả</h3>
+            <div id="qr-output"></div>
+            <button class="btn btn-primary mt-2" style="width:100%" onclick="SPS.qrDownload()"><i data-lucide="download"></i> Tải PNG</button>
+          </div>
+        </div>
+      `;
+      setTimeout(() => this.qrRender(), 100);
     },
+
+    // -------- CURRENCY --------
     currency(main) {
-      main.innerHTML = `<h1 class="page-title">💱 Chuyển đổi tiền tệ</h1><p class="page-sub">Tỷ giá từ open.er-api.com</p>
+      main.innerHTML = `
+        <h1 class="page-title">💱 Chuyển đổi tiền tệ</h1>
+        <p class="page-sub">Tỷ giá cập nhật từ Frankfurter API (ECB).</p>
         <div class="glass" style="padding:20px;max-width:560px;margin:0 auto">
-          <div class="input-row"><div class="form-group"><label>Số tiền</label><input id="cur-amt" type="number" value="100" oninput="SPS.currency.convert()"></div><div class="form-group"><label>Từ</label><input id="cur-from" value="USD" maxlength="3" style="text-transform:uppercase" oninput="SPS.currency.convert()"></div></div>
+          <div class="input-row">
+            <div class="form-group"><label>Số tiền</label><input id="cur-amt" type="number" value="100" oninput="SPS.currency.convert()"></div>
+            <div class="form-group"><label>Từ</label><input id="cur-from" value="USD" maxlength="3" style="text-transform:uppercase" oninput="SPS.currency.convert()"></div>
+          </div>
           <div class="form-group"><label>Đến</label><input id="cur-to" value="VND" maxlength="3" style="text-transform:uppercase" oninput="SPS.currency.convert()"></div>
-          <div class="glass" style="padding:16px;text-align:center;font-size:24px;font-weight:700;margin:14px 0"><span id="cur-result">--</span></div>
+          <div class="glass" style="padding:16px;text-align:center;font-size:24px;font-weight:700;margin:14px 0">
+            <span id="cur-result">--</span>
+          </div>
           <p class="muted center" style="font-size:12px" id="cur-info">Đang tải...</p>
-        </div>`;
+        </div>
+      `;
       this.currency.convert();
     },
+
+    // -------- IP INFO --------
     ip(main) {
-      main.innerHTML = `<h1 class="page-title">🌍 Thông tin IP</h1><p class="page-sub">Dữ liệu từ ipapi.co — không chính xác đến số nhà.</p><div id="ip-content" class="grid grid-2"></div>`;
+      main.innerHTML = `
+        <h1 class="page-title">🌍 Thông tin IP</h1>
+        <p class="page-sub">Dữ liệu từ ipapi.co — không chính xác đến số nhà.</p>
+        <div id="ip-content" class="grid grid-2"></div>
+      `;
       this.ipLookup();
     },
+
+    // -------- WEATHER --------
     weather(main) {
-      main.innerHTML = `<h1 class="page-title">☁️ Trung tâm thời tiết</h1><p class="page-sub">Open-Meteo API (miễn phí, không cần key).</p>
+      main.innerHTML = `
+        <h1 class="page-title">☁️ Trung tâm thời tiết</h1>
+        <p class="page-sub">Dữ liệu từ Open-Meteo (miễn phí, không cần API key).</p>
         <div class="glass" style="padding:16px;margin-bottom:16px">
-          <div class="row"><input id="wx-city" placeholder="Hanoi, Da Nang..." style="flex:1" value="Ho Chi Minh"><button class="btn btn-primary" onclick="SPS.weather.search()">🔍 Tìm</button><button class="btn" onclick="SPS.weather.gps()">📍 GPS</button></div>
+          <div class="row">
+            <input id="wx-city" placeholder="Tên thành phố (VD: Hanoi, Da Nang)" style="flex:1" value="Ho Chi Minh">
+            <button class="btn btn-primary" onclick="SPS.weather.search()">🔍 Tìm</button>
+            <button class="btn" onclick="SPS.weather.gps()">📍 GPS</button>
+          </div>
           <div class="row" style="margin-top:10px;font-size:12px">
             <button class="btn btn-sm" onclick="SPS.weather.quick(10.8231,106.6297,'Hồ Chí Minh')">HCM</button>
             <button class="btn btn-sm" onclick="SPS.weather.quick(21.0285,105.8542,'Hà Nội')">Hà Nội</button>
@@ -789,159 +1501,240 @@ const SPS = {
           </div>
         </div>
         <div id="weather-output"></div>
-        <div class="glass" style="padding:16px;margin-top:16px">
-          <h3 style="margin-bottom:10px">⚠️ Tin cảnh báo thiên tai</h3>
-          <button class="btn btn-sm" onclick="SPS.disaster.load()">Tải tin mới</button>
-          <div id="disaster-output" class="mt-2" style="font-size:13px"></div>
-        </div>`;
+      `;
       this.weather.quick(10.8231, 106.6297, 'Hồ Chí Minh');
-      this.disaster.load();
     },
+
+    // -------- CRYPTO --------
     crypto(main) {
-      main.innerHTML = `<h1 class="page-title">💰 Giá Crypto</h1><p class="page-sub">CoinGecko API.</p><button class="btn btn-primary" onclick="SPS.crypto.load()" style="margin-bottom:16px"><i data-lucide="refresh-cw"></i> Refresh</button><div id="crypto-output" class="grid grid-2"></div>`;
+      main.innerHTML = `
+        <h1 class="page-title">💰 Giá Crypto</h1>
+        <p class="page-sub">Dữ liệu từ CoinGecko API (miễn phí).</p>
+        <button class="btn btn-primary" onclick="SPS.crypto.load()" style="margin-bottom:16px"><i data-lucide="refresh-cw"></i> Refresh</button>
+        <div id="crypto-output" class="grid grid-2"></div>
+      `;
       this.crypto.load();
     },
+
+    // -------- CALCULATOR --------
     calc(main) {
-      main.innerHTML = `<h1 class="page-title">🧮 Máy tính kinh doanh</h1><p class="page-sub">Tính lợi nhuận, markup, chiết khấu, hoa hồng.</p>
-        <div class="grid grid-2">${[
-          ['profit', 'Lợi nhuận', 'Doanh thu - Chi phí', ['Doanh thu', 'Chi phí']],
-          ['markup', 'Giá bán từ giá gốc', 'Giá gốc × (1 + %markup)', ['Giá gốc', '% markup']],
-          ['discount', 'Giá sau giảm', 'Giá - %giảm', ['Giá gốc', '% giảm']],
-          ['commission', 'Hoa hồng', 'Doanh thu × %HH', ['Doanh thu', '% HH']]
-        ].map(([id, name, formula, labels]) => `<div class="glass" style="padding:20px"><h3>${name}</h3><p class="muted" style="font-size:12px;margin-bottom:10px">${formula}</p>
-          ${labels.map((l, i) => `<div class="form-group"><label>${l}</label><input type="number" id="calc-${id}-${i}" oninput="SPS.calc.run('${id}')" placeholder="0"></div>`).join('')}
-          <div class="glass" style="padding:12px;text-align:center;font-size:18px;font-weight:700">Kết quả: <span id="calc-res-${id}" style="color:var(--primary)">--</span></div>
-        </div>`).join('')}</div>`;
-      this.calc._defs = { profit: v => v[0] - v[1], markup: v => v[0] * (1 + v[1] / 100), discount: v => v[0] * (1 - v[1] / 100), commission: v => v[0] * v[1] / 100 };
-    },
-    invoice(main) {
-      main.innerHTML = `<h1 class="page-title">🧾 Hóa đơn / Báo giá</h1><p class="page-sub">Tạo và tải PDF.</p>
+      main.innerHTML = `
+        <h1 class="page-title">🧮 Máy tính kinh doanh</h1>
+        <p class="page-sub">Bộ công cụ tính toán cho người làm dịch vụ MMO.</p>
         <div class="grid grid-2">
-          <div class="glass" style="padding:20px"><h3>Thông tin</h3>
-            <div class="form-group"><label>Loại</label><select id="inv-type"><option value="invoice">Hóa đơn</option><option value="quote">Báo giá</option></select></div>
-            <div class="form-group"><label>Số</label><input id="inv-no" value="INV-001"></div>
-            <div class="form-group"><label>Ngày</label><input id="inv-date" type="date" value="${new Date().toISOString().slice(0, 10)}"></div>
-            <div class="form-group"><label>Khách hàng</label><input id="inv-customer"></div>
-            <div class="form-group"><label>Địa chỉ</label><input id="inv-address"></div>
-          </div>
-          <div class="glass" style="padding:20px"><h3>Mục hàng</h3>
-            <div id="inv-items"></div>
-            <button class="btn btn-sm mt-2" onclick="SPS.invAddItem()">+ Thêm mục</button>
-            <div class="glass" style="padding:12px;margin-top:12px">
-              <div class="row justify-between"><span>Tạm tính:</span><strong id="inv-subtotal">0₫</strong></div>
-              <div class="row justify-between mt-2"><span>Thuế (%):</span><input id="inv-tax" type="number" value="0" style="width:80px" oninput="SPS.invCalc()"></div>
-              <div class="row justify-between mt-2"><span>Tổng:</span><strong id="inv-total" style="color:var(--primary)">0₫</strong></div>
+          ${[
+            ['profit', 'Lợi nhuận', 'Doanh thu - Chi phí', ['Doanh thu', 'Chi phí'], (v) => v[0] - v[1]],
+            ['markup', 'Giá bán từ giá gốc', 'Giá gốc × (1 + %markup)', ['Giá gốc', '% markup'], (v) => v[0] * (1 + v[1] / 100)],
+            ['discount', 'Giá sau giảm', 'Giá - %giảm', ['Giá gốc', '% giảm'], (v) => v[0] * (1 - v[1] / 100)],
+            ['commission', 'Hoa hồng', 'Doanh thu × %HH', ['Doanh thu', '% HH'], (v) => v[0] * v[1] / 100]
+          ].map(([id, name, formula, labels, fn]) => `
+            <div class="glass" style="padding:20px">
+              <h3>${name}</h3>
+              <p class="muted" style="font-size:12px;margin-bottom:10px">${formula}</p>
+              ${labels.map((l, i) => `<div class="form-group"><label>${l}</label><input type="number" id="calc-${id}-${i}" oninput="SPS.calc.run('${id}')" placeholder="0"></div>`).join('')}
+              <div class="glass" style="padding:12px;text-align:center;font-size:18px;font-weight:700">
+                Kết quả: <span id="calc-res-${id}" style="color:var(--primary)">--</span>
+              </div>
             </div>
-            <button class="btn btn-primary mt-2" style="width:100%" onclick="SPS.invGenerate()"><i data-lucide="download"></i> Tải PDF</button>
-          </div>
-        </div>`;
-      this.invAddItem();
+          `).join('')}
+        </div>
+      `;
+      this.calc._defs = {
+        profit: (v) => v[0] - v[1],
+        markup: (v) => v[0] * (1 + v[1] / 100),
+        discount: (v) => v[0] * (1 - v[1] / 100),
+        commission: (v) => v[0] * v[1] / 100
+      };
     },
+
+    // -------- TODO --------
     todo(main) {
-      main.innerHTML = `<h1 class="page-title">✅ To-do List</h1><p class="page-sub">Quản lý công việc.</p>
-        <div class="glass" style="padding:16px;margin-bottom:16px"><div class="row">
-          <input id="todo-input" placeholder="Việc cần làm..." style="flex:1" onkeydown="if(event.key==='Enter')SPS.todo.add()">
-          <select id="todo-priority" style="width:auto"><option value="low">Thấp</option><option value="med" selected>Vừa</option><option value="high">Cao</option></select>
-          <input id="todo-due" type="date" style="width:auto">
-          <button class="btn btn-primary" onclick="SPS.todo.add()">Thêm</button>
-        </div></div>
-        <div id="todo-list" class="grid"></div>`;
+      main.innerHTML = `
+        <h1 class="page-title">✅ To-do List</h1>
+        <p class="page-sub">Quản lý công việc, tự động lưu.</p>
+        <div class="glass" style="padding:16px;margin-bottom:16px">
+          <div class="row">
+            <input id="todo-input" placeholder="Việc cần làm..." style="flex:1" onkeydown="if(event.key==='Enter')SPS.todo.add()">
+            <select id="todo-priority" style="width:auto">
+              <option value="low">Thấp</option>
+              <option value="med" selected>Vừa</option>
+              <option value="high">Cao</option>
+            </select>
+            <input id="todo-due" type="date" style="width:auto">
+            <button class="btn btn-primary" onclick="SPS.todo.add()">Thêm</button>
+          </div>
+        </div>
+        <div id="todo-list" class="grid"></div>
+      `;
       this.todo.render();
     },
+
+    // -------- CALENDAR --------
     calendar(main) {
-      main.innerHTML = `<h1 class="page-title">📅 Lịch</h1><p class="page-sub">Lịch tháng + sự kiện.</p>
+      main.innerHTML = `
+        <h1 class="page-title">📅 Lịch</h1>
+        <p class="page-sub">Lịch tháng + sự kiện.</p>
         <div class="glass" style="padding:16px">
-          <div class="row justify-between" style="margin-bottom:12px"><button class="btn btn-sm" onclick="SPS.calendar.prev()">◀</button><h3 id="cal-title" style="margin:0"></h3><button class="btn btn-sm" onclick="SPS.calendar.next()">▶</button></div>
+          <div class="row justify-between" style="margin-bottom:12px">
+            <button class="btn btn-sm" onclick="SPS.calendar.prev()">◀</button>
+            <h3 id="cal-title" style="margin:0"></h3>
+            <button class="btn btn-sm" onclick="SPS.calendar.next()">▶</button>
+          </div>
           <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px"></div>
         </div>
         <div class="glass" style="padding:16px;margin-top:16px">
           <h3 style="margin-bottom:10px">Sự kiện ngày <span id="cal-selected">--</span></h3>
-          <div class="row" style="margin-bottom:10px"><input id="cal-ev-title" placeholder="Tên sự kiện" style="flex:1"><button class="btn btn-primary" onclick="SPS.calendar.addEvent()">Thêm</button></div>
+          <div class="row" style="margin-bottom:10px">
+            <input id="cal-ev-title" placeholder="Tên sự kiện" style="flex:1">
+            <button class="btn btn-primary" onclick="SPS.calendar.addEvent()">Thêm</button>
+          </div>
           <div id="cal-events"></div>
-        </div>`;
+        </div>
+      `;
       this.calendar.init();
     },
+
+    // -------- PDF TOOLS --------
     pdf(main) {
-      main.innerHTML = `<h1 class="page-title">📄 Công cụ PDF</h1><p class="page-sub">Xử lý file PDF ngay trên trình duyệt.</p>
+      main.innerHTML = `
+        <h1 class="page-title">📄 Công cụ PDF</h1>
+        <p class="page-sub">Xử lý file PDF ngay trên trình duyệt, không upload lên server.</p>
         <div class="grid grid-2">
-          <div class="glass" style="padding:20px"><h3>🔗 Ghép PDF</h3><p class="muted" style="font-size:13px">Chọn 2+ file để gộp.</p><input type="file" id="pdf-merge-files" multiple accept="application/pdf" style="margin-top:10px"><button class="btn btn-primary mt-2" onclick="SPS.pdf.merge()">Ghép và tải</button></div>
-          <div class="glass" style="padding:20px"><h3>📝 Text thành PDF</h3><textarea id="pdf-text" rows="6" placeholder="Nhập văn bản..."></textarea><button class="btn btn-primary mt-2" onclick="SPS.pdf.text()">Tải PDF</button></div>
-          <div class="glass" style="padding:20px"><h3>📊 Metadata PDF</h3><input type="file" id="pdf-meta-file" accept="application/pdf"><button class="btn btn-primary mt-2" onclick="SPS.pdf.meta()">Xem</button><div id="pdf-meta-out" class="mt-2" style="font-size:13px"></div></div>
-          <div class="glass" style="padding:20px"><h3>✂️ Tách PDF</h3><input type="file" id="pdf-split-file" accept="application/pdf"><div class="input-row mt-2"><input type="number" id="pdf-split-from" placeholder="Từ trang" min="1"><input type="number" id="pdf-split-to" placeholder="Đến trang" min="1"></div><button class="btn btn-primary mt-2" onclick="SPS.pdf.split()">Tách và tải</button></div>
-        </div>`;
-    },
-    imgur(main) {
-      main.innerHTML = `<h1 class="page-title">🖼️ Image to Link</h1><p class="page-sub">Upload ảnh để lấy URL công khai.</p>
-        <div class="grid grid-2">
-          <div class="glass" style="padding:20px"><h3>📤 ImgBB</h3>
-            <div class="form-group"><label>API Key (đăng ký tại api.imgbb.com)</label><input id="imgbb-key" type="password" oninput="localStorage.setItem('sps_imgbb_key', this.value)"></div>
-            <div class="form-group"><label>Chọn ảnh (tối đa 32MB)</label><input type="file" id="imgbb-file" accept="image/*"></div>
-            <button class="btn btn-primary" onclick="SPS.imgbbUpload()">Upload & Lấy link</button>
-            <div id="imgbb-result" class="mt-2"></div>
-            <p class="muted" style="font-size:11px;margin-top:10px">Key lưu trong localStorage, không gửi lên server khác.</p>
+          <div class="glass" style="padding:20px">
+            <h3>🔗 Ghép nhiều PDF</h3>
+            <p class="muted" style="font-size:13px">Chọn 2+ file PDF để gộp.</p>
+            <input type="file" id="pdf-merge-files" multiple accept="application/pdf" style="margin-top:10px">
+            <button class="btn btn-primary mt-2" onclick="SPS.pdf.merge()">Ghép và tải</button>
           </div>
-          <div class="glass" style="padding:20px"><h3>☁️ Cloudinary (unsigned)</h3>
-            <div class="form-group"><label>Cloud name</label><input id="cld-cloud" placeholder="my-cloud"></div>
-            <div class="form-group"><label>Upload preset (unsigned)</label><input id="cld-preset" placeholder="sps_unsigned"></div>
-            <div class="form-group"><label>Chọn ảnh</label><input type="file" id="cld-file" accept="image/*"></div>
-            <button class="btn btn-primary" onclick="SPS.cloudinaryUpload()">Upload</button>
-            <div id="cld-result" class="mt-2"></div>
+          <div class="glass" style="padding:20px">
+            <h3>📝 Text thành PDF</h3>
+            <textarea id="pdf-text" rows="6" placeholder="Nhập văn bản..."></textarea>
+            <button class="btn btn-primary mt-2" onclick="SPS.pdf.text()">Tải PDF</button>
           </div>
-        </div>`;
-      const saved = localStorage.getItem('sps_imgbb_key');
-      if (saved) document.getElementById('imgbb-key').value = saved;
+          <div class="glass" style="padding:20px">
+            <h3>📊 Thông tin PDF (Metadata)</h3>
+            <input type="file" id="pdf-meta-file" accept="application/pdf">
+            <button class="btn btn-primary mt-2" onclick="SPS.pdf.meta()">Xem</button>
+            <div id="pdf-meta-out" class="mt-2" style="font-size:13px"></div>
+          </div>
+          <div class="glass" style="padding:20px">
+            <h3>✂️ Tách PDF</h3>
+            <p class="muted" style="font-size:13px">Tách lấy từ trang X đến trang Y.</p>
+            <input type="file" id="pdf-split-file" accept="application/pdf">
+            <div class="input-row mt-2">
+              <input type="number" id="pdf-split-from" placeholder="Từ trang" min="1">
+              <input type="number" id="pdf-split-to" placeholder="Đến trang" min="1">
+            </div>
+            <button class="btn btn-primary mt-2" onclick="SPS.pdf.split()">Tách và tải</button>
+          </div>
+        </div>
+      `;
     },
+
     shortener(main) {
-      main.innerHTML = `<h1 class="page-title">🔗 Rút gọn URL</h1><p class="page-sub">Dùng is.gd – miễn phí, không cần API key.</p>
+      main.innerHTML = `
+        <h1 class="page-title">🔗 Rút gọn URL</h1>
         <div class="glass" style="padding:24px;max-width:560px;margin:0 auto">
-          <div class="form-group"><label>URL dài</label><input id="short-url" placeholder="https://example.com/very/long/url"></div>
-          <button class="btn btn-primary" onclick="SPS.shortUrl()">Rút gọn</button>
-          <div id="short-result" class="mt-2"></div>
-          <p class="muted" style="font-size:12px;margin-top:12px">Nếu is.gd bị CORS, sẽ tự động thử qua CORS proxy.</p>
-        </div>`;
+          <div class="badge badge-warn" style="margin-bottom:12px">Cần cấu hình API</div>
+          <p class="muted">Công cụ này cần gọi API rút gọn link thật (TinyURL, Bitly, ...). Do không có API key sẵn trong mã nguồn, tính năng này <strong>chưa thể hoạt động thực tế</strong>.</p>
+          <p class="muted mt-2" style="font-size:13px">Hướng dẫn tích hợp:</p>
+          <pre style="background:var(--glass);padding:12px;border-radius:10px;font-size:12px;overflow-x:auto;margin-top:8px">fetch('https://tinyurl.com/api-create.php?url=' + encodeURIComponent(longUrl))
+  .then(r => r.text())
+  .then(short => console.log(short));</pre>
+          <p class="muted mt-2" style="font-size:12px">TinyURL không cần API key. Có thể bật bằng cách sửa code này. Hiện tại chưa kích hoạt để tránh rate-limit/abuse.</p>
+        </div>
+      `;
     },
-    facebook(main) {
-      main.innerHTML = `<h1 class="page-title">📘 Facebook Link Checker</h1><p class="page-sub">Kiểm tra định dạng và khả năng truy cập công khai. KHÔNG thể phát hiện tài khoản bị khóa.</p>
+
+    imgur(main) {
+      main.innerHTML = `
+        <h1 class="page-title">🖼️ Image to Link</h1>
         <div class="glass" style="padding:24px;max-width:560px;margin:0 auto">
-          <div class="form-group"><label>URL Facebook</label><input id="fb-url" placeholder="https://facebook.com/username"></div>
-          <button class="btn btn-primary" onclick="SPS.checkFb()">Kiểm tra</button>
-          <div id="fb-result" class="mt-2"></div>
-          <p class="muted" style="font-size:12px;margin-top:12px">⚠️ Không thể vượt qua đăng nhập/CAPTCHA của Meta. Kết quả chỉ mang tính tham khảo.</p>
-        </div>`;
+          <div class="badge badge-warn" style="margin-bottom:12px">Cần cấu hình API</div>
+          <p class="muted">Để tạo link ảnh công khai vĩnh viễn, cần upload lên dịch vụ lưu trữ thật (ImgBB, Cloudinary, S3...).</p>
+          <p class="muted mt-2" style="font-size:13px">Không thể dùng Blob URL vì link chỉ tồn tại trong session.</p>
+          <p class="muted mt-2" style="font-size:13px">Đăng ký key miễn phí tại <a href="https://api.imgbb.com/" target="_blank" style="color:var(--primary)">api.imgbb.com</a> rồi thêm vào cấu hình.</p>
+          <input type="file" accept="image/*" disabled style="margin-top:12px;opacity:.5">
+          <button class="btn mt-2" disabled style="opacity:.5">Upload (chưa cấu hình)</button>
+        </div>
+      `;
     }
   },
 
-  /* ==================== IMPLEMENTATIONS ==================== */
+  // ======================================================
+  // IMPLEMENTATIONS
+  // ======================================================
+
+  // ---- NOTES ----
   notes: {
     render() {
-      const g = document.getElementById('notes-grid');
-      if (!g) return;
-      g.innerHTML = (SPS.state.notes || []).map(n => `<div class="note-card glass"><textarea oninput="SPS.notes.update('${n.id}',this.value)">${SPS.esc(n.text)}</textarea><div class="row justify-between" style="margin-top:8px"><span class="muted" style="font-size:11px">${new Date(n.created).toLocaleString('vi-VN')}</span><button class="btn btn-sm btn-danger" onclick="SPS.notes.del('${n.id}')">Xóa</button></div></div>`).join('') || '<p class="muted">Chưa có ghi chú.</p>';
+      const grid = document.getElementById('notes-grid');
+      if (!grid) return;
+      grid.innerHTML = (SPS.state.notes || []).map(n => `
+        <div class="note-card glass">
+          <textarea oninput="SPS.notes.update('${n.id}',this.value)">${SPS.esc(n.text)}</textarea>
+          <div class="row justify-between" style="margin-top:8px">
+            <span class="muted" style="font-size:11px">${new Date(n.created).toLocaleString('vi-VN')}</span>
+            <button class="btn btn-sm btn-danger" onclick="SPS.notes.del('${n.id}')">Xóa</button>
+          </div>
+        </div>
+      `).join('') || '<p class="muted">Chưa có ghi chú.</p>';
     },
-    add() { const i = document.getElementById('note-input'); const t = i.value.trim(); if (!t) return SPS.toast('Nhập nội dung', 'error'); SPS.state.notes = SPS.state.notes || []; SPS.state.notes.unshift({ id: SPS.id(), text: t, created: Date.now() }); SPS.store.save(); i.value = ''; this.render(); SPS.toast('Đã thêm', 'success'); },
-    update(id, text) { const n = SPS.state.notes.find(x => x.id === id); if (n) { n.text = text; SPS.store.save(); } },
-    del(id) { SPS.state.notes = SPS.state.notes.filter(x => x.id !== id); SPS.store.save(); this.render(); }
+    add() {
+      const input = document.getElementById('note-input');
+      const text = input.value.trim();
+      if (!text) return SPS.toast('Nhập nội dung', 'error');
+      SPS.state.notes = SPS.state.notes || [];
+      SPS.state.notes.unshift({ id: SPS.id(), text, created: Date.now() });
+      SPS.store.save();
+      input.value = '';
+      this.render();
+      SPS.toast('Đã thêm', 'success');
+    },
+    update(id, text) {
+      const n = SPS.state.notes.find(x => x.id === id);
+      if (n) { n.text = text; SPS.store.save(); }
+    },
+    del(id) {
+      SPS.state.notes = SPS.state.notes.filter(x => x.id !== id);
+      SPS.store.save();
+      this.render();
+    }
   },
 
+  // ---- TOTP ----
   totp: {
-    _int: null, _secret: '',
+    _interval: null,
+    _secret: '',
     init() { this._secret = ''; },
-    toggle() { const el = document.getElementById('totp-secret'); el.type = el.type === 'password' ? 'text' : 'password'; },
+    toggle() {
+      const el = document.getElementById('totp-secret');
+      el.type = el.type === 'password' ? 'text' : 'password';
+    },
     start() {
       this._secret = document.getElementById('totp-secret').value.trim();
-      if (this._int) clearInterval(this._int);
-      if (!this._secret) { document.getElementById('totp-code').textContent = '------'; return; }
-      this.tick(); this._int = setInterval(() => this.tick(), 1000);
+      if (this._interval) clearInterval(this._interval);
+      if (!this._secret) {
+        document.getElementById('totp-code').textContent = '------';
+        return;
+      }
+      const tick = () => this.tick();
+      tick();
+      this._interval = setInterval(tick, 1000);
     },
     async tick() {
-      if (!this._secret) return;
+      const secret = this._secret;
+      if (!secret) return;
       try {
-        const code = await this.generate(this._secret);
+        const code = await this.generate(secret);
         document.getElementById('totp-code').textContent = code;
         const rem = 30 - (Math.floor(Date.now() / 1000) % 30);
         document.getElementById('totp-timer').textContent = rem + 's';
         document.getElementById('totp-bar').style.width = ((30 - rem) / 30 * 100) + '%';
-      } catch (e) { document.getElementById('totp-code').textContent = 'ERROR'; document.getElementById('totp-timer').textContent = e.message; }
+      } catch (e) {
+        document.getElementById('totp-code').textContent = 'ERROR';
+        document.getElementById('totp-timer').textContent = e.message;
+      }
     },
     base32Decode(str) {
       str = str.replace(/=+$/, '').replace(/\s+/g, '').toUpperCase();
@@ -950,26 +1743,39 @@ const SPS = {
       for (const c of str) {
         const idx = map.indexOf(c);
         if (idx === -1) throw new Error('Ký tự Base32 không hợp lệ: ' + c);
-        value = (value << 5) | idx; bits += 5;
-        if (bits >= 8) { out.push((value >>> (bits - 8)) & 0xff); bits -= 8; }
+        value = (value << 5) | idx;
+        bits += 5;
+        if (bits >= 8) {
+          out.push((value >>> (bits - 8)) & 0xff);
+          bits -= 8;
+        }
       }
       return new Uint8Array(out);
     },
     async generate(secret, digits = 6, period = 30) {
       const key = this.base32Decode(secret);
       const counter = Math.floor(Date.now() / 1000 / period);
-      const buf = new ArrayBuffer(8); const view = new DataView(buf);
+      const buf = new ArrayBuffer(8);
+      const view = new DataView(buf);
       view.setUint32(0, Math.floor(counter / 0x100000000), false);
       view.setUint32(4, counter, false);
-      const ck = await crypto.subtle.importKey('raw', key, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
-      const sig = new Uint8Array(await crypto.subtle.sign('HMAC', ck, buf));
+      const cryptoKey = await crypto.subtle.importKey(
+        'raw', key, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']
+      );
+      const sig = new Uint8Array(await crypto.subtle.sign('HMAC', cryptoKey, buf));
       const off = sig[sig.length - 1] & 0x0f;
       const bin = ((sig[off] & 0x7f) << 24) | ((sig[off + 1] & 0xff) << 16) | ((sig[off + 2] & 0xff) << 8) | (sig[off + 3] & 0xff);
-      return String(bin % Math.pow(10, digits)).padStart(digits, '0');
+      const code = bin % Math.pow(10, digits);
+      return String(code).padStart(digits, '0');
     },
-    copy() { const c = document.getElementById('totp-code').textContent; if (c.includes('-') || c === 'ERROR') return SPS.toast('Chưa có mã', 'error'); SPS.copy(c); }
+    copy() {
+      const code = document.getElementById('totp-code').textContent;
+      if (code.includes('-') || code === 'ERROR') return SPS.toast('Chưa có mã', 'error');
+      SPS.copy(code);
+    }
   },
 
+  // ---- QR ----
   qr: {
     _qr: null,
     qrRender() {
@@ -981,18 +1787,27 @@ const SPS = {
       const size = Math.max(100, Math.min(800, +document.getElementById('qr-size').value || 300));
       const out = document.getElementById('qr-output');
       if (!data) { out.innerHTML = '<p style="color:#666">Nhập nội dung</p>'; return; }
-      try { out.innerHTML = ''; this._qr = new QRCode(out, { text: data, width: size, height: size, colorDark: color, colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.H }); }
-      catch (e) { out.innerHTML = '<p style="color:#c00">Lỗi: ' + SPS.esc(e.message) + '</p>'; }
+      try {
+        out.innerHTML = '';
+        this._qr = new QRCode(out, { text: data, width: size, height: size, colorDark: color, colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.H });
+      } catch (e) {
+        out.innerHTML = '<p style="color:#c00">Lỗi: ' + SPS.esc(e.message) + '</p>';
+      }
     },
     qrDownload() {
       const out = document.getElementById('qr-output');
       const img = out.querySelector('img') || out.querySelector('canvas');
       if (!img) return SPS.toast('Chưa có QR', 'error');
-      if (img.tagName === 'IMG') { const a = document.createElement('a'); a.href = img.src; a.download = 'sps-qr.png'; a.click(); }
-      else img.toBlob(b => SPS.download(b, 'sps-qr.png'));
+      if (img.tagName === 'IMG') {
+        const a = document.createElement('a');
+        a.href = img.src; a.download = 'sps-qr.png'; a.click();
+      } else {
+        img.toBlob(b => SPS.download(b, 'sps-qr.png'));
+      }
     }
   },
 
+  // ---- CURRENCY (Frankfurter API) ----
   currency: {
     async convert() {
       const amt = +document.getElementById('cur-amt').value || 0;
@@ -1000,19 +1815,26 @@ const SPS = {
       const to = (document.getElementById('cur-to').value || 'VND').toUpperCase();
       const info = document.getElementById('cur-info');
       const res = document.getElementById('cur-result');
+      if (!from || !to) return;
       try {
-        let rate = from === to ? 1 : null;
-        if (!rate) {
+        // Frankfurter only supports major fiat. VND is not supported → use exchangerate.host fallback via open.er-api.com
+        let rate = null, source = 'open.er-api.com';
+        if (from === to) rate = 1;
+        else {
           const data = await SPS.fetchJSON('https://open.er-api.com/v6/latest/' + from);
           if (data && data.rates && data.rates[to]) rate = data.rates[to];
-          else throw new Error('Không có tỷ giá');
+          else throw new Error('Không có tỷ giá cho cặp này');
         }
         res.textContent = (amt * rate).toLocaleString('vi-VN', { maximumFractionDigits: 2 }) + ' ' + to;
-        info.textContent = 'Nguồn: open.er-api.com · Cập nhật: ' + new Date().toLocaleString('vi-VN') + ' · 1 ' + from + ' = ' + rate.toLocaleString('vi-VN', { maximumFractionDigits: 4 }) + ' ' + to;
-      } catch (e) { res.textContent = '--'; info.textContent = '⚠️ ' + e.message; }
+        info.textContent = 'Nguồn: ' + source + ' · Cập nhật: ' + new Date().toLocaleString('vi-VN') + ' · 1 ' + from + ' = ' + rate.toLocaleString('vi-VN', { maximumFractionDigits: 4 }) + ' ' + to;
+      } catch (e) {
+        res.textContent = '--';
+        info.textContent = '⚠️ ' + e.message + ' · Thử mã ISO: USD, EUR, VND, JPY, GBP...';
+      }
     }
   },
 
+  // ---- IP INFO ----
   async ipLookup() {
     const el = document.getElementById('ip-content');
     if (!el) return;
@@ -1021,244 +1843,304 @@ const SPS = {
       const d = await SPS.fetchJSON('https://ipapi.co/json/');
       if (d.error) throw new Error(d.reason || 'API error');
       const rows = [
-        ['IPv4', d.ip || 'N/A', 'globe'], ['Quốc gia', (d.country_name || '') + ' (' + (d.country_code || '') + ')', 'flag'],
-        ['Vùng', d.region || 'N/A', 'map'], ['Thành phố', d.city || 'N/A', 'building'],
-        ['Mã bưu chính', d.postal || 'N/A', 'mail'], ['Tọa độ ~', (d.latitude || '?') + ', ' + (d.longitude || '?'), 'map-pin'],
-        ['Múi giờ', d.timezone || 'N/A', 'clock'], ['ISP', d.org || 'N/A', 'wifi'], ['ASN', d.asn || 'N/A', 'server']
+        ['IPv4', d.ip || 'N/A', 'globe'],
+        ['Quốc gia', (d.country_name || 'N/A') + ' (' + (d.country_code || '') + ')', 'flag'],
+        ['Vùng', d.region || 'N/A', 'map'],
+        ['Thành phố', d.city || 'N/A', 'building'],
+        ['Mã bưu chính', d.postal || 'N/A', 'mail'],
+        ['Tọa độ ~', (d.latitude || '?') + ', ' + (d.longitude || '?'), 'map-pin'],
+        ['Múi giờ', d.timezone || 'N/A', 'clock'],
+        ['ISP', d.org || 'N/A', 'wifi'],
+        ['ASN', d.asn || 'N/A', 'server']
       ];
-      el.innerHTML = rows.map(([l, v, i]) => `<div class="glass" style="padding:14px;display:flex;justify-content:space-between;align-items:center;gap:10px"><div><div class="muted" style="font-size:12px">${l}</div><div style="font-weight:600;margin-top:2px">${SPS.esc(v)}</div></div><i data-lucide="${i}" style="color:var(--primary)"></i></div>`).join('') +
-        `<div class="glass" style="padding:14px;grid-column:1/-1"><button class="btn btn-sm" onclick="SPS.copy('${SPS.esc(d.ip || '')}')">Sao chép IP</button> <button class="btn btn-sm" onclick="SPS.ipLookup()">Refresh</button><p class="muted" style="font-size:11px;margin-top:8px">⚠️ Vị trí IP chỉ ước lượng, không chính xác đến số nhà.</p></div>`;
+      el.innerHTML = rows.map(([l, v, i]) => `
+        <div class="glass" style="padding:14px;display:flex;justify-content:space-between;align-items:center;gap:10px">
+          <div>
+            <div class="muted" style="font-size:12px">${l}</div>
+            <div style="font-weight:600;margin-top:2px">${SPS.esc(v)}</div>
+          </div>
+          <i data-lucide="${i}" style="color:var(--primary)"></i>
+        </div>
+      `).join('') + `
+        <div class="glass" style="padding:14px;grid-column:1/-1">
+          <button class="btn btn-sm" onclick="SPS.copy('${SPS.esc(d.ip || '')}')">Sao chép IP</button>
+          <button class="btn btn-sm" onclick="SPS.ipLookup()">Refresh</button>
+          <p class="muted" style="font-size:11px;margin-top:8px">⚠️ Vị trí IP chỉ mang tính ước lượng, không chính xác đến số nhà.</p>
+        </div>
+      `;
       if (window.lucide) lucide.createIcons();
-    } catch (e) { el.innerHTML = '<div class="glass" style="padding:20px"><span class="badge badge-danger">Lỗi</span> ' + SPS.esc(e.message) + '</div>'; }
+    } catch (e) {
+      el.innerHTML = '<div class="glass" style="padding:20px"><span class="badge badge-danger">Lỗi</span> Không thể lấy dữ liệu IP: ' + SPS.esc(e.message) + '</div>';
+    }
   },
 
+  // ---- WEATHER (Open-Meteo) ----
   weather: {
     async search() {
       const q = document.getElementById('wx-city').value.trim();
       if (!q) return;
       try {
         const geo = await SPS.fetchJSON('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(q) + '&count=1&language=vi');
-        if (!geo.results?.length) throw new Error('Không tìm thấy thành phố');
-        this.load(geo.results[0].latitude, geo.results[0].longitude, geo.results[0].name);
+        if (!geo.results || !geo.results.length) throw new Error('Không tìm thấy thành phố');
+        const r = geo.results[0];
+        this.load(r.latitude, r.longitude, r.name);
       } catch (e) { SPS.toast('Lỗi: ' + e.message, 'error'); }
     },
     gps() {
-      if (!navigator.geolocation) return SPS.toast('Không hỗ trợ GPS', 'error');
+      if (!navigator.geolocation) return SPS.toast('Trình duyệt không hỗ trợ GPS', 'error');
       navigator.geolocation.getCurrentPosition(
-        p => this.load(p.coords.latitude, p.coords.longitude, 'Vị trí của bạn'),
-        e => SPS.toast('GPS lỗi: ' + e.message, 'error')
+        pos => this.load(pos.coords.latitude, pos.coords.longitude, 'Vị trí của bạn'),
+        err => SPS.toast('Không lấy được GPS: ' + err.message, 'error')
       );
     },
     quick(lat, lon, name) { this.load(lat, lon, name); },
     async load(lat, lon, name) {
       const out = document.getElementById('weather-output');
       if (!out) return;
-      out.innerHTML = '<div class="glass" style="padding:20px"><span class="muted">Đang tải...</span></div>';
+      out.innerHTML = '<div class="glass" style="padding:20px"><span class="muted">Đang tải dữ liệu thời tiết...</span></div>';
       try {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,surface_pressure&hourly=temperature_2m,precipitation_probability,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code,sunrise,sunset&timezone=auto&forecast_days=3`;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+          `&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure&hourly=temperature_2m,precipitation_probability,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code,sunrise,sunset&timezone=auto&forecast_days=3`;
         const d = await SPS.fetchJSON(url);
         const cur = d.current;
-        const map = { 0: ['☀️', 'Quang'], 1: ['🌤️', 'Ít mây'], 2: ['⛅', 'Mây'], 3: ['☁️', 'Nhiều mây'], 45: ['🌫️', 'Sương mù'], 51: ['🌦️', 'Mưa phùn'], 61: ['🌧️', 'Mưa'], 63: ['🌧️', 'Mưa vừa'], 65: ['⛈️', 'Mưa to'], 80: ['🌧️', 'Mưa rào'], 95: ['⛈️', 'Dông'] };
-        const [icon, desc] = map[cur.weather_code] || ['🌡️', 'N/A'];
+        const codeMap = { 0: ['☀️', 'Trời quang'], 1: ['🌤️', 'Ít mây'], 2: ['⛅', 'Mây rải rác'], 3: ['☁️', 'Nhiều mây'], 45: ['🌫️', 'Sương mù'], 48: ['🌫️', 'Sương giá'], 51: ['🌦️', 'Mưa phùn nhẹ'], 61: ['🌧️', 'Mưa'], 63: ['🌧️', 'Mưa vừa'], 65: ['⛈️', 'Mưa to'], 80: ['🌧️', 'Mưa rào'], 95: ['⛈️', 'Dông'] };
+        const [icon, desc] = codeMap[cur.weather_code] || ['🌡️', 'Không xác định'];
         const sunrise = d.daily.sunrise[0] ? new Date(d.daily.sunrise[0]).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : 'N/A';
         const sunset = d.daily.sunset[0] ? new Date(d.daily.sunset[0]).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : 'N/A';
-        const hourly = (d.hourly.time || []).slice(0, 24).map((t, i) => {
+        const hourlyHtml = (d.hourly.time || []).slice(0, 24).map((t, i) => {
           const hr = new Date(t).getHours().toString().padStart(2, '0') + ':00';
-          const hc = map[d.hourly.weather_code[i]] || ['🌡️'];
-          return `<div class="hourly-item"><div class="hour">${hr}</div><div style="font-size:20px">${hc[0]}</div><div class="h-temp">${Math.round(d.hourly.temperature_2m[i])}°</div><div class="muted">${d.hourly.precipitation_probability[i] || 0}%</div></div>`;
+          const hcode = codeMap[d.hourly.weather_code[i]] || ['🌡️'];
+          return `<div class="hourly-item"><div class="hour">${hr}</div><div style="font-size:20px">${hcode[0]}</div><div class="h-temp">${Math.round(d.hourly.temperature_2m[i])}°</div><div class="muted">${d.hourly.precipitation_probability[i] || 0}%</div></div>`;
         }).join('');
-        out.innerHTML = `<div class="glass weather-hero"><h2>${SPS.esc(name)}</h2><div style="font-size:48px;margin:10px 0">${icon}</div><div class="temp">${Math.round(cur.temperature_2m)}°C</div><p class="muted">${desc} · Cảm giác ${Math.round(cur.apparent_temperature)}°C</p>
-          <div class="weather-details"><div class="weather-detail"><div class="label">Độ ẩm</div><div class="val">${cur.relative_humidity_2m}%</div></div><div class="weather-detail"><div class="label">Gió</div><div class="val">${cur.wind_speed_10m} km/h</div></div><div class="weather-detail"><div class="label">Áp suất</div><div class="val">${cur.surface_pressure} hPa</div></div><div class="weather-detail"><div class="label">Cao/Thấp</div><div class="val">${Math.round(d.daily.temperature_2m_max[0])}° / ${Math.round(d.daily.temperature_2m_min[0])}°</div></div><div class="weather-detail"><div class="label">Mặt trời mọc</div><div class="val">${sunrise}</div></div><div class="weather-detail"><div class="label">Mặt trời lặn</div><div class="val">${sunset}</div></div></div>
-        </div>
-        <div class="glass" style="padding:16px"><h3 style="margin-bottom:10px">24 giờ tới</h3><div class="hourly-scroll">${hourly}</div></div>
-        <p class="muted center" style="font-size:11px;margin-top:10px">Nguồn: Open-Meteo.com</p>`;
-      } catch (e) { out.innerHTML = '<div class="glass" style="padding:20px"><span class="badge badge-danger">Lỗi</span> ' + SPS.esc(e.message) + '</div>'; }
+        out.innerHTML = `
+          <div class="glass weather-hero">
+            <h2 style="margin-bottom:6px">${SPS.esc(name)}</h2>
+            <div style="font-size:48px;margin:10px 0">${icon}</div>
+            <div class="temp">${Math.round(cur.temperature_2m)}°C</div>
+            <p class="muted">${desc} · Cảm giác ${Math.round(cur.apparent_temperature)}°C</p>
+            <div class="weather-details">
+              <div class="weather-detail"><div class="label">Độ ẩm</div><div class="val">${cur.relative_humidity_2m}%</div></div>
+              <div class="weather-detail"><div class="label">Gió</div><div class="val">${cur.wind_speed_10m} km/h</div></div>
+              <div class="weather-detail"><div class="label">Áp suất</div><div class="val">${cur.surface_pressure} hPa</div></div>
+              <div class="weather-detail"><div class="label">Cao/Thấp</div><div class="val">${Math.round(d.daily.temperature_2m_max[0])}° / ${Math.round(d.daily.temperature_2m_min[0])}°</div></div>
+              <div class="weather-detail"><div class="label">Mặt trời mọc</div><div class="val">${sunrise}</div></div>
+              <div class="weather-detail"><div class="label">Mặt trời lặn</div><div class="val">${sunset}</div></div>
+            </div>
+          </div>
+          <div class="glass" style="padding:16px">
+            <h3 style="margin-bottom:10px">Dự báo 24 giờ</h3>
+            <div class="hourly-scroll">${hourlyHtml}</div>
+          </div>
+          <div class="glass" style="padding:16px;margin-top:16px">
+            <h3 style="margin-bottom:10px">🌅 Dự báo 3 ngày</h3>
+            <div class="grid grid-3">
+              ${d.daily.time.map((t, i) => {
+                const dc = codeMap[d.daily.weather_code[i]] || ['🌡️', '?'];
+                return `<div class="glass" style="padding:12px;text-align:center">
+                  <div style="font-size:11px;color:var(--muted)">${new Date(t).toLocaleDateString('vi-VN', { weekday: 'short', day: '2-digit', month: '2-digit' })}</div>
+                  <div style="font-size:28px;margin:6px 0">${dc[0]}</div>
+                  <div><strong>${Math.round(d.daily.temperature_2m_max[i])}°</strong> / ${Math.round(d.daily.temperature_2m_min[i])}°</div>
+                  <div class="muted" style="font-size:11px">${dc[1]}</div>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>
+          <p class="muted center" style="font-size:11px;margin-top:10px">Nguồn: Open-Meteo.com · Không dùng để cảnh báo thiên tai chính thức.</p>
+        `;
+      } catch (e) {
+        out.innerHTML = '<div class="glass" style="padding:20px"><span class="badge badge-danger">Lỗi API</span> ' + SPS.esc(e.message) + '</div>';
+      }
     }
   },
 
+  // ---- CRYPTO ----
   crypto: {
     async load() {
       const out = document.getElementById('crypto-output');
       if (!out) return;
-      out.innerHTML = '<p class="muted">Đang tải...</p>';
+      out.innerHTML = '<p class="muted">Đang tải giá crypto...</p>';
       try {
         const d = await SPS.fetchJSON('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,solana,cardano,dogecoin,ripple,tron&vs_currencies=usd,vnd&include_24hr_change=true');
-        const map = { bitcoin: 'Bitcoin', ethereum: 'Ethereum', binancecoin: 'BNB', solana: 'Solana', cardano: 'Cardano', dogecoin: 'Dogecoin', ripple: 'XRP', tron: 'TRON' };
+        const map = { bitcoin: 'Bitcoin (BTC)', ethereum: 'Ethereum (ETH)', binancecoin: 'BNB', solana: 'Solana (SOL)', cardano: 'Cardano (ADA)', dogecoin: 'Dogecoin (DOGE)', ripple: 'XRP', tron: 'TRON (TRX)' };
         out.innerHTML = Object.entries(d).map(([id, v]) => {
           const chg = v.usd_24h_change || 0;
           const color = chg >= 0 ? 'var(--success)' : 'var(--danger)';
-          return `<div class="glass" style="padding:16px"><div style="display:flex;justify-content:space-between"><strong>${map[id] || id}</strong><span style="color:${color};font-size:12px">${chg >= 0 ? '▲' : '▼'} ${Math.abs(chg).toFixed(2)}%</span></div><div style="font-size:20px;font-weight:700;margin-top:8px">$${(v.usd || 0).toLocaleString('en-US', { maximumFractionDigits: 2 })}</div><div class="muted" style="font-size:13px">${(v.vnd || 0).toLocaleString('vi-VN')}₫</div></div>`;
-        }).join('');
-      } catch (e) { out.innerHTML = '<div class="glass" style="padding:20px"><span class="badge badge-danger">Lỗi</span> ' + SPS.esc(e.message) + ' (CoinGecko rate-limit)</div>'; }
+          return `<div class="glass" style="padding:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong>${map[id] || id}</strong>
+              <span style="color:${color};font-size:12px;font-weight:600">${chg >= 0 ? '▲' : '▼'} ${Math.abs(chg).toFixed(2)}%</span>
+            </div>
+            <div style="font-size:20px;font-weight:700;margin-top:8px">$${(v.usd || 0).toLocaleString('en-US', { maximumFractionDigits: 2 })}</div>
+            <div class="muted" style="font-size:13px">${(v.vnd || 0).toLocaleString('vi-VN')}₫</div>
+          </div>`;
+        }).join('') + `<p class="muted center" style="font-size:11px;grid-column:1/-1;margin-top:8px">Nguồn: CoinGecko · Cập nhật: ${new Date().toLocaleTimeString('vi-VN')}</p>`;
+      } catch (e) {
+        out.innerHTML = '<div class="glass" style="padding:20px"><span class="badge badge-danger">Lỗi</span> CoinGecko có thể giới hạn request. Thử lại sau: ' + SPS.esc(e.message) + '</div>';
+      }
     }
   },
 
+  // ---- CALCULATOR ----
   calc: {
     _defs: {},
     run(id) {
-      const n = { profit: 2, markup: 2, discount: 2, commission: 2 }[id];
-      const v = [];
-      for (let i = 0; i < n; i++) { const x = parseFloat(document.getElementById(`calc-${id}-${i}`).value); v.push(isNaN(x) ? 0 : x); }
-      const r = this._defs[id](v);
-      document.getElementById(`calc-res-${id}`).textContent = isFinite(r) ? r.toLocaleString('vi-VN', { maximumFractionDigits: 2 }) : '--';
+      const labels = { profit: 2, markup: 2, discount: 2, commission: 2 };
+      const vals = [];
+      for (let i = 0; i < labels[id]; i++) {
+        const v = parseFloat(document.getElementById(`calc-${id}-${i}`).value);
+        vals.push(isNaN(v) ? 0 : v);
+      }
+      const fn = this._defs[id];
+      const res = fn(vals);
+      document.getElementById(`calc-res-${id}`).textContent = (isFinite(res) ? res.toLocaleString('vi-VN', { maximumFractionDigits: 2 }) : '--');
     }
   },
 
-  invAddItem() {
-    const c = document.getElementById('inv-items'); if (!c) return;
-    const div = document.createElement('div');
-    div.className = 'input-row'; div.style.marginBottom = '8px';
-    div.innerHTML = `<input placeholder="Tên mục" class="inv-name"><input type="number" placeholder="SL" value="1" class="inv-qty" oninput="SPS.invCalc()" style="width:60px"><input type="number" placeholder="Đơn giá" value="0" class="inv-price" oninput="SPS.invCalc()" style="width:100px">`;
-    c.appendChild(div); this.invCalc();
-  },
-  invCalc() {
-    let st = 0;
-    document.querySelectorAll('#inv-items .input-row').forEach(r => { st += (+r.querySelector('.inv-qty').value || 0) * (+r.querySelector('.inv-price').value || 0); });
-    const tax = +document.getElementById('inv-tax').value || 0;
-    const t = st * (1 + tax / 100);
-    const fmt = n => n.toLocaleString('vi-VN') + '₫';
-    document.getElementById('inv-subtotal').textContent = fmt(st);
-    document.getElementById('inv-total').textContent = fmt(t);
-  },
-  async invGenerate() {
-    if (typeof PDFLib === 'undefined') return SPS.toast('Thư viện PDF chưa tải', 'error');
-    const type = document.getElementById('inv-type').value;
-    const no = document.getElementById('inv-no').value;
-    const date = document.getElementById('inv-date').value;
-    const customer = document.getElementById('inv-customer').value;
-    const address = document.getElementById('inv-address').value;
-    const items = [];
-    document.querySelectorAll('#inv-items .input-row').forEach(r => items.push({ name: r.querySelector('.inv-name').value || '—', qty: +r.querySelector('.inv-qty').value || 0, price: +r.querySelector('.inv-price').value || 0 }));
-    const st = items.reduce((a, i) => a + i.qty * i.price, 0);
-    const tax = +document.getElementById('inv-tax').value || 0;
-    const total = st * (1 + tax / 100);
-    try {
-      const doc = await PDFLib.PDFDocument.create();
-      const font = await doc.embedFont(PDFLib.StandardFonts.Helvetica);
-      const bold = await doc.embedFont(PDFLib.StandardFonts.HelveticaBold);
-      const page = doc.addPage([595, 842]);
-      const { width, height } = page.getSize();
-      let y = height - 60;
-      page.drawText(type === 'invoice' ? 'HOA DON' : 'BAO GIA', { x: 50, y, size: 22, font: bold });
-      page.drawText(`${no} · ${date}`, { x: 50, y: y - 20, size: 11, font, color: PDFLib.rgb(0.4, 0.4, 0.4) });
-      y -= 60;
-      page.drawText('Khach hang: ' + customer, { x: 50, y, size: 12, font: bold });
-      page.drawText(address, { x: 50, y: y - 16, size: 10, font });
-      y -= 50;
-      page.drawLine({ start: { x: 50, y }, end: { x: width - 50, y }, thickness: 1 });
-      y -= 20;
-      page.drawText('Muc', { x: 50, y, size: 10, font: bold });
-      page.drawText('SL', { x: 350, y, size: 10, font: bold });
-      page.drawText('Don gia', { x: 400, y, size: 10, font: bold });
-      page.drawText('Thanh tien', { x: 480, y, size: 10, font: bold });
-      y -= 16;
-      items.forEach(it => {
-        page.drawText((it.name || '').slice(0, 40), { x: 50, y, size: 10, font });
-        page.drawText(String(it.qty), { x: 350, y, size: 10, font });
-        page.drawText(it.price.toLocaleString('vi-VN'), { x: 400, y, size: 10, font });
-        page.drawText((it.qty * it.price).toLocaleString('vi-VN'), { x: 480, y, size: 10, font });
-        y -= 16;
-      });
-      y -= 10;
-      page.drawLine({ start: { x: 350, y }, end: { x: width - 50, y }, thickness: 1 });
-      y -= 20;
-      page.drawText('Tam tinh:', { x: 350, y, size: 10, font });
-      page.drawText(st.toLocaleString('vi-VN') + 'd', { x: 480, y, size: 10, font });
-      y -= 16;
-      page.drawText(`Thue (${tax}%):`, { x: 350, y, size: 10, font });
-      page.drawText((st * tax / 100).toLocaleString('vi-VN') + 'd', { x: 480, y, size: 10, font });
-      y -= 20;
-      page.drawText('TONG:', { x: 350, y, size: 12, font: bold });
-      page.drawText(total.toLocaleString('vi-VN') + 'd', { x: 480, y, size: 12, font: bold });
-      const bytes = await doc.save();
-      SPS.download(new Blob([bytes], { type: 'application/pdf' }), `${type}-${no}.pdf`);
-      SPS.toast('Đã tải PDF', 'success');
-    } catch (e) { SPS.toast('Lỗi: ' + e.message, 'error'); }
-  },
-
+  // ---- TODO ----
   todo: {
     add() {
-      const i = document.getElementById('todo-input'); const t = i.value.trim(); if (!t) return;
+      const input = document.getElementById('todo-input');
+      const text = input.value.trim();
+      if (!text) return;
       SPS.state.todos = SPS.state.todos || [];
-      SPS.state.todos.unshift({ id: SPS.id(), text: t, priority: document.getElementById('todo-priority').value, due: document.getElementById('todo-due').value || null, done: false, created: Date.now() });
-      SPS.store.save(); i.value = ''; this.render();
+      SPS.state.todos.unshift({
+        id: SPS.id(), text,
+        priority: document.getElementById('todo-priority').value,
+        due: document.getElementById('todo-due').value || null,
+        done: false, created: Date.now()
+      });
+      SPS.store.save();
+      input.value = '';
+      this.render();
     },
-    toggle(id) { const t = SPS.state.todos.find(x => x.id === id); if (t) { t.done = !t.done; SPS.store.save(); this.render(); } },
-    del(id) { SPS.state.todos = SPS.state.todos.filter(x => x.id !== id); SPS.store.save(); this.render(); },
+    toggle(id) {
+      const t = SPS.state.todos.find(x => x.id === id);
+      if (t) { t.done = !t.done; SPS.store.save(); this.render(); }
+    },
+    del(id) {
+      SPS.state.todos = SPS.state.todos.filter(x => x.id !== id);
+      SPS.store.save();
+      this.render();
+    },
     render() {
-      const el = document.getElementById('todo-list'); if (!el) return;
-      const ts = SPS.state.todos || [];
-      el.innerHTML = ts.length ? ts.map(t => `<div class="glass" style="padding:12px;display:flex;gap:10px;align-items:center;${t.done ? 'opacity:.55' : ''}"><input type="checkbox" ${t.done ? 'checked' : ''} onchange="SPS.todo.toggle('${t.id}')" style="width:auto"><div style="flex:1;${t.done ? 'text-decoration:line-through' : ''}">${SPS.esc(t.text)}<div class="muted" style="font-size:11px;margin-top:2px">${t.priority === 'high' ? '🔴 Cao' : t.priority === 'med' ? '🟡 Vừa' : '🟢 Thấp'}${t.due ? ' · Hạn: ' + t.due : ''}</div></div><button class="btn btn-sm btn-danger" onclick="SPS.todo.del('${t.id}')">Xóa</button></div>`).join('') : '<p class="muted">Chưa có công việc.</p>';
+      const el = document.getElementById('todo-list');
+      if (!el) return;
+      const todos = SPS.state.todos || [];
+      el.innerHTML = todos.length ? todos.map(t => `
+        <div class="glass" style="padding:12px;display:flex;gap:10px;align-items:center;${t.done ? 'opacity:.55' : ''}">
+          <input type="checkbox" ${t.done ? 'checked' : ''} onchange="SPS.todo.toggle('${t.id}')" style="width:auto">
+          <div style="flex:1;${t.done ? 'text-decoration:line-through' : ''}">
+            ${SPS.esc(t.text)}
+            <div class="muted" style="font-size:11px;margin-top:2px">
+              ${t.priority === 'high' ? '🔴 Cao' : t.priority === 'med' ? '🟡 Vừa' : '🟢 Thấp'}
+              ${t.due ? ' · Hạn: ' + t.due : ''}
+            </div>
+          </div>
+          <button class="btn btn-sm btn-danger" onclick="SPS.todo.del('${t.id}')">Xóa</button>
+        </div>
+      `).join('') : '<p class="muted">Chưa có công việc.</p>';
     }
   },
 
+  // ---- CALENDAR ----
   calendar: {
-    _cur: new Date(), _sel: new Date(),
+    _cur: new Date(),
+    _sel: new Date(),
     init() { this._cur = new Date(); this._sel = new Date(); this.render(); },
     prev() { this._cur.setMonth(this._cur.getMonth() - 1); this.render(); },
     next() { this._cur.setMonth(this._cur.getMonth() + 1); this.render(); },
     render() {
-      const title = document.getElementById('cal-title'); if (!title) return;
-      const d = this._cur; title.textContent = d.toLocaleDateString('vi-VN', { month: 'long', year: 'numeric' });
-      const y = d.getFullYear(), m = d.getMonth();
-      const fd = new Date(y, m, 1).getDay();
-      const dm = new Date(y, m + 1, 0).getDate();
+      const title = document.getElementById('cal-title');
+      if (!title) return;
+      const d = this._cur;
+      title.textContent = d.toLocaleDateString('vi-VN', { month: 'long', year: 'numeric' });
+      const year = d.getFullYear(), month = d.getMonth();
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
       const today = new Date();
-      const g = document.getElementById('cal-grid');
+      const grid = document.getElementById('cal-grid');
       let html = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'].map(w => `<div style="text-align:center;font-size:11px;color:var(--muted);padding:6px 0">${w}</div>`).join('');
-      for (let i = 0; i < fd; i++) html += '<div></div>';
-      for (let day = 1; day <= dm; day++) {
-        const isT = y === today.getFullYear() && m === today.getMonth() && day === today.getDate();
-        const isS = y === this._sel.getFullYear() && m === this._sel.getMonth() && day === this._sel.getDate();
-        const ds = `${y}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const hasEv = (SPS.state.events || []).some(e => e.date === ds);
-        html += `<div onclick="SPS.calendar.select(${y},${m},${day})" style="text-align:center;padding:8px 4px;border-radius:8px;cursor:pointer;font-size:13px;background:${isS ? 'var(--primary)' : isT ? 'rgba(77,123,255,.2)' : 'transparent'};color:${isS ? '#fff' : 'var(--text)'};position:relative">${day}${hasEv ? '<span style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--accent);border-radius:50%"></span>' : ''}</div>`;
+      for (let i = 0; i < firstDay; i++) html += '<div></div>';
+      for (let day = 1; day <= daysInMonth; day++) {
+        const isToday = year === today.getFullYear() && month === today.getMonth() && day === today.getDate();
+        const isSel = year === this._sel.getFullYear() && month === this._sel.getMonth() && day === this._sel.getDate();
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const hasEvt = (SPS.state.events || []).some(e => e.date === dateStr);
+        html += `<div onclick="SPS.calendar.select(${year},${month},${day})" style="text-align:center;padding:8px 4px;border-radius:8px;cursor:pointer;font-size:13px;background:${isSel ? 'var(--primary)' : isToday ? 'rgba(77,123,255,.2)' : 'transparent'};color:${isSel ? '#fff' : 'var(--text)'};position:relative">
+          ${day}${hasEvt ? '<span style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--accent);border-radius:50%"></span>' : ''}
+        </div>`;
       }
-      g.innerHTML = html;
+      grid.innerHTML = html;
       document.getElementById('cal-selected').textContent = this._sel.toLocaleDateString('vi-VN');
       this.renderEvents();
     },
-    select(y, m, d) { this._sel = new Date(y, m, d); this.render(); },
+    select(y, m, d) {
+      this._sel = new Date(y, m, d);
+      this.render();
+    },
     addEvent() {
-      const t = document.getElementById('cal-ev-title').value.trim(); if (!t) return;
+      const title = document.getElementById('cal-ev-title').value.trim();
+      if (!title) return;
       const date = `${this._sel.getFullYear()}-${String(this._sel.getMonth() + 1).padStart(2, '0')}-${String(this._sel.getDate()).padStart(2, '0')}`;
       SPS.state.events = SPS.state.events || [];
-      SPS.state.events.push({ id: SPS.id(), title: t, date });
-      SPS.store.save(); document.getElementById('cal-ev-title').value = ''; this.render();
+      SPS.state.events.push({ id: SPS.id(), title, date });
+      SPS.store.save();
+      document.getElementById('cal-ev-title').value = '';
+      this.render();
     },
-    delEvent(id) { SPS.state.events = SPS.state.events.filter(e => e.id !== id); SPS.store.save(); this.render(); },
+    delEvent(id) {
+      SPS.state.events = SPS.state.events.filter(e => e.id !== id);
+      SPS.store.save();
+      this.render();
+    },
     renderEvents() {
       const date = `${this._sel.getFullYear()}-${String(this._sel.getMonth() + 1).padStart(2, '0')}-${String(this._sel.getDate()).padStart(2, '0')}`;
-      const evs = (SPS.state.events || []).filter(e => e.date === date);
-      const el = document.getElementById('cal-events'); if (!el) return;
-      el.innerHTML = evs.length ? evs.map(e => `<div class="glass" style="padding:8px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;font-size:13px"><span>${SPS.esc(e.title)}</span><button class="btn btn-sm btn-danger" onclick="SPS.calendar.delEvent('${e.id}')">×</button></div>`).join('') : '<p class="muted" style="font-size:13px">Không có sự kiện.</p>';
+      const evts = (SPS.state.events || []).filter(e => e.date === date);
+      const el = document.getElementById('cal-events');
+      if (!el) return;
+      el.innerHTML = evts.length ? evts.map(e => `
+        <div class="glass" style="padding:8px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;font-size:13px">
+          <span>${SPS.esc(e.title)}</span>
+          <button class="btn btn-sm btn-danger" onclick="SPS.calendar.delEvent('${e.id}')">×</button>
+        </div>
+      `).join('') : '<p class="muted" style="font-size:13px">Không có sự kiện.</p>';
     }
   },
 
+  // ---- PDF ----
   pdf: {
     async merge() {
       const files = document.getElementById('pdf-merge-files').files;
-      if (!files.length || files.length < 2) return SPS.toast('Chọn ít nhất 2 file', 'error');
-      if (typeof PDFLib === 'undefined') return SPS.toast('pdf-lib chưa tải', 'error');
+      if (!files.length || files.length < 2) return SPS.toast('Chọn ít nhất 2 file PDF', 'error');
+      if (typeof PDFLib === 'undefined') return SPS.toast('Thư viện PDF chưa tải được. Kiểm tra CDN.', 'error');
       try {
         const merged = await PDFLib.PDFDocument.create();
-        for (const f of files) { const b = await f.arrayBuffer(); const d = await PDFLib.PDFDocument.load(b); const p = await merged.copyPages(d, d.getPageIndices()); p.forEach(x => merged.addPage(x)); }
+        for (const file of files) {
+          const bytes = await file.arrayBuffer();
+          const doc = await PDFLib.PDFDocument.load(bytes);
+          const pages = await merged.copyPages(doc, doc.getPageIndices());
+          pages.forEach(p => merged.addPage(p));
+        }
         const out = await merged.save();
         SPS.download(new Blob([out], { type: 'application/pdf' }), 'sps-merged.pdf');
-        SPS.toast('Đã ghép ' + files.length + ' file', 'success');
+        SPS.toast('Đã ghép ' + files.length + ' file PDF', 'success');
       } catch (e) { SPS.toast('Lỗi: ' + e.message, 'error'); }
     },
     async text() {
-      const txt = document.getElementById('pdf-text').value; if (!txt.trim()) return SPS.toast('Nhập văn bản', 'error');
-      if (typeof PDFLib === 'undefined') return SPS.toast('pdf-lib chưa tải', 'error');
+      const txt = document.getElementById('pdf-text').value;
+      if (!txt.trim()) return SPS.toast('Nhập văn bản', 'error');
+      if (typeof PDFLib === 'undefined') return SPS.toast('Thư viện PDF chưa tải được', 'error');
       try {
         const doc = await PDFLib.PDFDocument.create();
         const font = await doc.embedFont(PDFLib.StandardFonts.Helvetica);
         const page = doc.addPage([595, 842]);
-        let y = 800; const size = 12;
-        for (const line of txt.split('\n')) {
-          if (y < 40) { page.drawText(line.slice(0, 100), { x: 50, y: 40, size, font, maxWidth: 495 }); break; }
-          page.drawText(line.slice(0, 100), { x: 50, y, size, font, maxWidth: 495 }); y -= size * 1.5;
+        const lines = txt.split('\n');
+        let y = 800;
+        const size = 12;
+        for (const line of lines) {
+          if (y < 40) { page.drawText(line.slice(0, 200), { x: 50, y: 40, size, font }); break; }
+          page.drawText(line.slice(0, 100), { x: 50, y, size, font, maxWidth: 495 });
+          y -= size * 1.5;
         }
         const out = await doc.save();
         SPS.download(new Blob([out], { type: 'application/pdf' }), 'sps-text.pdf');
@@ -1269,136 +2151,48 @@ const SPS = {
       const file = document.getElementById('pdf-split-file').files[0];
       const from = +document.getElementById('pdf-split-from').value;
       const to = +document.getElementById('pdf-split-to').value;
-      if (!file) return SPS.toast('Chọn file', 'error');
+      if (!file) return SPS.toast('Chọn file PDF', 'error');
       if (!from || !to || from < 1 || to < from) return SPS.toast('Khoảng trang không hợp lệ', 'error');
-      if (typeof PDFLib === 'undefined') return SPS.toast('pdf-lib chưa tải', 'error');
+      if (typeof PDFLib === 'undefined') return SPS.toast('Thư viện PDF chưa tải', 'error');
       try {
-        const b = await file.arrayBuffer();
-        const d = await PDFLib.PDFDocument.load(b);
-        const total = d.getPageCount();
-        const fi = from - 1, ti = Math.min(to - 1, total - 1);
-        if (fi >= total) return SPS.toast('Trang vượt quá ' + total, 'error');
-        const nd = await PDFLib.PDFDocument.create();
-        const idx = []; for (let i = fi; i <= ti; i++) idx.push(i);
-        const ps = await nd.copyPages(d, idx); ps.forEach(p => nd.addPage(p));
-        const out = await nd.save();
-        SPS.download(new Blob([out], { type: 'application/pdf' }), `sps-pages-${from}-${ti + 1}.pdf`);
-        SPS.toast('Đã tách ' + idx.length + ' trang', 'success');
+        const bytes = await file.arrayBuffer();
+        const doc = await PDFLib.PDFDocument.load(bytes);
+        const total = doc.getPageCount();
+        const fromIdx = from - 1, toIdx = Math.min(to - 1, total - 1);
+        if (fromIdx >= total) return SPS.toast('Trang bắt đầu vượt quá số trang (' + total + ')', 'error');
+        const newDoc = await PDFLib.PDFDocument.create();
+        const indices = [];
+        for (let i = fromIdx; i <= toIdx; i++) indices.push(i);
+        const pages = await newDoc.copyPages(doc, indices);
+        pages.forEach(p => newDoc.addPage(p));
+        const out = await newDoc.save();
+        SPS.download(new Blob([out], { type: 'application/pdf' }), `sps-pages-${from}-${toIdx + 1}.pdf`);
+        SPS.toast('Đã tách ' + indices.length + ' trang', 'success');
       } catch (e) { SPS.toast('Lỗi: ' + e.message, 'error'); }
     },
     async meta() {
       const file = document.getElementById('pdf-meta-file').files[0];
-      const out = document.getElementById('pdf-meta-out'); if (!file) return;
-      if (typeof PDFLib === 'undefined') return SPS.toast('pdf-lib chưa tải', 'error');
+      const out = document.getElementById('pdf-meta-out');
+      if (!file) return;
+      if (typeof PDFLib === 'undefined') return SPS.toast('Thư viện PDF chưa tải', 'error');
       try {
-        const b = await file.arrayBuffer();
-        const d = await PDFLib.PDFDocument.load(b);
-        out.innerHTML = `<div class="glass" style="padding:12px"><div><strong>Trang:</strong> ${d.getPageCount()}</div><div><strong>Tiêu đề:</strong> ${SPS.esc(d.getTitle() || 'N/A')}</div><div><strong>Tác giả:</strong> ${SPS.esc(d.getAuthor() || 'N/A')}</div><div><strong>Chủ đề:</strong> ${SPS.esc(d.getSubject() || 'N/A')}</div><div><strong>Dung lượng:</strong> ${(file.size / 1024).toFixed(1)} KB</div></div>`;
+        const bytes = await file.arrayBuffer();
+        const doc = await PDFLib.PDFDocument.load(bytes);
+        out.innerHTML = `
+          <div class="glass" style="padding:12px">
+            <div><strong>Số trang:</strong> ${doc.getPageCount()}</div>
+            <div><strong>Tiêu đề:</strong> ${SPS.esc(doc.getTitle() || 'N/A')}</div>
+            <div><strong>Tác giả:</strong> ${SPS.esc(doc.getAuthor() || 'N/A')}</div>
+            <div><strong>Chủ đề:</strong> ${SPS.esc(doc.getSubject() || 'N/A')}</div>
+            <div><strong>Tạo bởi:</strong> ${SPS.esc(doc.getCreator() || 'N/A')}</div>
+            <div><strong>Dung lượng:</strong> ${(file.size / 1024).toFixed(1)} KB</div>
+          </div>
+        `;
       } catch (e) { out.innerHTML = '<span style="color:var(--danger)">Lỗi: ' + SPS.esc(e.message) + '</span>'; }
     }
   },
 
-  async imgbbUpload() {
-    const key = document.getElementById('imgbb-key').value.trim();
-    const file = document.getElementById('imgbb-file').files[0];
-    const out = document.getElementById('imgbb-result');
-    if (!key) return SPS.toast('Nhập ImgBB API key', 'error');
-    if (!file) return SPS.toast('Chọn ảnh', 'error');
-    if (file.size > 32 * 1024 * 1024) return SPS.toast('Vượt 32MB', 'error');
-    out.innerHTML = '<p class="muted">Đang upload...</p>';
-    try {
-      const fd = new FormData(); fd.append('image', file);
-      const r = await fetch(`https://api.imgbb.com/1/upload?key=${key}`, { method: 'POST', body: fd });
-      const d = await r.json();
-      if (!d.success) throw new Error(d.error?.message || 'Upload thất bại');
-      const url = d.data.url;
-      out.innerHTML = `<div class="glass" style="padding:12px;word-break:break-all"><strong>URL:</strong><br>${SPS.esc(url)} <button class="btn btn-sm mt-2" onclick="SPS.copy('${url}')">Sao chép</button></div><img src="${url}" style="max-width:100%;border-radius:12px;margin-top:10px">`;
-    } catch (e) { out.innerHTML = `<span class="badge badge-danger">Lỗi</span> ${SPS.esc(e.message)}`; }
-  },
-
-  async cloudinaryUpload() {
-    const cn = document.getElementById('cld-cloud').value.trim();
-    const pr = document.getElementById('cld-preset').value.trim();
-    const file = document.getElementById('cld-file').files[0];
-    const out = document.getElementById('cld-result');
-    if (!cn || !pr) return SPS.toast('Nhập Cloud name và preset', 'error');
-    if (!file) return SPS.toast('Chọn ảnh', 'error');
-    out.innerHTML = '<p class="muted">Đang upload...</p>';
-    try {
-      const fd = new FormData(); fd.append('file', file); fd.append('upload_preset', pr);
-      const r = await fetch(`https://api.cloudinary.com/v1_1/${cn}/image/upload`, { method: 'POST', body: fd });
-      const d = await r.json();
-      if (d.error) throw new Error(d.error.message);
-      out.innerHTML = `<div class="glass" style="padding:12px;word-break:break-all"><strong>URL:</strong><br>${SPS.esc(d.secure_url)} <button class="btn btn-sm mt-2" onclick="SPS.copy('${d.secure_url}')">Sao chép</button></div>`;
-    } catch (e) { out.innerHTML = `<span class="badge badge-danger">Lỗi</span> ${SPS.esc(e.message)}`; }
-  },
-
-  async shortUrl() {
-    const url = document.getElementById('short-url').value.trim();
-    const out = document.getElementById('short-result');
-    if (!/^https?:\/\//i.test(url)) return SPS.toast('URL phải bắt đầu bằng http(s)://', 'error');
-    out.innerHTML = '<p class="muted">Đang xử lý...</p>';
-    const ep = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(url)}`;
-    try {
-      let r = await fetch(ep); let text = await r.text();
-      if (!r.ok || !text.startsWith('http')) {
-        const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(ep)}`;
-        r = await fetch(proxy); text = await r.text();
-      }
-      if (!text.startsWith('http')) throw new Error(text.trim() || 'Không thể rút gọn');
-      out.innerHTML = `<div class="glass" style="padding:12px;word-break:break-all"><strong>Link:</strong><br><a href="${text}" target="_blank" style="color:var(--primary)">${text}</a> <button class="btn btn-sm mt-2" onclick="SPS.copy('${text}')">Sao chép</button></div>`;
-    } catch (e) {
-      out.innerHTML = `<span class="badge badge-danger">Lỗi</span> ${SPS.esc(e.message)}<br><p class="muted" style="font-size:12px;margin-top:8px">is.gd có thể đã giới hạn request. Thử lại sau.</p>`;
-    }
-  },
-
-  async checkFb() {
-    const url = document.getElementById('fb-url').value.trim();
-    const out = document.getElementById('fb-result');
-    if (!/^https?:\/\/(www\.)?(facebook|fb)\.com\//i.test(url)) { out.innerHTML = '<span class="badge badge-danger">URL không hợp lệ</span>'; return; }
-    out.innerHTML = '<p class="muted">Đang kiểm tra...</p>';
-    try {
-      const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-      const r = await fetch(proxy, { method: 'HEAD' });
-      out.innerHTML = `<div class="glass" style="padding:12px"><strong>HTTP:</strong> ${r.status}<br><span class="badge ${r.ok ? 'badge-success' : 'badge-danger'}">${r.ok ? 'Có thể truy cập' : 'Không truy cập'}</span><p class="muted" style="font-size:11px;margin-top:8px">Thời gian: ${new Date().toLocaleString('vi-VN')}</p></div>`;
-    } catch (e) {
-      out.innerHTML = `<span class="badge badge-warn">Không thể kiểm tra</span><p class="muted" style="font-size:12px;margin-top:6px">${SPS.esc(e.message)}. Facebook chặn truy cập từ bên thứ ba.</p>`;
-    }
-  },
-
-  disaster: {
-    async load() {
-      const out = document.getElementById('disaster-output');
-      if (!out) return;
-      out.innerHTML = '<p class="muted">Đang tải cảnh báo...</p>';
-      const feeds = [
-        'https://vnexpress.net/rss/thoi-su.rss',
-        'https://tuoitre.vn/rss/tin-moi-nhat.rss'
-      ];
-      try {
-        let all = [];
-        for (const feed of feeds) {
-          try {
-            const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(feed)}`;
-            const r = await fetch(proxy);
-            const text = await r.text();
-            const doc = new DOMParser().parseFromString(text, 'text/xml');
-            const items = [...doc.querySelectorAll('item')];
-            all.push(...items.map(it => ({
-              title: it.querySelector('title')?.textContent || '',
-              link: it.querySelector('link')?.textContent || '#',
-              date: it.querySelector('pubDate')?.textContent || ''
-            })).filter(x => /bão|lũ|lụt|sạt lở|dông|sét|áp thấp|mưa lớn|nắng nóng|rét|triều cường|thiên tai|ngập/i.test(x.title)));
-          } catch (e) {}
-        }
-        if (!all.length) { out.innerHTML = '<p class="muted">Không có tin cảnh báo mới. Theo dõi <a href="https://kttv.gov.vn" target="_blank" style="color:var(--primary)">kttv.gov.vn</a>.</p>'; return; }
-        all = all.slice(0, 6);
-        out.innerHTML = all.map(n => `<div class="glass" style="padding:10px;margin-bottom:6px"><strong>${SPS.esc(n.title)}</strong><p class="muted" style="font-size:11px;margin-top:4px">${new Date(n.date).toLocaleString('vi-VN')}</p><a href="${SPS.esc(n.link)}" target="_blank" style="color:var(--primary);font-size:12px">Đọc tiếp →</a></div>`).join('') +
-          `<p class="muted" style="font-size:11px;margin-top:8px">⚠️ Tin từ báo chí, không phải cảnh báo chính thức NCHMF.</p>`;
-      } catch (e) { out.innerHTML = `<span class="badge badge-danger">Lỗi</span> ${SPS.esc(e.message)}`; }
-    }
-  },
-
+  // ---- MUSIC ----
   music: {
     tracks: [
       { name: 'Người Đứng Wen Remix', url: 'https://m.soundcloud.com/doyu-358490204/jack-j97-ng-i-d-ng-wen-remix' },
@@ -1413,65 +2207,138 @@ const SPS = {
     close() { document.getElementById('music-widget').classList.remove('open'); },
     load(i) {
       SPS.state.music.track = i;
-      const embed = 'https://w.soundcloud.com/player/?url=' + encodeURIComponent(this.tracks[i].url) + '&color=%234d7bff&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false';
-      document.getElementById('music-iframe-wrap').innerHTML = `<iframe allow="autoplay" src="${embed}" style="height:120px"></iframe>`;
+      const t = this.tracks[i];
+      const embedUrl = 'https://w.soundcloud.com/player/?url=' + encodeURIComponent(t.url) + '&color=%234d7bff&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false';
+      document.getElementById('music-iframe-wrap').innerHTML = `<iframe allow="autoplay" src="${embedUrl}" style="height:120px"></iframe>`;
     },
-    next() { const i = (SPS.state.music.track + 1) % this.tracks.length; document.getElementById('music-select').value = i; this.load(i); },
-    prev() { const i = (SPS.state.music.track - 1 + this.tracks.length) % this.tracks.length; document.getElementById('music-select').value = i; this.load(i); }
+    next() {
+      const i = (SPS.state.music.track + 1) % this.tracks.length;
+      document.getElementById('music-select').value = i;
+      this.load(i);
+    },
+    prev() {
+      const i = (SPS.state.music.track - 1 + this.tracks.length) % this.tracks.length;
+      document.getElementById('music-select').value = i;
+      this.load(i);
+    }
   },
 
+  // ---- EFFECTS CANVAS ----
   effects: {
     _raf: null,
+    _particles: [],
     init() {
-      this.canvas = document.getElementById('effects-canvas');
-      if (!this.canvas) return;
-      this.ctx = this.canvas.getContext('2d');
+      const canvas = document.getElementById('effects-canvas');
+      if (!canvas) return;
+      this.canvas = canvas;
+      this.ctx = canvas.getContext('2d');
       this.resize();
       window.addEventListener('resize', () => this.resize());
       this.loop();
     },
-    resize() { if (!this.canvas) return; this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; },
+    resize() {
+      if (!this.canvas) return;
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+    },
     loop() {
-      const ctx = this.ctx; if (!ctx) return;
+      const ctx = this.ctx;
+      if (!ctx) return;
       ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
       const fx = SPS.state.effects;
-      if (!SPS.state.reduceMotion) {
-        if (fx.stars) { for (let i = 0; i < 30 * fx.density; i++) { ctx.fillStyle = `rgba(255,255,255,${0.3 * fx.brightness})`; ctx.beginPath(); ctx.arc((i * 137) % this.canvas.width, (i * 89 + Date.now() * 0.01 * fx.speed) % this.canvas.height, 1.2, 0, Math.PI * 2); ctx.fill(); } }
-        if (fx.rain) { ctx.strokeStyle = 'rgba(150,200,255,0.4)'; ctx.lineWidth = 1; for (let i = 0; i < 80 * fx.density; i++) { const x = (i * 73 + Date.now() * 0.1 * fx.speed) % this.canvas.width; const y = (i * 137 + Date.now() * 0.8 * fx.speed) % this.canvas.height; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 2, y + 15); ctx.stroke(); } }
-        if (fx.snow) { ctx.fillStyle = 'rgba(255,255,255,0.7)'; for (let i = 0; i < 40 * fx.density; i++) { const x = (i * 97 + Math.sin(Date.now() * 0.001 + i) * 30) % this.canvas.width; const y = (i * 53 + Date.now() * 0.05 * fx.speed) % this.canvas.height; ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2); ctx.fill(); } }
+      if (SPS.state.reduceMotion) { this._raf = requestAnimationFrame(() => this.loop()); return; }
+
+      // Stars
+      if (fx.stars) {
+        for (let i = 0; i < 30 * fx.density; i++) {
+          ctx.fillStyle = `rgba(255,255,255,${0.3 * fx.brightness})`;
+          ctx.beginPath();
+          ctx.arc((i * 137) % this.canvas.width, (i * 89 + Date.now() * 0.01 * fx.speed) % this.canvas.height, 1.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      // Rain
+      if (fx.rain) {
+        ctx.strokeStyle = 'rgba(150,200,255,0.4)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < 80 * fx.density; i++) {
+          const x = (i * 73 + Date.now() * 0.1 * fx.speed) % this.canvas.width;
+          const y = (i * 137 + Date.now() * 0.8 * fx.speed) % this.canvas.height;
+          ctx.beginPath();
+          ctx.moveTo(x, y); ctx.lineTo(x - 2, y + 15);
+          ctx.stroke();
+        }
+      }
+      // Snow
+      if (fx.snow) {
+        ctx.fillStyle = 'rgba(255,255,255,0.7)';
+        for (let i = 0; i < 40 * fx.density; i++) {
+          const x = (i * 97 + Math.sin(Date.now() * 0.001 + i) * 30) % this.canvas.width;
+          const y = (i * 53 + Date.now() * 0.05 * fx.speed) % this.canvas.height;
+          ctx.beginPath();
+          ctx.arc(x, y, 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
       this._raf = requestAnimationFrame(() => this.loop());
     }
   },
 
+  // ---- ACCESSIBILITY PANEL ----
   a11y: {
     render() {
-      const p = document.getElementById('a11y-panel'); if (!p) return;
+      const p = document.getElementById('a11y-panel');
+      if (!p) return;
       const fx = SPS.state.effects;
-      p.innerHTML = `<h4>♿ Trợ năng <button class="icon-btn" style="width:26px;height:26px" onclick="SPS.a11y.close()"><i data-lucide="x" style="width:14px;height:14px"></i></button></h4>
+      p.innerHTML = `
+        <h4>♿ Trợ năng <button class="icon-btn" style="width:26px;height:26px" onclick="SPS.a11y.close()"><i data-lucide="x" style="width:14px;height:14px"></i></button></h4>
         <div class="a11y-row"><span>Theme</span><button class="btn btn-sm" onclick="SPS.toggleTheme()">${SPS.state.theme === 'dark' ? '☀️ Sáng' : '🌙 Tối'}</button></div>
-        <div class="a11y-row"><span>Cỡ chữ</span><input type="range" min="12" max="22" value="${parseInt(getComputedStyle(document.documentElement).fontSize) || 16}" oninput="document.documentElement.style.setProperty('--fs', this.value + 'px')"></div>
-        <div class="a11y-row"><span>Giảm chuyển động</span><label class="switch"><input type="checkbox" ${SPS.state.reduceMotion ? 'checked' : ''} onchange="SPS.state.reduceMotion=this.checked;document.documentElement.setAttribute('data-reduce-motion',this.checked?1:0);SPS.store.save()"><span></span></label></div>
+        <div class="a11y-row"><span>Cỡ chữ</span>
+          <input type="range" min="12" max="22" value="${parseInt(getComputedStyle(document.documentElement).fontSize) || 16}" oninput="document.documentElement.style.setProperty('--fs', this.value + 'px')">
+        </div>
+        <div class="a11y-row"><span>Giảm chuyển động</span>
+          <label class="switch"><input type="checkbox" ${SPS.state.reduceMotion ? 'checked' : ''} onchange="SPS.state.reduceMotion=this.checked;document.documentElement.setAttribute('data-reduce-motion',this.checked?1:0);SPS.store.save()"><span></span></label>
+        </div>
         <div style="margin:12px 0 8px;font-size:12px;font-weight:600;color:var(--muted)">HIỆU ỨNG NỀN</div>
-        ${[['stars', '⭐ Sao'], ['snow', '❄️ Tuyết'], ['rain', '🌧️ Mưa']].map(([k, l]) => `<div class="a11y-row"><span>${l}</span><label class="switch"><input type="checkbox" ${fx[k] ? 'checked' : ''} onchange="SPS.state.effects.${k}=this.checked;SPS.store.save()"><span></span></label></div>`).join('')}
+        ${[
+          ['stars', '⭐ Sao'], ['snow', '❄️ Tuyết'], ['rain', '🌧️ Mưa']
+        ].map(([k, label]) => `
+          <div class="a11y-row"><span>${label}</span>
+            <label class="switch"><input type="checkbox" ${fx[k] ? 'checked' : ''} onchange="SPS.state.effects.${k}=this.checked;SPS.store.save()"><span></span></label>
+          </div>
+        `).join('')}
         <div class="a11y-row"><span>Tốc độ</span><input type="range" min="0.2" max="3" step="0.1" value="${fx.speed}" oninput="SPS.state.effects.speed=+this.value;SPS.store.save()"></div>
         <div class="a11y-row"><span>Mật độ</span><input type="range" min="0.2" max="3" step="0.1" value="${fx.density}" oninput="SPS.state.effects.density=+this.value;SPS.store.save()"></div>
         <div class="a11y-row"><span>Độ sáng</span><input type="range" min="0.2" max="1.5" step="0.1" value="${fx.brightness}" oninput="SPS.state.effects.brightness=+this.value;SPS.store.save()"></div>
-        <button class="btn btn-sm" style="width:100%;margin-top:12px" onclick="SPS.a11y.reset()">Đặt lại</button>`;
+        <button class="btn btn-sm" style="width:100%;margin-top:12px" onclick="SPS.a11y.reset()">Đặt lại tùy chỉnh</button>
+      `;
       if (window.lucide) lucide.createIcons();
     },
     open() { document.getElementById('a11y-panel').classList.add('open'); this.render(); },
     close() { document.getElementById('a11y-panel').classList.remove('open'); },
     toggle() { document.getElementById('a11y-panel').classList.toggle('open'); this.render(); },
-    reset() { SPS.state.effects = { stars: true, snow: false, rain: false, speed: 1, density: 1, brightness: 1 }; SPS.state.reduceMotion = false; document.documentElement.removeAttribute('data-reduce-motion'); document.documentElement.style.removeProperty('--fs'); SPS.store.save(); this.render(); SPS.toast('Đã reset', 'success'); }
+    reset() {
+      SPS.state.effects = { stars: true, snow: false, rain: false, speed: 1, density: 1, brightness: 1 };
+      SPS.state.reduceMotion = false;
+      document.documentElement.removeAttribute('data-reduce-motion');
+      document.documentElement.style.removeProperty('--fs');
+      SPS.store.save();
+      this.render();
+      SPS.toast('Đã reset', 'success');
+    }
   },
 
-  init() {
+  // ======================================================
+  // INIT
+  // ======================================================
+  async init() {
+    // Load persisted state
     this.store.load();
     document.documentElement.setAttribute('data-theme', this.state.theme || 'dark');
     document.documentElement.setAttribute('lang', this.state.lang || 'vi');
     if (this.state.reduceMotion) document.documentElement.setAttribute('data-reduce-motion', '1');
 
+    // Seed sample data on first launch
     if (!this.state.products || !this.state.products.length) {
       this.state.products = [
         { id: 'p1', name: 'Acc Liên Quân VIP', category: 'Shop Liên Quân', price: 250000, sale: 199000, featured: true, created: Date.now() - 1000 },
@@ -1489,7 +2356,10 @@ const SPS = {
       this.store.save();
     }
 
+    // Start effects
     this.effects.init();
+
+    // Event listeners
     document.getElementById('lang-btn').addEventListener('click', () => this.openLangPicker());
     document.getElementById('music-btn').addEventListener('click', () => this.music.open());
     document.getElementById('music-select').addEventListener('change', e => this.music.load(+e.target.value));
@@ -1497,26 +2367,33 @@ const SPS = {
     document.getElementById('music-prev').addEventListener('click', () => this.music.prev());
     document.getElementById('a11y-fab').addEventListener('click', () => this.a11y.toggle());
 
+    // Topbar scroll
     let ticking = false;
     window.addEventListener('scroll', () => {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        const tb = document.getElementById('topbar');
-        if (window.scrollY > 20) tb.classList.add('scrolled'); else tb.classList.remove('scrolled');
+        const topbar = document.getElementById('topbar');
+        if (window.scrollY > 20) topbar.classList.add('scrolled');
+        else topbar.classList.remove('scrolled');
         ticking = false;
       });
     });
 
+    // Router
     window.addEventListener('hashchange', () => this.render());
     if (!location.hash) location.hash = '#/home';
 
+    // Initial render
     this.render();
     this.a11y.render();
+
+    // Wait for lucide
     setTimeout(() => { if (window.lucide) lucide.createIcons(); }, 100);
   }
 };
 
+// Boot
 document.addEventListener('DOMContentLoaded', () => SPS.init());
 </script>
 </body>
