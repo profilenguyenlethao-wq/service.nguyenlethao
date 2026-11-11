@@ -1,340 +1,1230 @@
 <!DOCTYPE html>
-<html lang="vi" data-theme="dark">
+<html lang="vi" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-<meta name="description" content="SPS – Service Processing Support. Nền tảng MMO, công cụ tiện ích, dịch vụ số.">
-<meta property="og:title" content="SPS – Service Processing Support">
-<meta property="og:description" content="Bộ công cụ MMO, PDF, Weather, Business và dịch vụ số chuyên nghiệp.">
-<title>SPS – Service Processing Support</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%234d7bff'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>S</text></svg>">
-<script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#05070d;--bg-2:#0a0f1a;--glass:rgba(255,255,255,.06);--glass-2:rgba(255,255,255,.1);--border:rgba(255,255,255,.12);--text:#eaf0ff;--muted:#8b98b0;--primary:#4d7bff;--secondary:#a855f7;--accent:#22d3ee;--success:#22c55e;--danger:#ef4444;--warning:#f59e0b;--radius:18px;--blur:20px;--shadow:0 8px 32px rgba(0,0,0,.4);--fs:16px;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-[data-theme="light"]{--bg:#eef2f9;--bg-2:#e4eaf5;--glass:rgba(255,255,255,.6);--glass-2:rgba(255,255,255,.85);--border:rgba(10,20,40,.08);--text:#0b1425;--muted:#59677f;--shadow:0 8px 32px rgba(30,50,90,.1)}
-html,body{height:100%}
-body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:var(--fs);overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.55;transition:background .3s,color .3s}
-#bg-layer{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
-#bg-layer::before{content:'';position:absolute;inset:-20%;background:radial-gradient(circle at 15% 20%,rgba(77,123,255,.25),transparent 45%),radial-gradient(circle at 85% 80%,rgba(168,85,247,.2),transparent 45%),radial-gradient(circle at 60% 40%,rgba(34,211,238,.15),transparent 50%);animation:bgMove 30s ease-in-out infinite}
-@keyframes bgMove{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(3%,-3%) scale(1.08)}}
-[data-reduce-motion="1"] *{animation-duration:.01ms !important;transition-duration:.01ms !important}
-.glass{background:var(--glass);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);position:relative;overflow:hidden}
-.glass::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 40%)}
-header.topbar{position:sticky;top:0;z-index:100;background:var(--glass);backdrop-filter:blur(calc(var(--blur)*1.2));border-bottom:1px solid var(--border);transition:all .3s}
-header.topbar.scrolled{box-shadow:var(--shadow);background:var(--glass-2)}
-.nav-wrap{max-width:1400px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:14px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;cursor:pointer;user-select:none}
-.logo-icon{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:800;font-size:19px;box-shadow:0 4px 16px rgba(77,123,255,.5)}
-nav.desktop-nav{display:flex;gap:2px;flex:1;margin-left:12px}
-nav.desktop-nav a{padding:8px 12px;border-radius:10px;color:var(--muted);font-size:14px;text-decoration:none;cursor:pointer;transition:all .18s;font-weight:500}
-nav.desktop-nav a:hover,nav.desktop-nav a.active{background:var(--glass-2);color:var(--text)}
-.nav-actions{display:flex;gap:6px;align-items:center}
-.icon-btn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--glass);border:1px solid var(--border);color:var(--text);cursor:pointer;transition:all .18s}
-.icon-btn:hover{background:var(--glass-2);transform:translateY(-1px)}
-.icon-btn:active{transform:scale(.96)}
-main{max-width:1400px;margin:0 auto;padding:20px 18px 100px}
-.page-title{font-size:clamp(24px,4vw,36px);font-weight:800;margin-bottom:6px;letter-spacing:-.02em}
-.page-sub{color:var(--muted);margin-bottom:22px;font-size:15px}
-.section{margin:28px 0}
-.section h2{font-size:22px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px}
-.hero{padding:60px 30px;text-align:center;position:relative;overflow:hidden}
-.hero h1{font-size:clamp(30px,5.5vw,54px);font-weight:800;line-height:1.1;margin-bottom:16px;letter-spacing:-.03em}
-.hero h1 .grad{background:linear-gradient(135deg,var(--primary),var(--secondary),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{color:var(--muted);font-size:17px;max-width:640px;margin:0 auto 24px}
-.btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.btn{padding:12px 22px;border-radius:13px;border:1px solid var(--border);background:var(--glass);color:var(--text);font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px;font-family:inherit;text-decoration:none}
-.btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
-.btn:active{transform:scale(.97)}
-.btn-primary{background:linear-gradient(135deg,var(--primary),var(--secondary));border:none;color:#fff;box-shadow:0 6px 22px rgba(77,123,255,.4)}
-.btn-primary:hover{filter:brightness(1.1)}
-.btn-sm{padding:8px 14px;font-size:13px;border-radius:10px}
-.btn-danger{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4);color:#ff8585}
-.grid{display:grid;gap:16px}
-.grid-2{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
-.grid-3{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
-.grid-4{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
-.card{padding:20px;cursor:pointer;transition:transform .2s,box-shadow .2s}
-.card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.25)}
-.card h3{font-size:16px;font-weight:700;margin-bottom:6px}
-.card p{font-size:13px;color:var(--muted);line-height:1.5}
-.card .icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;margin-bottom:14px;background:linear-gradient(135deg,rgba(77,123,255,.25),rgba(168,85,247,.25));color:var(--primary)}
-.form-group{margin-bottom:16px}
-.form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--muted)}
-input,textarea,select{width:100%;padding:11px 14px;border-radius:11px;background:var(--glass);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:14px;transition:border .18s,box-shadow .18s}
-input:focus,textarea:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(77,123,255,.15)}
-textarea{min-height:100px;resize:vertical}
-.input-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:600px){.input-row{grid-template-columns:1fr}}
-.tbl{width:100%;border-collapse:collapse;font-size:14px}
-.tbl th,.tbl td{padding:11px 10px;text-align:left;border-bottom:1px solid var(--border)}
-.tbl th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.03em}
-.tbl tr:hover td{background:var(--glass)}
-.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:1000;display:grid;place-items:center;padding:16px;animation:fadeIn .2s}
-.modal{width:100%;max-width:560px;max-height:88vh;overflow-y:auto;padding:24px;background:var(--bg-2);border:1px solid var(--border);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:slideUp .25s}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.modal h3{font-size:20px;margin-bottom:16px}
-#toast-container{position:fixed;top:80px;right:16px;z-index:2000;display:flex;flex-direction:column;gap:8px;max-width:360px}
-.toast{padding:12px 18px;border-radius:12px;background:var(--bg-2);border:1px solid var(--border);color:var(--text);font-size:14px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.3);animation:slideIn .25s;display:flex;align-items:center;gap:10px}
-.toast.success{border-left:3px solid var(--success)}
-.toast.error{border-left:3px solid var(--danger)}
-.toast.info{border-left:3px solid var(--primary)}
-@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-nav.mobile-nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:none;gap:4px;padding:8px;background:var(--glass-2);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);z-index:150;max-width:calc(100vw - 24px)}
-nav.mobile-nav a{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;color:var(--muted);cursor:pointer;transition:all .18s;position:relative}
-nav.mobile-nav a.active{color:var(--primary);background:rgba(77,123,255,.15)}
-@media(max-width:900px){nav.desktop-nav{display:none}nav.mobile-nav{display:flex}main{padding-bottom:120px}}
-#effects-canvas{position:fixed;inset:0;pointer-events:none;z-index:0}
-.fab{position:fixed;z-index:200;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));border:none;color:#fff;cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 24px rgba(77,123,255,.5);transition:transform .2s}
-.fab:hover{transform:scale(1.08)}
-.a11y-panel{position:fixed;z-index:210;width:320px;max-height:80vh;overflow-y:auto;padding:20px;background:var(--glass-2);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);display:none}
-.a11y-panel.open{display:block;animation:slideUp .25s}
-.a11y-panel h4{font-size:15px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
-.a11y-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
-.a11y-row:last-child{border:none}
-.a11y-row input[type="range"]{width:110px}
-.switch{position:relative;width:38px;height:22px;flex-shrink:0}
-.switch input{opacity:0;width:0;height:0}
-.switch span{position:absolute;inset:0;background:var(--border);border-radius:22px;cursor:pointer;transition:.2s}
-.switch span::before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
-.switch input:checked + span{background:var(--primary)}
-.switch input:checked + span::before{transform:translateX(16px)}
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
-.badge-success{background:rgba(34,197,94,.15);color:#4ade80}
-.badge-warn{background:rgba(245,158,11,.15);color:#fbbf24}
-.badge-danger{background:rgba(239,68,68,.15);color:#f87171}
-.badge-info{background:rgba(77,123,255,.15);color:#93c5fd}
-.product-card{padding:0;overflow:hidden;display:flex;flex-direction:column}
-.product-img{aspect-ratio:16/9;background:linear-gradient(135deg,rgba(77,123,255,.3),rgba(168,85,247,.3));display:grid;place-items:center;font-size:40px;color:var(--primary)}
-.product-body{padding:16px;flex:1;display:flex;flex-direction:column;gap:8px}
-.product-body .price{font-size:18px;font-weight:800;color:var(--primary)}
-.product-body .price s{font-size:13px;color:var(--muted);font-weight:400;margin-left:6px}
-.hidden{display:none !important}
-.center{text-align:center}
-.mt-2{margin-top:16px}
-.mt-3{margin-top:24px}
-.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.muted{color:var(--muted)}
-.totp-display{font-size:44px;font-weight:800;letter-spacing:8px;font-family:'SF Mono',Menlo,monospace;text-align:center;padding:20px;color:var(--primary)}
-.totp-bar{height:4px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:10px}
-.totp-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .3s linear}
-#qr-output{display:grid;place-items:center;padding:16px;background:#fff;border-radius:14px;min-height:180px;margin-top:10px}
-#qr-output img{max-width:100%}
-.weather-hero{padding:30px;text-align:center;margin-bottom:20px}
-.weather-hero .temp{font-size:72px;font-weight:800;line-height:1;background:linear-gradient(135deg,#fff,var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.weather-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:20px}
-.weather-detail{padding:14px;background:rgba(255,255,255,.06);border-radius:12px;text-align:center}
-.weather-detail .label{font-size:12px;color:var(--muted);margin-bottom:4px}
-.weather-detail .val{font-size:16px;font-weight:700}
-.hourly-scroll{display:flex;gap:10px;overflow-x:auto;padding:14px 0}
-.hourly-item{min-width:80px;padding:12px;border-radius:12px;background:var(--glass);border:1px solid var(--border);text-align:center;font-size:12px}
-.hourly-item .hour{font-size:11px;color:var(--muted);margin-bottom:6px}
-.hourly-item .h-temp{font-size:16px;font-weight:700}
-.admin-tabs{display:flex;gap:4px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px}
-.admin-tabs button{padding:9px 16px;border-radius:11px;border:1px solid var(--border);background:var(--glass);color:var(--muted);cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;transition:.18s;font-family:inherit}
-.admin-tabs button.active{background:var(--primary);border-color:var(--primary);color:#fff}
-.music-widget{position:fixed;bottom:80px;right:16px;z-index:180;width:300px;padding:14px;background:var(--glass-2);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);display:none}
-.music-widget.open{display:block}
-@media(max-width:900px){.music-widget{bottom:90px;width:calc(100vw - 32px);right:16px}}
-.music-widget iframe{width:100%;border:none;border-radius:10px;height:120px}
-@media(max-width:600px){.hero{padding:40px 18px}.page-title{font-size:24px}}
-.note-card{padding:14px;min-height:120px;cursor:pointer}
-.note-card textarea{background:transparent;border:none;width:100%;resize:none;color:inherit;font-family:inherit;font-size:14px;min-height:80px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Thao Service • Premium MMO</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Soundcloud API -->
+    <script src="https://w.soundcloud.com/player/api.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Quicksand:wght@400;600;700&display=swap');
+        
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1e1b4b 100%);
+            --glass-bg: rgba(30, 41, 59, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        html.light {
+            --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #f8fafc 100%);
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+        }
+
+        body { 
+            font-family: 'Quicksand', 'Inter', sans-serif; 
+            overflow-x: hidden; 
+            background: var(--bg-gradient);
+            background-size: 200% 200%;
+            animation: gradientMove 15s ease infinite;
+            color: #f1f5f9;
+            min-height: 100vh;
+            transition: background 0.5s ease, color 0.3s;
+        }
+        html.light body { color: #0f172a; }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Liquid Glass Core */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            border-radius: 24px;
+        }
+        .glass-strong {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), var(--glass-shadow);
+        }
+
+        /* Hide Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Animations */
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        
+        .animate-bounce-in { animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+
+        .float-anim { animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+        /* Background Effects */
+        .snowflake, .flower, .lava { position: fixed; top: -10px; pointer-events: none; z-index: 0; animation: fall linear forwards; }
+        .lava { bottom: -10px; top: auto; border-radius: 50%; animation: rise linear forwards; }
+        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); opacity: 0.1; } }
+        @keyframes rise { to { transform: translateY(-105vh) rotate(-360deg); opacity: 0; } }
+
+        /* Premium Product Card */
+        .product-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+        }
+        .light .product-card { background: linear-gradient(145deg, #ffffff 0%, #f0f9ff 100%); border-color: #e2e8f0; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.4); }
+        
+        .product-image-wrapper {
+            position: relative;
+            background: radial-gradient(circle at center, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+        }
+        .product-img { position: relative; z-index: 1; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .product-card:hover .product-img { transform: scale(1.1) translateY(-10px); }
+
+        /* Buttons */
+        .btn-3d { transition: all 0.1s; }
+        .btn-3d:active { transform: translateY(2px) scale(0.98); box-shadow: none !important; }
+
+        /* iOS Style Bottom Nav */
+        .ios-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 50;
+        }
+        .light .ios-nav { background: rgba(255, 255, 255, 0.7); border-color: rgba(255, 255, 255, 0.9); }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 8px 16px; border-radius: 20px; transition: all 0.3s;
+            color: #94a3b8;
+        }
+        .nav-item.active { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .light .nav-item.active { background: rgba(59, 130, 246, 0.1); }
+        
+        /* FAB */
+        .fab { position: fixed; z-index: 50; touch-action: none; cursor: grab; }
+        .fab:active { cursor: grabbing; }
+    </style>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#3b82f6' } } } }
+    </script>
 </head>
-<body>
-<div id="bg-layer"></div>
-<canvas id="effects-canvas"></canvas>
-<header class="topbar" id="topbar">
-  <div class="nav-wrap">
-    <div class="logo" onclick="SPS.nav('home')"><div class="logo-icon">S</div><span>SPS</span></div>
-    <nav class="desktop-nav" id="desktop-nav"></nav>
-    <div class="nav-actions">
-      <button class="icon-btn" id="lang-btn" title="Language"><i data-lucide="languages"></i></button>
-      <button class="icon-btn" onclick="SPS.toggleTheme()" title="Theme"><i data-lucide="sun-moon"></i></button>
-      <button class="icon-btn" id="music-btn" title="Music"><i data-lucide="music"></i></button>
-      <button class="icon-btn" onclick="SPS.nav('admin')" title="Admin"><i data-lucide="shield"></i></button>
-    </div>
-  </div>
-</header>
-<main id="main"></main>
-<nav class="mobile-nav" id="mobile-nav"></nav>
-<button class="fab" id="a11y-fab" style="right:16px;bottom:24px" title="Accessibility"><i data-lucide="accessibility"></i></button>
-<div class="a11y-panel" id="a11y-panel"></div>
-<div class="music-widget" id="music-widget">
-  <h4 style="font-size:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center"><span>🎵 SPS Radio</span><button class="icon-btn" style="width:28px;height:28px" onclick="SPS.music.close()"><i data-lucide="x" style="width:16px;height:16px"></i></button></h4>
-  <div class="row" style="gap:6px;margin-bottom:10px;font-size:12px">
-    <button class="btn btn-sm" id="music-prev">◀</button>
-    <select id="music-select" style="flex:1;padding:6px;font-size:12px"></select>
-    <button class="btn btn-sm" id="music-next">▶</button>
-  </div>
-  <div id="music-iframe-wrap"></div>
-  <div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center">SoundCloud Embed · Không tự động phát</div>
-</div>
-<div id="toast-container"></div>
-<div id="modal-root"></div>
+<body class="pb-28 relative overflow-x-hidden">
 
-<script>
-const SPS = {
-state:{lang:'vi',theme:'dark',page:'home',admin:null,effects:{stars:true,snow:false,rain:false,speed:1,density:1,brightness:1},reduceMotion:false,music:{track:0},products:[],blog:[],orders:[],settings:{},notes:[],todos:[],events:[],pageData:{}},
-store:{
-  key:'sps_v2',
-  save(){try{const{lang,theme,effects,reduceMotion,products,blog,orders,settings,notes,todos,events,admin}=SPS.state;localStorage.setItem(this.key,JSON.stringify({lang,theme,effects,reduceMotion,products,blog,orders,settings,notes,todos,events,admin}))}catch(e){console.warn(e)}},
-  load(){try{const raw=localStorage.getItem(this.key);if(!raw)return false;Object.assign(SPS.state,JSON.parse(raw));return true}catch(e){return false}},
-  export(){const data=localStorage.getItem(this.key)||'{}';SPS.download(new Blob([data],{type:'application/json'}),'sps-backup-'+new Date().toISOString().slice(0,10)+'.json')},
-  async import(file){const text=await file.text();try{const o=JSON.parse(text);if(typeof o!=='object'||Array.isArray(o))throw new Error('Invalid');localStorage.setItem(this.key,JSON.stringify(o));SPS.toast('Đã phục hồi, đang tải lại...','success');setTimeout(()=>location.reload(),800)}catch(e){SPS.toast('File không hợp lệ: '+e.message,'error')}}
-},
-i18n:{
-vi:{home:'Trang chủ',products:'Sản phẩm',services:'Dịch vụ',tools:'Công cụ',blog:'Blog',support:'Hỗ trợ',admin:'Quản trị',profile:'Hồ sơ',search:'Tìm kiếm...',login:'Đăng nhập',logout:'Đăng xuất',hero_title:'Nền tảng MMO đa năng cho người sáng tạo',hero_desc:'Bộ công cụ tiện ích, dịch vụ số và bảng điều khiển SaaS được thiết kế cho cộng đồng MMO Việt Nam.',explore_tools:'Khám phá công cụ',view_services:'Xem dịch vụ',featured_services:'Dịch vụ nổi bật',featured_products:'Sản phẩm nổi bật',latest_updates:'Cập nhật mới',why_sps:'Vì sao chọn SPS',save:'Lưu',cancel:'Hủy',delete:'Xóa',edit:'Sửa',add:'Thêm',copy:'Sao chép',download:'Tải xuống',send:'Gửi',close:'Đóng',confirm:'Xác nhận',notes:'Ghi chú',currency:'Chuyển đổi tiền tệ',qr:'QR Generator',totp:'TOTP Auth',ip:'Thông tin IP',weather:'Thời tiết',crypto:'Giá Crypto',calculator:'Máy tính kinh doanh',todo:'Công việc',calendar:'Lịch',pdf_tools:'Công cụ PDF'},
-en:{home:'Home',products:'Products',services:'Services',tools:'Tools',blog:'Blog',support:'Support',admin:'Admin',profile:'Profile',search:'Search...',login:'Login',logout:'Logout',hero_title:'Multi-purpose MMO platform for creators',hero_desc:'Utility tools, digital services and SaaS dashboard for the Vietnamese MMO community.',explore_tools:'Explore Tools',view_services:'View Services',featured_services:'Featured Services',featured_products:'Featured Products',latest_updates:'Latest Updates',why_sps:'Why Choose SPS',save:'Save',cancel:'Cancel',delete:'Delete',edit:'Edit',add:'Add',copy:'Copy',download:'Download',send:'Send',close:'Close',confirm:'Confirm',notes:'Notes',currency:'Currency Converter',qr:'QR Generator',totp:'TOTP Auth',ip:'IP Information',weather:'Weather',crypto:'Crypto Prices',calculator:'Business Calculator',todo:'To-do',calendar:'Calendar',pdf_tools:'PDF Tools'},
-'zh-CN':{home:'首页',products:'产品',services:'服务',tools:'工具',blog:'博客',support:'支持',admin:'管理',profile:'个人资料',search:'搜索...',login:'登录',logout:'退出',hero_title:'面向创作者的多功能 MMO 平台',hero_desc:'为越南 MMO 社区设计的实用工具、数字服务和 SaaS 仪表板。',explore_tools:'探索工具',view_services:'查看服务',featured_services:'精选服务',featured_products:'精选产品',latest_updates:'最新更新',why_sps:'为什么选择 SPS',save:'保存',cancel:'取消',delete:'删除',edit:'编辑',add:'添加',copy:'复制',download:'下载',send:'发送',close:'关闭',confirm:'确认',notes:'笔记',currency:'货币转换器',qr:'二维码生成器',totp:'TOTP 验证',ip:'IP 信息',weather:'天气',crypto:'加密货币价格',calculator:'商业计算器',todo:'待办事项',calendar:'日历',pdf_tools:'PDF 工具'},
-'zh-TW':{home:'首頁',products:'產品',services:'服務',tools:'工具',blog:'部落格',support:'支援',admin:'管理',profile:'個人資料',search:'搜尋...',login:'登入',logout:'登出',hero_title:'面向創作者的多功能 MMO 平台',hero_desc:'為越南 MMO 社群設計的實用工具、數位服務和 SaaS 儀表板。',explore_tools:'探索工具',view_services:'查看服務',featured_services:'精選服務',featured_products:'精選產品',latest_updates:'最新更新',why_sps:'為什麼選擇 SPS',save:'儲存',cancel:'取消',delete:'刪除',edit:'編輯',add:'新增',copy:'複製',download:'下載',send:'傳送',close:'關閉',confirm:'確認',notes:'筆記',currency:'貨幣轉換器',qr:'二維碼生成器',totp:'TOTP 驗證',ip:'IP 資訊',weather:'天氣',crypto:'加密貨幣價格',calculator:'商業計算器',todo:'待辦事項',calendar:'日曆',pdf_tools:'PDF 工具'},
-ja:{home:'ホーム',products:'製品',services:'サービス',tools:'ツール',blog:'ブログ',support:'サポート',admin:'管理',profile:'プロフィール',search:'検索...',login:'ログイン',logout:'ログアウト',hero_title:'クリエイターのための多機能 MMO プラットフォーム',hero_desc:'ベトナムの MMO コミュニティ向けに設計されたユーティリティツール、デジタルサービス、SaaS ダッシュボード。',explore_tools:'ツールを探す',view_services:'サービスを見る',featured_services:'注目のサービス',featured_products:'注目の製品',latest_updates:'最新情報',why_sps:'SPS を選ぶ理由',save:'保存',cancel:'キャンセル',delete:'削除',edit:'編集',add:'追加',copy:'コピー',download:'ダウンロード',send:'送信',close:'閉じる',confirm:'確認',notes:'メモ',currency:'通貨コンバーター',qr:'QR コード生成',totp:'TOTP 認証',ip:'IP 情報',weather:'天気',crypto:'暗号通貨価格',calculator:'ビジネス計算機',todo:'ToDo',calendar:'カレンダー',pdf_tools:'PDF ツール'},
-de:{home:'Startseite',products:'Produkte',services:'Dienste',tools:'Werkzeuge',blog:'Blog',support:'Support',admin:'Admin',profile:'Profil',search:'Suchen...',login:'Anmelden',logout:'Abmelden',hero_title:'Multifunktionale MMO-Plattform für Kreative',hero_desc:'Dienstprogramme, digitale Dienste und SaaS-Dashboard für die vietnamesische MMO-Community.',explore_tools:'Tools entdecken',view_services:'Dienste ansehen',featured_services:'Ausgewählte Dienste',featured_products:'Ausgewählte Produkte',latest_updates:'Neueste Updates',why_sps:'Warum SPS',save:'Speichern',cancel:'Abbrechen',delete:'Löschen',edit:'Bearbeiten',add:'Hinzufügen',copy:'Kopieren',download:'Herunterladen',send:'Senden',close:'Schließen',confirm:'Bestätigen',notes:'Notizen',currency:'Währungsumrechner',qr:'QR-Generator',totp:'TOTP-Authentifizierung',ip:'IP-Informationen',weather:'Wetter',crypto:'Krypto-Preise',calculator:'Business-Rechner',todo:'To-do',calendar:'Kalender',pdf_tools:'PDF-Tools'},
-ru:{home:'Главная',products:'Продукты',services:'Услуги',tools:'Инструменты',blog:'Блог',support:'Поддержка',admin:'Админ',profile:'Профиль',search:'Поиск...',login:'Войти',logout:'Выйти',hero_title:'Многофункциональная MMO-платформа для создателей',hero_desc:'Утилиты, цифровые услуги и SaaS-панель для вьетнамского MMO-сообщества.',explore_tools:'Исследовать инструменты',view_services:'Посмотреть услуги',featured_services:'Избранные услуги',featured_products:'Избранные продукты',latest_updates:'Последние обновления',why_sps:'Почему SPS',save:'Сохранить',cancel:'Отмена',delete:'Удалить',edit:'Редактировать',add:'Добавить',copy:'Копировать',download:'Скачать',send:'Отправить',close:'Закрыть',confirm:'Подтвердить',notes:'Заметки',currency:'Конвертер валют',qr:'QR-генератор',totp:'TOTP-аутентификация',ip:'Информация об IP',weather:'Погода',crypto:'Цены криптовалют',calculator:'Бизнес-калькулятор',todo:'Список дел',calendar:'Календарь',pdf_tools:'PDF-инструменты'}
-},
-t(k){return(this.i18n[this.state.lang]&&this.i18n[this.state.lang][k])||this.i18n.en[k]||k},
-toast(msg,type='info',duration=3500){const el=document.createElement('div');el.className='toast '+type;const icon=type==='success'?'check-circle':type==='error'?'alert-circle':'info';el.innerHTML='<i data-lucide="'+icon+'" style="width:18px;height:18px;flex-shrink:0"></i><span>'+this.esc(msg)+'</span>';document.getElementById('toast-container').appendChild(el);if(window.lucide)lucide.createIcons();setTimeout(()=>{el.style.opacity='0';setTimeout(()=>el.remove(),300)},duration)},
-esc(str){return String(str==null?'':str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))},
-id(){return Math.random().toString(36).slice(2,10)},
-download(blob,filename){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},100)},
-copy(text){if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(()=>this.toast('Đã sao chép','success'))}else{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');this.toast('Đã sao chép','success')}catch(e){this.toast('Không thể sao chép','error')}ta.remove()}},
-async fetchJSON(url,timeout=10000){const ctrl=new AbortController();const t=setTimeout(()=>ctrl.abort(),timeout);try{const r=await fetch(url,{signal:ctrl.signal});clearTimeout(t);if(!r.ok)throw new Error('HTTP '+r.status);return await r.json()}catch(e){clearTimeout(t);throw e}},
-modal(html){const root=document.getElementById('modal-root');const wrap=document.createElement('div');wrap.className='modal-backdrop';wrap.innerHTML='<div class="modal glass">'+html+'</div>';wrap.addEventListener('click',e=>{if(e.target===wrap)this.closeModal()});root.appendChild(wrap);if(window.lucide)lucide.createIcons();return wrap},
-closeModal(){document.getElementById('modal-root').innerHTML=''},
-toggleTheme(){this.state.theme=this.state.theme==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',this.state.theme);this.store.save();this.toast('Theme: '+this.state.theme,'info')},
-setLang(lang){this.state.lang=lang;document.documentElement.setAttribute('lang',lang);this.store.save();this.renderNav();this.render();this.toast('Language: '+lang,'success')},
-openLangPicker(){const langs=[{c:'vi',n:'Tiếng Việt'},{c:'en',n:'English'},{c:'zh-CN',n:'中文简体'},{c:'zh-TW',n:'中文繁體'},{c:'ja',n:'日本語'},{c:'de',n:'Deutsch'},{c:'ru',n:'Русский'}];const html='<h3>🌐 Language</h3>'+langs.map(l=>'<button class="btn" style="width:100%;margin-bottom:8px;justify-content:'+(this.state.lang===l.c?'space-between':'flex-start')+'" onclick="SPS.setLang(\''+l.c+'\');SPS.closeModal()"><span>'+l.n+'</span>'+(this.state.lang===l.c?'<span class="badge badge-success">Active</span>':'')+'</button>').join('');this.modal(html)},
-nav(page){if(location.hash==='#/'+page){this.render();return}location.hash='#/'+page},
-parseRoute(){const h=location.hash.replace(/^#\/?/,'')||'home';const [page,...rest]=h.split('/');return{page,params:rest}},
-navItems(){return[{id:'home',label:this.t('home'),icon:'home'},{id:'products',label:this.t('products'),icon:'shopping-bag'},{id:'services',label:this.t('services'),icon:'briefcase'},{id:'tools',label:this.t('tools'),icon:'wrench'},{id:'blog',label:this.t('blog'),icon:'newspaper'},{id:'support',label:this.t('support'),icon:'life-buoy'}]},
-renderNav(){const items=this.navItems();const cur=this.parseRoute().page;document.getElementById('desktop-nav').innerHTML=items.map(it=>'<a class="'+(cur===it.id?'active':'')+'" onclick="SPS.nav(\''+it.id+'\')">'+it.label+'</a>').join('');document.getElementById('mobile-nav').innerHTML=items.map(it=>'<a class="'+(cur===it.id?'active':'')+'" onclick="SPS.nav(\''+it.id+'\')" title="'+it.label+'"><i data-lucide="'+it.icon+'"></i></a>').join('');if(window.lucide)lucide.createIcons()},
-render(){const{page,params}=this.parseRoute();this.state.page=page;this.renderNav();const main=document.getElementById('main');const renderer=this.pages[page]||this.pages.notfound;try{main.innerHTML='';renderer.call(this,main,params)}catch(e){console.error(e);main.innerHTML='<div class="glass" style="padding:24px"><h2>Lỗi tải trang</h2><p class="muted">'+this.esc(e.message)+'</p></div>'}if(window.lucide)lucide.createIcons();window.scrollTo({top:0,behavior:this.state.reduceMotion?'auto':'smooth'})}
-};
-SPS.pages={
-home(main){const products=(this.state.products||[]).filter(p=>p.featured).slice(0,4);const services=[{icon:'smartphone',name:'Shop Liên Quân',desc:'Acc giá rẻ, uy tín'},{icon:'flame',name:'Shop Free Fire',desc:'Kim cương, acc VIP'},{icon:'facebook',name:'Support Meta',desc:'Hỗ trợ FB, IG, WA'},{icon:'search',name:'Support Google',desc:'Gmail, Business'},{icon:'music-2',name:'Support TikTok',desc:'Tăng trưởng kênh'},{icon:'code',name:'Source Code',desc:'Website, tool, bot'}];main.innerHTML=`
-<div class="hero glass"><div class="logo-icon" style="width:64px;height:64px;font-size:32px;border-radius:18px;margin:0 auto 20px"></div><h1><span class="grad">${this.t('hero_title')}</span></h1><p>${this.t('hero_desc')}</p><div class="btn-row"><button class="btn btn-primary" onclick="SPS.nav('tools')"><i data-lucide="wrench"></i> ${this.t('explore_tools')}</button><button class="btn" onclick="SPS.nav('services')"><i data-lucide="briefcase"></i> ${this.t('view_services')}</button></div></div>
-<div class="section"><h2><i data-lucide="sparkles" style="color:var(--primary)"></i> ${this.t('featured_services')}</h2><div class="grid grid-3">${services.map(s=>`<div class="card glass" onclick="SPS.nav('services')"><div class="icon"><i data-lucide="${s.icon}"></i></div><h3>${s.name}</h3><p>${s.desc}</p></div>`).join('')}</div></div>
-${products.length?`<div class="section"><h2><i data-lucide="star" style="color:var(--warning)"></i> ${this.t('featured_products')}</h2><div class="grid grid-3">${products.map(p=>this.renderProductCard(p)).join('')}</div></div>`:''}
-<div class="section"><h2><i data-lucide="zap" style="color:var(--accent)"></i> ${this.t('why_sps')}</h2><div class="grid grid-4">${[{i:'shield-check',t:'Bảo mật',d:'Dữ liệu lưu trên máy bạn'},{i:'rocket',t:'Nhanh',d:'Xử lý client-side'},{i:'globe',t:'Đa ngôn ngữ',d:'7 ngôn ngữ'},{i:'heart',t:'Miễn phí',d:'Hầu hết công cụ'}].map(x=>`<div class="card glass"><div class="icon"><i data-lucide="${x.i}"></i></div><h3>${x.t}</h3><p>${x.d}</p></div>`).join('')}</div></div>
-<div class="section"><h2><i data-lucide="newspaper" style="color:var(--secondary)"></i> ${this.t('latest_updates')}</h2><div class="grid grid-2">${(this.state.blog||[]).slice(0,4).map(b=>`<div class="card glass" onclick="SPS.nav('blog/${b.id}')"><span class="badge badge-info">${this.esc(b.category||'Blog')}</span><h3 style="margin-top:8px">${this.esc(b.title)}</h3><p>${this.esc((b.content||'').slice(0,100))}...</p></div>`).join('')||'<p class="muted">Chưa có bài viết.</p>'}</div></div>`},
-products(main){const cats=[...new Set((this.state.products||[]).map(p=>p.category).filter(Boolean))];main.innerHTML=`<h1 class="page-title">${this.t('products')}</h1><p class="page-sub">Danh sách sản phẩm số, dịch vụ MMO và source code.</p><div class="glass" style="padding:16px;margin-bottom:20px"><div class="input-row"><input id="p-search" placeholder="Tìm sản phẩm..." oninput="SPS.filterProducts()"><select id="p-cat" onchange="SPS.filterProducts()"><option value="">Tất cả danh mục</option>${cats.map(c=>`<option>${this.esc(c)}</option>`).join('')}</select></div><div class="input-row mt-2"><select id="p-sort" onchange="SPS.filterProducts()"><option value="new">Mới nhất</option><option value="price-asc">Giá tăng dần</option><option value="price-desc">Giá giảm dần</option></select><label style="display:flex;align-items:center;gap:8px;font-size:13px"><input type="checkbox" id="p-featured" onchange="SPS.filterProducts()" style="width:auto"> Chỉ nổi bật</label></div></div><div id="products-grid" class="grid grid-3"></div>`;this.filterProducts()},
-filterProducts(){const q=(document.getElementById('p-search')?.value||'').toLowerCase();const cat=document.getElementById('p-cat')?.value||'';const sort=document.getElementById('p-sort')?.value||'new';const featuredOnly=document.getElementById('p-featured')?.checked;let list=(this.state.products||[]).filter(p=>{if(q&&!(p.name||'').toLowerCase().includes(q))return false;if(cat&&p.category!==cat)return false;if(featuredOnly&&!p.featured)return false;return true});if(sort==='price-asc')list.sort((a,b)=>(+a.price||0)-(+b.price||0));else if(sort==='price-desc')list.sort((a,b)=>(+b.price||0)-(+a.price||0));else list.sort((a,b)=>(b.created||0)-(a.created||0));const grid=document.getElementById('products-grid');if(!grid)return;grid.innerHTML=list.length?list.map(p=>this.renderProductCard(p)).join(''):'<p class="muted">Không có sản phẩm.</p>';if(window.lucide)lucide.createIcons()},
-renderProductCard(p){return`<div class="card glass product-card"><div class="product-img"><i data-lucide="package"></i></div><div class="product-body">${p.featured?'<span class="badge badge-warn">★ Nổi bật</span>':''}<h3>${this.esc(p.name||'Sản phẩm')}</h3><p>${this.esc(p.category||'')}</p><div class="price">${(+p.price||0).toLocaleString('vi-VN')}₫ ${p.sale?`<s>${(+p.sale).toLocaleString('vi-VN')}₫</s>`:''}</div><button class="btn btn-primary btn-sm" onclick="SPS.openOrder('${p.id}')"><i data-lucide="shopping-cart"></i> Đặt hàng</button></div></div>`},
-openOrder(id){const p=(this.state.products||[]).find(x=>x.id===id);if(!p)return;this.modal(`<h3>🛒 Đặt hàng</h3><div class="glass" style="padding:14px;margin-bottom:14px"><strong>${this.esc(p.name)}</strong><br><span style="color:var(--primary);font-size:18px;font-weight:700">${(+p.price||0).toLocaleString('vi-VN')}₫</span></div><div class="form-group"><label>Số lượng</label><input type="number" id="ord-qty" value="1" min="1" oninput="SPS.updateOrderTotal('${p.id}')"></div><div class="form-group"><label>Họ tên</label><input id="ord-name"></div><div class="form-group"><label>SĐT/Email</label><input id="ord-contact"></div><div class="form-group"><label>Ghi chú</label><textarea id="ord-note" rows="2"></textarea></div><div class="glass" style="padding:12px;margin-bottom:14px">Tổng: <strong id="ord-total" style="color:var(--primary);font-size:18px">${(+p.price||0).toLocaleString('vi-VN')}₫</strong></div><div class="row"><button class="btn btn-primary" onclick="SPS.submitOrder('${p.id}')">Xác nhận</button><button class="btn" onclick="SPS.closeModal()">Hủy</button></div><p class="muted" style="font-size:12px;margin-top:14px">⚠️ Đơn lưu local. KHÔNG tự xác nhận thanh toán.</p>`)},
-updateOrderTotal(id){const p=(this.state.products||[]).find(x=>x.id===id);const qty=+document.getElementById('ord-qty').value||1;document.getElementById('ord-total').textContent=((+p.price||0)*qty).toLocaleString('vi-VN')+'₫'},
-submitOrder(id){const p=(this.state.products||[]).find(x=>x.id===id);const qty=+document.getElementById('ord-qty').value||1;const name=document.getElementById('ord-name').value.trim();const contact=document.getElementById('ord-contact').value.trim();if(!name||!contact)return this.toast('Nhập tên và liên hệ','error');const o={id:'ORD'+Date.now().toString(36).toUpperCase(),productId:p.id,productName:p.name,price:+p.price||0,qty,total:(+p.price||0)*qty,name,contact,note:document.getElementById('ord-note').value,status:'pending',created:Date.now()};this.state.orders=this.state.orders||[];this.state.orders.push(o);this.store.save();this.closeModal();this.toast('Đã tạo đơn: '+o.id,'success')},
-services(main){main.innerHTML=`<h1 class="page-title">${this.t('services')}</h1><p class="page-sub">Danh mục dịch vụ MMO và hỗ trợ nền tảng.</p><div class="grid grid-2">${[{i:'smartphone',n:'Shop Liên Quân',d:'Acc game, skin, rank'},{i:'flame',n:'Shop Free Fire',d:'Kim cương, acc giá rẻ'},{i:'facebook',n:'Support Meta',d:'Facebook, IG, WhatsApp'},{i:'search',n:'Support Google',d:'Gmail, Business, Ads'},{i:'music-2',n:'Support TikTok',d:'Tăng follow, view'},{i:'code',n:'Source Code',d:'Website, tool, bot'},{i:'lock',n:'VPN/Proxy',d:'IP sạch, tốc độ cao'},{i:'file-code',n:'IPA/RAW',d:'Tài nguyên, file gốc'}].map(s=>`<div class="card glass" onclick="SPS.toast('Liên hệ Admin: ${s.n}','info')"><div class="icon"><i data-lucide="${s.i}"></i></div><h3>${s.n}</h3><p>${s.d}</p></div>`).join('')}</div>`},
-tools(main,params){if(!params||!params[0]){const tools=[{id:'note',i:'sticky-note',n:'Ghi chú',d:'Tự động lưu'},{id:'totp',i:'key-round',n:'TOTP Auth',d:'Mã 2FA 6 số'},{id:'qr',i:'qr-code',n:'QR Generator',d:'URL, text, SĐT'},{id:'currency',i:'coins',n:'Chuyển tiền tệ',d:'Tỷ giá realtime'},{id:'ip',i:'globe',n:'Thông tin IP',d:'IP, quốc gia, ISP'},{id:'weather',i:'cloud-sun',n:'Thời tiết',d:'Dự báo, cảnh báo'},{id:'crypto',i:'bitcoin',n:'Giá Crypto',d:'BTC, ETH, BNB'},{id:'calc',i:'calculator',n:'Máy tính KD',d:'Lợi nhuận, chiết khấu'},{id:'invoice',i:'file-invoice',n:'Hóa đơn / Báo giá',d:'Xuất PDF'},{id:'todo',i:'check-square',n:'To-do',d:'Quản lý việc'},{id:'calendar',i:'calendar',n:'Lịch',d:'Lịch tháng + sự kiện'},{id:'pdf',i:'file-text',n:'Công cụ PDF',d:'Merge, split, text'},{id:'shortener',i:'link',n:'Rút gọn URL',d:'is.gd (không cần key)'},{id:'imgbb',i:'image',n:'Image to Link',d:'ImgBB / Cloudinary'},{id:'facebook',i:'facebook',n:'Facebook Checker',d:'Kiểm tra URL'}];main.innerHTML=`<h1 class="page-title">${this.t('tools')}</h1><p class="page-sub">Bộ công cụ xử lý ngay trên trình duyệt.</p><div class="grid grid-3">${tools.map(t=>`<div class="card glass" onclick="SPS.nav('tools/${t.id}')"><div class="icon"><i data-lucide="${t.i}"></i></div><h3>${t.n}</h3><p>${t.d}</p></div>`).join('')}</div>`;return}const id=params[0];const fn=this.toolPages[id];if(fn)fn.call(this,main);else main.innerHTML='<h1 class="page-title">Tool không tồn tại</h1>'},
-blog(main,params){if(params&&params[0])return this.blogDetail(main,params[0]);const posts=this.state.blog||[];const q=this.state.pageData.blogQuery||'';const filtered=posts.filter(p=>!q||(p.title||'').toLowerCase().includes(q.toLowerCase()));main.innerHTML=`<h1 class="page-title">${this.t('blog')}</h1><p class="page-sub">Tin tức, hướng dẫn.</p><div class="glass" style="padding:14px;margin-bottom:20px"><input placeholder="Tìm bài viết..." value="${this.esc(q)}" oninput="SPS.state.pageData.blogQuery=this.value;SPS.render()"></div><div class="grid grid-2">${filtered.length?filtered.map(b=>`<div class="card glass" onclick="SPS.nav('blog/${b.id}')"><span class="badge badge-info">${this.esc(b.category||'Blog')}</span><h3 style="margin-top:8px">${this.esc(b.title)}</h3><p class="muted">${new Date(b.created||Date.now()).toLocaleDateString('vi-VN')}</p><p>${this.esc((b.content||'').slice(0,120))}...</p></div>`).join(''):'<p class="muted">Chưa có bài viết.</p>'}</div>`},
-blogDetail(main,id){const b=(this.state.blog||[]).find(x=>x.id===id);if(!b){main.innerHTML='<h1 class="page-title">Không tìm thấy</h1>';return}main.innerHTML=`<button class="btn btn-sm" onclick="SPS.nav('blog')"><i data-lucide="arrow-left"></i> Quay lại</button><article class="glass" style="padding:24px;margin-top:16px"><span class="badge badge-info">${this.esc(b.category||'Blog')}</span><h1 class="page-title" style="margin-top:10px">${this.esc(b.title)}</h1><p class="muted" style="margin-bottom:16px">${this.esc(b.author||'Admin')} · ${new Date(b.created||Date.now()).toLocaleDateString('vi-VN')}</p><div style="line-height:1.8;white-space:pre-wrap">${this.esc(b.content||'')}</div></article>`},
-support(main){main.innerHTML=`<h1 class="page-title">${this.t('support')}</h1><p class="page-sub">Gửi yêu cầu hoặc xem FAQ.</p><div class="grid grid-2"><div class="glass" style="padding:24px"><h2 style="margin-bottom:16px">📩 Gửi yêu cầu</h2><div class="form-group"><label>Họ tên</label><input id="s-name"></div><div class="form-group"><label>Email</label><input id="s-email" type="email"></div><div class="form-group"><label>SĐT</label><input id="s-phone"></div><div class="form-group"><label>Chủ đề</label><select id="s-topic"><option>Hỗ trợ kỹ thuật</option><option>Thanh toán</option><option>Đơn hàng</option><option>Khác</option></select></div><div class="form-group"><label>Nội dung</label><textarea id="s-msg"></textarea></div><button class="btn btn-primary" onclick="SPS.submitSupport()"><i data-lucide="send"></i> Gửi</button><p class="muted" style="font-size:12px;margin-top:12px">⚠️ Không backend — nội dung được copy để gửi qua Zalo/Messenger.</p></div><div class="glass" style="padding:24px"><h2 style="margin-bottom:16px">❓ FAQ</h2>${[['Mua hàng thế nào?','Chọn SP → Đặt hàng → Admin xác nhận.'],['Công cụ miễn phí?','Hầu hết miễn phí.'],['Dữ liệu lưu đâu?','LocalStorage trình duyệt.'],['Hoàn tiền?','Liên hệ Admin.'],['Liên hệ nhanh?','Zalo/Messenger.']].map(([q,a])=>`<div class="glass" style="padding:14px;margin-bottom:10px"><strong>${q}</strong><p class="muted" style="margin-top:6px;font-size:13px">${a}</p></div>`).join('')}<div class="row mt-2"><a class="btn" href="https://zalo.me" target="_blank" rel="noopener"><i data-lucide="message-circle"></i> Zalo</a><a class="btn" href="https://m.me" target="_blank" rel="noopener"><i data-lucide="message-square"></i> Messenger</a></div></div></div>`},
-submitSupport(){const name=document.getElementById('s-name').value.trim();const msg=document.getElementById('s-msg').value.trim();if(!name||!msg)return this.toast('Nhập tên và nội dung','error');const text=`SPS Support\nTên: ${name}\nEmail: ${document.getElementById('s-email').value}\nSĐT: ${document.getElementById('s-phone').value}\nChủ đề: ${document.getElementById('s-topic').value}\nNội dung: ${msg}`;this.copy(text);this.toast('Đã copy. Dán vào Zalo/Messenger.','success')},
-profile(main){const s=this.state.settings||{};main.innerHTML=`<div class="glass" style="overflow:hidden"><div style="height:160px;background:linear-gradient(135deg,var(--primary),var(--secondary))"></div><div style="padding:24px;margin-top:-60px"><div class="logo-icon" style="width:100px;height:100px;font-size:44px;border-radius:24px;border:4px solid var(--bg)"></div><h1 class="page-title" style="margin-top:14px">${this.esc(s.profileName||'SPS Admin')}</h1><p class="muted">${this.esc(s.profileTitle||'Full-Stack Developer & MMO Specialist')}</p><p style="margin-top:14px">${this.esc(s.profileBio||'Chào mừng đến với SPS.')}</p></div></div>`},
-admin(main){if(!this.state.admin||!this.state.admin.loggedIn)return this.renderAdminLogin(main);this.renderAdminDashboard(main)},
-renderAdminLogin(main){main.innerHTML=`<div style="max-width:420px;margin:40px auto"><div class="glass" style="padding:30px"><h2 style="margin-bottom:6px">🔐 Đăng nhập Admin</h2><p class="muted" style="font-size:13px;margin-bottom:20px">⚠️ Bảo mật thật cần backend. Đây là cổng UI (dữ liệu vẫn local).</p><div class="form-group"><label>Tài khoản</label><input id="lg-user"></div><div class="form-group"><label>Mật khẩu</label><div style="position:relative"><input id="lg-pass" type="password" style="padding-right:44px" onkeydown="if(event.key==='Enter')SPS.doLogin()"><button class="icon-btn" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);width:34px;height:34px" onclick="SPS.togglePass('lg-pass')" type="button"><i data-lucide="eye"></i></button></div></div><button class="btn btn-primary" style="width:100%" onclick="SPS.doLogin()">Đăng nhập</button><p class="muted" style="font-size:11px;margin-top:14px">Mặc định: admin / sps2024 (đổi trong Settings)</p></div></div>`},
-togglePass(id){const el=document.getElementById(id);el.type=el.type==='password'?'text':'password'},
-doLogin(){const u=document.getElementById('lg-user').value.trim();const p=document.getElementById('lg-pass').value;const cfg=this.state.settings.adminCreds||{user:'admin',pass:'sps2024'};if(u===cfg.user&&p===cfg.pass){this.state.admin={loggedIn:true,user:u};this.store.save();this.toast('OK','success');this.render()}else this.toast('Sai tài khoản/mật khẩu','error')},
-doLogout(){this.state.admin=null;this.store.save();this.render();this.toast('Đã đăng xuất','info')},
-renderAdminDashboard(main){const tab=this.state.pageData.adminTab||'overview';const tabs=[['overview','Tổng quan'],['products','Sản phẩm'],['blog','Blog'],['orders','Đơn'],['settings','Cài đặt'],['apikeys','API Keys'],['data','Dữ liệu']];main.innerHTML=`<div class="row" style="justify-content:space-between;margin-bottom:16px"><div><h1 class="page-title">Admin</h1><p class="muted">Xin chào, ${this.esc(this.state.admin.user)}</p></div><button class="btn btn-danger btn-sm" onclick="SPS.doLogout()"><i data-lucide="log-out"></i> Đăng xuất</button></div><div class="admin-tabs">${tabs.map(([id,label])=>`<button class="${tab===id?'active':''}" onclick="SPS.state.pageData.adminTab='${id}';SPS.render()">${label}</button>`).join('')}</div><div id="admin-content"></div>`;const c=document.getElementById('admin-content');({overview:this.adminOverview,products:this.adminProducts,blog:this.adminBlog,orders:this.adminOrders,settings:this.adminSettings,apikeys:this.adminApiKeys,data:this.adminData})[tab].call(this,c)},
-adminOverview(el){const s=this.state;el.innerHTML=`<div class="grid grid-4">${[['Sản phẩm',(s.products||[]).length,'package','primary'],['Bài viết',(s.blog||[]).length,'newspaper','secondary'],['Đơn hàng',(s.orders||[]).length,'shopping-cart','accent'],['Doanh thu',(s.orders||[]).reduce((a,o)=>a+(o.total||0),0).toLocaleString('vi-VN')+'₫','trending-up','success']].map(([l,v,i,c])=>`<div class="glass" style="padding:18px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="muted" style="font-size:13px">${l}</span><i data-lucide="${i}" style="color:var(--${c})"></i></div><div style="font-size:22px;font-weight:700">${v}</div></div>`).join('')}</div><div class="section glass" style="padding:20px"><h3>Đơn mới nhất</h3>${(this.state.orders||[]).slice(-5).reverse().map(o=>`<div class="glass" style="padding:10px;margin-top:6px;font-size:13px"><strong>${o.id}</strong> - ${this.esc(o.productName)} - ${(o.total||0).toLocaleString('vi-VN')}₫ <span class="badge ${o.status==='pending'?'badge-warn':'badge-success'}">${o.status}</span></div>`).join('')||'<p class="muted">Chưa có đơn.</p>'}</div>`},
-adminProducts(el){el.innerHTML=`<div class="row" style="justify-content:space-between;margin-bottom:12px"><h3>Sản phẩm</h3><button class="btn btn-primary btn-sm" onclick="SPS.editProduct()"><i data-lucide="plus"></i> Thêm</button></div><div class="glass" style="padding:14px;overflow-x:auto"><table class="tbl"><thead><tr><th>Tên</th><th>DM</th><th>Giá</th><th>★</th><th></th></tr></thead><tbody>${(this.state.products||[]).map(p=>`<tr><td>${this.esc(p.name)}</td><td>${this.esc(p.category||'')}</td><td>${(+p.price||0).toLocaleString('vi-VN')}₫</td><td>${p.featured?'★':''}</td><td style="white-space:nowrap"><button class="btn btn-sm" onclick="SPS.editProduct('${p.id}')">Sửa</button> <button class="btn btn-sm btn-danger" onclick="SPS.deleteProduct('${p.id}')">Xóa</button></td></tr>`).join('')||'<tr><td colspan="5" class="muted">Chưa có.</td></tr>'}</tbody></table></div>`},
-editProduct(id){const p=id?(this.state.products||[]).find(x=>x.id===id):{};this.modal(`<h3>${id?'Sửa':'Thêm'} sản phẩm</h3><div class="form-group"><label>Tên</label><input id="pr-name" value="${this.esc(p.name||'')}"></div><div class="form-group"><label>Danh mục</label><input id="pr-cat" value="${this.esc(p.category||'')}"></div><div class="input-row"><div class="form-group"><label>Giá</label><input id="pr-price" type="number" value="${p.price||0}"></div><div class="form-group"><label>Giá KM</label><input id="pr-sale" type="number" value="${p.sale||''}"></div></div><div class="form-group"><label><input type="checkbox" id="pr-featured" ${p.featured?'checked':''} style="width:auto"> Nổi bật</label></div><div class="row"><button class="btn btn-primary" onclick="SPS.saveProduct('${id||''}')">Lưu</button><button class="btn" onclick="SPS.closeModal()">Hủy</button></div>`)},
-saveProduct(id){const d={name:document.getElementById('pr-name').value.trim(),category:document.getElementById('pr-cat').value.trim(),price:+document.getElementById('pr-price').value||0,sale:+document.getElementById('pr-sale').value||null,featured:document.getElementById('pr-featured').checked};if(!d.name)return this.toast('Nhập tên','error');this.state.products=this.state.products||[];if(id)Object.assign(this.state.products.find(x=>x.id===id),d);else this.state.products.push({id:this.id(),...d,created:Date.now()});this.store.save();this.closeModal();this.render();this.toast('Đã lưu','success')},
-deleteProduct(id){if(!confirm('Xóa?'))return;this.state.products=(this.state.products||[]).filter(x=>x.id!==id);this.store.save();this.render();this.toast('Đã xóa','success')},
-adminBlog(el){el.innerHTML=`<div class="row" style="justify-content:space-between;margin-bottom:12px"><h3>Blog</h3><button class="btn btn-primary btn-sm" onclick="SPS.editBlog()"><i data-lucide="plus"></i> Thêm</button></div><div class="grid grid-2">${(this.state.blog||[]).map(b=>`<div class="glass" style="padding:16px"><span class="badge badge-info">${this.esc(b.category||'Blog')}</span><h4 style="margin-top:6px">${this.esc(b.title)}</h4><p class="muted" style="font-size:12px;margin:6px 0">${new Date(b.created||Date.now()).toLocaleDateString('vi-VN')}</p><div class="row"><button class="btn btn-sm" onclick="SPS.editBlog('${b.id}')">Sửa</button><button class="btn btn-sm btn-danger" onclick="SPS.deleteBlog('${b.id}')">Xóa</button></div></div>`).join('')||'<p class="muted">Chưa có.</p>'}</div>`},
-editBlog(id){const b=id?(this.state.blog||[]).find(x=>x.id===id):{};this.modal(`<h3>${id?'Sửa':'Thêm'} bài</h3><div class="form-group"><label>Tiêu đề</label><input id="bl-title" value="${this.esc(b.title||'')}"></div><div class="form-group"><label>Danh mục</label><input id="bl-cat" value="${this.esc(b.category||'Blog')}"></div><div class="form-group"><label>Tác giả</label><input id="bl-author" value="${this.esc(b.author||'Admin')}"></div><div class="form-group"><label>Nội dung</label><textarea id="bl-content" rows="8">${this.esc(b.content||'')}</textarea></div><div class="row"><button class="btn btn-primary" onclick="SPS.saveBlog('${id||''}')">Lưu</button><button class="btn" onclick="SPS.closeModal()">Hủy</button></div>`)},
-saveBlog(id){const d={title:document.getElementById('bl-title').value.trim(),category:document.getElementById('bl-cat').value.trim(),author:document.getElementById('bl-author').value.trim(),content:document.getElementById('bl-content').value.trim()};if(!d.title)return this.toast('Nhập tiêu đề','error');this.state.blog=this.state.blog||[];if(id)Object.assign(this.state.blog.find(x=>x.id===id),d);else this.state.blog.unshift({id:this.id(),...d,created:Date.now()});this.store.save();this.closeModal();this.render();this.toast('Đã lưu','success')},
-deleteBlog(id){if(!confirm('Xóa?'))return;this.state.blog=(this.state.blog||[]).filter(x=>x.id!==id);this.store.save();this.render();this.toast('Đã xóa','success')},
-adminOrders(el){el.innerHTML=`<h3>Đơn hàng</h3><div class="glass" style="padding:14px;margin-top:12px;overflow-x:auto"><table class="tbl"><thead><tr><th>Mã</th><th>SP</th><th>SL</th><th>Tổng</th><th>KH</th><th>TT</th><th></th></tr></thead><tbody>${(this.state.orders||[]).map(o=>`<tr><td>${o.id}</td><td>${this.esc(o.productName)}</td><td>${o.qty}</td><td>${(o.total||0).toLocaleString('vi-VN')}₫</td><td>${this.esc(o.name)}<br><small class="muted">${this.esc(o.contact)}</small></td><td><span class="badge ${o.status==='pending'?'badge-warn':'badge-success'}">${o.status}</span></td><td>${o.status==='pending'?`<button class="btn btn-sm" onclick="SPS.markPaid('${o.id}')">Xác nhận</button>`:''} <button class="btn btn-sm btn-danger" onclick="SPS.deleteOrder('${o.id}')">Xóa</button></td></tr>`).join('')||'<tr><td colspan="7" class="muted">Chưa có.</td></tr>'}</tbody></table></div>`},
-markPaid(id){const o=this.state.orders.find(x=>x.id===id);if(o){o.status='paid';this.store.save();this.render();this.toast('Đã xác nhận','success')}},
-deleteOrder(id){if(!confirm('Xóa?'))return;this.state.orders=this.state.orders.filter(x=>x.id!==id);this.store.save();this.render()},
-adminSettings(el){const s=this.state.settings||{};el.innerHTML=`<h3>Cài đặt</h3><div class="glass" style="padding:20px;margin-top:12px"><div class="form-group"><label>Tên website</label><input id="st-name" value="${this.esc(s.siteName||'SPS')}"></div><div class="form-group"><label>SEO Description</label><input id="st-desc" value="${this.esc(s.siteDesc||'')}"></div><div class="form-group"><label>Profile - Tên</label><input id="st-pname" value="${this.esc(s.profileName||'SPS Admin')}"></div><div class="form-group"><label>Profile - Chức danh</label><input id="st-ptitle" value="${this.esc(s.profileTitle||'Full-Stack Developer')}"></div><div class="form-group"><label>Profile - Bio</label><textarea id="st-pbio" rows="3">${this.esc(s.profileBio||'')}</textarea></div><hr style="border-color:var(--border);margin:16px 0"><h4 style="margin-bottom:12px">Đổi mật khẩu Admin</h4><div class="input-row"><div class="form-group"><label>User mới</label><input id="st-user"></div><div class="form-group"><label>Pass mới</label><input id="st-pass" type="password"></div></div><button class="btn btn-primary" onclick="SPS.saveSettings()">Lưu</button></div>`},
-saveSettings(){const s=this.state.settings||{};s.siteName=document.getElementById('st-name').value.trim();s.siteDesc=document.getElementById('st-desc').value.trim();s.profileName=document.getElementById('st-pname').value.trim();s.profileTitle=document.getElementById('st-ptitle').value.trim();s.profileBio=document.getElementById('st-pbio').value.trim();const nu=document.getElementById('st-user').value.trim();const np=document.getElementById('st-pass').value;if(nu||np)s.adminCreds={user:nu||(s.adminCreds?.user||'admin'),pass:np||(s.adminCreds?.pass||'sps2024')};this.state.settings=s;this.store.save();this.toast('Đã lưu','success')},
-adminApiKeys(el){const k={imgbb:localStorage.getItem('sps_imgbb_key')||'',cldc:localStorage.getItem('sps_cld_cloud')||'',cldp:localStorage.getItem('sps_cld_preset')||''};el.innerHTML=`<h3>API Keys (lưu local)</h3><p class="muted" style="margin:8px 0 16px;font-size:13px">Các key này lưu trong localStorage của trình duyệt bạn. Không upload lên server nào.</p><div class="glass" style="padding:20px"><div class="form-group"><label>ImgBB API Key (<a href="https://api.imgbb.com/" target="_blank" style="color:var(--primary)">api.imgbb.com</a>)</label><input id="ak-imgbb" type="password" value="${this.esc(k.imgbb)}" oninput="localStorage.setItem('sps_imgbb_key',this.value)"></div><hr style="border-color:var(--border);margin:16px 0"><p class="muted" style="font-size:13px;margin-bottom:8px">Cloudinary (unsigned preset):</p><div class="input-row"><div class="form-group"><label>Cloud name</label><input id="ak-cldc" value="${this.esc(k.cldc)}" oninput="localStorage.setItem('sps_cld_cloud',this.value)"></div><div class="form-group"><label>Upload preset</label><input id="ak-cldp" value="${this.esc(k.cldp)}" oninput="localStorage.setItem('sps_cld_preset',this.value)"></div></div><p class="muted" style="font-size:12px;margin-top:8px">Tạo preset kiểu <strong>Unsigned</strong> tại cloudinary.com → Settings → Upload.</p></div>`},
-adminData(el){el.innerHTML=`<h3>Dữ liệu</h3><div class="glass" style="padding:20px;margin-top:12px"><p class="muted">Dữ liệu lưu trong localStorage trình duyệt này.</p><div class="row mt-2"><button class="btn btn-primary" onclick="SPS.store.export()"><i data-lucide="download"></i> Export</button><button class="btn" onclick="document.getElementById('import-input').click()"><i data-lucide="upload"></i> Import</button><input type="file" id="import-input" accept="application/json" style="display:none" onchange="SPS.store.import(this.files[0])"><button class="btn btn-danger" onclick="SPS.resetData()"><i data-lucide="trash-2"></i> Xóa hết</button></div></div>`},
-resetData(){if(!confirm('XÓA TOÀN BỘ?'))return;localStorage.removeItem('sps_v2');location.reload()},
-notfound(main){main.innerHTML='<div class="glass" style="padding:60px 24px;text-align:center"><h1 class="page-title">404</h1><p class="muted">Không tồn tại.</p><button class="btn btn-primary mt-3" onclick="SPS.nav(\'home\')">Về trang chủ</button></div>'}
-};
-SPS.toolPages={
-note(main){main.innerHTML=`<h1 class="page-title">📝 Ghi chú</h1><div class="row" style="margin-bottom:16px"><input id="note-input" placeholder="Nội dung..." style="flex:1" onkeydown="if(event.key==='Enter')SPS.notes.add()"><button class="btn btn-primary" onclick="SPS.notes.add()">Thêm</button></div><div id="notes-grid" class="grid grid-3"></div>`;this.notes.render()},
-totp(main){main.innerHTML=`<h1 class="page-title">🔐 TOTP Generator</h1><p class="page-sub">RFC 6238 · Base32 · SHA-1. Xử lý local 100%.</p><div class="glass" style="padding:20px;max-width:560px;margin:0 auto"><div class="form-group"><label>Secret Key (Base32)</label><div style="position:relative"><input id="totp-secret" placeholder="JBSWY3DPEHPK3PXP" style="padding-right:44px" oninput="SPS.totp.start()"><button class="icon-btn" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);width:34px;height:34px" onclick="SPS.totp.toggle()" type="button"><i data-lucide="eye"></i></button></div></div><div class="totp-display" id="totp-code">------</div><div class="totp-bar"><div class="totp-bar-fill" id="totp-bar" style="width:0%"></div></div><p class="muted center mt-2" id="totp-timer">--s</p><button class="btn btn-primary mt-2" style="width:100%" onclick="SPS.totp.copy()"><i data-lucide="copy"></i> Sao chép</button><p class="muted mt-2" style="font-size:12px">⚠️ Không nhập secret từ nguồn không tin cậy.</p></div>`;this.totp.init()},
-qr(main){main.innerHTML=`<h1 class="page-title">📱 QR Generator</h1><div class="grid grid-2"><div class="glass" style="padding:20px"><div class="form-group"><label>Loại</label><select id="qr-type" onchange="SPS.qr.qrRender()"><option value="url">URL</option><option value="text">Văn bản</option><option value="phone">SĐT</option><option value="payment">Thanh toán</option></select></div><div class="form-group"><label>Nội dung</label><textarea id="qr-data" rows="3" oninput="SPS.qr.qrRender()">https://example.com</textarea></div><div class="input-row"><div class="form-group"><label>Màu</label><input type="color" id="qr-color" value="#000000" oninput="SPS.qr.qrRender()" style="height:44px"></div><div class="form-group"><label>Kích thước</label><input type="number" id="qr-size" value="300" min="100" max="800" oninput="SPS.qr.qrRender()"></div></div><button class="btn btn-primary" onclick="SPS.qr.qrRender()">Tạo lại</button></div><div class="glass" style="padding:20px"><h3>Kết quả</h3><div id="qr-output"></div><button class="btn btn-primary mt-2" style="width:100%" onclick="SPS.qr.qrDownload()"><i data-lucide="download"></i> Tải PNG</button></div></div>`;setTimeout(()=>this.qr.qrRender(),100)},
-currency(main){main.innerHTML=`<h1 class="page-title">💱 Chuyển tiền tệ</h1><div class="glass" style="padding:20px;max-width:560px;margin:0 auto"><div class="input-row"><div class="form-group"><label>Số tiền</label><input id="cur-amt" type="number" value="100" oninput="SPS.currency.convert()"></div><div class="form-group"><label>Từ</label><input id="cur-from" value="USD" maxlength="3" style="text-transform:uppercase" oninput="SPS.currency.convert()"></div></div><div class="form-group"><label>Đến</label><input id="cur-to" value="VND" maxlength="3" style="text-transform:uppercase" oninput="SPS.currency.convert()"></div><div class="glass" style="padding:16px;text-align:center;font-size:24px;font-weight:700;margin:14px 0"><span id="cur-result">--</span></div><p class="muted center" style="font-size:12px" id="cur-info">Đang tải...</p></div>`;this.currency.convert()},
-ip(main){main.innerHTML=`<h1 class="page-title">🌍 IP Info</h1><div id="ip-content" class="grid grid-2"></div>`;this.ipLookup()},
-weather(main){main.innerHTML=`<h1 class="page-title">☁️ Trung tâm thời tiết</h1><div class="glass" style="padding:16px;margin-bottom:16px"><div class="row"><input id="wx-city" placeholder="Tên thành phố (Hanoi, Da Nang...)" style="flex:1" value="Ho Chi Minh"><button class="btn btn-primary" onclick="SPS.weather.search()">🔍 Tìm</button><button class="btn" onclick="SPS.weather.gps()">📍 GPS</button></div><div class="row" style="margin-top:10px;font-size:12px"><button class="btn btn-sm" onclick="SPS.weather.quick(10.8231,106.6297,'Hồ Chí Minh')">HCM</button><button class="btn btn-sm" onclick="SPS.weather.quick(21.0285,105.8542,'Hà Nội')">Hà Nội</button><button class="btn btn-sm" onclick="SPS.weather.quick(16.0544,108.2022,'Đà Nẵng')">Đà Nẵng</button><button class="btn btn-sm" onclick="SPS.weather.quick(16.4637,107.5909,'Huế')">Huế</button><button class="btn btn-sm" onclick="SPS.weather.quick(12.2388,109.1967,'Nha Trang')">Nha Trang</button><button class="btn btn-sm" onclick="SPS.weather.quick(13.7829,109.2196,'Quy Nhơn')">Quy Nhơn</button></div></div><div id="weather-output"></div><div class="glass" style="padding:16px;margin-top:16px"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h3>🚨 Cảnh báo thiên tai</h3><button class="btn btn-sm" onclick="SPS.disaster.load()">Refresh</button></div><div id="disaster-output"><p class="muted">Nhấn Refresh để tải.</p></div></div>`;this.weather.quick(10.8231,106.6297,'Hồ Chí Minh');this.disaster.load()},
-crypto(main){main.innerHTML=`<h1 class="page-title">💰 Giá Crypto</h1><button class="btn btn-primary" onclick="SPS.crypto.load()" style="margin-bottom:16px"><i data-lucide="refresh-cw"></i> Refresh</button><div id="crypto-output" class="grid grid-2"></div>`;this.crypto.load()},
-calc(main){main.innerHTML=`<h1 class="page-title">🧮 Máy tính kinh doanh</h1><div class="grid grid-2">${[['profit','Lợi nhuận','DT - CP',['Doanh thu','Chi phí']],['markup','Giá bán','Giá gốc × (1+%)',['Giá gốc','% markup']],['discount','Giá sau giảm','Giá - %',['Giá gốc','% giảm']],['commission','Hoa hồng','DT × %',['Doanh thu','% HH']]].map(([id,n,f,labels])=>`<div class="glass" style="padding:20px"><h3>${n}</h3><p class="muted" style="font-size:12px;margin-bottom:10px">${f}</p>${labels.map((l,i)=>`<div class="form-group"><label>${l}</label><input type="number" id="calc-${id}-${i}" oninput="SPS.calc.run('${id}')" placeholder="0"></div>`).join('')}<div class="glass" style="padding:12px;text-align:center;font-size:18px;font-weight:700">KQ: <span id="calc-res-${id}" style="color:var(--primary)">--</span></div></div>`).join('')}</div>`;this.calc._defs={profit:v=>v[0]-v[1],markup:v=>v[0]*(1+v[1]/100),discount:v=>v[0]*(1-v[1]/100),commission:v=>v[0]*v[1]/100}},
-invoice(main){main.innerHTML=`<h1 class="page-title">🧾 Hóa đơn / Báo giá</h1><div class="grid grid-2"><div class="glass" style="padding:20px"><h3>Thông tin</h3><div class="form-group"><label>Loại</label><select id="inv-type"><option value="invoice">Hóa đơn</option><option value="quote">Báo giá</option></select></div><div class="form-group"><label>Số</label><input id="inv-no" value="INV-001"></div><div class="form-group"><label>Ngày</label><input id="inv-date" type="date" value="${new Date().toISOString().slice(0,10)}"></div><div class="form-group"><label>Khách hàng</label><input id="inv-customer"></div><div class="form-group"><label>Địa chỉ</label><input id="inv-address"></div></div><div class="glass" style="padding:20px"><h3>Mục hàng</h3><div id="inv-items"></div><button class="btn btn-sm mt-2" onclick="SPS.invAddItem()">+ Thêm mục</button><div class="glass" style="padding:12px;margin-top:12px"><div class="row" style="justify-content:space-between"><span>Tạm tính:</span><strong id="inv-subtotal">0₫</strong></div><div class="row" style="justify-content:space-between;margin-top:8px"><span>Thuế (%):</span><input id="inv-tax" type="number" value="0" style="width:80px" oninput="SPS.invCalc()"></div><div class="row" style="justify-content:space-between;margin-top:8px"><span>Tổng:</span><strong id="inv-total" style="color:var(--primary)">0₫</strong></div></div><button class="btn btn-primary mt-2" style="width:100%" onclick="SPS.invGenerate()"><i data-lucide="download"></i> Tải PDF</button></div></div>`;this.invAddItem()},
-todo(main){main.innerHTML=`<h1 class="page-title">✅ To-do List</h1><div class="glass" style="padding:16px;margin-bottom:16px"><div class="row"><input id="todo-input" placeholder="Việc cần làm..." style="flex:1" onkeydown="if(event.key==='Enter')SPS.todo.add()"><select id="todo-priority" style="width:auto"><option value="low">Thấp</option><option value="med" selected>Vừa</option><option value="high">Cao</option></select><input id="todo-due" type="date" style="width:auto"><button class="btn btn-primary" onclick="SPS.todo.add()">Thêm</button></div></div><div id="todo-list" class="grid"></div>`;this.todo.render()},
-calendar(main){main.innerHTML=`<h1 class="page-title">📅 Lịch</h1><div class="glass" style="padding:16px"><div class="row" style="justify-content:space-between;margin-bottom:12px"><button class="btn btn-sm" onclick="SPS.calendar.prev()">◀</button><h3 id="cal-title" style="margin:0"></h3><button class="btn btn-sm" onclick="SPS.calendar.next()">▶</button></div><div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px"></div></div><div class="glass" style="padding:16px;margin-top:16px"><h3 style="margin-bottom:10px">Sự kiện ngày <span id="cal-selected">--</span></h3><div class="row" style="margin-bottom:10px"><input id="cal-ev-title" placeholder="Tên sự kiện" style="flex:1"><button class="btn btn-primary" onclick="SPS.calendar.addEvent()">Thêm</button></div><div id="cal-events"></div></div>`;this.calendar.init()},
-pdf(main){main.innerHTML=`<h1 class="page-title">📄 Công cụ PDF</h1><p class="page-sub">Xử lý trên trình duyệt, không upload server.</p><div class="grid grid-2"><div class="glass" style="padding:20px"><h3>🔗 Ghép PDF</h3><input type="file" id="pdf-merge-files" multiple accept="application/pdf" style="margin-top:10px"><button class="btn btn-primary mt-2" onclick="SPS.pdf.merge()">Ghép và tải</button></div><div class="glass" style="padding:20px"><h3>📝 Text → PDF</h3><textarea id="pdf-text" rows="6"></textarea><button class="btn btn-primary mt-2" onclick="SPS.pdf.text()">Tải PDF</button></div><div class="glass" style="padding:20px"><h3>📊 Metadata</h3><input type="file" id="pdf-meta-file" accept="application/pdf"><button class="btn btn-primary mt-2" onclick="SPS.pdf.meta()">Xem</button><div id="pdf-meta-out" class="mt-2" style="font-size:13px"></div></div><div class="glass" style="padding:20px"><h3>✂️ Tách PDF</h3><input type="file" id="pdf-split-file" accept="application/pdf"><div class="input-row mt-2"><input type="number" id="pdf-split-from" placeholder="Từ trang" min="1"><input type="number" id="pdf-split-to" placeholder="Đến trang" min="1"></div><button class="btn btn-primary mt-2" onclick="SPS.pdf.split()">Tách và tải</button></div></div>`},
-shortener(main){main.innerHTML=`<h1 class="page-title">🔗 Rút gọn URL</h1><p class="page-sub">Dùng is.gd — miễn phí, không cần API key.</p><div class="glass" style="padding:24px;max-width:560px;margin:0 auto"><div class="form-group"><label>URL dài</label><input id="short-url" placeholder="https://example.com/very/long"></div><button class="btn btn-primary" onclick="SPS.shortUrl()">Rút gọn</button><div id="short-result" class="mt-2"></div><p class="muted" style="font-size:11px;margin-top:12px">Nếu bị CORS, sẽ thử qua proxy allorigins.</p></div>`},
-imgbb(main){main.innerHTML=`<h1 class="page-title">🖼️ Image to Link</h1><p class="page-sub">Upload ảnh, lấy URL công khai.</p><div class="grid grid-2"><div class="glass" style="padding:20px"><h3>ImgBB</h3><div class="form-group"><label>API Key (lấy từ api.imgbb.com)</label><input id="imgbb-key" type="password" placeholder="Dán key..." oninput="localStorage.setItem('sps_imgbb_key',this.value)"></div><div class="form-group"><label>Chọn ảnh (&lt;32MB)</label><input type="file" id="imgbb-file" accept="image/*"></div><button class="btn btn-primary" onclick="SPS.imgbbUpload()">Upload</button><div id="imgbb-result" class="mt-2"></div></div><div class="glass" style="padding:20px"><h3>Cloudinary (unsigned preset)</h3><div class="form-group"><label>Cloud name</label><input id="cld-cloud" placeholder="Cloud name" oninput="localStorage.setItem('sps_cld_cloud',this.value)"></div><div class="form-group"><label>Upload preset (unsigned)</label><input id="cld-preset" placeholder="sps_unsigned" oninput="localStorage.setItem('sps_cld_preset',this.value)"></div><div class="form-group"><label>Chọn ảnh</label><input type="file" id="cld-file" accept="image/*"></div><button class="btn btn-primary" onclick="SPS.cloudinaryUpload()">Upload</button><div id="cld-result" class="mt-2"></div><p class="muted" style="font-size:11px;margin-top:8px">Tạo preset tại cloudinary.com → Settings → Upload → Unsigned.</p></div></div>`;const k=localStorage.getItem('sps_imgbb_key');if(k)document.getElementById('imgbb-key').value=k;const c=localStorage.getItem('sps_cld_cloud');if(c)document.getElementById('cld-cloud').value=c;const p=localStorage.getItem('sps_cld_preset');if(p)document.getElementById('cld-preset').value=p},
-facebook(main){main.innerHTML=`<h1 class="page-title">📘 Facebook Link Checker</h1><p class="page-sub">Kiểm tra định dạng URL + HTTP status. KHÔNG phát hiện tài khoản bị khóa.</p><div class="glass" style="padding:24px;max-width:560px;margin:0 auto"><div class="form-group"><label>URL Facebook</label><input id="fb-url" placeholder="https://facebook.com/username"></div><button class="btn btn-primary" onclick="SPS.checkFb()">Kiểm tra</button><div id="fb-result" class="mt-2"></div><p class="muted" style="font-size:12px;margin-top:12px">⚠️ Không vượt qua đăng nhập/CAPTCHA Meta. Kết quả tham khảo.</p></div>`}
-};
-SPS.notes={render(){const g=document.getElementById('notes-grid');if(!g)return;g.innerHTML=(SPS.state.notes||[]).map(n=>`<div class="note-card glass"><textarea oninput="SPS.notes.update('${n.id}',this.value)">${SPS.esc(n.text)}</textarea><div class="row" style="justify-content:space-between;margin-top:8px"><span class="muted" style="font-size:11px">${new Date(n.created).toLocaleString('vi-VN')}</span><button class="btn btn-sm btn-danger" onclick="SPS.notes.del('${n.id}')">Xóa</button></div></div>`).join('')||'<p class="muted">Chưa có.</p>'},add(){const i=document.getElementById('note-input');const t=i.value.trim();if(!t)return;SPS.state.notes=SPS.state.notes||[];SPS.state.notes.unshift({id:SPS.id(),text:t,created:Date.now()});SPS.store.save();i.value='';this.render()},update(id,t){const n=SPS.state.notes.find(x=>x.id===id);if(n){n.text=t;SPS.store.save()}},del(id){SPS.state.notes=SPS.state.notes.filter(x=>x.id!==id);SPS.store.save();this.render()}};
+    <!-- Background Effects Layer -->
+    <div id="effect-layer" class="fixed inset-0 pointer-events-none z-0"></div>
+    
+    <!-- Hidden Soundcloud Player -->
+    <div id="sc-container" style="position:fixed; bottom:-1000px; left:-1000px; width:1px; height:1px; opacity:0;"></div>
 
-SPS.totp={_i:null,_s:'',init(){this._s=''},toggle(){const el=document.getElementById('totp-secret');el.type=el.type==='password'?'text':'password'},start(){this._s=document.getElementById('totp-secret').value.trim();if(this._i)clearInterval(this._i);if(!this._s){document.getElementById('totp-code').textContent='------';return}this.tick();this._i=setInterval(()=>this.tick(),1000)},async tick(){if(!this._s)return;try{const code=await this.gen(this._s);document.getElementById('totp-code').textContent=code;const rem=30-(Math.floor(Date.now()/1000)%30);document.getElementById('totp-timer').textContent=rem+'s';document.getElementById('totp-bar').style.width=((30-rem)/30*100)+'%'}catch(e){document.getElementById('totp-code').textContent='ERROR';document.getElementById('totp-timer').textContent=e.message}},b32d(str){str=str.replace(/=+$/,'').replace(/\s+/g,'').toUpperCase();const map='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';let bits=0,val=0,out=[];for(const c of str){const idx=map.indexOf(c);if(idx===-1)throw new Error('Base32 invalid: '+c);val=(val<<5)|idx;bits+=5;if(bits>=8){out.push((val>>>(bits-8))&0xff);bits-=8}}return new Uint8Array(out)},async gen(secret,digits=6,period=30){const key=this.b32d(secret);const ctr=Math.floor(Date.now()/1000/period);const buf=new ArrayBuffer(8);const v=new DataView(buf);v.setUint32(0,Math.floor(ctr/0x100000000),false);v.setUint32(4,ctr,false);const ck=await crypto.subtle.importKey('raw',key,{name:'HMAC',hash:'SHA-1'},false,['sign']);const sig=new Uint8Array(await crypto.subtle.sign('HMAC',ck,buf));const off=sig[sig.length-1]&0x0f;const bin=((sig[off]&0x7f)<<24)|((sig[off+1]&0xff)<<16)|((sig[off+2]&0xff)<<8)|(sig[off+3]&0xff);return String(bin%Math.pow(10,digits)).padStart(digits,'0')},copy(){const c=document.getElementById('totp-code').textContent;if(c.includes('-')||c==='ERROR')return SPS.toast('Chưa có mã','error');SPS.copy(c)}};
+    <!-- React Root -->
+    <div id="root" class="relative z-10"></div>
 
-SPS.qr={_q:null,qrRender(){const type=document.getElementById('qr-type').value;let data=document.getElementById('qr-data').value||'';if(type==='phone')data='tel:'+data.replace(/\s/g,'');if(type==='url'&&data&&!/^https?:\/\//i.test(data))data='https://'+data;const color=document.getElementById('qr-color').value;const size=Math.max(100,Math.min(800,+document.getElementById('qr-size').value||300));const out=document.getElementById('qr-output');if(!data){out.innerHTML='<p style="color:#666">Nhập nội dung</p>';return}try{out.innerHTML='';this._q=new QRCode(out,{text:data,width:size,height:size,colorDark:color,colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H})}catch(e){out.innerHTML='<p style="color:#c00">'+SPS.esc(e.message)+'</p>'}},qrDownload(){const out=document.getElementById('qr-output');const img=out.querySelector('img')||out.querySelector('canvas');if(!img)return SPS.toast('Chưa có QR','error');if(img.tagName==='IMG'){const a=document.createElement('a');a.href=img.src;a.download='sps-qr.png';a.click()}else img.toBlob(b=>SPS.download(b,'sps-qr.png'))}};
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback, useMemo } = React;
 
-SPS.currency={async convert(){const amt=+document.getElementById('cur-amt').value||0;const from=(document.getElementById('cur-from').value||'USD').toUpperCase();const to=(document.getElementById('cur-to').value||'VND').toUpperCase();const info=document.getElementById('cur-info');const res=document.getElementById('cur-result');if(!from||!to)return;try{let rate=null;if(from===to)rate=1;else{const d=await SPS.fetchJSON('https://open.er-api.com/v6/latest/'+from);if(d&&d.rates&&d.rates[to])rate=d.rates[to];else throw new Error('Không có tỷ giá')}res.textContent=(amt*rate).toLocaleString('vi-VN',{maximumFractionDigits:2})+' '+to;info.textContent='Nguồn: open.er-api.com · '+new Date().toLocaleString('vi-VN')+' · 1 '+from+' = '+rate.toLocaleString('vi-VN',{maximumFractionDigits:4})+' '+to}catch(e){res.textContent='--';info.textContent='⚠️ '+e.message+' · Thử: USD, EUR, VND, JPY, GBP...'}}};
+        /* ================= CONSTANTS & DATA ================= */
+        const ADMIN_USER = "admin";
+        const ADMIN_PASS = "123456";
+        
+        const SC_TRACKS = [
+            "https://soundcloud.com/quang-huynhh/v-b-n-anh-remix-jack-j97-x",
+            "https://soundcloud.com/doyu-358490204/jack-j97-ng-i-d-ng-wen-remix"
+        ];
 
-SPS.ipLookup=async function(){const el=document.getElementById('ip-content');if(!el)return;el.innerHTML='<p class="muted">Đang tải...</p>';try{const d=await SPS.fetchJSON('https://ipapi.co/json/');if(d.error)throw new Error(d.reason||'API error');const rows=[['IPv4',d.ip||'N/A','globe'],['Quốc gia',(d.country_name||'N/A')+' ('+(d.country_code||'')+')','flag'],['Vùng',d.region||'N/A','map'],['Thành phố',d.city||'N/A','building'],['Mã bưu chính',d.postal||'N/A','mail'],['Tọa độ ~',(d.latitude||'?')+', '+(d.longitude||'?'),'map-pin'],['Múi giờ',d.timezone||'N/A','clock'],['ISP',d.org||'N/A','wifi'],['ASN',d.asn||'N/A','server']];el.innerHTML=rows.map(([l,v,i])=>`<div class="glass" style="padding:14px;display:flex;justify-content:space-between;align-items:center;gap:10px"><div><div class="muted" style="font-size:12px">${l}</div><div style="font-weight:600;margin-top:2px">${SPS.esc(v)}</div></div><i data-lucide="${i}" style="color:var(--primary)"></i></div>`).join('')+`<div class="glass" style="padding:14px;grid-column:1/-1"><button class="btn btn-sm" onclick="SPS.copy('${SPS.esc(d.ip||'')}')">Sao chép IP</button> <button class="btn btn-sm" onclick="SPS.ipLookup()">Refresh</button><p class="muted" style="font-size:11px;margin-top:8px">⚠️ Vị trí IP không chính xác đến số nhà.</p></div>`;if(window.lucide)lucide.createIcons()}catch(e){el.innerHTML='<div class="glass" style="padding:20px"><span class="badge badge-danger">Lỗi</span> '+SPS.esc(e.message)+'</div>'}};
+        const DEFAULT_PROFILE = {
+            name: "Nguyễn Lê Thảo",
+            verified: true,
+            bio: "Chuyên cung cấp dịch vụ MMO, Support Facebook/Meta, TikTok, Google và các tool hỗ trợ. Uy tín - Nhanh chóng - Bảo mật.",
+            avatar: "https://ui-avatars.com/api/?name=NL&background=3b82f6&color=fff&size=200",
+            cover: "https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&q=80",
+            contact: {
+                telegram: "usertaiwan8686", facebook: "nguyenlethaoservice",
+                phone: "0898666218", email: "nguyenlethao.profile08@gmail.com", discord: "nguyenlethao.service"
+            }
+        };
 
-SPS.weather={async search(){const q=document.getElementById('wx-city').value.trim();if(!q)return;try{const g=await SPS.fetchJSON('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(q)+'&count=1&language=vi');if(!g.results||!g.results.length)throw new Error('Không tìm thấy');const r=g.results[0];this.load(r.latitude,r.longitude,r.name)}catch(e){SPS.toast('Lỗi: '+e.message,'error')}},gps(){if(!navigator.geolocation)return SPS.toast('Không hỗ trợ GPS','error');navigator.geolocation.getCurrentPosition(p=>this.load(p.coords.latitude,p.coords.longitude,'Vị trí của bạn'),e=>SPS.toast('GPS lỗi: '+e.message,'error'))},quick(lat,lon,name){this.load(lat,lon,name)},async load(lat,lon,name){const out=document.getElementById('weather-output');if(!out)return;out.innerHTML='<div class="glass" style="padding:20px"><span class="muted">Đang tải...</span></div>';try{const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,surface_pressure&hourly=temperature_2m,precipitation_probability,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code,sunrise,sunset&timezone=auto&forecast_days=3`;const d=await SPS.fetchJSON(url);const c=d.current;const cm={0:['☀️','Trời quang'],1:['🌤️','Ít mây'],2:['⛅','Mây rải rác'],3:['☁️','Nhiều mây'],45:['🌫️','Sương mù'],51:['🌦️','Mưa phùn'],61:['🌧️','Mưa'],63:['🌧️','Mưa vừa'],65:['⛈️','Mưa to'],80:['🌧️','Mưa rào'],95:['⛈️','Dông']};const [ic,desc]=cm[c.weather_code]||['🌡️','?'];const sr=d.daily.sunrise[0]?new Date(d.daily.sunrise[0]).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}):'N/A';const ss=d.daily.sunset[0]?new Date(d.daily.sunset[0]).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}):'N/A';const hrly=(d.hourly.time||[]).slice(0,24).map((t,i)=>{const hr=new Date(t).getHours().toString().padStart(2,'0')+':00';const hc=cm[d.hourly.weather_code[i]]||['🌡️'];return`<div class="hourly-item"><div class="hour">${hr}</div><div style="font-size:20px">${hc[0]}</div><div class="h-temp">${Math.round(d.hourly.temperature_2m[i])}°</div><div class="muted">${d.hourly.precipitation_probability[i]||0}%</div></div>`}).join('');out.innerHTML=`<div class="glass weather-hero"><h2 style="margin-bottom:6px">${SPS.esc(name)}</h2><div style="font-size:48px;margin:10px 0">${ic}</div><div class="temp">${Math.round(c.temperature_2m)}°C</div><p class="muted">${desc} · Cảm giác ${Math.round(c.apparent_temperature)}°C</p><div class="weather-details"><div class="weather-detail"><div class="label">Độ ẩm</div><div class="val">${c.relative_humidity_2m}%</div></div><div class="weather-detail"><div class="label">Gió</div><div class="val">${c.wind_speed_10m} km/h</div></div><div class="weather-detail"><div class="label">Áp suất</div><div class="val">${c.surface_pressure} hPa</div></div><div class="weather-detail"><div class="label">Cao/Thấp</div><div class="val">${Math.round(d.daily.temperature_2m_max[0])}°/${Math.round(d.daily.temperature_2m_min[0])}°</div></div><div class="weather-detail"><div class="label">Mặt trời mọc</div><div class="val">${sr}</div></div><div class="weather-detail"><div class="label">Lặn</div><div class="val">${ss}</div></div></div></div><div class="glass" style="padding:16px"><h3 style="margin-bottom:10px">Dự báo 24h</h3><div class="hourly-scroll">${hrly}</div></div><p class="muted center" style="font-size:11px;margin-top:10px">Nguồn: Open-Meteo.com · Không dùng cho cảnh báo chính thức.</p>`}catch(e){out.innerHTML='<div class="glass" style="padding:20px"><span class="badge badge-danger">Lỗi API</span> '+SPS.esc(e.message)+'</div>'}}};
+        const DEFAULT_PRODUCTS = [
+            { id: 1, category: "Support Social", subcategory: "Meta", name: "UNLOCK 282", price: "150.000đ", desc: "Mở khóa tính năng 282", stock: 10, rating: 4.8, reviews: 156, badge: "NEW", image: "https://cdn-icons-png.flaticon.com/512/5968/5968764.png" },
+            { id: 2, category: "Support Social", subcategory: "Meta", name: "UNLOCK 956", price: "200.000đ", desc: "Mở khóa tính năng 956", stock: 5, rating: 4.9, reviews: 210, badge: "HOT", image: "https://cdn-icons-png.flaticon.com/512/5968/5968764.png" },
+            { id: 3, category: "Support Social", subcategory: "TikTok", name: "UNLOCK LIVE", price: "200.000đ", desc: "Mở live TikTok", stock: 7, rating: 4.7, reviews: 89, badge: "", image: "https://cdn-icons-png.flaticon.com/512/3046/3046120.png" },
+            { id: 4, category: "Shop Liên Quân", subcategory: "", name: "Acc Kim Cương 100+", price: "500.000đ", desc: "Full tướng, ngọc đỏ", stock: 5, rating: 5.0, reviews: 45, badge: "VIP", image: "https://cdn-icons-png.flaticon.com/512/8166/8166287.png" }
+        ];
 
-SPS.disaster={async load(){const out=document.getElementById('disaster-output');if(!out)return;out.innerHTML='<p class="muted">Đang tải...</p>';const rss='https://trithucvn2.net/tag/canh-bao-thien-tai/feed/';try{const proxy='https://api.allorigins.win/raw?url='+encodeURIComponent(rss);const r=await fetch(proxy);const text=await r.text();const doc=new DOMParser().parseFromString(text,'text/xml');const items=[...doc.querySelectorAll('item')].slice(0,5);if(!items.length)throw new Error('Không có tin');out.innerHTML=items.map(item=>`<div class="glass" style="padding:14px;margin-bottom:8px"><strong>${SPS.esc(item.querySelector('title')?.textContent||'')}</strong><p class="muted" style="font-size:12px;margin-top:4px">${new Date(item.querySelector('pubDate')?.textContent||Date.now()).toLocaleString('vi-VN')}</p><a href="${item.querySelector('link')?.textContent||'#'}" target="_blank" style="color:var(--primary);font-size:12px">Đọc tiếp →</a></div>`).join('')+`<p class="muted" style="font-size:11px;margin-top:8px">⚠️ Tin từ báo chí, không phải cảnh báo chính thức NCHMF. Xem kttv.gov.vn để có thông tin chính xác.</p>`}catch(e){out.innerHTML=`<span class="badge badge-warn">Không tải được</span><p class="muted" style="font-size:12px;margin-top:8px">${SPS.esc(e.message)} — thử Refresh hoặc kiểm tra mạng.</p>`}}};
+        const DEFAULT_POSTS = [
+            { id: 1, title: "Hướng dẫn mua hàng", content: "Vui lòng liên hệ Telegram để được hỗ trợ thanh toán và nhận hàng.", date: new Date().toISOString(), image: "" },
+            { id: 2, title: "Cập nhật bảo mật Meta", content: "Hệ thống đã cập nhật quy trình mới cho UNLOCK 956.", date: new Date().toISOString(), image: "" }
+        ];
 
-SPS.crypto={async load(){const out=document.getElementById('crypto-output');if(!out)return;out.innerHTML='<p class="muted">Đang tải...</p>';try{const d=await SPS.fetchJSON('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,solana,cardano,dogecoin,ripple,tron&vs_currencies=usd,vnd&include_24hr_change=true');const map={bitcoin:'Bitcoin (BTC)',ethereum:'Ethereum (ETH)',binancecoin:'BNB',solana:'Solana',cardano:'Cardano',dogecoin:'Dogecoin',ripple:'XRP',tron:'TRON'};out.innerHTML=Object.entries(d).map(([id,v])=>{const chg=v.usd_24h_change||0;const color=chg>=0?'var(--success)':'var(--danger)';return`<div class="glass" style="padding:16px"><div style="display:flex;justify-content:space-between;align-items:center"><strong>${map[id]||id}</strong><span style="color:${color};font-size:12px;font-weight:600">${chg>=0?'▲':'▼'} ${Math.abs(chg).toFixed(2)}%</span></div><div style="font-size:20px;font-weight:700;margin-top:8px">$${(v.usd||0).toLocaleString('en-US',{maximumFractionDigits:2})}</div><div class="muted" style="font-size:13px">${(v.vnd||0).toLocaleString('vi-VN')}₫</div></div>`}).join('')+`<p class="muted center" style="font-size:11px;grid-column:1/-1;margin-top:8px">CoinGecko · ${new Date().toLocaleTimeString('vi-VN')}</p>`}catch(e){out.innerHTML='<div class="glass" style="padding:20px"><span class="badge badge-danger">Lỗi</span> CoinGecko có thể rate-limit: '+SPS.esc(e.message)+'</div>'}}};
+        const CATEGORIES = [
+            { name: "Shop Liên Quân", icon: "gamepad-2", subs: [] },
+            { name: "Shop Free Fire", icon: "crosshair", subs: [] },
+            { name: "Support Social", icon: "share-2", subs: ["Meta", "TikTok", "Google"] },
+            { name: "Proxy / VPN", icon: "shield", subs: [] },
+            { name: "IPA / Antiban", icon: "apple", subs: [] },
+            { name: "Source / Raw", icon: "code", subs: [] },
+            { name: "Bypass / Tool", icon: "wrench", subs: [] }
+        ];
 
-SPS.calc={_defs:{},run(id){const n={profit:2,markup:2,discount:2,commission:2}[id];const v=[];for(let i=0;i<n;i++){const x=parseFloat(document.getElementById(`calc-${id}-${i}`).value);v.push(isNaN(x)?0:x)}const r=this._defs[id](v);document.getElementById(`calc-res-${id}`).textContent=isFinite(r)?r.toLocaleString('vi-VN',{maximumFractionDigits:2}):'--'}};
+        /* ================= UTILS ================= */
+        const ls = {
+            get: (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+            set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) { console.warn("Storage full"); } }
+        };
 
-SPS.invAddItem=function(){const c=document.getElementById('inv-items');if(!c)return;const d=document.createElement('div');d.className='input-row';d.style.marginBottom='8px';d.innerHTML=`<input placeholder="Tên mục" class="inv-name"><input type="number" placeholder="SL" value="1" class="inv-qty" oninput="SPS.invCalc()" style="width:60px"><input type="number" placeholder="Đơn giá" value="0" class="inv-price" oninput="SPS.invCalc()" style="width:100px">`;c.appendChild(d);this.invCalc()};
-SPS.invCalc=function(){let st=0;document.querySelectorAll('#inv-items .input-row').forEach(r=>{const q=+r.querySelector('.inv-qty').value||0;const p=+r.querySelector('.inv-price').value||0;st+=q*p});const tax=+document.getElementById('inv-tax').value||0;const fmt=n=>n.toLocaleString('vi-VN')+'₫';document.getElementById('inv-subtotal').textContent=fmt(st);document.getElementById('inv-total').textContent=fmt(st*(1+tax/100))};
-SPS.invGenerate=async function(){if(typeof PDFLib==='undefined')return SPS.toast('PDFLib chưa tải','error');const type=document.getElementById('inv-type').value;const no=document.getElementById('inv-no').value;const date=document.getElementById('inv-date').value;const customer=document.getElementById('inv-customer').value;const address=document.getElementById('inv-address').value;const items=[];document.querySelectorAll('#inv-items .input-row').forEach(r=>{items.push({name:r.querySelector('.inv-name').value||'—',qty:+r.querySelector('.inv-qty').value||0,price:+r.querySelector('.inv-price').value||0})});const st=items.reduce((a,i)=>a+i.qty*i.price,0);const tax=+document.getElementById('inv-tax').value||0;const total=st*(1+tax/100);try{const doc=await PDFLib.PDFDocument.create();const f=await doc.embedFont(PDFLib.StandardFonts.Helvetica);const b=await doc.embedFont(PDFLib.StandardFonts.HelveticaBold);const page=doc.addPage([595,842]);const {width,height}=page.getSize();let y=height-60;page.drawText(type==='invoice'?'HÓA ĐƠN':'BÁO GIÁ',{x:50,y,size:22,font:b});page.drawText(`${no} · ${date}`,{x:50,y:y-20,size:11,font:f,color:PDFLib.rgb(0.4,0.4,0.4)});y-=60;page.drawText('Khách hàng: '+customer,{x:50,y,size:12,font:b});page.drawText(address,{x:50,y:y-16,size:10,font:f});y-=50;page.drawLine({start:{x:50,y},end:{x:width-50,y},thickness:1});y-=20;page.drawText('Mục',{x:50,y,size:10,font:b});page.drawText('SL',{x:350,y,size:10,font:b});page.drawText('Đơn giá',{x:400,y,size:10,font:b});page.drawText('Thành tiền',{x:480,y,size:10,font:b});y-=16;items.forEach(it=>{page.drawText(it.name.slice(0,40),{x:50,y,size:10,font:f});page.drawText(String(it.qty),{x:350,y,size:10,font:f});page.drawText(it.price.toLocaleString('vi-VN'),{x:400,y,size:10,font:f});page.drawText((it.qty*it.price).toLocaleString('vi-VN'),{x:480,y,size:10,font:f});y-=16});y-=10;page.drawLine({start:{x:350,y},end:{x:width-50,y},thickness:1});y-=20;page.drawText('Tạm tính:',{x:350,y,size:10,font:f});page.drawText(st.toLocaleString('vi-VN')+'₫',{x:480,y,size:10,font:f});y-=16;page.drawText(`Thuế (${tax}%):`,{x:350,y,size:10,font:f});page.drawText((st*tax/100).toLocaleString('vi-VN')+'₫',{x:480,y,size:10,font:f});y-=20;page.drawText('TỔNG:',{x:350,y,size:12,font:b});page.drawText(total.toLocaleString('vi-VN')+'₫',{x:480,y,size:12,font:b});const bytes=await doc.save();SPS.download(new Blob([bytes],{type:'application/pdf'}),`${type}-${no}.pdf`);SPS.toast('Đã tải PDF','success')}catch(e){SPS.toast('Lỗi: '+e.message,'error')}};
+        const compressImage = (file, maxW = 400, q = 0.7) => new Promise(res => {
+            const r = new FileReader();
+            r.onload = e => {
+                const img = new Image();
+                img.onload = () => {
+                    const c = document.createElement('canvas');
+                    let w = img.width, h = img.height;
+                    if (w > maxW) { h = h * maxW / w; w = maxW; }
+                    c.width = w; c.height = h;
+                    c.getContext('2d').drawImage(img, 0, 0, w, h);
+                    res(c.toDataURL('image/jpeg', q));
+                };
+                img.src = e.target.result;
+            };
+            r.readAsDataURL(file);
+        });
 
-SPS.todo={add(){const i=document.getElementById('todo-input');const t=i.value.trim();if(!t)return;SPS.state.todos=SPS.state.todos||[];SPS.state.todos.unshift({id:SPS.id(),text:t,priority:document.getElementById('todo-priority').value,due:document.getElementById('todo-due').value||null,done:false,created:Date.now()});SPS.store.save();i.value='';this.render()},toggle(id){const t=SPS.state.todos.find(x=>x.id===id);if(t){t.done=!t.done;SPS.store.save();this.render()}},del(id){SPS.state.todos=SPS.state.todos.filter(x=>x.id!==id);SPS.store.save();this.render()},render(){const el=document.getElementById('todo-list');if(!el)return;const todos=SPS.state.todos||[];el.innerHTML=todos.length?todos.map(t=>`<div class="glass" style="padding:12px;display:flex;gap:10px;align-items:center;${t.done?'opacity:.55':''}"><input type="checkbox" ${t.done?'checked':''} onchange="SPS.todo.toggle('${t.id}')" style="width:auto"><div style="flex:1;${t.done?'text-decoration:line-through':''}">${SPS.esc(t.text)}<div class="muted" style="font-size:11px;margin-top:2px">${t.priority==='high'?'🔴 Cao':t.priority==='med'?'🟡 Vừa':'🟢 Thấp'}${t.due?' · Hạn: '+t.due:''}</div></div><button class="btn btn-sm btn-danger" onclick="SPS.todo.del('${t.id}')">Xóa</button></div>`).join(''):'<p class="muted">Chưa có việc.</p>'}};
+        function useLucide() {
+            useEffect(() => {
+                let scheduled = false;
+                const run = () => {
+                    if (!window.lucide) return;
+                    if (!document.querySelector('[data-lucide]')) return;
+                    window.lucide.createIcons();
+                };
+                const schedule = () => {
+                    if (scheduled) return;
+                    scheduled = true;
+                    requestAnimationFrame(() => { scheduled = false; run(); });
+                };
+                run();
+                const obs = new MutationObserver(schedule);
+                obs.observe(document.body, { childList: true, subtree: true });
+                return () => obs.disconnect();
+            }, []);
+        }
 
-SPS.calendar={_cur:new Date(),_sel:new Date(),init(){this._cur=new Date();this._sel=new Date();this.render()},prev(){this._cur.setMonth(this._cur.getMonth()-1);this.render()},next(){this._cur.setMonth(this._cur.getMonth()+1);this.render()},render(){const title=document.getElementById('cal-title');if(!title)return;const d=this._cur;title.textContent=d.toLocaleDateString('vi-VN',{month:'long',year:'numeric'});const y=d.getFullYear(),m=d.getMonth();const fd=new Date(y,m,1).getDay();const dim=new Date(y,m+1,0).getDate();const today=new Date();const grid=document.getElementById('cal-grid');let html=['CN','T2','T3','T4','T5','T6','T7'].map(w=>`<div style="text-align:center;font-size:11px;color:var(--muted);padding:6px 0">${w}</div>`).join('');for(let i=0;i<fd;i++)html+='<div></div>';for(let day=1;day<=dim;day++){const isT=y===today.getFullYear()&&m===today.getMonth()&&day===today.getDate();const isS=y===this._sel.getFullYear()&&m===this._sel.getMonth()&&day===this._sel.getDate();const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;const has=(SPS.state.events||[]).some(e=>e.date===ds);html+=`<div onclick="SPS.calendar.select(${y},${m},${day})" style="text-align:center;padding:8px 4px;border-radius:8px;cursor:pointer;font-size:13px;background:${isS?'var(--primary)':isT?'rgba(77,123,255,.2)':'transparent'};color:${isS?'#fff':'var(--text)'};position:relative">${day}${has?'<span style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--accent);border-radius:50%"></span>':''}</div>`}grid.innerHTML=html;document.getElementById('cal-selected').textContent=this._sel.toLocaleDateString('vi-VN');this.renderEvents()},select(y,m,d){this._sel=new Date(y,m,d);this.render()},addEvent(){const t=document.getElementById('cal-ev-title').value.trim();if(!t)return;const date=`${this._sel.getFullYear()}-${String(this._sel.getMonth()+1).padStart(2,'0')}-${String(this._sel.getDate()).padStart(2,'0')}`;SPS.state.events=SPS.state.events||[];SPS.state.events.push({id:SPS.id(),title:t,date});SPS.store.save();document.getElementById('cal-ev-title').value='';this.render()},delEvent(id){SPS.state.events=SPS.state.events.filter(e=>e.id!==id);SPS.store.save();this.render()},renderEvents(){const date=`${this._sel.getFullYear()}-${String(this._sel.getMonth()+1).padStart(2,'0')}-${String(this._sel.getDate()).padStart(2,'0')}`;const evts=(SPS.state.events||[]).filter(e=>e.date===date);const el=document.getElementById('cal-events');if(!el)return;el.innerHTML=evts.length?evts.map(e=>`<div class="glass" style="padding:8px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;font-size:13px"><span>${SPS.esc(e.title)}</span><button class="btn btn-sm btn-danger" onclick="SPS.calendar.delEvent('${e.id}')">×</button></div>`).join(''):'<p class="muted" style="font-size:13px">Không có sự kiện.</p>'}};
+        /* ================= EFFECTS ================= */
+        function Effects({ type }) {
+            useEffect(() => {
+                const layer = document.getElementById('effect-layer');
+                if (!layer) return;
+                layer.innerHTML = '';
+                if (type === 'none') return;
+                
+                let interval;
+                const timeouts = [];
+                
+                const add = (html, cls, style, dur) => {
+                    const el = document.createElement('div');
+                    el.innerHTML = html; el.className = cls;
+                    Object.assign(el.style, style);
+                    layer.appendChild(el);
+                    timeouts.push(setTimeout(() => el.remove(), dur));
+                };
 
-SPS.pdf={async merge(){const files=document.getElementById('pdf-merge-files').files;if(!files.length||files.length<2)return SPS.toast('Chọn ít nhất 2 file','error');if(typeof PDFLib==='undefined')return SPS.toast('PDFLib chưa tải','error');try{const m=await PDFLib.PDFDocument.create();for(const file of files){const b=await file.arrayBuffer();const d=await PDFLib.PDFDocument.load(b);const pages=await m.copyPages(d,d.getPageIndices());pages.forEach(p=>m.addPage(p))}const out=await m.save();SPS.download(new Blob([out],{type:'application/pdf'}),'sps-merged.pdf');SPS.toast('Đã ghép '+files.length+' file','success')}catch(e){SPS.toast('Lỗi: '+e.message,'error')}},async text(){const txt=document.getElementById('pdf-text').value;if(!txt.trim())return SPS.toast('Nhập văn bản','error');if(typeof PDFLib==='undefined')return SPS.toast('PDFLib chưa tải','error');try{const doc=await PDFLib.PDFDocument.create();const font=await doc.embedFont(PDFLib.StandardFonts.Helvetica);const page=doc.addPage([595,842]);const lines=txt.split('\n');let y=800;const size=12;for(const line of lines){if(y<40){page.drawText(line.slice(0,200),{x:50,y:40,size,font});break}page.drawText(line.slice(0,100),{x:50,y,size,font,maxWidth:495});y-=size*1.5}const out=await doc.save();SPS.download(new Blob([out],{type:'application/pdf'}),'sps-text.pdf');SPS.toast('Đã tạo','success')}catch(e){SPS.toast('Lỗi: '+e.message,'error')}},async split(){const file=document.getElementById('pdf-split-file').files[0];const from=+document.getElementById('pdf-split-from').value;const to=+document.getElementById('pdf-split-to').value;if(!file)return SPS.toast('Chọn file','error');if(!from||!to||from<1||to<from)return SPS.toast('Khoảng trang không hợp lệ','error');if(typeof PDFLib==='undefined')return SPS.toast('PDFLib chưa tải','error');try{const b=await file.arrayBuffer();const doc=await PDFLib.PDFDocument.load(b);const total=doc.getPageCount();const fi=from-1,ti=Math.min(to-1,total-1);if(fi>=total)return SPS.toast('Vượt quá số trang','error');const nd=await PDFLib.PDFDocument.create();const idx=[];for(let i=fi;i<=ti;i++)idx.push(i);const pages=await nd.copyPages(doc,idx);pages.forEach(p=>nd.addPage(p));const out=await nd.save();SPS.download(new Blob([out],{type:'application/pdf'}),`sps-pages-${from}-${ti+1}.pdf`);SPS.toast('Đã tách '+idx.length+' trang','success')}catch(e){SPS.toast('Lỗi: '+e.message,'error')}},async meta(){const file=document.getElementById('pdf-meta-file').files[0];const out=document.getElementById('pdf-meta-out');if(!file)return;if(typeof PDFLib==='undefined')return SPS.toast('PDFLib chưa tải','error');try{const b=await file.arrayBuffer();const doc=await PDFLib.PDFDocument.load(b);out.innerHTML=`<div class="glass" style="padding:12px"><div><strong>Số trang:</strong> ${doc.getPageCount()}</div><div><strong>Tiêu đề:</strong> ${SPS.esc(doc.getTitle()||'N/A')}</div><div><strong>Tác giả:</strong> ${SPS.esc(doc.getAuthor()||'N/A')}</div><div><strong>Chủ đề:</strong> ${SPS.esc(doc.getSubject()||'N/A')}</div><div><strong>Tạo bởi:</strong> ${SPS.esc(doc.getCreator()||'N/A')}</div><div><strong>Dung lượng:</strong> ${(file.size/1024).toFixed(1)} KB</div></div>`}catch(e){out.innerHTML='<span style="color:var(--danger)">Lỗi: '+SPS.esc(e.message)+'</span>'}}};
+                if (type === 'snow') {
+                    interval = setInterval(() => {
+                        add('❄', 'snowflake', { left: Math.random()*100+'vw', animationDuration: (Math.random()*4+4)+'s', opacity: Math.random()*0.5+0.2, fontSize: (Math.random()*10+12)+'px' }, 8000);
+                    }, 300);
+                } else if (type === 'flower') {
+                    const flowers = ['🌸','🌺','🌼','🌷','🍁','🍂'];
+                    interval = setInterval(() => {
+                        add(flowers[Math.floor(Math.random()*flowers.length)], 'flower', { left: Math.random()*100+'vw', animationDuration: (Math.random()*4+5)+'s', fontSize: (Math.random()*12+14)+'px' }, 9000);
+                    }, 500);
+                } else if (type === 'lava') {
+                    interval = setInterval(() => {
+                        const size = Math.random()*6+4;
+                        add('', 'lava', { left: Math.random()*100+'vw', animationDuration: (Math.random()*3+4)+'s', width: size+'px', height: size+'px', background: `radial-gradient(circle, hsl(${Math.random()*30+15},100%,60%), hsl(${Math.random()*20},100%,40%))` }, 7000);
+                    }, 150);
+                }
 
-SPS.shortUrl=async function(){const url=document.getElementById('short-url').value.trim();const out=document.getElementById('short-result');if(!/^https?:\/\//i.test(url))return SPS.toast('URL phải bắt đầu http:// hoặc https://','error');out.innerHTML='<p class="muted">Đang xử lý...</p>';const ep=`https://is.gd/create.php?format=simple&url=${encodeURIComponent(url)}`;try{let r=await fetch(ep);let text=await r.text();if(!r.ok||text.includes('Error')||!text.startsWith('http')){const proxy=`https://api.allorigins.win/raw?url=${encodeURIComponent(ep)}`;r=await fetch(proxy);text=await r.text()}if(!text.startsWith('http'))throw new Error(text.trim()||'Không rút gọn được');out.innerHTML=`<div class="glass" style="padding:12px;word-break:break-all"><strong>Link rút gọn:</strong><br><a href="${text}" target="_blank" style="color:var(--primary)">${text}</a><button class="btn btn-sm mt-2" onclick="SPS.copy('${text}')">Sao chép</button></div>`}catch(e){out.innerHTML=`<span class="badge badge-danger">Lỗi</span> ${SPS.esc(e.message)}<br><p class="muted" style="font-size:12px;margin-top:8px">Nếu bị CORS, thử lại sau.</p>`}};
+                return () => { if(interval) clearInterval(interval); timeouts.forEach(t=>clearTimeout(t)); layer.innerHTML=''; };
+            }, [type]);
+            return null;
+        }
 
-SPS.imgbbUpload=async function(){const key=document.getElementById('imgbb-key').value.trim();const file=document.getElementById('imgbb-file').files[0];const out=document.getElementById('imgbb-result');if(!key)return SPS.toast('Nhập ImgBB API key (lấy tại api.imgbb.com)','error');if(!file)return SPS.toast('Chọn ảnh','error');if(file.size>32*1024*1024)return SPS.toast('Ảnh vượt 32MB','error');out.innerHTML='<p class="muted">Đang upload...</p>';try{const fd=new FormData();fd.append('image',file);const r=await fetch(`https://api.imgbb.com/1/upload?key=${key}`,{method:'POST',body:fd});const data=await r.json();if(!data.success)throw new Error(data.error?.message||'Upload thất bại');const url=data.data.url;out.innerHTML=`<div class="glass" style="padding:12px;word-break:break-all"><strong>URL:</strong><br>${SPS.esc(url)}<button class="btn btn-sm mt-2" onclick="SPS.copy('${url}')">Sao chép</button></div><img src="${url}" style="max-width:100%;border-radius:12px;margin-top:10px">`}catch(e){out.innerHTML=`<span class="badge badge-danger">Lỗi</span> ${SPS.esc(e.message)}`}};
+        /* ================= COMPONENTS ================= */
+        const VerifiedIcon = ({ size = 20 }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="inline-block text-blue-500 ml-1 drop-shadow-md">
+                <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2ZM16.707 9.707C17.098 9.316 17.098 8.684 16.707 8.293C16.316 7.902 15.684 7.902 15.293 8.293L10.5 13.086L8.707 11.293C8.316 10.902 7.684 10.902 7.293 11.293C6.902 11.684 6.902 12.316 7.293 12.707L10.5 15.914L16.707 9.707Z" fill="currentColor"/>
+            </svg>
+        );
 
-SPS.cloudinaryUpload=async function(){const cloud=document.getElementById('cld-cloud').value.trim();const preset=document.getElementById('cld-preset').value.trim();const file=document.getElementById('cld-file').files[0];const out=document.getElementById('cld-result');if(!cloud||!preset)return SPS.toast('Nhập Cloud name và preset','error');if(!file)return SPS.toast('Chọn ảnh','error');out.innerHTML='<p class="muted">Đang upload...</p>';try{const fd=new FormData();fd.append('file',file);fd.append('upload_preset',preset);const r=await fetch(`https://api.cloudinary.com/v1_1/${cloud}/image/upload`,{method:'POST',body:fd});const data=await r.json();if(data.error)throw new Error(data.error.message);out.innerHTML=`<div class="glass" style="padding:12px;word-break:break-all"><strong>URL:</strong><br>${SPS.esc(data.secure_url)}<button class="btn btn-sm mt-2" onclick="SPS.copy('${data.secure_url}')">Sao chép</button></div>`}catch(e){out.innerHTML=`<span class="badge badge-danger">Lỗi</span> ${SPS.esc(e.message)}`}};
+        function ProfileHome({ profile, posts, onNavigate }) {
+            return (
+                <div className="animate-fade-in space-y-5">
+                    {/* Cover & Avatar */}
+                    <div className="relative rounded-3xl overflow-hidden glass-strong shadow-2xl">
+                        <div className="h-44 md:h-64 relative bg-gradient-to-r from-blue-600 to-cyan-400">
+                            {profile.cover && <img src={profile.cover} className="w-full h-full object-cover mix-blend-overlay opacity-80" alt="Cover" />}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                        </div>
+                        <div className="px-6 pb-6 -mt-16 relative">
+                            <img src={profile.avatar} className="w-28 h-28 rounded-full border-4 border-white dark:border-slate-800 object-cover shadow-2xl bg-white float-anim" alt="Avatar" />
+                            <div className="mt-4">
+                                <h2 className="text-3xl font-extrabold flex items-center drop-shadow-sm">
+                                    {profile.name} {profile.verified && <VerifiedIcon size={26} />}
+                                </h2>
+                                <p className="text-sm font-semibold text-blue-400 mt-1">@{ADMIN_USER} • MMO Provider</p>
+                            </div>
+                            <p className="mt-4 text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-medium">{profile.bio}</p>
+                            
+                            <div className="flex gap-3 mt-6">
+                                <button onClick={() => onNavigate('shop')} className="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-2xl text-sm font-bold shadow-[0_8px_20px_rgba(37,99,235,0.4)] transition btn-3d">Xem Shop</button>
+                                <button onClick={() => onNavigate('contact')} className="flex-1 glass-strong py-3 rounded-2xl text-sm font-bold hover:bg-white/10 transition btn-3d">Liên Hệ</button>
+                            </div>
+                        </div>
+                    </div>
 
-SPS.checkFb=async function(){const url=document.getElementById('fb-url').value.trim();const out=document.getElementById('fb-result');if(!/^https?:\/\/(www\.)?(facebook|fb)\.com\//i.test(url)){out.innerHTML='<span class="badge badge-danger">URL không hợp lệ</span>';return}out.innerHTML='<p class="muted">Đang kiểm tra...</p>';try{const proxy=`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;const r=await fetch(proxy,{method:'HEAD'});out.innerHTML=`<div class="glass" style="padding:12px"><strong>HTTP Status:</strong> ${r.status}<br><span class="badge ${r.ok?'badge-success':'badge-danger'}">${r.ok?'Có thể truy cập':'Không truy cập'}</span><p class="muted" style="font-size:11px;margin-top:8px">${new Date().toLocaleString('vi-VN')}</p></div>`}catch(e){out.innerHTML=`<span class="badge badge-warn">Không thể kiểm tra</span><br><p class="muted" style="font-size:12px">${SPS.esc(e.message)}. Facebook chặn bên thứ ba.</p>`}};
+                    {/* Features & Guide (Fill empty space) */}
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="glass p-4 rounded-2xl flex flex-col items-center text-center">
+                            <div className="w-10 h-10 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center mb-2"><i data-lucide="shield-check" size="20"></i></div>
+                            <h4 className="font-bold text-sm">Bảo Mật Tuyệt Đối</h4>
+                            <p className="text-[10px] text-gray-400 mt-1">Thông tin khách hàng luôn được mã hóa an toàn.</p>
+                        </div>
+                        <div className="glass p-4 rounded-2xl flex flex-col items-center text-center">
+                            <div className="w-10 h-10 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center mb-2"><i data-lucide="zap" size="20"></i></div>
+                            <h4 className="font-bold text-sm">Xử Lý Nhanh Chóng</h4>
+                            <p className="text-[10px] text-gray-400 mt-1">Hệ thống tự động, hỗ trợ 24/7 không gián đoạn.</p>
+                        </div>
+                    </div>
 
-SPS.music={tracks:[{name:'Người Đứng Wen Remix',url:'https://m.soundcloud.com/doyu-358490204/jack-j97-ng-i-d-ng-wen-remix'},{name:'Vợ Bạn Anh Remix',url:'https://m.soundcloud.com/quang-huynhh/v-b-n-anh-remix-jack-j97-x'}],open(){document.getElementById('music-widget').classList.add('open');const sel=document.getElementById('music-select');sel.innerHTML=this.tracks.map((t,i)=>`<option value="${i}" ${i===SPS.state.music.track?'selected':''}>${t.name}</option>`).join('');this.load(SPS.state.music.track||0)},close(){document.getElementById('music-widget').classList.remove('open')},load(i){SPS.state.music.track=i;const t=this.tracks[i];const eu='https://w.soundcloud.com/player/?url='+encodeURIComponent(t.url)+'&color=%234d7bff&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false';document.getElementById('music-iframe-wrap').innerHTML=`<iframe allow="autoplay" src="${eu}" style="height:120px"></iframe>`},next(){const i=(SPS.state.music.track+1)%this.tracks.length;document.getElementById('music-select').value=i;this.load(i)},prev(){const i=(SPS.state.music.track-1+this.tracks.length)%this.tracks.length;document.getElementById('music-select').value=i;this.load(i)}};
+                    {/* Latest News */}
+                    <div className="glass rounded-3xl p-6">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="font-bold text-lg flex items-center gap-2">
+                                <i data-lucide="newspaper" size="20" className="text-blue-500"></i> Bản tin mới
+                            </h3>
+                            <button onClick={() => onNavigate('posts')} className="text-xs font-bold text-blue-500">Xem tất cả</button>
+                        </div>
+                        <div className="space-y-3">
+                            {posts.slice(-2).reverse().map(p => (
+                                <div key={p.id} onClick={() => onNavigate('posts')} className="glass-strong rounded-2xl p-4 cursor-pointer hover:bg-white/5 transition border border-white/5">
+                                    <p className="font-bold text-sm text-blue-400 mb-1">{p.title}</p>
+                                    <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">{p.content}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
 
-SPS.effects={_raf:null,init(){const c=document.getElementById('effects-canvas');if(!c)return;this.canvas=c;this.ctx=c.getContext('2d');this.resize();window.addEventListener('resize',()=>this.resize());this.loop()},resize(){if(!this.canvas)return;this.canvas.width=window.innerWidth;this.canvas.height=window.innerHeight},loop(){const ctx=this.ctx;if(!ctx)return;ctx.clearRect(0,0,this.canvas.width,this.canvas.height);const fx=SPS.state.effects;if(!SPS.state.reduceMotion){if(fx.stars){for(let i=0;i<30*fx.density;i++){ctx.fillStyle=`rgba(255,255,255,${0.3*fx.brightness})`;ctx.beginPath();ctx.arc((i*137)%this.canvas.width,(i*89+Date.now()*0.01*fx.speed)%this.canvas.height,1.2,0,Math.PI*2);ctx.fill()}}if(fx.rain){ctx.strokeStyle='rgba(150,200,255,0.4)';ctx.lineWidth=1;for(let i=0;i<80*fx.density;i++){const x=(i*73+Date.now()*0.1*fx.speed)%this.canvas.width;const y=(i*137+Date.now()*0.8*fx.speed)%this.canvas.height;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-2,y+15);ctx.stroke()}}if(fx.snow){ctx.fillStyle='rgba(255,255,255,0.7)';for(let i=0;i<40*fx.density;i++){const x=(i*97+Math.sin(Date.now()*0.001+i)*30)%this.canvas.width;const y=(i*53+Date.now()*0.05*fx.speed)%this.canvas.height;ctx.beginPath();ctx.arc(x,y,2,0,Math.PI*2);ctx.fill()}}}this._raf=requestAnimationFrame(()=>this.loop())}};
+        function Shop({ products, filter, setFilter }) {
+            const [search, setSearch] = useState('');
+            
+            // Lọc sản phẩm: Chỉ lọc theo category/subcategory được chọn, sau đó mới áp dụng search
+            const list = useMemo(() => {
+                return products.filter(p => {
+                    const matchFilter = filter ? (p.category === filter || p.subcategory === filter) : true;
+                    const matchSearch = search ? p.name.toLowerCase().includes(search.toLowerCase()) : true;
+                    return matchFilter && matchSearch;
+                });
+            }, [products, filter, search]);
 
-SPS.a11y={render(){const p=document.getElementById('a11y-panel');if(!p)return;const fx=SPS.state.effects;p.innerHTML=`<h4>♿ Trợ năng <button class="icon-btn" style="width:26px;height:26px" onclick="SPS.a11y.close()"><i data-lucide="x" style="width:14px;height:14px"></i></button></h4><div class="a11y-row"><span>Theme</span><button class="btn btn-sm" onclick="SPS.toggleTheme()">${SPS.state.theme==='dark'?'☀️ Sáng':'🌙 Tối'}</button></div><div class="a11y-row"><span>Cỡ chữ</span><input type="range" min="12" max="22" value="${parseInt(getComputedStyle(document.documentElement).fontSize)||16}" oninput="document.documentElement.style.setProperty('--fs',this.value+'px')"></div><div class="a11y-row"><span>Giảm chuyển động</span><label class="switch"><input type="checkbox" ${SPS.state.reduceMotion?'checked':''} onchange="SPS.state.reduceMotion=this.checked;document.documentElement.setAttribute('data-reduce-motion',this.checked?1:0);SPS.store.save()"><span></span></label></div><div style="margin:12px 0 8px;font-size:12px;font-weight:600;color:var(--muted)">HIỆU ỨNG NỀN</div>${[['stars','⭐ Sao'],['snow','❄️ Tuyết'],['rain','🌧️ Mưa']].map(([k,l])=>`<div class="a11y-row"><span>${l}</span><label class="switch"><input type="checkbox" ${fx[k]?'checked':''} onchange="SPS.state.effects.${k}=this.checked;SPS.store.save()"><span></span></label></div>`).join('')}<div class="a11y-row"><span>Tốc độ</span><input type="range" min="0.2" max="3" step="0.1" value="${fx.speed}" oninput="SPS.state.effects.speed=+this.value;SPS.store.save()"></div><div class="a11y-row"><span>Mật độ</span><input type="range" min="0.2" max="3" step="0.1" value="${fx.density}" oninput="SPS.state.effects.density=+this.value;SPS.store.save()"></div><div class="a11y-row"><span>Độ sáng</span><input type="range" min="0.2" max="1.5" step="0.1" value="${fx.brightness}" oninput="SPS.state.effects.brightness=+this.value;SPS.store.save()"></div><button class="btn btn-sm" style="width:100%;margin-top:12px" onclick="SPS.a11y.reset()">Đặt lại</button>`;if(window.lucide)lucide.createIcons()},open(){document.getElementById('a11y-panel').classList.add('open');this.render()},close(){document.getElementById('a11y-panel').classList.remove('open')},toggle(){const p=document.getElementById('a11y-panel');if(p.classList.contains('open'))this.close();else this.open()},reset(){SPS.state.effects={stars:true,snow:false,rain:false,speed:1,density:1,brightness:1};SPS.state.reduceMotion=false;document.documentElement.removeAttribute('data-reduce-motion');document.documentElement.style.removeProperty('--fs');SPS.store.save();this.render();SPS.toast('Đã reset','success')}};
+            return (
+                <div className="animate-fade-in space-y-5">
+                    {/* Search & Filter Bar */}
+                    <div className="glass-strong rounded-3xl p-5 sticky top-4 z-20 shadow-xl">
+                        <div className="relative mb-4">
+                            <i data-lucide="search" size="18" className="absolute left-4 top-3.5 text-gray-400"></i>
+                            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Tìm sản phẩm trong mục này..." className="w-full bg-black/20 dark:bg-black/40 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all font-medium" />
+                        </div>
+                        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                            <button onClick={() => setFilter('')} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition ${!filter ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/10'}`}>Tất cả</button>
+                            {CATEGORIES.map(c => (
+                                <button key={c.name} onClick={() => { setFilter(c.name); setSearch(''); }} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition ${filter === c.name ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/10'}`}>
+                                    <i data-lucide={c.icon} size="14"></i> {c.name}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    {/* Premium Product Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {list.map(p => (
+                            <div key={p.id} className="product-card p-5 flex flex-col group">
+                                {/* Badges */}
+                                <div className="flex justify-between items-start mb-4 z-10 relative">
+                                    <span className="bg-blue-600/20 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">{p.badge || 'PREMIUM'}</span>
+                                    <button className="w-8 h-8 rounded-full glass-strong flex items-center justify-center text-gray-400 hover:text-red-500 transition"><i data-lucide="heart" size="16"></i></button>
+                                </div>
+                                
+                                {/* Image with glow */}
+                                <div className="product-image-wrapper h-40 flex items-center justify-center mb-4">
+                                    {p.image ? (
+                                        <img src={p.image} className="product-img h-32 object-contain drop-shadow-2xl" alt={p.name} />
+                                    ) : (
+                                        <i data-lucide="package" size="64" className="text-blue-500 opacity-50 product-img"></i>
+                                    )}
+                                </div>
 
-SPS.init=async function(){this.store.load();document.documentElement.setAttribute('data-theme',this.state.theme||'dark');document.documentElement.setAttribute('lang',this.state.lang||'vi');if(this.state.reduceMotion)document.documentElement.setAttribute('data-reduce-motion','1');
-if(!this.state.products||!this.state.products.length){this.state.products=[{id:'p1',name:'Acc Liên Quân VIP',category:'Shop Liên Quân',price:250000,sale:199000,featured:true,created:Date.now()-1000},{id:'p2',name:'Kim Cương FF 500',category:'Shop Free Fire',price:100000,featured:true,created:Date.now()-2000},{id:'p3',name:'Source Code Website Tool',category:'Source Code',price:500000,sale:399000,featured:false,created:Date.now()-3000},{id:'p4',name:'Proxy Riêng 30 Ngày',category:'VPN / Proxy',price:300000,featured:true,created:Date.now()-4000}];this.store.save()}
-if(!this.state.blog||!this.state.blog.length){this.state.blog=[{id:'b1',title:'Chào mừng đến với SPS',category:'Tin tức',author:'Admin',content:'SPS là nền tảng công cụ MMO và dịch vụ số dành cho cộng đồng Việt Nam.\n\nChúng tôi cung cấp nhiều tool hữu ích: TOTP, QR, PDF, Weather, Crypto và nhiều hơn nữa.',created:Date.now()-86400000},{id:'b2',title:'Hướng dẫn dùng TOTP Generator',category:'Hướng dẫn',author:'Admin',content:'Bước 1: Nhập secret (VD: JBSWY3DPEHPK3PXP)\nBước 2: Mã tự động cập nhật mỗi 30 giây\nBước 3: Sao chép và dùng để đăng nhập',created:Date.now()-3600000}];this.store.save()}
-this.effects.init();
-document.getElementById('lang-btn').addEventListener('click',()=>this.openLangPicker());
-document.getElementById('music-btn').addEventListener('click',()=>this.music.open());
-document.getElementById('music-select').addEventListener('change',e=>this.music.load(+e.target.value));
-document.getElementById('music-next').addEventListener('click',()=>this.music.next());
-document.getElementById('music-prev').addEventListener('click',()=>this.music.prev());
-document.getElementById('a11y-fab').addEventListener('click',()=>this.a11y.toggle());
-let ticking=false;window.addEventListener('scroll',()=>{if(ticking)return;ticking=true;requestAnimationFrame(()=>{const t=document.getElementById('topbar');if(window.scrollY>20)t.classList.add('scrolled');else t.classList.remove('scrolled');ticking=false})});
-window.addEventListener('hashchange',()=>this.render());
-if(!location.hash)location.hash='#/home';
-this.render();this.a11y.render();
-setTimeout(()=>{if(window.lucide)lucide.createIcons()},100)};
+                                {/* Info */}
+                                <div className="flex-1 flex flex-col relative z-10">
+                                    <div className="flex justify-between items-start mb-1">
+                                        <h3 className="font-extrabold text-lg leading-tight text-slate-900 dark:text-white">{p.name}</h3>
+                                        <div className="text-right">
+                                            <p className="font-extrabold text-blue-500 text-lg">{p.price}</p>
+                                            <p className="text-[10px] text-gray-500 line-through">{(parseInt(p.price.replace(/\D/g,'')) * 1.2).toLocaleString()}đ</p>
+                                        </div>
+                                    </div>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">{p.desc}</p>
+                                    
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <div className="flex text-yellow-400"><i data-lucide="star" size="12" fill="currentColor"></i></div>
+                                        <span className="text-xs font-bold">{p.rating} <span className="text-gray-500 font-normal">({p.reviews})</span></span>
+                                    </div>
 
-document.addEventListener('DOMContentLoaded',()=>SPS.init());
-</script>
+                                    {/* Actions */}
+                                    <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/10">
+                                        <div className="flex gap-1.5">
+                                            <div className="w-4 h-4 rounded-full bg-blue-600 ring-2 ring-white/20"></div>
+                                            <div className="w-4 h-4 rounded-full bg-slate-800 ring-2 ring-white/20"></div>
+                                            <div className="w-4 h-4 rounded-full bg-cyan-400 ring-2 ring-white/20"></div>
+                                        </div>
+                                        <button disabled={p.stock <= 0} className={`px-5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition btn-3d ${p.stock > 0 ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'bg-gray-700 text-gray-400 cursor-not-allowed'}`}>
+                                            {p.stock > 0 ? 'Mua Ngay' : 'Hết Hàng'} <i data-lucide="arrow-right" size="14"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    {list.length === 0 && <div className="text-center py-10 text-gray-500 font-medium">Không tìm thấy sản phẩm nào.</div>}
+                </div>
+            );
+        }
+
+        function Weather() {
+            const [weather, setWeather] = useState(null);
+            const [loading, setLoading] = useState(false);
+            const [activeCity, setActiveCity] = useState('');
+            
+            const cities = [
+                { name: "Vị trí của tôi", lat: null, lon: null },
+                { name: "Quy Nhơn", lat: 13.78, lon: 109.22 },
+                { name: "Phú Quốc", lat: 10.23, lon: 103.96 },
+                { name: "Nha Trang", lat: 12.24, lon: 109.19 },
+                { name: "Đà Nẵng", lat: 16.05, lon: 108.20 },
+                { name: "Hà Nội", lat: 21.03, lon: 105.85 },
+                { name: "HCM", lat: 10.82, lon: 106.63 }
+            ];
+
+            const fetchWeather = async (lat, lon, name) => {
+                setLoading(true);
+                try {
+                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_gusts_10m,uv_index&hourly=temperature_2m,precipitation_probability,weather_code&daily=sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=Asia%2FHo_Chi_Minh`;
+                    const r = await fetch(url);
+                    const d = await r.json();
+                    setWeather({ name, current: d.current, daily: d.daily, hourly: d.hourly });
+                    setActiveCity(name);
+                } catch (e) { alert('Lỗi tải thời tiết'); }
+                setLoading(false);
+            };
+
+            const getMyLocation = () => {
+                if (navigator.geolocation) {
+                    setLoading(true);
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => fetchWeather(pos.coords.latitude, pos.coords.longitude, "Vị trí hiện tại"),
+                        (err) => { alert('Không thể lấy vị trí. Vui lòng cấp quyền!'); setLoading(false); }
+                    );
+                } else {
+                    alert('Trình duyệt không hỗ trợ lấy vị trí.');
+                }
+            };
+
+            useEffect(() => { fetchWeather(cities[1].lat, cities[1].lon, cities[1].name); }, []);
+
+            const codeMap = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',51:'🌦',61:'🌧',80:'🌧',95:'⛈'};
+
+            return (
+                <div className="glass p-6 rounded-3xl animate-fade-in space-y-5">
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-xl font-extrabold flex items-center gap-2"><i data-lucide="cloud-sun" size="24" className="text-blue-500"></i> Thời Tiết</h2>
+                    </div>
+                    
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+                        {cities.map(c => (
+                            <button key={c.name} onClick={() => c.lat ? fetchWeather(c.lat, c.lon, c.name) : getMyLocation()} className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold transition flex items-center gap-1 ${activeCity === c.name ? 'bg-blue-600 text-white shadow-lg' : 'glass-strong hover:bg-white/10'}`}>
+                                {c.name === "Vị trí của tôi" && <i data-lucide="map-pin" size="12"></i>} {c.name}
+                            </button>
+                        ))}
+                    </div>
+                    
+                    {loading ? <div className="text-center py-10 animate-pulse font-bold text-blue-400">Đang tải dữ liệu...</div> : weather && (
+                        <div className="space-y-4">
+                            {/* Main Card */}
+                            <div className="glass-strong p-6 rounded-3xl flex justify-between items-center relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl"></div>
+                                <div className="z-10">
+                                    <p className="text-2xl font-extrabold text-blue-400">{weather.name}</p>
+                                    <p className="text-sm text-gray-300 mt-1 font-medium">Cảm giác: {weather.current.apparent_temperature}°C</p>
+                                    <p className="text-xs text-gray-400 mt-1">Gió: {weather.current.wind_speed_10m} km/h (Gió giật: {weather.current.wind_gusts_10m} km/h)</p>
+                                    <p className="text-xs text-gray-400">Độ ẩm: {weather.current.relative_humidity_2m}% • UV: {weather.current.uv_index}</p>
+                                </div>
+                                <div className="text-center z-10">
+                                    <p className="text-6xl drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">{codeMap[weather.current.weather_code] || '🌤'}</p>
+                                    <p className="text-4xl font-extrabold text-blue-500 mt-2">{weather.current.temperature_2m}°</p>
+                                </div>
+                            </div>
+
+                            {/* Sun & Moon */}
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="glass-strong p-4 rounded-2xl flex items-center gap-3">
+                                    <i data-lucide="sunrise" size="28" className="text-orange-400 drop-shadow-md"></i>
+                                    <div><p className="text-[10px] text-gray-400 font-bold uppercase">Mặt trời mọc</p><p className="font-bold text-lg">{weather.daily.sunrise[0].split('T')[1]}</p></div>
+                                </div>
+                                <div className="glass-strong p-4 rounded-2xl flex items-center gap-3">
+                                    <i data-lucide="sunset" size="28" className="text-red-400 drop-shadow-md"></i>
+                                    <div><p className="text-[10px] text-gray-400 font-bold uppercase">Mặt trời lặn</p><p className="font-bold text-lg">{weather.daily.sunset[0].split('T')[1]}</p></div>
+                                </div>
+                            </div>
+
+                            {/* Hourly Forecast */}
+                            <div>
+                                <p className="text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider flex items-center gap-1"><i data-lucide="clock" size="14"></i> Dự báo 24 giờ tới</p>
+                                <div className="overflow-x-auto no-scrollbar flex gap-3 glass-strong p-4 rounded-2xl">
+                                    {weather.hourly.time.slice(0, 24).map((time, i) => (
+                                        <div key={i} className="text-center min-w-[60px] space-y-1 bg-white/5 rounded-xl p-2 border border-white/5 hover:bg-white/10 transition">
+                                            <p className="text-[10px] text-gray-400 font-bold">{time.split('T')[1]}</p>
+                                            <p className="text-lg">{codeMap[weather.hourly.weather_code[i]] || '🌤'}</p>
+                                            <p className="font-bold text-sm text-blue-300">{weather.hourly.temperature_2m[i]}°</p>
+                                            <p className="text-[10px] text-blue-400 font-bold flex items-center justify-center gap-0.5"><i data-lucide="droplets" size="10"></i> {weather.hourly.precipitation_probability[i]}%</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Warning Details */}
+                            <div className="bg-red-500/10 border border-red-500/20 p-5 rounded-3xl relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/20 rounded-full blur-xl"></div>
+                                <p className="font-bold text-red-400 flex items-center gap-2 text-sm uppercase tracking-wide"><i data-lucide="alert-triangle" size="20"></i> Cảnh báo thiên tai Miền Trung</p>
+                                <p className="mt-2 text-xs text-gray-300 leading-relaxed font-medium">
+                                    <strong className="text-white">Tình hình:</strong> Mưa lớn diện rộng kết hợp không khí lạnh gây ra các hiện tượng cực đoan.<br/>
+                                    <strong className="text-white">Nguy cơ:</strong> Lũ quét, sạt lở đất vùng núi; ngập úng cục bộ vùng trũng thấp. Đề phòng dông lốc, sét và gió giật mạnh trong cơn dông.<br/>
+                                    <strong className="text-white">Khuyến cáo:</strong> Hạn chế di chuyển qua các ngầm tràn, suối cạn khi có mưa lớn. Gia cố nhà cửa và theo dõi sát sao bản tin thời tiết.
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function Tools() {
+            const [ip, setIp] = useState(null);
+            const [loadingIp, setLoadingIp] = useState(false);
+            
+            const [speed, setSpeed] = useState(null);
+            const [testing, setTesting] = useState(false);
+
+            const [mail, setMail] = useState(() => ls.get('tempmail', null));
+            const [messages, setMessages] = useState([]);
+            const [loadingMail, setLoadingMail] = useState(false);
+
+            // IP Check
+            const checkIp = async () => {
+                setLoadingIp(true); setIp(null);
+                try {
+                    const r = await fetch('https://ipwho.is/');
+                    const d = await r.json();
+                    if(d.success) setIp(d);
+                    else alert('Lỗi check IP');
+                } catch (e) { alert('Lỗi mạng!'); }
+                setLoadingIp(false);
+            };
+
+            // Speed Test
+            const testSpeed = async () => {
+                setTesting(true); setSpeed(null);
+                const start = performance.now();
+                try {
+                    await fetch('https://speed.cloudflare.com/__down?bytes=5000000&cache=' + Date.now(), { cache: 'no-store' });
+                    const dur = (performance.now() - start) / 1000;
+                    setSpeed(((5000000 * 8) / (dur * 1000000)).toFixed(2));
+                } catch (e) { alert('Lỗi test mạng'); }
+                setTesting(false);
+            };
+
+            // Temp Mail
+            const createMail = async () => {
+                setLoadingMail(true);
+                try {
+                    const dr = await fetch('https://api.mail.tm/domains');
+                    const dd = await dr.json();
+                    const domain = dd['hydra:member'][0].domain;
+                    const address = `user${Math.floor(Math.random() * 1000000)}@${domain}`;
+                    const password = 'Password123!';
+                    
+                    const cr = await fetch('https://api.mail.tm/accounts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password }) });
+                    if (!cr.ok) throw new Error();
+                    
+                    const tr = await fetch('https://api.mail.tm/token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password }) });
+                    const td = await tr.json();
+                    
+                    const m = { address, token: td.token };
+                    ls.set('tempmail', m); setMail(m);
+                } catch (e) { alert('Lỗi tạo mail, thử lại!'); }
+                setLoadingMail(false);
+            };
+
+            const fetchMail = async () => {
+                if (!mail) return;
+                try {
+                    const r = await fetch('https://api.mail.tm/messages', { headers: { Authorization: `Bearer ${mail.token}` } });
+                    const d = await r.json();
+                    setMessages(d['hydra:member'] || []);
+                } catch (e) { alert('Lỗi tải mail'); }
+            };
+
+            return (
+                <div className="animate-fade-in space-y-5">
+                    <h2 className="text-2xl font-extrabold flex items-center gap-2"><i data-lucide="layout-grid" size="24" className="text-blue-500"></i> Tiện Ích Mở Rộng</h2>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {/* IP Check */}
+                        <div className="glass p-6 rounded-3xl flex flex-col">
+                            <h3 className="text-lg font-extrabold flex items-center gap-2 mb-4"><i data-lucide="globe" size="20" className="text-blue-400"></i> Check IP</h3>
+                            <button onClick={checkIp} disabled={loadingIp} className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-2xl font-bold shadow-lg shadow-blue-500/30 transition btn-3d mb-4">
+                                {loadingIp ? 'Đang check...' : 'Check IP Ngay'}
+                            </button>
+                            {ip && (
+                                <div className="bg-black/20 p-4 rounded-2xl text-xs space-y-2 mt-auto animate-bounce-in border border-white/10">
+                                    <div className="flex justify-between border-b border-white/10 pb-2"><span className="text-gray-400">IP:</span><span className="font-bold text-blue-400">{ip.ip}</span></div>
+                                    <div className="flex justify-between border-b border-white/10 pb-2"><span className="text-gray-400">Nhà mạng:</span><span className="font-bold text-right">{ip.connection?.isp || 'N/A'}</span></div>
+                                    <div className="flex justify-between border-b border-white/10 pb-2"><span className="text-gray-400">Vị trí:</span><span className="font-bold text-right">{ip.city}, {ip.country}</span></div>
+                                    <div className="flex justify-between"><span className="text-gray-400">Loại:</span><span className={`font-bold ${ip.country_code === 'VN' ? 'text-green-500' : 'text-red-500'}`}>{ip.country_code === 'VN' ? 'Local (VN)' : 'Proxy/VPN'}</span></div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Speed Test */}
+                        <div className="glass p-6 rounded-3xl flex flex-col">
+                            <h3 className="text-lg font-extrabold flex items-center gap-2 mb-4"><i data-lucide="wifi" size="20" className="text-purple-400"></i> Tốc Độ Mạng</h3>
+                            <button onClick={testSpeed} disabled={testing} className="w-full bg-purple-600 hover:bg-purple-500 text-white py-3 rounded-2xl font-bold shadow-lg shadow-purple-500/30 transition btn-3d mb-4">
+                                {testing ? 'Đang test...' : 'Bắt đầu Test'}
+                            </button>
+                            {speed && (
+                                <div className="bg-black/20 p-4 rounded-2xl text-center mt-auto animate-bounce-in border border-white/10 relative overflow-hidden">
+                                    <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 to-transparent"></div>
+                                    <p className="text-xs text-gray-400 font-bold mb-1 relative z-10">Tốc độ tải xuống</p>
+                                    <p className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 relative z-10">{speed} <span className="text-sm">Mbps</span></p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Temp Mail */}
+                        <div className="glass p-6 rounded-3xl md:col-span-2">
+                            <h3 className="text-lg font-extrabold flex items-center gap-2 mb-4"><i data-lucide="mail" size="20" className="text-orange-400"></i> Email Tạm Thời</h3>
+                            {!mail ? (
+                                <button onClick={createMail} disabled={loadingMail} className="w-full bg-orange-600 hover:bg-orange-500 text-white py-3 rounded-2xl font-bold shadow-lg shadow-orange-500/30 transition btn-3d">
+                                    {loadingMail ? 'Đang tạo...' : 'Tạo Email Mới'}
+                                </button>
+                            ) : (
+                                <div className="bg-black/20 p-4 rounded-2xl space-y-3 border border-white/10">
+                                    <div className="flex justify-between items-center bg-orange-500/10 p-3 rounded-xl border border-orange-500/20">
+                                        <p className="font-bold text-orange-400 break-all text-sm">{mail.address}</p>
+                                        <button onClick={() => { ls.set('tempmail', null); setMail(null); setMessages([]); }} className="text-red-400 hover:text-red-300 p-1"><i data-lucide="trash-2" size="16"></i></button>
+                                    </div>
+                                    <button onClick={fetchMail} className="w-full bg-blue-600 text-white py-2 rounded-xl text-xs font-bold transition btn-3d">Tải hộp thư mới</button>
+                                    {messages.length > 0 && (
+                                        <ul className="space-y-2 max-h-40 overflow-y-auto no-scrollbar mt-2">
+                                            {messages.map(m => (
+                                                <li key={m.id} className="bg-white/5 p-3 rounded-xl border border-white/5">
+                                                    <p className="font-bold text-xs text-blue-300">{m.subject || '(Không tiêu đề)'}</p>
+                                                    <p className="text-gray-400 text-[10px] mt-1">Từ: {m.from?.address}</p>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function ContactPage({ profile }) {
+            const c = profile.contact || DEFAULT_PROFILE.contact;
+            const items = [
+                { icon: 'send', label: 'Telegram', value: `@${c.telegram}`, link: `https://t.me/${c.telegram}`, color: 'text-blue-500 bg-blue-500/10' },
+                { icon: 'facebook', label: 'Facebook', value: `@${c.facebook}`, link: `https://facebook.com/${c.facebook}`, color: 'text-blue-600 bg-blue-600/10' },
+                { icon: 'phone', label: 'Điện thoại', value: c.phone, link: `tel:${c.phone}`, color: 'text-green-500 bg-green-500/10' },
+                { icon: 'mail', label: 'Email', value: c.email, link: `mailto:${c.email}`, color: 'text-red-500 bg-red-500/10' },
+                { icon: 'message-square', label: 'Discord', value: c.discord, link: `https://discord.com/users/${c.discord}`, color: 'text-indigo-500 bg-indigo-500/10' }
+            ];
+            return (
+                <div className="animate-fade-in space-y-5">
+                    <div className="glass p-8 rounded-3xl text-center relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-blue-500 to-purple-500 opacity-20 blur-xl"></div>
+                        <img src={profile.avatar} alt="" className="w-24 h-24 rounded-full mx-auto border-4 border-blue-500 shadow-2xl relative z-10" />
+                        <h2 className="text-2xl font-extrabold mt-4 flex items-center justify-center relative z-10">{profile.name}{profile.verified && <VerifiedIcon size={20} />}</h2>
+                        <p className="text-sm text-gray-400 mt-2 font-medium relative z-10">Hỗ trợ khách hàng 24/7</p>
+                    </div>
+                    <div className="grid grid-cols-1 gap-3">
+                        {items.map((it, i) => (
+                            <a key={i} href={it.link} target="_blank" rel="noreferrer" className="glass-strong rounded-2xl p-4 flex items-center gap-4 hover:bg-white/10 transition border border-white/5 group">
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${it.color} group-hover:scale-110 transition`}>
+                                    <i data-lucide={it.icon} size="22"></i>
+                                </div>
+                                <div className="flex-1">
+                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">{it.label}</p>
+                                    <p className="text-sm font-extrabold mt-0.5 break-all">{it.value}</p>
+                                </div>
+                                <i data-lucide="chevron-right" size="18" className="text-gray-500 group-hover:translate-x-1 transition"></i>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        /* ================= ADMIN PANEL ================= */
+        function AdminLogin({ onLogin }) {
+            const [u, setU] = useState('');
+            const [p, setP] = useState('');
+            const [err, setErr] = useState('');
+
+            const submit = e => {
+                e.preventDefault();
+                if (u === ADMIN_USER && p === ADMIN_PASS) onLogin();
+                else setErr('Sai tài khoản hoặc mật khẩu!');
+            };
+
+            return (
+                <div className="animate-fade-in max-w-md mx-auto mt-10">
+                    <div className="glass p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+                        <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/30 rounded-full blur-2xl"></div>
+                        <div className="text-center mb-8 relative z-10">
+                            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-400 mx-auto flex items-center justify-center shadow-lg shadow-blue-500/50">
+                                <i data-lucide="shield-check" size="40" className="text-white"></i>
+                            </div>
+                            <h2 className="text-2xl font-extrabold mt-4">Admin Portal</h2>
+                            <p className="text-xs text-gray-400 mt-1">Yêu cầu quyền truy cập cấp cao</p>
+                        </div>
+                        <form onSubmit={submit} className="space-y-4 relative z-10">
+                            <div>
+                                <label className="text-xs font-bold text-gray-400 ml-1 mb-1 block">Tài khoản</label>
+                                <input value={u} onChange={e => setU(e.target.value)} placeholder="Nhập tài khoản..." className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all" />
+                            </div>
+                            <div>
+                                <label className="text-xs font-bold text-gray-400 ml-1 mb-1 block">Mật khẩu</label>
+                                <input type="password" value={p} onChange={e => setP(e.target.value)} placeholder="••••••••" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 transition-all" />
+                            </div>
+                            {err && <p className="text-xs text-red-500 text-center font-bold bg-red-500/10 p-2 rounded-lg">{err}</p>}
+                            <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition btn-3d mt-2">Đăng Nhập</button>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        function AdminPanel({ data, setData, onLogout }) {
+            const [tab, setTab] = useState('profile');
+            const [form, setForm] = useState({});
+            const [editId, setEditId] = useState(null);
+
+            const tabs = [
+                { id: 'profile', label: 'Profile', icon: 'user' },
+                { id: 'site', label: 'Cài đặt Web', icon: 'settings' },
+                { id: 'products', label: 'Sản phẩm', icon: 'shopping-bag' },
+                { id: 'posts', label: 'Bài viết', icon: 'newspaper' }
+            ];
+
+            const updImg = async (e, k, cb) => {
+                const f = e.target.files[0]; if (!f) return;
+                const b64 = await compressImage(f, 500, 0.7);
+                cb(k, b64);
+            };
+
+            const ProfileTab = () => {
+                const p = data.profile;
+                const upd = (k, v) => setData({ ...data, profile: { ...p, [k]: v } });
+                return (
+                    <div className="space-y-4 animate-fade-in">
+                        <div><label className="text-xs font-bold text-gray-400">Tên hiển thị</label>
+                        <input value={p.name} onChange={e => upd('name', e.target.value)} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
+                        <div className="flex items-center gap-2 bg-black/20 p-3 rounded-xl border border-white/10">
+                            <input type="checkbox" checked={p.verified} onChange={e => upd('verified', e.target.checked)} id="vf" className="w-4 h-4 accent-blue-500" />
+                            <label htmlFor="vf" className="text-sm font-bold">Hiển thị tick xanh</label>
+                        </div>
+                        <div><label className="text-xs font-bold text-gray-400">Tiểu sử (Bio)</label>
+                        <textarea value={p.bio} onChange={e => upd('bio', e.target.value)} rows="3" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div><label className="text-xs font-bold text-gray-400">Avatar</label>
+                            <div className="mt-1 flex flex-col items-center gap-2 bg-black/20 p-3 rounded-xl border border-white/10">
+                                <img src={p.avatar} className="w-16 h-16 rounded-full object-cover shadow-lg" />
+                                <input type="file" accept="image/*" onChange={e => updImg(e, 'avatar', upd)} className="text-[10px] w-full" />
+                            </div></div>
+                            <div><label className="text-xs font-bold text-gray-400">Ảnh bìa</label>
+                            <div className="mt-1 flex flex-col items-center gap-2 bg-black/20 p-3 rounded-xl border border-white/10">
+                                <img src={p.cover} className="w-full h-16 object-cover rounded-lg shadow-lg" />
+                                <input type="file" accept="image/*" onChange={e => updImg(e, 'cover', upd)} className="text-[10px] w-full" />
+                            </div></div>
+                        </div>
+                        <div><label className="text-xs font-bold text-gray-400">Liên hệ (JSON format)</label>
+                        <textarea value={JSON.stringify(p.contact, null, 2)} onChange={e => { try { upd('contact', JSON.parse(e.target.value)) } catch {} }} rows="4" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-xs font-mono outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
+                    </div>
+                );
+            };
+
+            const SiteTab = () => (
+                <div className="space-y-4 animate-fade-in">
+                    <div><label className="text-xs font-bold text-gray-400">Tên Website</label>
+                    <input value={data.siteName} onChange={e => setData({ ...data, siteName: e.target.value })} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1" /></div>
+                    <div><label className="text-xs font-bold text-gray-400">Hiệu ứng nền mặc định</label>
+                    <select value={data.defaultEffect} onChange={e => setData({ ...data, defaultEffect: e.target.value })} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 mt-1">
+                        <option value="none">Không có</option><option value="snow">Tuyết rơi</option><option value="flower">Hoa rơi</option><option value="lava">Dung nham</option>
+                    </select></div>
+                </div>
+            );
+
+            const ProductsTab = () => {
+                const save = () => {
+                    if (!form.name || !form.price) return alert('Vui lòng nhập Tên & Giá');
+                    const list = data.products || [];
+                    if (editId) setData({ ...data, products: list.map(x => x.id === editId ? { ...form, id: editId } : x) });
+                    else setData({ ...data, products: [...list, { ...form, id: Date.now() }] });
+                    setForm({}); setEditId(null);
+                };
+                return (
+                    <div className="space-y-4 animate-fade-in">
+                        <div className="bg-black/20 p-4 rounded-2xl border border-white/10 space-y-3">
+                            <div className="grid grid-cols-2 gap-2">
+                                <select value={form.category || ''} onChange={e => setForm({ ...form, category: e.target.value, subcategory: '' })} className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none">
+                                    <option value="">-- Danh mục --</option>
+                                    {CATEGORIES.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
+                                </select>
+                                <select value={form.subcategory || ''} onChange={e => setForm({ ...form, subcategory: e.target.value })} className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" disabled={!form.category || CATEGORIES.find(c=>c.name===form.category)?.subs.length === 0}>
+                                    <option value="">-- Danh mục con --</option>
+                                    {CATEGORIES.find(c => c.name === form.category)?.subs.map(s => <option key={s} value={s}>{s}</option>)}
+                                </select>
+                            </div>
+                            <input value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Tên sản phẩm" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
+                            <div className="flex gap-2">
+                                <input value={form.price || ''} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="Giá (VD: 150.000đ)" className="w-1/2 bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
+                                <input type="number" value={form.stock || 0} onChange={e => setForm({ ...form, stock: Number(e.target.value) })} placeholder="Kho" className="w-1/2 bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
+                            </div>
+                            <input value={form.desc || ''} onChange={e => setForm({ ...form, desc: e.target.value })} placeholder="Mô tả ngắn" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
+                            <div className="flex items-center gap-2">
+                                {form.image && <img src={form.image} className="w-10 h-10 rounded-lg object-contain bg-white/10" />}
+                                <input type="file" accept="image/*" onChange={e => updImg(e, 'image', (k, v) => setForm({ ...form, [k]: v }))} className="text-xs w-full" />
+                            </div>
+                            <div className="flex gap-2 pt-2">
+                                <button onClick={save} className="flex-1 bg-blue-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/30 transition btn-3d">{editId ? 'Lưu Thay Đổi' : 'Thêm Sản Phẩm'}</button>
+                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-600 text-white px-4 rounded-xl text-sm font-bold transition">Hủy</button>}
+                            </div>
+                        </div>
+                        <div className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
+                            {data.products.map(p => (
+                                <div key={p.id} className="bg-white/5 border border-white/5 p-3 rounded-xl flex items-center gap-3 text-xs">
+                                    <div className="flex-1 truncate font-medium">{p.name} <span className="text-blue-400 font-bold ml-1">{p.price}</span></div>
+                                    <button onClick={() => { setForm(p); setEditId(p.id); }} className="text-blue-500 p-2 hover:bg-blue-500/10 rounded-lg transition"><i data-lucide="edit" size="16"></i></button>
+                                    <button onClick={() => setData({ ...data, products: data.products.filter(x => x.id !== p.id) })} className="text-red-500 p-2 hover:bg-red-500/10 rounded-lg transition"><i data-lucide="trash-2" size="16"></i></button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            };
+
+            const PostsTab = () => {
+                const save = () => {
+                    if (!form.title || !form.content) return alert('Nhập tiêu đề & nội dung');
+                    if (editId) setData({ ...data, posts: data.posts.map(p => p.id === editId ? { ...form, id: editId, date: p.date } : p) });
+                    else setData({ ...data, posts: [...data.posts, { ...form, id: Date.now(), date: new Date().toISOString() }] });
+                    setForm({}); setEditId(null);
+                };
+                return (
+                    <div className="space-y-4 animate-fade-in">
+                        <div className="bg-black/20 p-4 rounded-2xl border border-white/10 space-y-3">
+                            <input value={form.title || ''} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Tiêu đề bài viết" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none" />
+                            <textarea value={form.content || ''} onChange={e => setForm({ ...form, content: e.target.value })} placeholder="Nội dung chi tiết..." rows="4" className="w-full bg-black/40 border border-white/10 p-2.5 rounded-xl text-sm outline-none"></textarea>
+                            <div className="flex gap-2 pt-2">
+                                <button onClick={save} className="flex-1 bg-green-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-green-500/30 transition btn-3d">{editId ? 'Lưu Thay Đổi' : 'Đăng Bài'}</button>
+                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-600 text-white px-4 rounded-xl text-sm font-bold transition">Hủy</button>}
+                            </div>
+                        </div>
+                        <div className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
+                            {data.posts.map(p => (
+                                <div key={p.id} className="bg-white/5 border border-white/5 p-3 rounded-xl flex items-center gap-3 text-xs">
+                                    <div className="flex-1 truncate font-medium">{p.title}</div>
+                                    <button onClick={() => { setForm(p); setEditId(p.id); }} className="text-blue-500 p-2 hover:bg-blue-500/10 rounded-lg transition"><i data-lucide="edit" size="16"></i></button>
+                                    <button onClick={() => setData({ ...data, posts: data.posts.filter(x => x.id !== p.id) })} className="text-red-500 p-2 hover:bg-red-500/10 rounded-lg transition"><i data-lucide="trash-2" size="16"></i></button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="animate-fade-in space-y-4 pb-10">
+                    <div className="glass p-4 rounded-3xl flex justify-between items-center bg-gradient-to-r from-red-500/20 to-transparent border border-red-500/20 sticky top-4 z-30">
+                        <h2 className="font-extrabold text-lg flex items-center gap-2 text-red-400"><i data-lucide="shield-alert" size="22"></i> Dashboard</h2>
+                        <button onClick={onLogout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-lg shadow-red-500/30">Thoát</button>
+                    </div>
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar">
+                        {tabs.map(t => (
+                            <button key={t.id} onClick={() => { setTab(t.id); setForm({}); setEditId(null); }} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition ${tab === t.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/10'}`}>
+                                <i data-lucide={t.icon} size="14"></i> {t.label}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="glass p-5 rounded-3xl">
+                        {tab === 'profile' && <ProfileTab />}
+                        {tab === 'site' && <SiteTab />}
+                        {tab === 'products' && <ProductsTab />}
+                        {tab === 'posts' && <PostsTab />}
+                    </div>
+                </div>
+            );
+        }
+
+        /* ================= DRAWER MENU ================= */
+        function Drawer({ open, onClose, activePage, onNavigate, data, isAdmin }) {
+            const [expanded, setExpanded] = useState(null);
+            const items = [
+                { id: 'profile', label: 'Tài khoản / Profile', icon: 'user' },
+                { id: 'shop', label: 'Sản phẩm', icon: 'shopping-bag', expandable: true },
+                { id: 'posts', label: 'Bài viết & Tin tức', icon: 'newspaper' },
+                { id: 'weather', label: 'Thời tiết', icon: 'cloud-sun' },
+                { id: 'tools', label: 'Tiện ích (IP, Mạng, Mail)', icon: 'layout-grid' },
+                { id: 'contact', label: 'Liên Hệ Hỗ Trợ', icon: 'phone' }
+            ];
+
+            return (
+                <>
+                    {open && <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity" onClick={onClose}></div>}
+                    <div className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] glass-strong z-50 transform transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${open ? 'translate-x-0' : '-translate-x-full'} flex flex-col rounded-r-3xl shadow-2xl overflow-hidden border-r border-white/10`}>
+                        <div className="p-6 flex items-center gap-4 border-b border-white/10 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/20 rounded-full blur-xl"></div>
+                            <img src={data.profile.avatar} className="w-14 h-14 rounded-full object-cover border-2 border-blue-500 shadow-lg z-10" alt="Avt" />
+                            <div className="flex-1 min-w-0 z-10">
+                                <p className="font-extrabold flex items-center text-base truncate">{data.profile.name}{data.profile.verified && <VerifiedIcon size={16} />}</p>
+                                <p className="text-xs text-blue-400 font-bold mt-0.5">@{ADMIN_USER}</p>
+                            </div>
+                            <button onClick={onClose} className="p-2 bg-black/20 rounded-full hover:bg-white/10 transition z-10"><i data-lucide="x" size="20"></i></button>
+                        </div>
+                        
+                        <div className="flex-1 overflow-y-auto p-4 space-y-1 no-scrollbar">
+                            {items.map(it => (
+                                <div key={it.id}>
+                                    <button onClick={() => {
+                                        if (it.expandable) setExpanded(expanded === it.id ? null : it.id);
+                                        else { onNavigate(it.id); onClose(); }
+                                    }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all ${activePage === it.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'hover:bg-white/10 text-gray-300'}`}>
+                                        <i data-lucide={it.icon} size="20" className={activePage === it.id ? 'text-white' : 'text-blue-400'}></i>
+                                        <span className="flex-1 text-left">{it.label}</span>
+                                        {it.expandable && <i data-lucide={expanded === it.id ? 'chevron-down' : 'chevron-right'} size="16" className="opacity-50"></i>}
+                                    </button>
+                                    
+                                    {it.expandable && expanded === it.id && (
+                                        <div className="ml-10 mt-1 space-y-1 border-l-2 border-blue-500/30 pl-3">
+                                            {CATEGORIES.map(c => (
+                                                <div key={c.name}>
+                                                    <button onClick={() => { onNavigate('shop', c.name); onClose(); }} className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-gray-400 hover:text-white hover:bg-white/10 transition">
+                                                        {c.name}
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                            
+                            <div className="pt-4 border-t border-white/10 mt-4">
+                                {isAdmin ? (
+                                    <button onClick={() => { onNavigate('admin'); onClose(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-red-400 bg-red-500/10 hover:bg-red-500/20 transition">
+                                        <i data-lucide="shield-check" size="20"></i> Admin Panel
+                                    </button>
+                                ) : (
+                                    <button onClick={() => { onNavigate('admin-login'); onClose(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-gray-400 hover:bg-white/10 transition">
+                                        <i data-lucide="lock" size="20"></i> Đăng nhập Admin
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </>
+            );
+        }
+
+        /* ================= FLOATING FAB & MUSIC ================= */
+        function GlobalTools({ effect, setEffect, musicOn, setMusicOn, track, setTrack }) {
+            const [open, setOpen] = useState(false);
+            const effects = ['none', 'snow', 'flower', 'lava'];
+            
+            // Drag logic
+            const [pos, setPos] = useState(() => ls.get('fabPos', { x: window.innerWidth - 80, y: window.innerHeight - 160 }));
+            const [dragging, setDragging] = useState(false);
+            const [rel, setRel] = useState({ x: 0, y: 0 });
+
+            const onStart = (e) => {
+                if (e.target.closest('.fab-menu')) return;
+                setDragging(true);
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                setRel({ x: clientX - pos.x, y: clientY - pos.y });
+            };
+
+            const onMove = useCallback((e) => {
+                if (!dragging) return;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                let newX = Math.max(10, Math.min(window.innerWidth - 70, clientX - rel.x));
+                let newY = Math.max(10, Math.min(window.innerHeight - 70, clientY - rel.y));
+                setPos({ x: newX, y: newY });
+            }, [dragging, rel]);
+
+            const onEnd = () => {
+                setDragging(false);
+                ls.set('fabPos', pos);
+            };
+
+            useEffect(() => {
+                if (dragging) {
+                    document.addEventListener('mousemove', onMove);
+                    document.addEventListener('mouseup', onEnd);
+                    document.addEventListener('touchmove', onMove, { passive: false });
+                    document.addEventListener('touchend', onEnd);
+                }
+                return () => {
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onEnd);
+                    document.removeEventListener('touchmove', onMove);
+                    document.removeEventListener('touchend', onEnd);
+                };
+            }, [dragging, onMove]);
+
+            // Music Control via hidden iframe (Moved to root App for persistence, this is just UI)
+            return (
+                <div className="fab" style={{ left: pos.x, top: pos.y }} onMouseDown={onStart} onTouchStart={onStart}>
+                    <button onClick={() => setOpen(!open)} className={`w-14 h-14 rounded-full glass-strong flex items-center justify-center shadow-2xl transition-transform ${open ? 'rotate-90 scale-110 bg-blue-600/80 border-blue-400' : 'hover:scale-105 border-white/30'}`}>
+                        <i data-lucide={open ? "x" : "sparkles"} size="24" className={open ? "text-white" : "text-blue-400"}></i>
+                    </button>
+                    
+                    {open && (
+                        <div className="fab-menu absolute top-16 right-0 w-64 glass-strong rounded-3xl p-5 animate-bounce-in shadow-2xl origin-top-right border border-white/20">
+                            <h4 className="text-xs font-extrabold text-blue-400 uppercase mb-3 flex items-center gap-2"><i data-lucide="settings" size="14"></i> Bảng Điều Khiển</h4>
+                            
+                            <div className="mb-4">
+                                <p className="text-[10px] font-bold text-gray-400 mb-2">Hiệu ứng nền</p>
+                                <div className="grid grid-cols-2 gap-1.5">
+                                    {effects.map(e => (
+                                        <button key={e} onClick={() => setEffect(e)} className={`text-[11px] py-1.5 rounded-lg capitalize transition font-bold ${effect === e ? 'bg-blue-600 text-white shadow-lg' : 'bg-black/20 text-gray-300 hover:bg-white/10'}`}>{e === 'none' ? 'Tắt' : e}</button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div>
+                                <div className="flex justify-between items-center mb-2">
+                                    <p className="text-[10px] font-bold text-gray-400">Nhạc nền</p>
+                                    <button onClick={() => setMusicOn(!musicOn)} className={`w-10 h-5 rounded-full relative transition-colors ${musicOn ? 'bg-green-500' : 'bg-gray-600'}`}>
+                                        <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all ${musicOn ? 'left-6' : 'left-1'}`}></div>
+                                    </button>
+                                </div>
+                                {musicOn && (
+                                    <div className="bg-black/30 p-2 rounded-xl flex items-center justify-between border border-white/10 mt-2">
+                                        <div className="flex items-center gap-2 overflow-hidden">
+                                            <div className="w-8 h-8 rounded-full bg-blue-500 flex flex-shrink-0 items-center justify-center animate-spin-slow"><i data-lucide="disc" size="16" className="text-white"></i></div>
+                                            <div>
+                                                <p className="text-[9px] font-bold truncate text-gray-300">Đang phát...</p>
+                                                <p className="text-[8px] text-gray-500 truncate w-24">Nhạc Remix</p>
+                                            </div>
+                                        </div>
+                                        <button onClick={() => setTrack((track + 1) % SC_TRACKS.length)} className="p-1.5 bg-white/10 rounded-lg hover:bg-white/20 transition"><i data-lucide="skip-forward" size="14"></i></button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        /* ================= MAIN APP ================= */
+        function App() {
+            useLucide();
+            const [darkMode, setDarkMode] = useState(() => ls.get('darkMode', true));
+            const [effect, setEffect] = useState(() => ls.get('effect', 'snow'));
+            const [musicOn, setMusicOn] = useState(false);
+            const [track, setTrack] = useState(0);
+            const [activePage, setActivePage] = useState('profile');
+            const [shopFilter, setShopFilter] = useState('');
+            const [drawerOpen, setDrawerOpen] = useState(false);
+            const [isAdmin, setIsAdmin] = useState(() => ls.get('isAdmin', false));
+
+            const [data, setDataState] = useState(() => ({
+                profile: ls.get('profile', DEFAULT_PROFILE),
+                products: ls.get('products', DEFAULT_PRODUCTS),
+                posts: ls.get('posts', DEFAULT_POSTS),
+                siteName: ls.get('siteName', 'Thao Service Premium'),
+                defaultEffect: ls.get('defaultEffect', 'snow')
+            }));
+
+            const setData = (d) => {
+                setDataState(d);
+                ls.set('profile', d.profile); ls.set('products', d.products); ls.set('posts', d.posts);
+                ls.set('siteName', d.siteName); ls.set('defaultEffect', d.defaultEffect);
+            };
+
+            useEffect(() => { 
+                ls.set('darkMode', darkMode); 
+                if(darkMode) document.documentElement.classList.add('dark');
+                else document.documentElement.classList.remove('dark');
+                document.documentElement.classList.toggle('light', !darkMode);
+            }, [darkMode]);
+            
+            useEffect(() => { ls.set('effect', effect); }, [effect]);
+            useEffect(() => { ls.set('isAdmin', isAdmin); }, [isAdmin]);
+
+            const navigate = (page, filter) => {
+                setActivePage(page);
+                if (page === 'shop') {
+                    setShopFilter(filter !== undefined ? filter : '');
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            // Soundcloud Widget setup
+            const widgetRef = useRef(null);
+            useEffect(() => {
+                if (!window.SC) return;
+                const container = document.getElementById('sc-container');
+                if (container && !container.innerHTML) {
+                    container.innerHTML = `<iframe id="sc-player" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=${encodeURIComponent(SC_TRACKS[0])}&color=%233b82f6&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false"></iframe>`;
+                    widgetRef.current = window.SC.Widget(document.getElementById('sc-player'));
+                }
+            }, []);
+
+            useEffect(() => {
+                if (!widgetRef.current) return;
+                if (musicOn) {
+                    widgetRef.current.load(SC_TRACKS[track], { auto_play: true });
+                } else {
+                    widgetRef.current.pause();
+                }
+            }, [musicOn, track]);
+
+            return (
+                <div className="max-w-4xl mx-auto p-4 pb-32">
+                    <Effects type={effect} />
+                    
+                    {/* Header - Glass */}
+                    <header className="glass sticky top-4 z-30 rounded-full p-2 px-3 mb-6 flex justify-between items-center shadow-lg transition-all duration-300">
+                        <button onClick={() => setDrawerOpen(true)} className="p-2.5 bg-white/10 rounded-full hover:bg-white/20 transition border border-white/5 active:scale-95"><i data-lucide="menu" size="20" className="text-blue-500"></i></button>
+                        <h1 className="text-base font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300 tracking-tight">{data.siteName}</h1>
+                        <div className="flex gap-2">
+                            <button onClick={() => setDarkMode(!darkMode)} className="p-2.5 bg-white/10 rounded-full hover:bg-white/20 transition border border-white/5 active:scale-95">
+                                <i data-lucide={darkMode ? 'sun' : 'moon'} size="18" className={darkMode ? 'text-yellow-400' : 'text-slate-700'}></i>
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* Page Content */}
+                    <div className="min-h-[60vh] relative">
+                        {activePage === 'profile' && <ProfileHome profile={data.profile} posts={data.posts} onNavigate={navigate} />}
+                        {activePage === 'shop' && <Shop products={data.products} filter={shopFilter} setFilter={setShopFilter} />}
+                        {activePage === 'weather' && <Weather />}
+                        {activePage === 'tools' && <Tools />}
+                        {activePage === 'contact' && <ContactPage profile={data.profile} />}
+                        {activePage === 'posts' && (
+                            <div className="glass p-6 rounded-3xl space-y-4 animate-fade-in">
+                                <h2 className="text-xl font-extrabold mb-4">Bài Viết Mới Nhất</h2>
+                                {data.posts.map(p => (
+                                    <div key={p.id} className="glass-strong p-5 rounded-2xl">
+                                        <h3 className="font-bold text-blue-400">{p.title}</h3>
+                                        <p className="text-xs text-gray-500 mt-1 mb-2">{new Date(p.date).toLocaleDateString('vi-VN')}</p>
+                                        <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{p.content}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        {activePage === 'admin-login' && <AdminLogin onLogin={() => { setIsAdmin(true); navigate('admin'); }} />}
+                        {activePage === 'admin' && (isAdmin ? <AdminPanel data={data} setData={setData} onLogout={() => { setIsAdmin(false); navigate('profile'); }} /> : <AdminLogin onLogin={() => { setIsAdmin(true); navigate('admin'); }} />)}
+                    </div>
+
+                    {/* Floating Tools & Music Controller */}
+                    <GlobalTools effect={effect} setEffect={setEffect} musicOn={musicOn} setMusicOn={setMusicOn} track={track} setTrack={setTrack} />
+                    
+                    {/* Drawer Menu */}
+                    <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} activePage={activePage} onNavigate={navigate} data={data} isAdmin={isAdmin} />
+
+                    {/* iOS Style Bottom Nav */}
+                    <nav className="ios-nav">
+                        <button onClick={() => navigate('profile')} className={`nav-item ${activePage === 'profile' ? 'active' : ''}`}>
+                            <i data-lucide="home" size="22"></i>
+                            <span className="text-[10px] font-bold mt-1">Home</span>
+                        </button>
+                        <button onClick={() => navigate('shop')} className={`nav-item ${activePage === 'shop' ? 'active' : ''}`}>
+                            <i data-lucide="shopping-bag" size="22"></i>
+                            <span className="text-[10px] font-bold mt-1">Shop</span>
+                        </button>
+                        <button onClick={() => navigate('tools')} className={`nav-item ${activePage === 'tools' ? 'active' : ''}`}>
+                            <i data-lucide="layout-grid" size="22"></i>
+                            <span className="text-[10px] font-bold mt-1">Tools</span>
+                        </button>
+                        <button onClick={() => navigate('contact')} className={`nav-item ${activePage === 'contact' ? 'active' : ''}`}>
+                            <i data-lucide="phone" size="22"></i>
+                            <span className="text-[10px] font-bold mt-1">Contact</span>
+                        </button>
+                    </nav>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
 </body>
-</html>
+</html> 
