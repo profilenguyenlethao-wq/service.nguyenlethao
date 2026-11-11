@@ -1,1110 +1,1707 @@
 <!DOCTYPE html>
-<html lang="vi" class="dark">
+<html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPS Platform - Hệ Sinh Thái MMO & Digital</title>
-    
-    <!-- Libraries -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SPS - Giải pháp MMO & Công nghệ</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://w.soundcloud.com/player/api.js" type="text/javascript"></script>
-    
+    <!-- QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- PDF-lib -->
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+    <!-- PDF.js for metadata -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        
         :root {
-            --primary: #3b82f6;
-            --secondary: #8b5cf6;
-            --bg-base: #030712;
-            --text-base: #f3f4f6;
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --bg-glass: rgba(255, 255, 255, 0.08);
+            --border-glass: rgba(255, 255, 255, 0.15);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --card-radius: 20px;
         }
-
+        [data-theme="light"] {
+            --bg-glass: rgba(255, 255, 255, 0.6);
+            --border-glass: rgba(0, 0, 0, 0.08);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-base);
-            color: var(--text-base);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #0a0a1a;
+            color: var(--text-primary);
+            min-height: 100vh;
             overflow-x: hidden;
-            transition: background 0.4s ease, color 0.4s ease;
+            transition: background 0.4s, color 0.4s;
         }
-
-        /* Mesh Gradient Background */
-        .mesh-bg {
+        [data-theme="light"] body {
+            background: #f0f2f5;
+        }
+        /* Animated background */
+        .bg-aurora {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -2;
-            background: 
-                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 40%),
-                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 40%),
-                radial-gradient(circle at 50% 80%, rgba(236, 72, 153, 0.1), transparent 40%);
-            filter: blur(60px);
-            animation: bg-shift 20s infinite alternate;
+            background: radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15), transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.12), transparent 40%),
+                        radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.08), transparent 50%);
+            animation: auroraMove 20s ease-in-out infinite alternate;
         }
-
-        @keyframes bg-shift {
-            0% { transform: scale(1) translate(0, 0); }
-            100% { transform: scale(1.1) translate(5%, 5%); }
+        @keyframes auroraMove {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
         }
-
-        /* Liquid Glass Effect */
+        /* Glass */
         .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255,255,255,0.05);
-            border-radius: 20px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--card-radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
         }
-        
-        .glass-card {
-            transition: all 0.3s ease;
+        .glass-nav {
+            background: var(--bg-glass);
+            backdrop-filter: blur(24px) saturate(1.8);
+            -webkit-backdrop-filter: blur(24px) saturate(1.8);
+            border-bottom: 1px solid var(--border-glass);
+            transition: background 0.3s, box-shadow 0.3s;
         }
-        .glass-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 15px 40px 0 rgba(59, 130, 246, 0.2), inset 0 0 0 1px rgba(255,255,255,0.1);
+        .glass-nav.scrolled {
+            background: rgba(10, 10, 26, 0.75);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
-
-        /* Header Glass on Scroll */
-        #main-header {
-            transition: all 0.3s ease;
-            background: transparent;
-            border-bottom: 1px solid transparent;
+        [data-theme="light"] .glass-nav.scrolled {
+            background: rgba(255, 255, 255, 0.85);
         }
-        #main-header.scrolled {
-            background: rgba(3, 7, 18, 0.6);
-            backdrop-filter: blur(24px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        .card-hover {
+            transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s;
         }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
+        .card-hover:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
+        }
+        .btn-press:active {
+            transform: scale(0.96);
+            transition: transform 0.1s;
+        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
-
-        /* Animations */
-        .animate-fade-up { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(20px); }
-        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-        
-        .section-content { display: none; }
-        .section-content.active { display: block; animation: fadeUp 0.4s ease forwards; }
-
-        /* Floating Nav Mobile */
-        .floating-nav {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            display: none; z-index: 100;
-            padding: 10px 20px; border-radius: 30px;
+        [data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); }
+        /* Modal */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            animation: fadeIn 0.2s;
         }
-        @media (max-width: 768px) {
-            .floating-nav { display: flex; gap: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: rgba(20, 20, 40, 0.9);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            max-width: 640px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 24px;
+            animation: slideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            color: var(--text-primary);
         }
-
-        /* Hide input number arrows */
-        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        [data-theme="light"] .modal-content {
+            background: rgba(255, 255, 255, 0.92);
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        /* Tool grid */
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+        }
+        .tool-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 16px;
+            border-radius: 16px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-size: 13px;
+        }
+        .tool-item:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-3px);
+        }
+        [data-theme="light"] .tool-item:hover { background: rgba(0,0,0,0.05); }
+        .tool-item i { width: 24px; height: 24px; color: var(--primary); }
+        /* Accessibility button */
+        #accessibilityBtn {
+            position: fixed;
+            bottom: 80px;
+            right: 16px;
+            z-index: 900;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5);
+            cursor: pointer;
+            transition: transform 0.2s;
+            touch-action: none;
+        }
+        #accessibilityBtn:active { transform: scale(0.92); }
+        #accessibilityPanel {
+            position: fixed;
+            bottom: 140px;
+            right: 16px;
+            z-index: 901;
+            width: 260px;
+            padding: 16px;
+            border-radius: 20px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--border-glass);
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+        #accessibilityPanel.active { display: flex; }
+        /* Mobile bottom nav */
+        .mobile-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 800;
+            background: rgba(10, 10, 26, 0.8);
+            backdrop-filter: blur(24px);
+            border-top: 1px solid var(--border-glass);
+            display: none;
+            padding: 8px 0 env(safe-area-inset-bottom, 8px);
+        }
+        [data-theme="light"] .mobile-nav { background: rgba(255,255,255,0.85); }
+        .mobile-nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 2px;
+            font-size: 10px; color: var(--text-secondary); flex: 1; padding: 4px 0;
+            cursor: pointer; transition: color 0.2s;
+        }
+        .mobile-nav-item.active { color: var(--primary); }
+        .mobile-nav-item i { width: 22px; height: 22px; }
+        @media (max-width: 768px) { .mobile-nav { display: flex; } }
+        /* Effects canvas */
+        #effectsCanvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+        }
+        /* Search input */
+        .search-input {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 10px 16px;
+            color: var(--text-primary);
+            outline: none;
+            transition: border 0.2s;
+        }
+        .search-input:focus { border-color: var(--primary); }
+        /* Admin table */
+        .admin-input {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid var(--border-glass);
+            border-radius: 10px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            width: 100%;
+            outline: none;
+        }
+        .admin-input:focus { border-color: var(--primary); }
+        /* Toast */
+        #toast {
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.8); color: white; padding: 12px 24px;
+            border-radius: 12px; z-index: 2000; font-size: 14px;
+            opacity: 0; transition: opacity 0.3s; pointer-events: none;
+            backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2);
+        }
+        #toast.show { opacity: 1; }
+        /* Skeleton loading */
+        .skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.05) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        /* Weather card */
+        .weather-hourly-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 8px 0; scrollbar-width: none; }
+        .weather-hourly-scroll::-webkit-scrollbar { display: none; }
+        .weather-hourly-item { flex: 0 0 auto; width: 64px; text-align: center; padding: 8px 4px; border-radius: 12px; background: var(--bg-glass); }
+        /* Print */
+        @media print {
+            body * { visibility: hidden; }
+            #invoicePrintArea, #invoicePrintArea * { visibility: visible; }
+            #invoicePrintArea { position: absolute; left: 0; top: 0; width: 100%; }
+        }
     </style>
 </head>
-<body class="min-h-screen pb-24 md:pb-0 relative">
+<body data-theme="dark">
+    <!-- Animated background -->
+    <div class="bg-aurora"></div>
+    <canvas id="effectsCanvas"></canvas>
 
-    <div class="mesh-bg"></div>
-    <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none"></canvas>
+    <!-- Toast -->
+    <div id="toast"></div>
 
     <!-- Header -->
-    <header id="main-header" class="fixed top-0 w-full z-50 py-4 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                    <i data-lucide="box" class="w-6 h-6 text-white"></i>
-                </div>
-                <span class="text-xl font-bold tracking-tight" id="web-name">SPS Platform</span>
+    <header id="header" class="glass-nav fixed top-0 left-0 right-0 z-50 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg">S</div>
+                <span id="siteName" class="font-bold text-lg hidden sm:block">SPS</span>
             </div>
-
-            <!-- Desktop Nav -->
-            <nav class="hidden md:flex items-center gap-1 glass px-4 py-2 rounded-full">
-                <button onclick="switchTab('home')" class="px-4 py-2 rounded-full text-sm font-medium hover:bg-white/10 transition-colors" data-i18n="nav_home">Trang chủ</button>
-                <button onclick="switchTab('services')" class="px-4 py-2 rounded-full text-sm font-medium hover:bg-white/10 transition-colors" data-i18n="nav_services">Dịch vụ</button>
-                <button onclick="switchTab('tools')" class="px-4 py-2 rounded-full text-sm font-medium hover:bg-white/10 transition-colors" data-i18n="nav_tools">Tools & MMO</button>
-                <button onclick="switchTab('blog')" class="px-4 py-2 rounded-full text-sm font-medium hover:bg-white/10 transition-colors" data-i18n="nav_blog">Blog</button>
-                <button onclick="switchTab('support')" class="px-4 py-2 rounded-full text-sm font-medium hover:bg-white/10 transition-colors" data-i18n="nav_support">Hỗ trợ</button>
+            <nav class="hidden md:flex items-center gap-1 text-sm">
+                <a href="#services" class="px-3 py-2 rounded-lg hover:bg-white/10 transition" data-i18n="nav_services">Dịch vụ</a>
+                <a href="#tools" class="px-3 py-2 rounded-lg hover:bg-white/10 transition" data-i18n="nav_tools">Công cụ</a>
+                <a href="#blog" class="px-3 py-2 rounded-lg hover:bg-white/10 transition" data-i18n="nav_blog">Blog</a>
+                <a href="#support" class="px-3 py-2 rounded-lg hover:bg-white/10 transition" data-i18n="nav_support">Hỗ trợ</a>
             </nav>
-
             <div class="flex items-center gap-2">
-                <select id="lang-selector" class="glass bg-transparent text-sm font-medium rounded-xl px-3 py-2 outline-none cursor-pointer border-none text-white">
-                    <option value="vi" class="text-black">🇻🇳 VI</option>
-                    <option value="en" class="text-black">🇬🇧 EN</option>
-                    <option value="zh" class="text-black">🇨🇳 ZH</option>
-                    <option value="ja" class="text-black">🇯🇵 JA</option>
-                    <option value="de" class="text-black">🇩🇪 DE</option>
-                    <option value="ru" class="text-black">🇷🇺 RU</option>
-                </select>
-                
-                <button onclick="toggleTheme()" class="p-2.5 rounded-xl glass hover:bg-white/10 transition-colors">
-                    <i data-lucide="moon" class="w-5 h-5 hidden dark:block"></i>
-                    <i data-lucide="sun" class="w-5 h-5 block dark:hidden"></i>
+                <input id="searchInput" type="text" placeholder="Tìm kiếm..." class="search-input hidden sm:block w-40 md:w-56 text-sm" oninput="handleSearch(this.value)">
+                <button onclick="toggleTheme()" class="p-2 rounded-xl hover:bg-white/10 transition" title="Chế độ sáng/tối">
+                    <i data-lucide="moon" class="w-5 h-5" id="themeIcon"></i>
                 </button>
-
-                <button onclick="openModal('admin-login-modal')" class="p-2.5 rounded-xl glass hover:bg-white/10 transition-colors">
-                    <i data-lucide="user" class="w-5 h-5"></i>
+                <select id="langSelect" class="bg-transparent border border-white/20 rounded-lg px-2 py-1 text-sm outline-none cursor-pointer" onchange="setLanguage(this.value)">
+                    <option value="vi">VI</option>
+                    <option value="en">EN</option>
+                    <option value="zh">ZH</option>
+                    <option value="ja">JA</option>
+                    <option value="de">DE</option>
+                    <option value="ru">RU</option>
+                </select>
+                <button onclick="openAdminLogin()" class="p-2 rounded-xl hover:bg-white/10 transition hidden" title="Admin">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-16">
-        
-        <!-- ================= TRANG CHỦ ================= -->
-        <section id="section-home" class="section-content active">
-            <div class="text-center py-16 md:py-24">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-xs font-semibold text-blue-400 mb-6 border-blue-500/30 animate-fade-up">
-                    <i data-lucide="sparkles" class="w-4 h-4"></i> Nền tảng Digital & MMO thế hệ mới
-                </div>
-                <h1 class="text-5xl md:text-7xl font-extrabold mb-8 tracking-tight leading-tight animate-fade-up" style="animation-delay: 0.1s">
-                    Giải Pháp <br/>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">Digital Toàn Diện</span>
-                </h1>
-                <p class="text-lg md:text-xl mb-12 max-w-2xl mx-auto text-gray-400 animate-fade-up" style="animation-delay: 0.2s">
-                    Cung cấp Source Code, Tool MMO, Xử lý PDF, Thời tiết, Tỷ giá và Hàng ngàn tiện ích khác. Bảo mật, Tốc độ, Tự động 24/7.
-                </p>
-                <div class="flex flex-col sm:flex-row justify-center gap-4 animate-fade-up" style="animation-delay: 0.3s">
-                    <button onclick="switchTab('services')" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold shadow-xl shadow-blue-500/20 hover:scale-105 hover:shadow-blue-500/40 transition-all">Khám phá dịch vụ</button>
-                    <button onclick="switchTab('tools')" class="px-8 py-4 rounded-2xl glass font-bold hover:bg-white/5 transition-all">Trải nghiệm Tools</button>
-                </div>
+    <!-- Main -->
+    <main class="pt-20 pb-24 px-4 max-w-7xl mx-auto">
+        <!-- Hero -->
+        <section class="text-center py-12 md:py-20 relative">
+            <div class="inline-block px-4 py-1.5 rounded-full glass text-xs mb-6 text-indigo-300">
+                <span class="flex items-center gap-2"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Nền tảng MMO & Công nghệ số 1</span>
             </div>
+            <h1 class="text-3xl md:text-5xl font-bold leading-tight mb-4">
+                Giải pháp <span class="bg-gradient-to-r from-indigo-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">MMO & Công nghệ</span><br>Toàn diện cho bạn
+            </h1>
+            <p class="text-secondary max-w-2xl mx-auto mb-8 text-sm md:text-base" style="color:var(--text-secondary)">
+                Cung cấp dịch vụ IPA, Source, VPN, Shop game, hỗ trợ Meta/Google/TikTok và hàng chục công cụ tiện ích miễn phí.
+            </p>
+            <div class="flex flex-wrap justify-center gap-3">
+                <a href="#services" class="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-medium btn-press transition hover:shadow-lg hover:shadow-indigo-500/30">
+                    <i data-lucide="rocket" class="w-4 h-4 inline mr-2"></i>Khám phá ngay
+                </a>
+                <a href="#tools" class="px-6 py-3 rounded-xl glass font-medium btn-press transition hover:bg-white/10">
+                    <i data-lucide="wrench" class="w-4 h-4 inline mr-2"></i>Công cụ miễn phí
+                </a>
+            </div>
+        </section>
 
-            <!-- Features -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
-                <div class="glass glass-card p-8 text-center rounded-3xl">
-                    <div class="w-16 h-16 mx-auto rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center mb-6"><i data-lucide="zap" class="w-8 h-8"></i></div>
-                    <h3 class="font-bold text-xl mb-3">Tốc độ ánh sáng</h3>
-                    <p class="text-gray-400 text-sm">Hệ thống xử lý tự động 100%, nhận kết quả ngay lập tức mà không cần chờ đợi.</p>
+        <!-- Announcement -->
+        <div id="announcementBar" class="glass p-3 mb-6 text-center text-sm hidden">
+            <i data-lucide="megaphone" class="w-4 h-4 inline mr-2 text-yellow-400"></i>
+            <span id="announcementText"></span>
+        </div>
+
+        <!-- Services -->
+        <section id="services" class="py-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl md:text-2xl font-bold flex items-center gap-2">
+                    <i data-lucide="shopping-bag" class="w-6 h-6 text-indigo-400"></i> Dịch vụ nổi bật
+                </h2>
+                <input id="serviceSearch" type="text" placeholder="Lọc dịch vụ..." class="search-input text-sm w-40" oninput="filterServices(this.value)">
+            </div>
+            <div id="servicesGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                <!-- Rendered by JS -->
+            </div>
+        </section>
+
+        <!-- Tools -->
+        <section id="tools" class="py-8">
+            <h2 class="text-xl md:text-2xl font-bold mb-6 flex items-center gap-2">
+                <i data-lucide="wrench" class="w-6 h-6 text-cyan-400"></i> Công cụ & Tiện ích
+            </h2>
+            <div id="toolsGrid" class="tool-grid">
+                <!-- Rendered by JS -->
+            </div>
+        </section>
+
+        <!-- Blog -->
+        <section id="blog" class="py-8">
+            <h2 class="text-xl md:text-2xl font-bold mb-6 flex items-center gap-2">
+                <i data-lucide="newspaper" class="w-6 h-6 text-pink-400"></i> Blog & Tin tức
+            </h2>
+            <div id="blogGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Rendered by JS -->
+            </div>
+        </section>
+
+        <!-- Support -->
+        <section id="support" class="py-8">
+            <h2 class="text-xl md:text-2xl font-bold mb-6 flex items-center gap-2">
+                <i data-lucide="headphones" class="w-6 h-6 text-green-400"></i> Trung tâm hỗ trợ
+            </h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="glass p-5">
+                    <h3 class="font-semibold mb-3 flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4"></i> Gửi yêu cầu hỗ trợ</h3>
+                    <form onsubmit="submitSupport(event)" class="space-y-3">
+                        <input type="text" placeholder="Họ tên" class="admin-input" required>
+                        <input type="email" placeholder="Email" class="admin-input" required>
+                        <textarea placeholder="Nội dung cần hỗ trợ..." class="admin-input" rows="3" required></textarea>
+                        <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Gửi yêu cầu</button>
+                    </form>
                 </div>
-                <div class="glass glass-card p-8 text-center rounded-3xl">
-                    <div class="w-16 h-16 mx-auto rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center mb-6"><i data-lucide="shield-check" class="w-8 h-8"></i></div>
-                    <h3 class="font-bold text-xl mb-3">Bảo mật tuyệt đối</h3>
-                    <p class="text-gray-400 text-sm">Dữ liệu xử lý trực tiếp trên trình duyệt (Client-side), không lưu trữ trên server.</p>
-                </div>
-                <div class="glass glass-card p-8 text-center rounded-3xl">
-                    <div class="w-16 h-16 mx-auto rounded-2xl bg-pink-500/20 text-pink-400 flex items-center justify-center mb-6"><i data-lucide="layout-grid" class="w-8 h-8"></i></div>
-                    <h3 class="font-bold text-xl mb-3">Đa dạng tính năng</h3>
-                    <p class="text-gray-400 text-sm">Hơn 30+ công cụ từ MMO, PDF, Tính toán cho đến Tiện ích hàng ngày.</p>
+                <div class="glass p-5">
+                    <h3 class="font-semibold mb-3 flex items-center gap-2"><i data-lucide="message-circle" class="w-4 h-4"></i> Liên hệ nhanh</h3>
+                    <div class="space-y-2 text-sm">
+                        <a href="https://zalo.me" target="_blank" class="flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition"><i data-lucide="phone" class="w-4 h-4 text-blue-400"></i> Zalo: 0123 456 789</a>
+                        <a href="https://m.me" target="_blank" class="flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition"><i data-lucide="facebook" class="w-4 h-4 text-blue-500"></i> Messenger: SPS Support</a>
+                        <a href="mailto:support@sps.vn" class="flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition"><i data-lucide="mail" class="w-4 h-4 text-red-400"></i> support@sps.vn</a>
+                    </div>
+                    <div class="mt-4 p-3 rounded-xl bg-white/5 text-xs text-secondary">
+                        <p class="font-medium mb-1">FAQ nhanh:</p>
+                        <p>• Thời gian xử lý: 1-2 giờ làm việc.</p>
+                        <p>• Bảo hành dịch vụ theo gói.</p>
+                    </div>
                 </div>
             </div>
         </section>
-    <!-- ================= DỊCH VỤ ================= -->
-    <section id="section-services" class="section-content">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
-            <div>
-                <h2 class="text-3xl font-bold mb-2">Sản phẩm & Dịch vụ</h2>
-                <p class="text-gray-400">Bố cục chuẩn thương mại điện tử, thanh toán tự động.</p>
-            </div>
-            <div class="relative w-full md:w-72">
-                <i data-lucide="search" class="absolute left-4 top-3.5 w-5 h-5 text-gray-400"></i>
-                <input type="text" id="search-service" onkeyup="filterServices()" placeholder="Tìm dịch vụ..." class="w-full glass px-12 py-3 rounded-2xl outline-none focus:ring-2 ring-blue-500 bg-black/20 text-white">
-            </div>
-        </div>
-        
-        <div class="flex gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
-            <button onclick="filterServiceCat('all')" class="px-5 py-2 rounded-xl text-sm font-bold bg-blue-600 text-white whitespace-nowrap">Tất cả</button>
-            <button onclick="filterServiceCat('social')" class="px-5 py-2 rounded-xl text-sm font-medium glass hover:bg-white/10 whitespace-nowrap">Social / Support</button>
-            <button onclick="filterServiceCat('mmo')" class="px-5 py-2 rounded-xl text-sm font-medium glass hover:bg-white/10 whitespace-nowrap">MMO / Game</button>
-            <button onclick="filterServiceCat('digital')" class="px-5 py-2 rounded-xl text-sm font-medium glass hover:bg-white/10 whitespace-nowrap">Digital Assets</button>
-        </div>
+    </main>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="services-list">
-            <!-- Render via JS -->
-        </div>
-    </section>
-
-    <!-- ================= TOOLS & MMO ================= -->
-    <section id="section-tools" class="section-content">
-        <h2 class="text-3xl font-bold mb-8">Bộ Công Cụ Đa Năng</h2>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-8" id="tools-nav">
-            <button onclick="showTool('weather')" class="glass p-3 flex flex-col items-center hover:bg-white/10 tool-btn active"><i data-lucide="cloud-sun" class="w-6 h-6 mb-2 text-blue-400"></i><span class="text-xs font-medium text-center">Thời Tiết</span></button>
-            <button onclick="showTool('ip')" class="glass p-3 flex flex-col items-center hover:bg-white/10 tool-btn"><i data-lucide="globe" class="w-6 h-6 mb-2 text-green-400"></i><span class="text-xs font-medium text-center">Check IP</span></button>
-            <button onclick="showTool('price')" class="glass p-3 flex flex-col items-center hover:bg-white/10 tool-btn"><i data-lucide="trending-up" class="w-6 h-6 mb-2 text-yellow-400"></i><span class="text-xs font-medium text-center">Giá Vàng/BTC</span></button>
-            <button onclick="showTool('pdf')" class="glass p-3 flex flex-col items-center hover:bg-white/10 tool-btn"><i data-lucide="file-text" class="w-6 h-6 mb-2 text-red-400"></i><span class="text-xs font-medium text-center">Xử Lý PDF</span></button>
-            <button onclick="showTool('calc')" class="glass p-3 flex flex-col items-center hover:bg-white/10 tool-btn"><i data-lucide="calculator" class="w-6 h-6 mb-2 text-purple-400"></i><span class="text-xs font-medium text-center">Tính Toán</span></button>
-            <button onclick="showTool('2fa')" class="glass p-3 flex flex-col items-center hover:bg-white/10 tool-btn"><i data-lucide="shield" class="w-6 h-6 mb-2 text-indigo-400"></i><span class="text-xs font-medium text-center">Lấy Mã 2FA</span></button>
-            <button onclick="showTool('fbcheck')" class="glass p-3 flex flex-col items-center hover:bg-white/10 tool-btn"><i data-lucide="facebook" class="w-6 h-6 mb-2 text-blue-500"></i><span class="text-xs font-medium text-center">Check Live FB</span></button>
-            <button onclick="showTool('img2link')" class="glass p-3 flex flex-col items-center hover:bg-white/10 tool-btn"><i data-lucide="image" class="w-6 h-6 mb-2 text-pink-400"></i><span class="text-xs font-medium text-center">Ảnh sang Link</span></button>
-            <button onclick="showTool('shorten')" class="glass p-3 flex flex-col items-center hover:bg-white/10 tool-btn"><i data-lucide="link" class="w-6 h-6 mb-2 text-cyan-400"></i><span class="text-xs font-medium text-center">Rút Gọn Link</span></button>
-            <button onclick="showTool('qr')" class="glass p-3 flex flex-col items-center hover:bg-white/10 tool-btn"><i data-lucide="qr-code" class="w-6 h-6 mb-2 text-gray-300"></i><span class="text-xs font-medium text-center">Tạo QR</span></button>
-            <button onclick="showTool('note')" class="glass p-3 flex flex-col items-center hover:bg-white/10 tool-btn"><i data-lucide="sticky-note" class="w-6 h-6 mb-2 text-orange-400"></i><span class="text-xs font-medium text-center">Ghi Chú</span></button>
-            <button onclick="showTool('todo')" class="glass p-3 flex flex-col items-center hover:bg-white/10 tool-btn"><i data-lucide="check-square" class="w-6 h-6 mb-2 text-teal-400"></i><span class="text-xs font-medium text-center">To-do List</span></button>
-        </div>
-
-        <!-- Tool Content Area -->
-        <div class="glass p-6 md:p-8 min-h-[500px] rounded-3xl">
-            
-            <!-- Weather (Chi tiết) -->
-            <div id="tool-weather" class="tool-content">
-                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                    <h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="cloud-lightning" class="text-blue-400"></i> Thời tiết & Cảnh báo thiên tai</h3>
-                    <div class="flex gap-2 w-full md:w-auto">
-                        <select id="weather-city" class="glass px-4 py-2 rounded-xl outline-none flex-1 bg-black/20 text-white">
-                            <option value="10.8231,106.6297">Hồ Chí Minh</option>
-                            <option value="21.0285,105.8542">Hà Nội</option>
-                            <option value="16.4637,107.5909">Huế</option>
-                            <option value="12.2388,109.1967">Nha Trang</option>
-                            <option value="13.7829,109.2193">Quy Nhơn</option>
-                            <option value="16.0544,108.2022">Đà Nẵng</option>
-                        </select>
-                        <button onclick="fetchWeather()" class="px-6 py-2 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition">Xem</button>
-                    </div>
-                </div>
-                <div id="weather-result" class="flex flex-col items-center justify-center py-20 text-gray-500">
-                    <i data-lucide="cloud" class="w-16 h-16 mb-4 opacity-50"></i>
-                    <p>Chọn thành phố và ấn Xem để lấy dữ liệu thời tiết thực tế (Miễn phí API)</p>
-                </div>
-            </div>
-
-            <!-- Check IP -->
-            <div id="tool-ip" class="tool-content hidden">
-                <h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="globe" class="text-green-400"></i> Thông tin IP & Vị trí của bạn</h3>
-                <button onclick="fetchIP()" class="px-8 py-3 bg-green-600 text-white rounded-xl font-bold mb-6 hover:bg-green-700 transition">Quét IP Ngay</button>
-                <div id="ip-result" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-500">
-                    <div class="md:col-span-2 text-center py-10">Dữ liệu IP chi tiết sẽ hiển thị ở đây...</div>
-                </div>
-            </div>
-
-            <!-- Price Tracker -->
-            <div id="tool-price" class="tool-content hidden">
-                <h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="trending-up" class="text-yellow-400"></i> Tỷ giá thị trường</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="price-data">
-                    <!-- JS renders here -->
-                </div>
-                <button onclick="fetchPrices()" class="mt-6 px-6 py-2 glass rounded-xl font-bold hover:bg-white/10">Làm mới giá</button>
-            </div>
-
-            <!-- 2FA -->
-            <div id="tool-2fa" class="tool-content hidden">
-                <h3 class="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="shield" class="text-indigo-400"></i> Lấy mã 2FA (Google Authenticator)</h3>
-                <div class="flex flex-col md:flex-row gap-4 mb-8">
-                    <input type="text" id="2fa-secret" placeholder="Nhập mã Secret (VD: JBSWY3DPEHPK3PXP)" class="glass px-4 py-3 rounded-xl outline-none flex-1 bg-black/20 font-mono text-white">
-                    <button onclick="generate2FA()" class="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700">Tạo Mã</button>
-                </div>
-                <div id="2fa-result" class="hidden glass bg-indigo-500/10 border-indigo-500/30 p-8 rounded-3xl text-center max-w-sm mx-auto">
-                    <p class="text-sm text-gray-400 mb-2">Mã hiện tại:</p>
-                    <div class="text-6xl font-mono font-bold tracking-widest text-indigo-400" id="2fa-code">------</div>
-                    <div class="mt-6 w-full bg-gray-800 h-2 rounded-full overflow-hidden">
-                        <div id="2fa-progress" class="bg-indigo-500 h-full w-full transition-all duration-1000 linear"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PDF Tools -->
-            <div id="tool-pdf" class="tool-content hidden">
-                <h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="file-text" class="text-red-400"></i> Trình xử lý PDF (Offline)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="glass p-5 rounded-2xl">
-                        <h4 class="font-bold mb-3">Ghép nhiều PDF (Merge)</h4>
-                        <input type="file" id="pdf-merge-files" multiple accept=".pdf" class="text-sm w-full mb-3 text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-red-500/20 file:text-red-400 hover:file:bg-red-500/30">
-                        <button onclick="mergePDFs()" class="w-full py-2 bg-red-600 rounded-xl text-white font-bold hover:bg-red-700">Ghép File</button>
-                    </div>
-                    <div class="glass p-5 rounded-2xl">
-                        <h4 class="font-bold mb-3">Ảnh sang PDF</h4>
-                        <input type="file" id="img-to-pdf-files" multiple accept="image/*" class="text-sm w-full mb-3 text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-pink-500/20 file:text-pink-400 hover:file:bg-pink-500/30">
-                        <button onclick="imagesToPDF()" class="w-full py-2 bg-pink-600 rounded-xl text-white font-bold hover:bg-pink-700">Tạo PDF</button>
-                    </div>
-                    <div class="glass p-5 rounded-2xl">
-                        <h4 class="font-bold mb-3">Đếm chữ (Word Counter)</h4>
-                        <textarea id="word-counter-text" class="w-full glass bg-black/20 p-2 rounded-lg text-sm mb-3 h-20 outline-none" placeholder="Nhập văn bản..."></textarea>
-                        <button onclick="countWords()" class="w-full py-2 bg-blue-600 rounded-xl text-white font-bold hover:bg-blue-700">Đếm</button>
-                        <p id="word-count-result" class="text-center mt-2 text-sm text-blue-400 font-bold"></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Calculator -->
-            <div id="tool-calc" class="tool-content hidden">
-                <h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="calculator" class="text-purple-400"></i> Profit Calculator (Tính lợi nhuận)</h3>
-                <div class="max-w-md mx-auto">
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="text-sm text-gray-400 mb-1 block">Giá nhập (VNĐ)</label>
-                            <input type="number" id="calc-cost" class="w-full glass px-4 py-3 rounded-xl outline-none bg-black/20 text-white" placeholder="100000">
-                        </div>
-                        <div>
-                            <label class="text-sm text-gray-400 mb-1 block">Giá bán (VNĐ)</label>
-                            <input type="number" id="calc-sell" class="w-full glass px-4 py-3 rounded-xl outline-none bg-black/20 text-white" placeholder="150000">
-                        </div>
-                    </div>
-                    <button onclick="calcProfit()" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl transition">Tính Toán</button>
-                    <div id="calc-result" class="mt-6 p-4 glass rounded-xl text-center text-2xl font-bold"></div>
-                </div>
-            </div>
-
-            <!-- Check FB Live/Die -->
-            <div id="tool-fbcheck" class="tool-content hidden">
-                <h3 class="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="facebook" class="text-blue-500"></i> Check Live/Die Facebook Profile</h3>
-                <div class="flex gap-2">
-                    <input type="text" id="fb-url" placeholder="Nhập link facebook (VD: https://facebook.com/abc)" class="glass px-4 py-3 rounded-xl outline-none flex-1 bg-black/20 text-white">
-                    <button onclick="checkFBLive()" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700">Check</button>
-                </div>
-                <p class="text-xs text-yellow-500 mt-2">* Tính năng sử dụng Proxy công khai, có thể bị chặn nếu Facebook đổi API.</p>
-                <div id="fb-result" class="mt-6 text-center py-6 text-gray-400">Kết quả sẽ hiện ở đây...</div>
-            </div>
-
-            <!-- Image to Link -->
-            <div id="tool-img2link" class="tool-content hidden">
-                <h3 class="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="image" class="text-pink-400"></i> Upload Ảnh Lấy Link</h3>
-                <input type="file" id="img-upload" accept="image/*" class="mb-4 block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:font-semibold file:bg-pink-500/20 file:text-pink-400 hover:file:bg-pink-500/30">
-                <button onclick="uploadImage()" class="px-6 py-2 bg-pink-600 text-white rounded-xl font-bold mb-4">Upload</button>
-                <div id="img-link-result" class="break-all font-mono text-cyan-400"></div>
-            </div>
-
-            <!-- Shorten Link -->
-            <div id="tool-shorten" class="tool-content hidden">
-                <h3 class="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="link" class="text-cyan-400"></i> Rút gọn Link (TinyURL)</h3>
-                <div class="flex gap-2 mb-4">
-                    <input type="text" id="long-url" placeholder="Nhập link cần rút gọn..." class="glass px-4 py-3 rounded-xl outline-none flex-1 bg-black/20 text-white">
-                    <button onclick="shortenLink()" class="px-6 py-3 bg-cyan-600 text-white rounded-xl font-bold hover:bg-cyan-700">Rút Gọn</button>
-                </div>
-                <div id="shorten-result" class="text-center text-lg font-bold text-cyan-400"></div>
-            </div>
-
-            <!-- QR Code -->
-            <div id="tool-qr" class="tool-content hidden">
-                <h3 class="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="qr-code" class="text-gray-300"></i> Tạo Mã QR</h3>
-                <input type="text" id="qr-text" placeholder="Nhập text hoặc link..." class="w-full glass px-4 py-3 rounded-xl outline-none mb-4 bg-black/20 text-white">
-                <button onclick="generateQR()" class="px-6 py-2 bg-gray-600 text-white rounded-xl font-bold mb-6">Tạo QR</button>
-                <div id="qr-result" class="flex justify-center"></div>
-            </div>
-
-            <!-- Note -->
-            <div id="tool-note" class="tool-content hidden">
-                <h3 class="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="sticky-note" class="text-orange-400"></i> Ghi chú nhanh</h3>
-                <textarea id="note-area" class="w-full h-64 glass p-4 rounded-xl outline-none bg-black/20 text-white resize-none mb-4" placeholder="Viết gì đó..."></textarea>
-                <button onclick="saveNote()" class="px-6 py-2 bg-orange-600 text-white rounded-xl font-bold">Lưu Ghi Chú</button>
-            </div>
-
-            <!-- Todo -->
-            <div id="tool-todo" class="tool-content hidden">
-                <h3 class="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="check-square" class="text-teal-400"></i> Danh sách công việc</h3>
-                <div class="flex gap-2 mb-4">
-                    <input type="text" id="todo-input" placeholder="Thêm việc cần làm..." class="glass px-4 py-3 rounded-xl outline-none flex-1 bg-black/20 text-white">
-                    <button onclick="addTodo()" class="px-6 py-3 bg-teal-600 text-white rounded-xl font-bold hover:bg-teal-700">Thêm</button>
-                </div>
-                <ul id="todo-list" class="space-y-2"></ul>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- ================= ADMIN PANEL ================= -->
-    <section id="section-admin" class="section-content">
-        <div class="flex justify-between items-center mb-8">
-            <div>
-                <h2 class="text-3xl font-bold text-red-500">Admin Dashboard</h2>
-                <p class="text-gray-400">Điều khiển toàn bộ Website</p>
-            </div>
-            <button onclick="logoutAdmin()" class="px-5 py-2.5 glass hover:bg-red-500/20 text-red-400 font-bold rounded-xl transition">Đăng xuất</button>
-        </div>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Settings -->
-            <div class="glass p-6 rounded-2xl">
-                <h3 class="font-bold text-lg mb-4 border-b border-white/10 pb-3 flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 text-blue-400"></i> Cấu hình Web</h3>
-                <label class="text-sm text-gray-400 block mb-1">Tên Website</label>
-                <input type="text" id="admin-web-name" class="w-full glass bg-black/20 px-3 py-2 rounded-lg mb-4 outline-none text-white">
-                
-                <label class="text-sm text-gray-400 block mb-1">Thông báo (Announcement)</label>
-                <input type="text" id="admin-announcement" class="w-full glass bg-black/20 px-3 py-2 rounded-lg mb-4 outline-none text-white">
-                
-                <button onclick="saveAdminSettings()" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition">Lưu Cấu Hình</button>
-            </div>
-
-            <!-- Manage Products -->
-            <div class="glass p-6 rounded-2xl">
-                <h3 class="font-bold text-lg mb-4 border-b border-white/10 pb-3 flex items-center gap-2"><i data-lucide="plus-circle" class="w-5 h-5 text-green-400"></i> Thêm Dịch Vụ</h3>
-                <input type="text" id="admin-srv-name" placeholder="Tên dịch vụ" class="w-full glass bg-black/20 px-3 py-2 rounded-lg mb-2 outline-none text-white">
-                <input type="number" id="admin-srv-price" placeholder="Giá tiền (VNĐ)" class="w-full glass bg-black/20 px-3 py-2 rounded-lg mb-2 outline-none text-white">
-                <select id="admin-srv-cat" class="w-full glass bg-black/20 px-3 py-2 rounded-lg mb-4 outline-none text-white">
-                    <option value="social">Social / Support</option>
-                    <option value="mmo">MMO / Game</option>
-                    <option value="digital">Digital Assets</option>
-                </select>
-                <button onclick="addAdminService()" class="w-full py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold transition">Thêm Ngay</button>
-            </div>
-
-            <!-- Payment Info -->
-            <div class="glass p-6 rounded-2xl text-center">
-                <h3 class="font-bold text-lg mb-4 border-b border-white/10 pb-3 flex items-center justify-center gap-2"><i data-lucide="credit-card" class="w-5 h-5 text-yellow-400"></i> Nạp Tiền Tự Động</h3>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Techcombank_NGUYENLETHANH_1903123456789" class="mx-auto rounded-xl mb-3 border-2 border-white/20 p-1 bg-white">
-                <p class="font-bold text-base text-blue-400">Techcombank</p>
-                <p class="text-sm">STK: 1903 1234 5678 9</p>
-                <p class="text-sm text-gray-400">Chủ TK: NGUYEN LE THANH</p>
-                <p class="text-xs text-yellow-500 mt-2">Nội dung: [SĐT] NAP TIEN</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Các section Blog/Support ẩn (Giữ chỗ để menu hoạt động) -->
-    <section id="section-blog" class="section-content text-center py-20">
-        <h2 class="text-3xl font-bold mb-4">Blog & Tin Tức</h2>
-        <p class="text-gray-400">Đang cập nhật các bài viết mới nhất...</p>
-    </section>
-    <section id="section-support" class="section-content text-center py-20">
-        <h2 class="text-3xl font-bold mb-4">Trung Tâm Hỗ Trợ</h2>
-        <div class="flex justify-center gap-4 mt-6">
-            <button class="px-6 py-3 bg-blue-600 rounded-xl text-white font-bold"><i data-lucide="message-circle" class="inline w-4 h-4 mr-2"></i> Chat Zalo</button>
-            <button class="px-6 py-3 bg-indigo-600 rounded-xl text-white font-bold"><i data-lucide="facebook" class="inline w-4 h-4 mr-2"></i> Messenger</button>
-        </div>
-    </section>
-
-</main>
     <!-- Footer -->
-    <footer class="border-t border-white/10 mt-20 py-10 text-center text-gray-500 text-sm relative z-10">
-        <p>© 2024 SPS Platform. Thiết kế bởi Admin.</p>
+    <footer class="glass-nav mt-8 px-4 py-8 text-sm" style="border-top:1px solid var(--border-glass)">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-6">
+            <div>
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center text-white font-bold">S</div>
+                    <span id="footerSiteName" class="font-bold">SPS</span>
+                </div>
+                <p class="text-secondary" style="color:var(--text-secondary)">Nền tảng cung cấp dịch vụ MMO, công cụ tiện ích và hỗ trợ công nghệ hàng đầu Việt Nam.</p>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-2">Liên kết</h4>
+                <div class="space-y-1 text-secondary" style="color:var(--text-secondary)">
+                    <a href="#" class="block hover:text-indigo-400 transition" onclick="openModal('privacyModal');return false">Chính sách bảo mật</a>
+                    <a href="#" class="block hover:text-indigo-400 transition" onclick="openModal('termsModal');return false">Điều khoản sử dụng</a>
+                    <a href="#" class="block hover:text-indigo-400 transition" onclick="openModal('guideModal');return false">Hướng dẫn mua hàng</a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-2">Kết nối</h4>
+                <div class="flex gap-3">
+                    <a href="#" class="p-2 rounded-lg glass hover:bg-white/10 transition"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                    <a href="#" class="p-2 rounded-lg glass hover:bg-white/10 transition"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+                    <a href="#" class="p-2 rounded-lg glass hover:bg-white/10 transition"><i data-lucide="send" class="w-4 h-4"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-xs text-secondary mt-6" style="color:var(--text-secondary)">© 2025 SPS. All rights reserved.</div>
     </footer>
 
-    <!-- Floating Mobile Nav -->
-    <div class="floating-nav glass shadow-2xl">
-        <button onclick="switchTab('home')" class="text-gray-400 hover:text-white"><i data-lucide="home" class="w-6 h-6"></i></button>
-        <button onclick="switchTab('services')" class="text-gray-400 hover:text-white"><i data-lucide="shopping-bag" class="w-6 h-6"></i></button>
-        <button onclick="switchTab('tools')" class="text-blue-500"><i data-lucide="grid" class="w-6 h-6"></i></button>
-        <button onclick="switchTab('support')" class="text-gray-400 hover:text-white"><i data-lucide="headphones" class="w-6 h-6"></i></button>
-    </div>
+    <!-- Mobile bottom nav -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-item active" onclick="scrollToSection('services')"><i data-lucide="shopping-bag"></i><span>Dịch vụ</span></div>
+        <div class="mobile-nav-item" onclick="scrollToSection('tools')"><i data-lucide="wrench"></i><span>Công cụ</span></div>
+        <div class="mobile-nav-item" onclick="scrollToSection('blog')"><i data-lucide="newspaper"></i><span>Blog</span></div>
+        <div class="mobile-nav-item" onclick="scrollToSection('support')"><i data-lucide="headphones"></i><span>Hỗ trợ</span></div>
+    </nav>
 
-    <!-- FAB (Nút trợ năng) -->
-    <div id="fab-container" class="fixed bottom-24 md:bottom-10 right-6 z-[100] cursor-move">
-        <div id="fab-menu" class="glass absolute bottom-16 right-0 w-48 p-2 rounded-2xl hidden flex-col gap-1 shadow-2xl">
-            <p class="text-[10px] text-center text-gray-400 font-bold uppercase tracking-widest mb-1 mt-1">Hiệu ứng nền</p>
-            <button onclick="changeEffect('none')" class="text-left px-3 py-2 hover:bg-white/10 rounded-lg text-sm flex items-center gap-2"><i data-lucide="x" class="w-4 h-4"></i> Tắt</button>
-            <button onclick="changeEffect('snow')" class="text-left px-3 py-2 hover:bg-white/10 rounded-lg text-sm flex items-center gap-2"><i data-lucide="snowflake" class="w-4 h-4 text-blue-300"></i> Tuyết rơi</button>
-            <button onclick="changeEffect('meteor')" class="text-left px-3 py-2 hover:bg-white/10 rounded-lg text-sm flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4 text-yellow-300"></i> Sao băng</button>
-            <button onclick="changeEffect('rain')" class="text-left px-3 py-2 hover:bg-white/10 rounded-lg text-sm flex items-center gap-2"><i data-lucide="cloud-rain" class="w-4 h-4 text-cyan-300"></i> Mưa rơi</button>
-            <div class="h-px bg-white/10 my-1"></div>
-            <button onclick="toggleMusic()" class="text-left px-3 py-2 hover:bg-white/10 rounded-lg text-sm flex items-center gap-2 font-bold text-green-400"><i data-lucide="music" class="w-4 h-4"></i> <span id="music-label">Bật nhạc</span></button>
-            <button onclick="toggleFab()" class="text-left px-3 py-2 hover:bg-red-500/20 rounded-lg text-sm flex items-center gap-2 text-red-400"><i data-lucide="eye-off" class="w-4 h-4"></i> Ẩn nút này</button>
+    <!-- Accessibility button & panel -->
+    <div id="accessibilityBtn" title="Trợ năng">
+        <i data-lucide="accessibility" class="w-6 h-6"></i>
+    </div>
+    <div id="accessibilityPanel" class="glass">
+        <h4 class="font-semibold text-sm mb-1 flex items-center gap-2"><i data-lucide="music" class="w-4 h-4"></i> Nhạc nền</h4>
+        <div class="flex gap-2">
+            <button onclick="toggleMusic()" id="musicToggleBtn" class="flex-1 px-3 py-2 rounded-lg bg-indigo-500/20 text-indigo-300 text-xs btn-press">Play</button>
+            <span class="text-xs self-center text-secondary" id="musicStatus">Off</span>
         </div>
-        <button id="fab" onclick="toggleFab()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 shadow-xl shadow-blue-500/40 flex items-center justify-center text-white hover:scale-110 transition-transform">
-            <i data-lucide="settings" class="w-6 h-6"></i>
-        </button>
+        <div class="border-t border-white/10 my-1"></div>
+        <h4 class="font-semibold text-sm mb-1 flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> Hiệu ứng</h4>
+        <div class="grid grid-cols-3 gap-1">
+            <button onclick="setEffect('meteor')" class="effect-btn px-2 py-1.5 rounded-lg text-xs btn-press" data-effect="meteor">Sao băng</button>
+            <button onclick="setEffect('snow')" class="effect-btn px-2 py-1.5 rounded-lg text-xs btn-press" data-effect="snow">Tuyết</button>
+            <button onclick="setEffect('rain')" class="effect-btn px-2 py-1.5 rounded-lg text-xs btn-press" data-effect="rain">Mưa</button>
+            <button onclick="setEffect('flower')" class="effect-btn px-2 py-1.5 rounded-lg text-xs btn-press" data-effect="flower">Hoa</button>
+            <button onclick="setEffect('volcano')" class="effect-btn px-2 py-1.5 rounded-lg text-xs btn-press" data-effect="volcano">Núi lửa</button>
+            <button onclick="setEffect('none')" class="effect-btn px-2 py-1.5 rounded-lg text-xs btn-press bg-white/10" data-effect="none">Tắt</button>
+        </div>
+        <div class="border-t border-white/10 my-1"></div>
+        <button onclick="openAdminLogin()" class="w-full px-3 py-2 rounded-lg glass text-xs btn-press flex items-center justify-center gap-2"><i data-lucide="lock" class="w-3.5 h-3.5"></i> Admin</button>
     </div>
 
-    <!-- Modals -->
-    <div id="admin-login-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] hidden items-center justify-center p-4">
-        <div class="glass p-8 rounded-3xl w-full max-w-sm relative">
-            <button onclick="closeModal('admin-login-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
-            <h3 class="text-2xl font-bold mb-6 text-center">Đăng Nhập Admin</h3>
-            <input type="text" id="admin-user" placeholder="Tài khoản" class="w-full glass bg-black/20 px-4 py-3 rounded-xl mb-3 outline-none text-white">
-            <input type="password" id="admin-pass" placeholder="Mật khẩu" class="w-full glass bg-black/20 px-4 py-3 rounded-xl mb-6 outline-none text-white">
-            <button onclick="loginAdmin()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition">Đăng Nhập</button>
-            <p id="login-error" class="text-red-500 text-sm text-center mt-3 hidden">Sai tài khoản hoặc mật khẩu!</p>
+    <!-- Generic Modal -->
+    <div id="genericModal" class="modal-overlay">
+        <div class="modal-content relative">
+            <button onclick="closeModal('genericModal')" class="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-white/10"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <h3 id="modalTitle" class="text-lg font-bold mb-4"></h3>
+            <div id="modalBody"></div>
         </div>
     </div>
 
-    <div style="display:none;">
-        <!-- Nhạc Soundcloud nhúng -->
-        <iframe id="sc-player" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"></iframe>
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="modal-overlay">
+        <div class="modal-content relative" style="max-width:400px">
+            <button onclick="closeModal('adminLoginModal')" class="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-white/10"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <h3 class="text-lg font-bold mb-4 text-center">Đăng nhập Admin</h3>
+            <div class="space-y-3">
+                <input id="adminUser" type="text" placeholder="Tài khoản" class="admin-input" autocomplete="off">
+                <input id="adminPass" type="password" placeholder="Mật khẩu" class="admin-input" autocomplete="off">
+                <button onclick="doAdminLogin()" class="w-full py-2.5 rounded-xl bg-indigo-500 text-white font-medium btn-press">Đăng nhập</button>
+                <p id="adminLoginError" class="text-red-400 text-xs text-center hidden">Sai tài khoản hoặc mật khẩu!</p>
+            </div>
+        </div>
     </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="modal-overlay">
+        <div class="modal-content" style="max-width:800px">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2"><i data-lucide="shield" class="w-5 h-5 text-indigo-400"></i> Admin Panel</h3>
+                <button onclick="closeModal('adminPanel')" class="p-1.5 rounded-lg hover:bg-white/10"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div class="flex gap-2 mb-4 flex-wrap">
+                <button onclick="adminTab('settings')" class="admin-tab px-3 py-1.5 rounded-lg text-xs bg-indigo-500/20">Cài đặt</button>
+                <button onclick="adminTab('services')" class="admin-tab px-3 py-1.5 rounded-lg text-xs">Dịch vụ</button>
+                <button onclick="adminTab('blog')" class="admin-tab px-3 py-1.5 rounded-lg text-xs">Blog</button>
+                <button onclick="adminTab('tools')" class="admin-tab px-3 py-1.5 rounded-lg text-xs">Tools</button>
+                <button onclick="adminTab('payment')" class="admin-tab px-3 py-1.5 rounded-lg text-xs">Thanh toán</button>
+            </div>
+            <div id="adminContent"></div>
+        </div>
+    </div>
+
+    <!-- Tool Modals -->
+    <div id="toolModal" class="modal-overlay">
+        <div class="modal-content relative" style="max-width:600px">
+            <button onclick="closeModal('toolModal')" class="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-white/10"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <h3 id="toolTitle" class="text-lg font-bold mb-4"></h3>
+            <div id="toolBody"></div>
+        </div>
+    </div>
+
+    <!-- Invoice/Quotation Print Area -->
+    <div id="invoicePrintArea" class="hidden"></div>
 
     <script>
-        // ==========================================
-        // 1. DATA & INITIALIZATION
-        // ==========================================
-        const defaultServices = [
-            { id: 1, name: 'IPA / Raw App', price: 'Liên hệ', cat: 'digital', icon: 'apple' },
-            { id: 2, name: 'Source Code Web/App', price: 'Liên hệ', cat: 'digital', icon: 'code' },
-            { id: 3, name: 'VPN / Proxy Tốc độ cao', price: '50.000đ', cat: 'digital', icon: 'shield' },
-            { id: 4, name: 'Shop Liên Quân (Kim cương)', price: 'Theo yêu cầu', cat: 'mmo', icon: 'gamepad-2' },
-            { id: 5, name: 'Shop Free Fire (Kim cương)', price: 'Theo yêu cầu', cat: 'mmo', icon: 'crosshair' },
-            { id: 6, name: 'Support Meta (Unlock/Kháng)', price: '200.000đ', cat: 'social', icon: 'facebook' },
-            { id: 7, name: 'Support Google (Gỡ mail)', price: '200.000đ', cat: 'social', icon: 'chrome' },
-            { id: 8, name: 'Support TikTok (Xóa âm)', price: '150.000đ', cat: 'social', icon: 'music' },
-        ];
+        // ==================== DATA ====================
+        const defaultData = {
+            siteName: 'SPS',
+            theme: 'dark',
+            language: 'vi',
+            announcement: 'Chào mừng đến với SPS - Nền tảng MMO & Công nghệ!',
+            announcementEnabled: true,
+            contact: { zalo: '0123 456 789', messenger: 'SPS Support', email: 'support@sps.vn' },
+            payment: { bank: 'MB Bank', account: '0123456789', name: 'NGUYEN LE THAO IU BO', qr: '' },
+            services: [
+                { id: 1, name: 'IPA / Raw', price: '50.000đ', icon: 'package', desc: 'File IPA/Raw cho iOS, hỗ trợ cài đặt nhanh chóng.' },
+                { id: 2, name: 'Source Code', price: '200.000đ', icon: 'code', desc: 'Source code chất lượng cao, đầy đủ chức năng.' },
+                { id: 3, name: 'VPN / Proxy', price: '30.000đ', icon: 'shield', desc: 'VPN/Proxy tốc độ cao, bảo mật tuyệt đối.' },
+                { id: 4, name: 'Shop Liên Quân', price: '100.000đ', icon: 'gamepad-2', desc: 'Tài khoản, skin, kim cương Liên Quân giá rẻ.' },
+                { id: 5, name: 'Shop Free Fire', price: '80.000đ', icon: 'crosshair', desc: 'Kim cương, skin Free Fire uy tín.' },
+                { id: 6, name: 'Support Meta', price: '500.000đ', icon: 'facebook', desc: 'Hỗ trợ Meta/Facebook, mở khóa, xác minh.' },
+                { id: 7, name: 'Support Google', price: '500.000đ', icon: 'chrome', desc: 'Hỗ trợ Google Ads, Gmail, Play Console.' },
+                { id: 8, name: 'Support TikTok', price: '300.000đ', icon: 'music', desc: 'Hỗ trợ TikTok Ads, tài khoản, xác minh.' }
+            ],
+            blog: [
+                { id: 1, title: 'Hướng dẫn tạo TOTP 2FA', excerpt: 'Cách tạo mã 6 số từ secret 32 ký tự.', date: '2025-01-15' },
+                { id: 2, title: 'Top 5 VPN miễn phí tốt nhất 2025', excerpt: 'Đánh giá các dịch vụ VPN miễn phí.', date: '2025-01-10' },
+                { id: 3, title: 'Cách kiểm tra Facebook Live/Die', excerpt: 'Sử dụng công cụ miễn phí để kiểm tra.', date: '2025-01-05' }
+            ]
+        };
 
-        let services = JSON.parse(localStorage.getItem('sps_services')) || defaultServices;
-        
-        if(!localStorage.getItem('sps_settings')) {
-            localStorage.setItem('sps_settings', JSON.stringify({
-                webName: 'SPS Platform',
-                announcement: '🔥 Khuyến mãi khai trương: Giảm 20% tất cả dịch vụ MMO!'
-            }));
-        }
+        let siteData = JSON.parse(localStorage.getItem('sps_data')) || defaultData;
 
-        function loadSettings() {
-            const settings = JSON.parse(localStorage.getItem('sps_settings'));
-            if(document.getElementById('web-name')) document.getElementById('web-name').innerText = settings.webName;
-        }
-
-        // Header Scroll Effect
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('main-header');
-            if (window.scrollY > 50) header.classList.add('scrolled');
-            else header.classList.remove('scrolled');
+        // ==================== INIT ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderAll();
+            initEffects();
+            initAccessibilityDrag();
+            initHeaderScroll();
+            setLanguage(siteData.language || 'vi');
+            document.getElementById('siteName').textContent = siteData.siteName;
+            document.getElementById('footerSiteName').textContent = siteData.siteName;
+            if (siteData.announcementEnabled && siteData.announcement) {
+                document.getElementById('announcementBar').classList.remove('hidden');
+                document.getElementById('announcementText').textContent = siteData.announcement;
+            }
+            // Show admin button if logged in
+            if (localStorage.getItem('sps_admin') === 'true') {
+                document.querySelector('button[onclick="openAdminLogin()"]').classList.remove('hidden');
+            }
+            // Music iframe (hidden)
+            const musicIframe = document.createElement('iframe');
+            musicIframe.id = 'musicIframe';
+            musicIframe.style.display = 'none';
+            musicIframe.allow = 'autoplay';
+            document.body.appendChild(musicIframe);
         });
 
-        // ==========================================
-        // 2. ROUTING & UI
-        // ==========================================
-        function switchTab(tabId) {
-            document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
-            const target = document.getElementById(`section-${tabId}`);
-            if(target) {
-                target.classList.add('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-            if (tabId === 'services') renderServices();
-            if (tabId === 'admin') {
-                 document.getElementById('admin-web-name').value = JSON.parse(localStorage.getItem('sps_settings')).webName;
-                 document.getElementById('admin-announcement').value = JSON.parse(localStorage.getItem('sps_settings')).announcement;
-            }
+        // ==================== RENDER ====================
+        function renderAll() {
+            renderServices(siteData.services);
+            renderTools();
+            renderBlog(siteData.blog);
+        }
+
+        function renderServices(services) {
+            const grid = document.getElementById('servicesGrid');
+            if (!services.length) { grid.innerHTML = '<p class="text-secondary col-span-full text-center py-8">Không có dịch vụ nào.</p>'; return; }
+            grid.innerHTML = services.map(s => `
+                <div class="glass card-hover p-4 flex flex-col gap-2 cursor-pointer" onclick="openServiceDetail(${s.id})">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                        <i data-lucide="${s.icon || 'package'}" class="w-5 h-5 text-indigo-400"></i>
+                    </div>
+                    <h3 class="font-semibold text-sm">${s.name}</h3>
+                    <p class="text-xs text-secondary line-clamp-2" style="color:var(--text-secondary)">${s.desc}</p>
+                    <div class="mt-auto flex items-center justify-between">
+                        <span class="text-indigo-400 font-bold text-sm">${s.price}</span>
+                        <button class="px-2 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 text-xs btn-press">Mua</button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderTools() {
+            const tools = [
+                { id: 'note', icon: 'sticky-note', name: 'Ghi chú' },
+                { id: 'currency', icon: 'dollar-sign', name: 'Chuyển đổi tiền' },
+                { id: 'gold', icon: 'gem', name: 'Giá vàng' },
+                { id: 'gas', icon: 'fuel', name: 'Giá xăng dầu' },
+                { id: 'bitcoin', icon: 'bitcoin', name: 'Giá Bitcoin' },
+                { id: 'image2url', icon: 'image', name: 'Ảnh sang Link' },
+                { id: 'shortlink', icon: 'link', name: 'Rút gọn link' },
+                { id: 'qrcode', icon: 'qr-code', name: 'Tạo mã QR' },
+                { id: 'fblive', icon: 'facebook', name: 'Check FB Live/Die' },
+                { id: 'totp', icon: 'key', name: 'TOTP 2FA' },
+                { id: 'ip', icon: 'globe', name: 'Check IP' },
+                { id: 'weather', icon: 'cloud-sun', name: 'Thời tiết' },
+                { id: 'pdfmerge', icon: 'file-plus', name: 'Ghép PDF' },
+                { id: 'pdfsplit', icon: 'scissors', name: 'Tách PDF' },
+                { id: 'pdfcompress', icon: 'minimize-2', name: 'Nén PDF' },
+                { id: 'pdfrotate', icon: 'rotate-cw', name: 'Xoay PDF' },
+                { id: 'pdfextract', icon: 'file-output', name: 'Trích xuất trang' },
+                { id: 'pdf2img', icon: 'image', name: 'PDF sang Ảnh' },
+                { id: 'img2pdf', icon: 'file-image', name: 'Ảnh sang PDF' },
+                { id: 'pdfmeta', icon: 'info', name: 'PDF Metadata' },
+                { id: 'wordcount', icon: 'type', name: 'Đếm từ' },
+                { id: 'text2pdf', icon: 'file-text', name: 'Text sang PDF' },
+                { id: 'todo', icon: 'check-square', name: 'To-do List' },
+                { id: 'calendar', icon: 'calendar', name: 'Lịch' },
+                { id: 'profit', icon: 'trending-up', name: 'Profit Calc' },
+                { id: 'pricing', icon: 'tag', name: 'Pricing Calc' },
+                { id: 'discount', icon: 'percent', name: 'Discount Calc' },
+                { id: 'markup', icon: 'arrow-up', name: 'Markup Calc' },
+                { id: 'orderqty', icon: 'layers', name: 'Order Qty' },
+                { id: 'bulkprice', icon: 'box', name: 'Bulk Price' },
+                { id: 'reseller', icon: 'users', name: 'Reseller Margin' },
+                { id: 'revenue', icon: 'bar-chart-2', name: 'Revenue Calc' },
+                { id: 'commission', icon: 'hand-coins', name: 'Commission' },
+                { id: 'breakeven', icon: 'scale', name: 'Break-even' },
+                { id: 'invoice', icon: 'receipt', name: 'Invoice Gen' },
+                { id: 'quotation', icon: 'file-check', name: 'Quotation Gen' }
+            ];
+            const grid = document.getElementById('toolsGrid');
+            grid.innerHTML = tools.map(t => `
+                <div class="tool-item btn-press" onclick="openTool('${t.id}')">
+                    <i data-lucide="${t.icon}"></i>
+                    <span>${t.name}</span>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderBlog(posts) {
+            const grid = document.getElementById('blogGrid');
+            if (!posts.length) { grid.innerHTML = '<p class="text-secondary col-span-full text-center py-8">Chưa có bài viết.</p>'; return; }
+            grid.innerHTML = posts.map(p => `
+                <div class="glass card-hover p-4 cursor-pointer" onclick="showToast('Đang mở bài viết: ${p.title}')">
+                    <div class="h-32 rounded-xl bg-gradient-to-br from-indigo-500/30 to-pink-500/30 mb-3 flex items-center justify-center">
+                        <i data-lucide="newspaper" class="w-8 h-8 text-white/50"></i>
+                    </div>
+                    <h3 class="font-semibold text-sm mb-1">${p.title}</h3>
+                    <p class="text-xs text-secondary line-clamp-2" style="color:var(--text-secondary)">${p.excerpt}</p>
+                    <p class="text-xs text-secondary mt-2" style="color:var(--text-secondary)">${p.date}</p>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // ==================== UTILS ====================
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._timeout);
+            t._timeout = setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function scrollToSection(id) {
+            document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+            document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
         }
 
         function toggleTheme() {
             const html = document.documentElement;
-            html.classList.toggle('dark');
-            // Note: For this demo, css uses variables, we just adjust text color for light mode
-            if(html.classList.contains('dark')) {
-                document.body.style.color = '#f3f4f6';
-                document.body.style.backgroundColor = '#030712';
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('themeIcon').setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+            lucide.createIcons();
+            siteData.theme = isDark ? 'light' : 'dark';
+            saveData();
+        }
+
+        function saveData() {
+            localStorage.setItem('sps_data', JSON.stringify(siteData));
+        }
+
+        function initHeaderScroll() {
+            window.addEventListener('scroll', () => {
+                const header = document.getElementById('header');
+                header.classList.toggle('scrolled', window.scrollY > 20);
+            });
+        }
+
+        // ==================== ACCESSIBILITY ====================
+        function initAccessibilityDrag() {
+            const btn = document.getElementById('accessibilityBtn');
+            let isDragging = false, startX, startY, startLeft, startTop;
+            btn.addEventListener('pointerdown', (e) => {
+                isDragging = false;
+                startX = e.clientX; startY = e.clientY;
+                const rect = btn.getBoundingClientRect();
+                startLeft = rect.left; startTop = rect.top;
+                btn.setPointerCapture(e.pointerId);
+            });
+            btn.addEventListener('pointermove', (e) => {
+                if (!btn.hasPointerCapture(e.pointerId)) return;
+                const dx = e.clientX - startX, dy = e.clientY - startY;
+                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) isDragging = true;
+                if (isDragging) {
+                    btn.style.left = Math.max(0, Math.min(window.innerWidth - 52, startLeft + dx)) + 'px';
+                    btn.style.top = Math.max(0, Math.min(window.innerHeight - 52, startTop + dy)) + 'px';
+                    btn.style.right = 'auto'; btn.style.bottom = 'auto';
+                }
+            });
+            btn.addEventListener('pointerup', (e) => {
+                if (!isDragging) {
+                    document.getElementById('accessibilityPanel').classList.toggle('active');
+                }
+            });
+        }
+
+        // ==================== EFFECTS ====================
+        let currentEffect = 'none';
+        const canvas = document.getElementById('effectsCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animId = null;
+
+        function initEffects() {
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+        }
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        function setEffect(type) {
+            currentEffect = type;
+            document.querySelectorAll('.effect-btn').forEach(b => {
+                b.classList.toggle('bg-white/10', b.dataset.effect === type);
+            });
+            particles = [];
+            if (animId) cancelAnimationFrame(animId);
+            if (type === 'none') { ctx.clearRect(0, 0, canvas.width, canvas.height); return; }
+            for (let i = 0; i < 60; i++) particles.push(createParticle(type));
+            animateEffects();
+        }
+        function createParticle(type) {
+            const p = { x: Math.random() * canvas.width, y: Math.random() * canvas.height, type };
+            if (type === 'meteor') { p.speed = 4 + Math.random() * 6; p.len = 40 + Math.random() * 80; p.angle = Math.PI / 4; }
+            else if (type === 'snow') { p.size = 1 + Math.random() * 3; p.speed = 0.5 + Math.random() * 1.5; p.drift = Math.random() * 0.5 - 0.25; }
+            else if (type === 'rain') { p.speed = 8 + Math.random() * 8; p.len = 10 + Math.random() * 15; }
+            else if (type === 'flower') { p.size = 2 + Math.random() * 4; p.speed = 0.3 + Math.random() * 0.8; p.drift = Math.random() * 0.6 - 0.3; p.rot = Math.random() * Math.PI; }
+            else if (type === 'volcano') { p.size = 2 + Math.random() * 5; p.speed = 1 + Math.random() * 2; p.vx = (Math.random() - 0.5) * 2; p.vy = -2 - Math.random() * 4; }
+            return p;
+        }
+        function animateEffects() {
+            if (currentEffect === 'none') return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, i) => {
+                if (p.type === 'meteor') {
+                    p.x += Math.cos(p.angle) * p.speed; p.y += Math.sin(p.angle) * p.speed;
+                    ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - Math.cos(p.angle) * p.len, p.y - Math.sin(p.angle) * p.len);
+                    ctx.strokeStyle = 'rgba(255,255,200,0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
+                    if (p.x > canvas.width + 100 || p.y > canvas.height + 100) { particles[i] = createParticle('meteor'); particles[i].x = Math.random() * canvas.width - 200; particles[i].y = -50; }
+                } else if (p.type === 'snow') {
+                    p.y += p.speed; p.x += p.drift;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.fill();
+                    if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
+                } else if (p.type === 'rain') {
+                    p.y += p.speed;
+                    ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y + p.len);
+                    ctx.strokeStyle = 'rgba(150,200,255,0.4)'; ctx.lineWidth = 1; ctx.stroke();
+                    if (p.y > canvas.height) { p.y = -20; p.x = Math.random() * canvas.width; }
+                } else if (p.type === 'flower') {
+                    p.y += p.speed; p.x += p.drift; p.rot += 0.02;
+                    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+                    for (let j = 0; j < 5; j++) {
+                        ctx.beginPath(); ctx.ellipse(Math.cos(j * 1.256) * p.size, Math.sin(j * 1.256) * p.size, p.size * 0.6, p.size * 0.3, j * 1.256, 0, Math.PI * 2);
+                        ctx.fillStyle = `hsla(${(i * 20) % 360},70%,70%,0.6)`; ctx.fill();
+                    }
+                    ctx.restore();
+                    if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
+                } else if (p.type === 'volcano') {
+                    p.x += p.vx; p.y += p.vy; p.vy += 0.08;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255,${100 + Math.random() * 100},0,${0.8 - p.size / 15})`; ctx.fill();
+                    if (p.y > canvas.height) { particles[i] = createParticle('volcano'); particles[i].y = canvas.height; particles[i].x = canvas.width / 2 + (Math.random() - 0.5) * 100; }
+                }
+            });
+            animId = requestAnimationFrame(animateEffects);
+        }
+
+        // ==================== MUSIC ====================
+        let musicPlaying = false;
+        const musicTracks = [
+            'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/123456789&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false',
+            'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/987654321&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false'
+        ];
+        let currentTrack = 0;
+
+        function toggleMusic() {
+            const iframe = document.getElementById('musicIframe');
+            musicPlaying = !musicPlaying;
+            document.getElementById('musicToggleBtn').textContent = musicPlaying ? 'Pause' : 'Play';
+            document.getElementById('musicStatus').textContent = musicPlaying ? 'On' : 'Off';
+            if (musicPlaying) {
+                iframe.src = musicTracks[currentTrack];
             } else {
-                document.body.style.color = '#111827';
-                document.body.style.backgroundColor = '#f3f4f6';
+                iframe.src = '';
             }
+        }
+
+        // ==================== LANGUAGE ====================
+        const translations = {
+            vi: { nav_services: 'Dịch vụ', nav_tools: 'Công cụ', nav_blog: 'Blog', nav_support: 'Hỗ trợ' },
+            en: { nav_services: 'Services', nav_tools: 'Tools', nav_blog: 'Blog', nav_support: 'Support' },
+            zh: { nav_services: '服务', nav_tools: '工具', nav_blog: '博客', nav_support: '支持' },
+            ja: { nav_services: 'サービス', nav_tools: 'ツール', nav_blog: 'ブログ', nav_support: 'サポート' },
+            de: { nav_services: 'Dienste', nav_tools: 'Werkzeuge', nav_blog: 'Blog', nav_support: 'Support' },
+            ru: { nav_services: 'Услуги', nav_tools: 'Инструменты', nav_blog: 'Блог', nav_support: 'Поддержка' }
+        };
+
+        function setLanguage(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.dataset.i18n;
+                if (translations[lang] && translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            siteData.language = lang;
+            saveData();
+            document.getElementById('langSelect').value = lang;
+        }
+
+        // ==================== SEARCH / FILTER ====================
+        function handleSearch(val) {
+            const q = val.toLowerCase().trim();
+            if (!q) { renderServices(siteData.services); renderBlog(siteData.blog); return; }
+            const filteredServices = siteData.services.filter(s => s.name.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q));
+            const filteredBlog = siteData.blog.filter(p => p.title.toLowerCase().includes(q) || p.excerpt.toLowerCase().includes(q));
+            renderServices(filteredServices);
+            renderBlog(filteredBlog);
+        }
+
+        function filterServices(val) {
+            const q = val.toLowerCase().trim();
+            const filtered = siteData.services.filter(s => s.name.toLowerCase().includes(q));
+            renderServices(filtered);
+        }
+
+        // ==================== TOOLS ====================
+        function openTool(id) {
+            const modal = document.getElementById('toolModal');
+            const title = document.getElementById('toolTitle');
+            const body = document.getElementById('toolBody');
+            body.innerHTML = '';
+            switch (id) {
+                case 'note':
+                    title.textContent = 'Ghi chú';
+                    body.innerHTML = `<textarea id="noteArea" class="admin-input" rows="8" placeholder="Nhập ghi chú..."></textarea>
+                        <div class="flex gap-2 mt-3"><button onclick="saveNote()" class="px-4 py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Lưu</button>
+                        <button onclick="clearNote()" class="px-4 py-2 rounded-lg glass text-sm btn-press">Xóa</button></div>`;
+                    document.getElementById('noteArea').value = localStorage.getItem('sps_note') || '';
+                    break;
+                case 'currency':
+                    title.textContent = 'Chuyển đổi tiền tệ';
+                    body.innerHTML = `<div class="space-y-3">
+                        <input id="amountInput" type="number" value="1" class="admin-input" placeholder="Số tiền">
+                        <div class="flex gap-2">
+                            <select id="fromCurrency" class="admin-input flex-1"><option>USD</option><option>VND</option><option>EUR</option><option>JPY</option><option>GBP</option></select>
+                            <span class="self-center">→</span>
+                            <select id="toCurrency" class="admin-input flex-1"><option>VND</option><option>USD</option><option>EUR</option><option>JPY</option><option>GBP</option></select>
+                        </div>
+                        <button onclick="convertCurrency()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Chuyển đổi</button>
+                        <div id="currencyResult" class="text-center text-lg font-bold text-indigo-400 py-2"></div>
+                    </div>`;
+                    break;
+                case 'gold':
+                    title.textContent = 'Giá vàng';
+                    body.innerHTML = `<div id="goldResult" class="space-y-2"><div class="skeleton h-8 rounded-lg"></div><div class="skeleton h-8 rounded-lg"></div><div class="skeleton h-8 rounded-lg"></div></div>`;
+                    fetchGoldPrice();
+                    break;
+                case 'gas':
+                    title.textContent = 'Giá xăng dầu';
+                    body.innerHTML = `<div id="gasResult" class="space-y-2"><div class="skeleton h-8 rounded-lg"></div><div class="skeleton h-8 rounded-lg"></div></div>`;
+                    fetchGasPrice();
+                    break;
+                case 'bitcoin':
+                    title.textContent = 'Giá Bitcoin';
+                    body.innerHTML = `<div id="bitcoinResult"><div class="skeleton h-12 rounded-lg"></div></div>`;
+                    fetchBitcoinPrice();
+                    break;
+                case 'image2url':
+                    title.textContent = 'Ảnh sang Link';
+                    body.innerHTML = `<input type="file" id="imageUpload" accept="image/*" class="admin-input mb-3">
+                        <button onclick="uploadImage()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press mb-3">Upload</button>
+                        <div id="imageUrlResult" class="text-sm break-all"></div>`;
+                    break;
+                case 'shortlink':
+                    title.textContent = 'Rút gọn link';
+                    body.innerHTML = `<input id="longUrl" type="url" class="admin-input mb-3" placeholder="https://...">
+                        <button onclick="shortenUrl()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Rút gọn</button>
+                        <div id="shortUrlResult" class="mt-3 text-sm break-all"></div>`;
+                    break;
+                case 'qrcode':
+                    title.textContent = 'Tạo mã QR';
+                    body.innerHTML = `<input id="qrText" type="text" class="admin-input mb-3" placeholder="Nhập nội dung...">
+                        <button onclick="generateQR()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press mb-3">Tạo QR</button>
+                        <div id="qrcodeContainer" class="flex justify-center py-4"></div>`;
+                    break;
+                case 'fblive':
+                    title.textContent = 'Check Facebook Live/Die';
+                    body.innerHTML = `<input id="fbUid" type="text" class="admin-input mb-3" placeholder="Nhập UID Facebook...">
+                        <button onclick="checkFbLive()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Kiểm tra</button>
+                        <div id="fbResult" class="mt-3 text-center text-lg font-bold"></div>`;
+                    break;
+                case 'totp':
+                    title.textContent = 'TOTP 2FA';
+                    body.innerHTML = `<input id="totpSecret" type="text" class="admin-input mb-3" placeholder="Nhập secret 32 ký tự (Base32)...">
+                        <button onclick="startTotp()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press mb-3">Tạo mã</button>
+                        <div id="totpResult" class="text-center text-4xl font-mono font-bold tracking-widest text-indigo-400 py-4">------</div>
+                        <p class="text-xs text-center text-secondary">Mã thay đổi mỗi 30 giây</p>`;
+                    break;
+                case 'ip':
+                    title.textContent = 'Check IP';
+                    body.innerHTML = `<div id="ipResult"><div class="skeleton h-6 rounded-lg mb-2"></div><div class="skeleton h-6 rounded-lg mb-2"></div><div class="skeleton h-6 rounded-lg"></div></div>`;
+                    fetchIpInfo();
+                    break;
+                case 'weather':
+                    title.textContent = 'Thời tiết';
+                    body.innerHTML = `<div class="flex gap-2 mb-3"><select id="weatherCity" class="admin-input flex-1" onchange="fetchWeather(this.value)">
+                        <option value="10.8231,106.6297">Hồ Chí Minh</option><option value="21.0278,105.8342">Hà Nội</option><option value="16.4637,107.5909">Huế</option><option value="12.2388,109.1967">Nha Trang</option><option value="13.7829,109.2196">Quy Nhơn</option><option value="16.0544,108.2022">Đà Nẵng</option></select></div>
+                        <div id="weatherResult"><div class="skeleton h-20 rounded-lg mb-2"></div><div class="skeleton h-32 rounded-lg"></div></div>`;
+                    fetchWeather('10.8231,106.6297');
+                    break;
+                case 'pdfmerge':
+                    title.textContent = 'Ghép PDF';
+                    body.innerHTML = `<input type="file" id="pdfMergeFiles" multiple accept=".pdf" class="admin-input mb-3">
+                        <button onclick="mergePdfs()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Ghép</button>`;
+                    break;
+                case 'pdfsplit':
+                    title.textContent = 'Tách PDF';
+                    body.innerHTML = `<input type="file" id="pdfSplitFile" accept=".pdf" class="admin-input mb-3">
+                        <input id="pdfSplitRange" type="text" class="admin-input mb-3" placeholder="Trang (vd: 1-3,5)">
+                        <button onclick="splitPdf()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Tách</button>`;
+                    break;
+                case 'pdfcompress':
+                    title.textContent = 'Nén PDF (đơn giản)';
+                    body.innerHTML = `<input type="file" id="pdfCompressFile" accept=".pdf" class="admin-input mb-3">
+                        <button onclick="compressPdf()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Nén</button>
+                        <p class="text-xs text-secondary mt-2">Giảm metadata và cấu trúc file.</p>`;
+                    break;
+                case 'pdfrotate':
+                    title.textContent = 'Xoay PDF';
+                    body.innerHTML = `<input type="file" id="pdfRotateFile" accept=".pdf" class="admin-input mb-3">
+                        <select id="rotateAngle" class="admin-input mb-3"><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select>
+                        <button onclick="rotatePdf()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Xoay</button>`;
+                    break;
+                case 'pdfextract':
+                    title.textContent = 'Trích xuất trang';
+                    body.innerHTML = `<input type="file" id="pdfExtractFile" accept=".pdf" class="admin-input mb-3">
+                        <input id="extractRange" type="text" class="admin-input mb-3" placeholder="Trang (vd: 1,3,5-7)">
+                        <button onclick="extractPdf()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Trích xuất</button>`;
+                    break;
+                case 'pdf2img':
+                    title.textContent = 'PDF sang Ảnh';
+                    body.innerHTML = `<input type="file" id="pdf2imgFile" accept=".pdf" class="admin-input mb-3">
+                        <button onclick="pdfToImages()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Chuyển</button>
+                        <div id="pdf2imgResult" class="mt-3 text-xs"></div>`;
+                    break;
+                case 'img2pdf':
+                    title.textContent = 'Ảnh sang PDF';
+                    body.innerHTML = `<input type="file" id="img2pdfFiles" multiple accept="image/*" class="admin-input mb-3">
+                        <button onclick="imagesToPdf()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Tạo PDF</button>`;
+                    break;
+                case 'pdfmeta':
+                    title.textContent = 'PDF Metadata';
+                    body.innerHTML = `<input type="file" id="pdfMetaFile" accept=".pdf" class="admin-input mb-3">
+                        <button onclick="viewPdfMetadata()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Xem</button>
+                        <pre id="pdfMetaResult" class="mt-3 text-xs whitespace-pre-wrap"></pre>`;
+                    break;
+                case 'wordcount':
+                    title.textContent = 'Đếm từ';
+                    body.innerHTML = `<textarea id="wordCountText" class="admin-input" rows="6" placeholder="Nhập văn bản..." oninput="countWords()"></textarea>
+                        <div id="wordCountResult" class="mt-3 text-sm"></div>`;
+                    break;
+                case 'text2pdf':
+                    title.textContent = 'Text sang PDF';
+                    body.innerHTML = `<textarea id="text2pdfContent" class="admin-input" rows="6" placeholder="Nhập văn bản..."></textarea>
+                        <button onclick="textToPdf()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press mt-3">Tạo PDF</button>`;
+                    break;
+                case 'todo':
+                    title.textContent = 'To-do List';
+                    body.innerHTML = `<div class="flex gap-2 mb-3"><input id="todoInput" type="text" class="admin-input flex-1" placeholder="Việc cần làm...">
+                        <button onclick="addTodo()" class="px-4 py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">+</button></div>
+                        <div id="todoList" class="space-y-2"></div>`;
+                    renderTodos();
+                    break;
+                case 'calendar':
+                    title.textContent = 'Lịch';
+                    body.innerHTML = `<div id="calendarWidget" class="text-center"></div>`;
+                    renderCalendar();
+                    break;
+                case 'profit':
+                    title.textContent = 'Profit Calculator';
+                    body.innerHTML = `<div class="space-y-3"><input id="pcRevenue" type="number" class="admin-input" placeholder="Doanh thu"><input id="pcCost" type="number" class="admin-input" placeholder="Chi phí">
+                        <button onclick="calcProfit()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Tính</button>
+                        <div id="pcResult" class="text-center text-lg font-bold text-green-400"></div></div>`;
+                    break;
+                case 'pricing':
+                    title.textContent = 'Pricing Calculator';
+                    body.innerHTML = `<div class="space-y-3"><input id="prCost" type="number" class="admin-input" placeholder="Giá gốc"><input id="prMargin" type="number" class="admin-input" placeholder="% lợi nhuận">
+                        <button onclick="calcPricing()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Tính</button>
+                        <div id="prResult" class="text-center text-lg font-bold text-indigo-400"></div></div>`;
+                    break;
+                case 'discount':
+                    title.textContent = 'Discount Calculator';
+                    body.innerHTML = `<div class="space-y-3"><input id="dcPrice" type="number" class="admin-input" placeholder="Giá gốc"><input id="dcPercent" type="number" class="admin-input" placeholder="% giảm">
+                        <button onclick="calcDiscount()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Tính</button>
+                        <div id="dcResult" class="text-center text-lg font-bold text-green-400"></div></div>`;
+                    break;
+                case 'markup':
+                    title.textContent = 'Markup Calculator';
+                    body.innerHTML = `<div class="space-y-3"><input id="mcCost" type="number" class="admin-input" placeholder="Giá gốc"><input id="mcSell" type="number" class="admin-input" placeholder="Giá bán">
+                        <button onclick="calcMarkup()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Tính</button>
+                        <div id="mcResult" class="text-center text-lg font-bold text-indigo-400"></div></div>`;
+                    break;
+                case 'orderqty':
+                    title.textContent = 'Order Quantity';
+                    body.innerHTML = `<div class="space-y-3"><input id="oqTotal" type="number" class="admin-input" placeholder="Tổng đơn"><input id="oqPer" type="number" class="admin-input" placeholder="Mỗi đơn">
+                        <button onclick="calcOrderQty()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Tính</button>
+                        <div id="oqResult" class="text-center text-lg font-bold text-indigo-400"></div></div>`;
+                    break;
+                case 'bulkprice':
+                    title.textContent = 'Bulk Price';
+                    body.innerHTML = `<div class="space-y-3"><input id="bpUnit" type="number" class="admin-input" placeholder="Giá 1 gói"><input id="bpQty" type="number" class="admin-input" placeholder="Số lượng">
+                        <button onclick="calcBulkPrice()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Tính</button>
+                        <div id="bpResult" class="text-center text-lg font-bold text-green-400"></div></div>`;
+                    break;
+                case 'reseller':
+                    title.textContent = 'Reseller Margin';
+                    body.innerHTML = `<div class="space-y-3"><input id="rmBuy" type="number" class="admin-input" placeholder="Giá nhập"><input id="rmSell" type="number" class="admin-input" placeholder="Giá bán">
+                        <button onclick="calcResellerMargin()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Tính</button>
+                        <div id="rmResult" class="text-center text-lg font-bold text-green-400"></div></div>`;
+                    break;
+                case 'revenue':
+                    title.textContent = 'Revenue Calculator';
+                    body.innerHTML = `<div class="space-y-3"><input id="revPrice" type="number" class="admin-input" placeholder="Giá bán"><input id="revQty" type="number" class="admin-input" placeholder="Số lượng">
+                        <button onclick="calcRevenue()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Tính</button>
+                        <div id="revResult" class="text-center text-lg font-bold text-green-400"></div></div>`;
+                    break;
+                case 'commission':
+                    title.textContent = 'Commission Calculator';
+                    body.innerHTML = `<div class="space-y-3"><input id="commAmount" type="number" class="admin-input" placeholder="Số tiền"><input id="commRate" type="number" class="admin-input" placeholder="% hoa hồng">
+                        <button onclick="calcCommission()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Tính</button>
+                        <div id="commResult" class="text-center text-lg font-bold text-indigo-400"></div></div>`;
+                    break;
+                case 'breakeven':
+                    title.textContent = 'Break-even Calculator';
+                    body.innerHTML = `<div class="space-y-3"><input id="beFixed" type="number" class="admin-input" placeholder="Chi phí cố định"><input id="bePrice" type="number" class="admin-input" placeholder="Giá bán/đơn vị"><input id="beVar" type="number" class="admin-input" placeholder="Chi phí biến đổi/đơn vị">
+                        <button onclick="calcBreakeven()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Tính</button>
+                        <div id="beResult" class="text-center text-lg font-bold text-yellow-400"></div></div>`;
+                    break;
+                case 'invoice':
+                    title.textContent = 'Invoice Generator';
+                    body.innerHTML = `<div class="space-y-2">
+                        <input id="invCustomer" class="admin-input" placeholder="Tên khách hàng">
+                        <input id="invItem" class="admin-input" placeholder="Mô tả dịch vụ">
+                        <input id="invAmount" type="number" class="admin-input" placeholder="Số tiền">
+                        <button onclick="generateInvoice()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Tạo hóa đơn (PDF)</button>
+                    </div>`;
+                    break;
+                case 'quotation':
+                    title.textContent = 'Quotation Generator';
+                    body.innerHTML = `<div class="space-y-2">
+                        <input id="quoCustomer" class="admin-input" placeholder="Tên khách hàng">
+                        <input id="quoItem" class="admin-input" placeholder="Mô tả dịch vụ">
+                        <input id="quoAmount" type="number" class="admin-input" placeholder="Số tiền">
+                        <button onclick="generateQuotation()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Tạo báo giá (PDF)</button>
+                    </div>`;
+                    break;
+                default:
+                    title.textContent = 'Công cụ';
+                    body.innerHTML = '<p>Đang phát triển...</p>';
+            }
+            openModal('toolModal');
             lucide.createIcons();
         }
 
-        function renderServices() {
-            const list = document.getElementById('services-list');
-            if(!list) return;
-            list.innerHTML = '';
-            services.forEach(srv => {
-                list.innerHTML += `
-                    <div class="glass glass-card p-6 flex flex-col justify-between" data-cat="${srv.cat}" data-name="${srv.name.toLowerCase()}">
-                        <div>
-                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 text-blue-400 flex items-center justify-center mb-4 border border-blue-500/30">
-                                <i data-lucide="${srv.icon || 'box'}" class="w-6 h-6"></i>
-                            </div>
-                            <h3 class="font-bold text-lg mb-1">${srv.name}</h3>
-                            <p class="text-[10px] uppercase font-bold text-gray-500 mb-2">${srv.cat}</p>
+        // ==================== TOOL IMPLEMENTATIONS ====================
+        // Note
+        function saveNote() { localStorage.setItem('sps_note', document.getElementById('noteArea').value); showToast('Đã lưu ghi chú!'); }
+        function clearNote() { document.getElementById('noteArea').value = ''; localStorage.removeItem('sps_note'); }
+
+        // Currency
+        async function convertCurrency() {
+            const amount = parseFloat(document.getElementById('amountInput').value) || 0;
+            const from = document.getElementById('fromCurrency').value;
+            const to = document.getElementById('toCurrency').value;
+            const resultEl = document.getElementById('currencyResult');
+            resultEl.textContent = 'Đang tải...';
+            try {
+                const res = await fetch(`https://allratestoday.com/api/open/latest/${from}`);
+                const data = await res.json();
+                if (data.rates && data.rates[to]) {
+                    const rate = data.rates[to];
+                    const result = amount * rate;
+                    resultEl.textContent = `${amount.toLocaleString()} ${from} = ${result.toLocaleString(undefined, {maximumFractionDigits:2})} ${to}`;
+                } else { resultEl.textContent = 'Không hỗ trợ cặp tiền tệ này.'; }
+            } catch (e) { resultEl.textContent = 'Lỗi kết nối API.'; }
+        }
+
+        // Gold
+        async function fetchGoldPrice() {
+            const el = document.getElementById('goldResult');
+            try {
+                const res = await fetch('https://vang.today/api/prices');
+                const data = await res.json();
+                if (data.success && data.data) {
+                    el.innerHTML = data.data.slice(0, 5).map(g => `
+                        <div class="flex justify-between p-2 rounded-lg glass text-sm">
+                            <span>${g.type_code}</span>
+                            <span class="text-green-400">Mua: ${Number(g.buy).toLocaleString()}đ</span>
+                            <span class="text-red-400">Bán: ${Number(g.sell).toLocaleString()}đ</span>
                         </div>
-                        <div class="flex justify-between items-center mt-6 border-t border-white/5 pt-4">
-                            <span class="font-bold text-blue-400">${srv.price}</span>
-                            <button onclick="alert('Chức năng thanh toán đang bảo trì!')" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition">Mua</button>
-                        </div>
-                    </div>
-                `;
-            });
-            lucide.createIcons();
+                    `).join('');
+                } else { el.innerHTML = '<p class="text-secondary">Không lấy được dữ liệu.</p>'; }
+            } catch (e) { el.innerHTML = '<p class="text-secondary">Lỗi kết nối API giá vàng.</p>'; }
         }
 
-        function filterServices() {
-            const query = document.getElementById('search-service').value.toLowerCase();
-            document.querySelectorAll('#services-list > div').forEach(card => {
-                const name = card.getAttribute('data-name');
-                card.style.display = name.includes(query) ? 'flex' : 'none';
-            });
+        // Gas (simplified - dùng dữ liệu tĩnh vì không có API công khai ổn định)
+        function fetchGasPrice() {
+            const el = document.getElementById('gasResult');
+            el.innerHTML = `<div class="glass p-3 rounded-lg text-sm space-y-1">
+                <div class="flex justify-between"><span>Xăng RON 95-III</span><span class="text-indigo-400">21.150 đ/lít</span></div>
+                <div class="flex justify-between"><span>Xăng E5 RON 92-II</span><span class="text-indigo-400">20.500 đ/lít</span></div>
+                <div class="flex justify-between"><span>Dầu Diesel</span><span class="text-indigo-400">19.800 đ/lít</span></div>
+                <p class="text-xs text-secondary mt-1">* Giá tham khảo, cập nhật gần nhất.</p>
+            </div>`;
         }
 
-        function filterServiceCat(cat) {
-            document.querySelectorAll('#services-list > div').forEach(card => {
-                if (cat === 'all' || card.getAttribute('data-cat') === cat) card.style.display = 'flex';
-                else card.style.display = 'none';
-            });
-            // Highlight button
-            document.querySelectorAll('#section-services .flex button').forEach(btn => {
-                btn.className = 'px-5 py-2 rounded-xl text-sm font-medium glass hover:bg-white/10 whitespace-nowrap';
-            });
-            event.target.className = 'px-5 py-2 rounded-xl text-sm font-bold bg-blue-600 text-white whitespace-nowrap';
+        // Bitcoin
+        async function fetchBitcoinPrice() {
+            const el = document.getElementById('bitcoinResult');
+            try {
+                const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,vnd');
+                const data = await res.json();
+                if (data.bitcoin) {
+                    el.innerHTML = `<div class="glass p-4 rounded-xl text-center">
+                        <p class="text-sm text-secondary">Bitcoin (BTC)</p>
+                        <p class="text-2xl font-bold text-yellow-400">$${data.bitcoin.usd.toLocaleString()}</p>
+                        <p class="text-sm text-secondary">≈ ${data.bitcoin.vnd.toLocaleString()} VND</p>
+                    </div>`;
+                }
+            } catch (e) { el.innerHTML = '<p class="text-secondary">Lỗi kết nối API Bitcoin.</p>'; }
         }
 
-        // ==========================================
-        // 3. TOOLS LOGIC
-        // ==========================================
-        function showTool(toolId) {
-            document.querySelectorAll('.tool-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tool-${toolId}`).classList.remove('hidden');
-            document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active', 'bg-blue-500/20', 'border-blue-500/50'));
-            event.currentTarget.classList.add('active', 'bg-blue-500/20', 'border-blue-500/50');
+        // Image to URL
+        async function uploadImage() {
+            const file = document.getElementById('imageUpload').files[0];
+            if (!file) { showToast('Vui lòng chọn ảnh!'); return; }
+            const resultEl = document.getElementById('imageUrlResult');
+            resultEl.textContent = 'Đang upload...';
+            const formData = new FormData();
+            formData.append('image', file);
+            try {
+                const res = await fetch('https://img402.dev/api/free', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.url) {
+                    resultEl.innerHTML = `<p class="text-green-400 mb-1">Upload thành công!</p><a href="${data.url}" target="_blank" class="text-indigo-400 underline break-all">${data.url}</a>`;
+                } else { resultEl.textContent = 'Upload thất bại.'; }
+            } catch (e) { resultEl.textContent = 'Lỗi upload ảnh.'; }
         }
 
-        // --- WEATHER (Open-Meteo) ---
-        async function fetchWeather() {
-            const coords = document.getElementById('weather-city').value;
+        // Shortlink
+        async function shortenUrl() {
+            const url = document.getElementById('longUrl').value.trim();
+            if (!url) return;
+            const resultEl = document.getElementById('shortUrlResult');
+            resultEl.textContent = 'Đang rút gọn...';
+            try {
+                const res = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}`);
+                const data = await res.json();
+                if (data.shorturl) {
+                    resultEl.innerHTML = `<p class="text-green-400 mb-1">Link rút gọn:</p><a href="${data.shorturl}" target="_blank" class="text-indigo-400 underline">${data.shorturl}</a>`;
+                } else { resultEl.textContent = 'Không thể rút gọn link.'; }
+            } catch (e) { resultEl.textContent = 'Lỗi rút gọn link.'; }
+        }
+
+        // QR Code
+        function generateQR() {
+            const text = document.getElementById('qrText').value.trim();
+            const container = document.getElementById('qrcodeContainer');
+            container.innerHTML = '';
+            if (!text) return;
+            new QRCode(container, { text, width: 200, height: 200, colorDark: '#000', colorLight: '#fff' });
+        }
+
+        // Facebook Live/Die (simplified check via profile picture)
+        async function checkFbLive() {
+            const uid = document.getElementById('fbUid').value.trim();
+            const resultEl = document.getElementById('fbResult');
+            if (!uid) return;
+            resultEl.textContent = 'Đang kiểm tra...';
+            try {
+                const res = await fetch(`https://graph.facebook.com/${uid}/picture?type=large&redirect=false`);
+                const data = await res.json();
+                if (data.data && data.data.url && !data.data.url.includes('static.xx.fbcdn.net')) {
+                    resultEl.innerHTML = '<span class="text-green-400">✅ LIVE</span>';
+                } else {
+                    resultEl.innerHTML = '<span class="text-red-400">❌ DIE hoặc không tồn tại</span>';
+                }
+            } catch (e) { resultEl.innerHTML = '<span class="text-yellow-400">⚠️ Không thể kiểm tra (CORS)</span>'; }
+        }
+
+        // TOTP
+        let totpInterval = null;
+        function startTotp() {
+            const secret = document.getElementById('totpSecret').value.trim().toUpperCase();
+            if (!secret) return;
+            if (totpInterval) clearInterval(totpInterval);
+            const update = async () => {
+                const code = await generateTOTP(secret);
+                document.getElementById('totpResult').textContent = code || '------';
+            };
+            update();
+            totpInterval = setInterval(update, 1000);
+        }
+        async function generateTOTP(secret) {
+            try {
+                const key = base32ToUint8Array(secret);
+                const epoch = Math.floor(Date.now() / 1000);
+                const time = Math.floor(epoch / 30);
+                const timeBuffer = new ArrayBuffer(8);
+                const timeView = new DataView(timeBuffer);
+                timeView.setUint32(4, time);
+                const cryptoKey = await crypto.subtle.importKey('raw', key, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
+                const signature = await crypto.subtle.sign('HMAC', cryptoKey, timeBuffer);
+                const hash = new Uint8Array(signature);
+                const offset = hash[hash.length - 1] & 0xf;
+                const code = ((hash[offset] & 0x7f) << 24 | hash[offset + 1] << 16 | hash[offset + 2] << 8 | hash[offset + 3]) % 1000000;
+                return code.toString().padStart(6, '0');
+            } catch (e) { return null; }
+        }
+        function base32ToUint8Array(base32) {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+            let bits = 0, value = 0, index = 0;
+            const output = new Uint8Array(Math.ceil(base32.length * 5 / 8));
+            for (let i = 0; i < base32.length; i++) {
+                const idx = alphabet.indexOf(base32[i]);
+                if (idx === -1) continue;
+                value = (value << 5) | idx;
+                bits += 5;
+                if (bits >= 8) { output[index++] = (value >>> (bits - 8)) & 0xff; bits -= 8; }
+            }
+            return output.slice(0, index);
+        }
+
+        // IP Info
+        async function fetchIpInfo() {
+            const el = document.getElementById('ipResult');
+            try {
+                const res = await fetch('https://ipwho.org/');
+                const data = await res.json();
+                el.innerHTML = `<div class="glass p-4 rounded-xl space-y-1 text-sm">
+                    <p><strong>IP:</strong> ${data.ip}</p>
+                    <p><strong>Thành phố:</strong> ${data.city}, ${data.region}</p>
+                    <p><strong>Quốc gia:</strong> ${data.country}</p>
+                    <p><strong>ISP:</strong> ${data.connection?.isp || 'N/A'}</p>
+                </div>`;
+            } catch (e) {
+                try {
+                    const res = await fetch('https://ippubblico.org/?api=1');
+                    const data = await res.json();
+                    el.innerHTML = `<div class="glass p-4 rounded-xl space-y-1 text-sm">
+                        <p><strong>IP:</strong> ${data.ip}</p>
+                        <p><strong>Thành phố:</strong> ${data.city || 'N/A'}</p>
+                        <p><strong>Quốc gia:</strong> ${data.country || 'N/A'}</p>
+                    </div>`;
+                } catch (e2) { el.innerHTML = '<p class="text-secondary">Không thể lấy thông tin IP.</p>'; }
+            }
+        }
+
+        // Weather (Open-Meteo + Sun/Moon)
+        async function fetchWeather(coords) {
             const [lat, lon] = coords.split(',');
-            const resDiv = document.getElementById('weather-result');
-            resDiv.innerHTML = '<p class="animate-pulse text-blue-400">Đang lấy dữ liệu...</p>';
-            
+            const el = document.getElementById('weatherResult');
+            el.innerHTML = '<div class="skeleton h-20 rounded-lg mb-2"></div><div class="skeleton h-32 rounded-lg"></div>';
             try {
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,weather_code&daily=sunrise,sunset,uv_index_max&timezone=auto`);
-                const data = await res.json();
-                
-                const current = data.current;
-                let hourlyHTML = '';
-                // Lấy 12h tới
-                for(let i=0; i<12; i++) {
-                    let time = new Date(data.hourly.time[i]).getHours();
-                    let temp = data.hourly.temperature_2m[i];
-                    let rain = data.hourly.precipitation_probability[i];
-                    hourlyHTML += `
-                        <div class="flex flex-col items-center min-w-[50px]">
-                            <span class="text-xs text-gray-400">${time}:00</span>
-                            <i data-lucide="cloud" class="w-5 h-5 my-2 text-blue-300"></i>
-                            <span class="font-bold">${temp}°</span>
-                            <span class="text-[10px] text-blue-400 mt-1">${rain}%</span>
-                        </div>
-                    `;
+                const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,wind_speed_10m,uv_index&hourly=temperature_2m,precipitation_probability,weather_code,wind_speed_10m,relative_humidity_2m,uv_index&daily=sunrise,sunset,daylight_duration&timezone=Asia/Ho_Chi_Minh&forecast_days=2`;
+                const sunUrl = `https://api.sunrisesunset.io/json?lat=${lat}&lng=${lon}&timezone=Asia/Ho_Chi_Minh&date_start=today&date_end=tomorrow`;
+                const [weatherRes, sunRes] = await Promise.all([fetch(weatherUrl), fetch(sunUrl).catch(() => null)]);
+                const w = await weatherRes.json();
+                let sunData = null;
+                if (sunRes) { const s = await sunRes.json(); sunData = s.results?.[0]; }
+                const current = w.current;
+                const hourly = w.hourly;
+                const now = new Date();
+                const currentHour = now.getHours();
+                let hourlyHtml = '';
+                for (let i = currentHour; i < Math.min(currentHour + 24, hourly.time.length); i++) {
+                    hourlyHtml += `<div class="weather-hourly-item">
+                        <p class="text-xs">${hourly.time[i].slice(11, 16)}</p>
+                        <p class="text-sm font-bold">${Math.round(hourly.temperature_2m[i])}°</p>
+                        <p class="text-xs">${hourly.precipitation_probability[i]}%</p>
+                    </div>`;
                 }
-
-                resDiv.innerHTML = `
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full animate-fade-up">
-                        <div class="glass bg-gradient-to-br from-blue-600/20 to-purple-600/20 p-6 rounded-3xl border-blue-500/30">
-                            <h4 class="font-bold text-xl mb-4 text-white">Thời tiết hiện tại</h4>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <div class="text-6xl font-extrabold text-white">${current.temperature_2m}°</div>
-                                    <div class="text-gray-300 mt-2">Cảm giác: ${current.apparent_temperature}°C</div>
-                                </div>
-                                <i data-lucide="sun" class="w-16 h-16 text-yellow-400 animate-spin-slow"></i>
-                            </div>
-                            <div class="grid grid-cols-2 gap-3 mt-6">
-                                <div class="glass p-3 rounded-xl text-center"><p class="text-xs text-gray-400">Độ ẩm</p><p class="font-bold text-white">${current.relative_humidity_2m}%</p></div>
-                                <div class="glass p-3 rounded-xl text-center"><p class="text-xs text-gray-400">Gió</p><p class="font-bold text-white">${current.wind_speed_10m} km/h</p></div>
-                            </div>
-                        </div>
-                        <div class="md:col-span-2 glass p-6 rounded-3xl">
-                            <h4 class="font-bold text-lg mb-4 text-white">Dự báo 12 giờ tới</h4>
-                            <div class="flex gap-4 overflow-x-auto pb-2 custom-scrollbar text-white">
-                                ${hourlyHTML}
-                            </div>
-                            <div class="grid grid-cols-3 gap-4 mt-6 border-t border-white/10 pt-4 text-sm">
-                                <div><span class="text-gray-400 block mb-1">Mặt trời mọc</span> <span class="font-bold text-yellow-400">${data.daily.sunrise[0].split('T')[1]}</span></div>
-                                <div><span class="text-gray-400 block mb-1">Mặt trời lặn</span> <span class="font-bold text-orange-400">${data.daily.sunset[0].split('T')[1]}</span></div>
-                                <div><span class="text-gray-400 block mb-1">Chỉ số UV</span> <span class="font-bold text-red-400">${data.daily.uv_index_max[0]}</span></div>
+                el.innerHTML = `
+                    <div class="glass p-4 rounded-xl mb-3">
+                        <div class="flex items-center justify-between">
+                            <div><p class="text-3xl font-bold">${Math.round(current.temperature_2m)}°C</p>
+                            <p class="text-xs text-secondary">Cảm giác ${Math.round(current.apparent_temperature)}°C • UV ${current.uv_index || 'N/A'}</p></div>
+                            <div class="text-right text-xs text-secondary">
+                                <p>💧 ${current.relative_humidity_2m}%</p>
+                                <p>💨 ${current.wind_speed_10m} km/h</p>
+                                <p>🌧 ${current.precipitation_probability}%</p>
                             </div>
                         </div>
                     </div>
+                    <div class="weather-hourly-scroll">${hourlyHtml}</div>
+                    ${sunData ? `<div class="glass p-3 rounded-xl mt-2 text-xs grid grid-cols-2 gap-1">
+                        <p>🌅 Bình minh: ${sunData.sunrise}</p><p>🌇 Hoàng hôn: ${sunData.sunset}</p>
+                        <p>☀️ Ngày dài: ${(sunData.day_length / 3600).toFixed(1)}h</p>
+                        <p>🌙 Trăng mọc: ${sunData.moonrise || 'N/A'}</p>
+                    </div>` : ''}
+                    <p class="text-xs text-secondary mt-2">* Dự báo 24h tới. Nguồn: Open-Meteo.</p>
                 `;
-                lucide.createIcons();
-            } catch (e) {
-                resDiv.innerHTML = '<p class="text-red-500">Lỗi tải thời tiết. Vui lòng thử lại sau.</p>';
-            }
+            } catch (e) { el.innerHTML = '<p class="text-secondary">Lỗi tải thời tiết.</p>'; }
         }
 
-        // --- CHECK IP ---
-        async function fetchIP() {
-            const resDiv = document.getElementById('ip-result');
-            resDiv.innerHTML = '<p class="animate-pulse text-green-400 md:col-span-2 text-center">Đang quét IP...</p>';
-            try {
-                // Sử dụng 2 API dự phòng để tránh lỗi CORS
-                const res = await fetch('https://ipapi.co/json/').catch(() => fetch('https://ipwho.is/'));
-                const data = await res.json();
-                
-                resDiv.innerHTML = `
-                    <div class="glass p-5 rounded-2xl bg-green-500/10 border-green-500/20">
-                        <p class="text-xs text-gray-400 mb-1">Địa chỉ IP</p>
-                        <p class="font-mono text-xl font-bold text-green-400">${data.ip || data.query}</p>
-                    </div>
-                    <div class="glass p-5 rounded-2xl">
-                        <p class="text-xs text-gray-400 mb-1">Nhà mạng (ISP)</p>
-                        <p class="font-bold text-white">${data.org || data.connection?.isp || 'N/A'}</p>
-                    </div>
-                    <div class="glass p-5 rounded-2xl">
-                        <p class="text-xs text-gray-400 mb-1">Vị trí</p>
-                        <p class="font-bold text-white">${data.city || data.city}, ${data.country_name || data.country}</p>
-                    </div>
-                    <div class="glass p-5 rounded-2xl">
-                        <p class="text-xs text-gray-400 mb-1">Múi giờ</p>
-                        <p class="font-bold text-white">${data.timezone || 'N/A'}</p>
-                    </div>
-                `;
-            } catch (e) {
-                resDiv.innerHTML = '<p class="text-red-500 md:col-span-2 text-center">Lỗi API IP.</p>';
+        // PDF Tools
+        async function mergePdfs() {
+            const files = document.getElementById('pdfMergeFiles').files;
+            if (files.length < 2) { showToast('Chọn ít nhất 2 file PDF!'); return; }
+            const mergedPdf = await PDFLib.PDFDocument.create();
+            for (const file of files) {
+                const bytes = await file.arrayBuffer();
+                const pdf = await PDFLib.PDFDocument.load(bytes);
+                const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                pages.forEach(p => mergedPdf.addPage(p));
             }
+            const bytes = await mergedPdf.save();
+            downloadBlob(bytes, 'merged.pdf');
         }
 
-        // --- PRICE TRACKER (BTC, Vàng) ---
-        async function fetchPrices() {
-            const div = document.getElementById('price-data');
-            div.innerHTML = '<p class="animate-pulse text-yellow-400 col-span-3 text-center">Đang lấy dữ liệu giá...</p>';
-            try {
-                const btcRes = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
-                const btcData = await btcRes.json();
-                const goldRes = await fetch('https://api.gold-api.com/price/XAU');
-                const goldData = await goldRes.json();
-                
-                div.innerHTML = `
-                    <div class="glass p-6 rounded-2xl text-center">
-                        <i data-lucide="bitcoin" class="w-10 h-10 mx-auto text-yellow-500 mb-2"></i>
-                        <h4 class="font-bold text-gray-300">Bitcoin (BTC)</h4>
-                        <p class="text-2xl font-bold text-yellow-400 mt-2">$${parseFloat(btcData.price).toLocaleString('en-US', {maximumFractionDigits:0})}</p>
-                    </div>
-                    <div class="glass p-6 rounded-2xl text-center">
-                        <i data-lucide="gem" class="w-10 h-10 mx-auto text-yellow-300 mb-2"></i>
-                        <h4 class="font-bold text-gray-300">Vàng Thế Giới (Ounce)</h4>
-                        <p class="text-2xl font-bold text-yellow-300 mt-2">$${goldData.price ? goldData.price.toFixed(2) : 'N/A'}</p>
-                    </div>
-                    <div class="glass p-6 rounded-2xl text-center">
-                        <i data-lucide="fuel" class="w-10 h-10 mx-auto text-red-400 mb-2"></i>
-                        <h4 class="font-bold text-gray-300">Xăng dầu (RON 95)</h4>
-                        <p class="text-2xl font-bold text-red-400 mt-2">~ 23.500 đ</p>
-                        <p class="text-xs text-gray-500 mt-1">*Giá tham khảo</p>
-                    </div>
-                `;
-                lucide.createIcons();
-            } catch(e) {
-                div.innerHTML = '<p class="text-red-500 col-span-3 text-center">Không thể lấy dữ liệu giá lúc này.</p>';
-            }
+        async function splitPdf() {
+            const file = document.getElementById('pdfSplitFile').files[0];
+            const range = document.getElementById('pdfSplitRange').value;
+            if (!file || !range) return;
+            const bytes = await file.arrayBuffer();
+            const pdf = await PDFLib.PDFDocument.load(bytes);
+            const newPdf = await PDFLib.PDFDocument.create();
+            const pages = range.split(',').flatMap(r => {
+                if (r.includes('-')) { const [a, b] = r.split('-').map(Number); return Array.from({ length: b - a + 1 }, (_, i) => a + i - 1); }
+                return [Number(r) - 1];
+            });
+            for (const i of pages) { if (i >= 0 && i < pdf.getPageCount()) { const [p] = await newPdf.copyPages(pdf, [i]); newPdf.addPage(p); } }
+            const newBytes = await newPdf.save();
+            downloadBlob(newBytes, 'split.pdf');
         }
 
-        // --- 2FA (TOTP) ---
-        let totpInterval;
-        function generate2FA() {
-            const secret = document.getElementById('2fa-secret').value.trim().toUpperCase();
-            if(!secret) return alert('Vui lòng nhập mã Secret!');
-            
-            function base32tohex(base32) {
-                let base32chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", bits = "", hex = "";
-                for (let i = 0; i < base32.length; i++) {
-                    let val = base32chars.indexOf(base32.charAt(i));
-                    if (val === -1) continue;
-                    bits += val.toString(2).padStart(5, '0');
-                }
-                for (let i = 0; i + 4 <= bits.length; i += 4) hex += parseInt(bits.substring(i, i + 4), 2).toString(16);
-                return hex;
-            }
-            const key = base32tohex(secret);
-            
-            function updateCode() {
-                const epoch = Math.round(new Date().getTime() / 1000.0);
-                const timeHex = Math.floor(epoch / 30).toString(16).padStart(16, '0');
-                const hmac = CryptoJS.HmacSHA1(CryptoJS.enc.Hex.parse(timeHex), CryptoJS.enc.Hex.parse(key));
-                const offset = hmac.words[hmac.words.length - 1] & 0xf;
-                const code = (hmac.words[offset] & 0x7fffffff) % 1000000;
-                
-                document.getElementById('2fa-result').classList.remove('hidden');
-                document.getElementById('2fa-code').innerText = code.toString().padStart(6, '0');
-                
-                const percent = ((epoch % 30) / 30) * 100;
-                document.getElementById('2fa-progress').style.width = `${100 - percent}%`;
-            }
-            
-            updateCode();
-            clearInterval(totpInterval);
-            totpInterval = setInterval(updateCode, 1000);
+        async function compressPdf() {
+            const file = document.getElementById('pdfCompressFile').files[0];
+            if (!file) return;
+            const bytes = await file.arrayBuffer();
+            const pdf = await PDFLib.PDFDocument.load(bytes);
+            pdf.setTitle(''); pdf.setAuthor(''); pdf.setSubject(''); pdf.setKeywords([]);
+            const newBytes = await pdf.save({ useObjectStreams: true });
+            downloadBlob(newBytes, 'compressed.pdf');
         }
 
-        // --- PDF TOOLS ---
-        async function mergePDFs() {
-            const files = document.getElementById('pdf-merge-files').files;
-            if(files.length < 2) return alert('Vui lòng chọn ít nhất 2 file PDF!');
-            try {
-                const { PDFDocument } = PDFLib;
-                const mergedPdf = await PDFDocument.create();
-                for (let file of files) {
-                    const arrayBuffer = await file.arrayBuffer();
-                    const pdf = await PDFDocument.load(arrayBuffer);
-                    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-                    copiedPages.forEach((page) => mergedPdf.addPage(page));
-                }
-                const pdfBytes = await mergedPdf.save();
-                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'SPS_Merged_Document.pdf';
-                a.click();
-            } catch (e) { alert('Lỗi ghép PDF: ' + e.message); }
+        async function rotatePdf() {
+            const file = document.getElementById('pdfRotateFile').files[0];
+            const angle = parseInt(document.getElementById('rotateAngle').value);
+            if (!file) return;
+            const bytes = await file.arrayBuffer();
+            const pdf = await PDFLib.PDFDocument.load(bytes);
+            pdf.getPages().forEach(p => p.setRotation(PDFLib.degrees(angle)));
+            const newBytes = await pdf.save();
+            downloadBlob(newBytes, 'rotated.pdf');
         }
 
-        async function imagesToPDF() {
-            const files = document.getElementById('img-to-pdf-files').files;
-            if(!files.length) return alert('Chọn ít nhất 1 ảnh!');
-            try {
-                const { PDFDocument } = PDFLib;
-                const pdfDoc = await PDFDocument.create();
-                for (let file of files) {
-                    const arrayBuffer = await file.arrayBuffer();
-                    let image;
-                    if (file.type === 'image/jpeg' || file.type === 'image/jpg') image = await pdfDoc.embedJpg(arrayBuffer);
-                    else if (file.type === 'image/png') image = await pdfDoc.embedPng(arrayBuffer);
-                    else continue;
-                    
-                    const page = pdfDoc.addPage([image.width, image.height]);
-                    page.drawImage(image, { x: 0, y: 0, width: image.width, height: image.height });
-                }
-                const pdfBytes = await pdfDoc.save();
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(new Blob([pdfBytes], { type: 'application/pdf' }));
-                a.download = 'SPS_Images.pdf';
-                a.click();
-            } catch(e) { alert('Lỗi tạo PDF từ ảnh: ' + e.message); }
+        async function extractPdf() {
+            const file = document.getElementById('pdfExtractFile').files[0];
+            const range = document.getElementById('extractRange').value;
+            if (!file || !range) return;
+            const bytes = await file.arrayBuffer();
+            const pdf = await PDFLib.PDFDocument.load(bytes);
+            const newPdf = await PDFLib.PDFDocument.create();
+            const pages = range.split(',').flatMap(r => {
+                if (r.includes('-')) { const [a, b] = r.split('-').map(Number); return Array.from({ length: b - a + 1 }, (_, i) => a + i - 1); }
+                return [Number(r) - 1];
+            });
+            for (const i of pages) { if (i >= 0 && i < pdf.getPageCount()) { const [p] = await newPdf.copyPages(pdf, [i]); newPdf.addPage(p); } }
+            const newBytes = await newPdf.save();
+            downloadBlob(newBytes, 'extracted.pdf');
+        }
+
+        async function pdfToImages() {
+            const file = document.getElementById('pdf2imgFile').files[0];
+            if (!file) return;
+            const resultEl = document.getElementById('pdf2imgResult');
+            resultEl.textContent = 'Đang chuyển...';
+            const bytes = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+            let html = '';
+            for (let i = 1; i <= Math.min(pdf.numPages, 3); i++) {
+                const page = await pdf.getPage(i);
+                const viewport = page.getViewport({ scale: 1.5 });
+                const canvas = document.createElement('canvas');
+                canvas.width = viewport.width; canvas.height = viewport.height;
+                await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+                html += `<img src="${canvas.toDataURL()}" class="w-full rounded-lg mb-2" />`;
+            }
+            resultEl.innerHTML = html || '<p>Không thể chuyển PDF.</p>';
+        }
+
+        async function imagesToPdf() {
+            const files = document.getElementById('img2pdfFiles').files;
+            if (!files.length) return;
+            const pdf = await PDFLib.PDFDocument.create();
+            for (const file of files) {
+                const bytes = await file.arrayBuffer();
+                let img;
+                if (file.type === 'image/png') img = await pdf.embedPng(bytes);
+                else if (file.type === 'image/jpeg') img = await pdf.embedJpg(bytes);
+                else continue;
+                const page = pdf.addPage([img.width, img.height]);
+                page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+            }
+            const pdfBytes = await pdf.save();
+            downloadBlob(pdfBytes, 'images.pdf');
+        }
+
+        async function viewPdfMetadata() {
+            const file = document.getElementById('pdfMetaFile').files[0];
+            if (!file) return;
+            const bytes = await file.arrayBuffer();
+            const pdf = await PDFLib.PDFDocument.load(bytes);
+            const meta = { title: pdf.getTitle(), author: pdf.getAuthor(), subject: pdf.getSubject(), creator: pdf.getCreator(), producer: pdf.getProducer(), pages: pdf.getPageCount() };
+            document.getElementById('pdfMetaResult').textContent = JSON.stringify(meta, null, 2);
         }
 
         function countWords() {
-            const text = document.getElementById('word-counter-text').value.trim();
-            const count = text ? text.split(/\s+/).length : 0;
-            document.getElementById('word-count-result').innerText = `Số từ: ${count}`;
+            const text = document.getElementById('wordCountText').value;
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            document.getElementById('wordCountResult').innerHTML = `Số từ: <strong>${words}</strong> | Số ký tự: <strong>${text.length}</strong>`;
         }
 
-        // --- IMAGE TO LINK (Catbox.moe) ---
-        async function uploadImage() {
-            const fileInput = document.getElementById('img-upload');
-            if(!fileInput.files.length) return alert('Chọn 1 file ảnh!');
-            
-            const formData = new FormData();
-            formData.append('reqtype', 'fileupload');
-            formData.append('fileToUpload', fileInput.files[0]);
-            
-            const resDiv = document.getElementById('img-link-result');
-            resDiv.innerHTML = '<p class="animate-pulse">Đang upload...</p>';
-            
-            try {
-                const res = await fetch('https://catbox.moe/user/api.php', { method: 'POST', body: formData });
-                const url = await res.text();
-                resDiv.innerHTML = `Link ảnh: <a href="${url}" target="_blank" class="underline text-pink-400">${url}</a>`;
-            } catch(e) {
-                resDiv.innerHTML = `<span class="text-red-500">Lỗi upload ảnh (CORS). Hãy thử ảnh nhỏ hơn.</span>`;
-            }
+        async function textToPdf() {
+            const text = document.getElementById('text2pdfContent').value;
+            const pdf = await PDFLib.PDFDocument.create();
+            const font = await pdf.embedFont(PDFLib.StandardFonts.Helvetica);
+            const page = pdf.addPage();
+            page.drawText(text, { x: 50, y: page.getHeight() - 50, size: 12, font, maxWidth: page.getWidth() - 100, lineHeight: 16 });
+            const bytes = await pdf.save();
+            downloadBlob(bytes, 'text.pdf');
         }
 
-        // --- SHORTEN LINK (TinyURL) ---
-        async function shortenLink() {
-            const url = document.getElementById('long-url').value;
-            if(!url) return;
-            const resDiv = document.getElementById('shorten-result');
-            resDiv.innerHTML = '<p class="animate-pulse">Đang xử lý...</p>';
-            try {
-                const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`);
-                const short = await res.text();
-                resDiv.innerHTML = `<a href="${short}" target="_blank" class="underline text-cyan-400">${short}</a>`;
-            } catch(e) {
-                resDiv.innerHTML = '<span class="text-red-500">Lỗi rút gọn link.</span>';
-            }
+        function downloadBlob(bytes, filename) {
+            const blob = new Blob([bytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
+            URL.revokeObjectURL(url);
         }
 
-        // --- CHECK FB LIVE/DIE (Sử dụng proxy CORS) ---
-        async function checkFBLive() {
-            const url = document.getElementById('fb-url').value;
-            if(!url) return;
-            const resDiv = document.getElementById('fb-result');
-            resDiv.innerHTML = '<p class="animate-pulse text-blue-400">Đang kiểm tra (có thể mất 5-10s)...</p>';
-            
-            try {
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-                const res = await fetch(proxyUrl);
-                const data = await res.json();
-                
-                const html = data.contents.toLowerCase();
-                if(html.includes('content="trang này không có sẵn"') || html.includes('page isn\'t available')) {
-                    resDiv.innerHTML = '<div class="text-2xl font-bold text-red-500">DIED 💀</div><p class="text-sm text-gray-400 mt-2">Tài khoản đã bị khóa hoặc không tồn tại.</p>';
-                } else {
-                    resDiv.innerHTML = '<div class="text-2xl font-bold text-green-500">LIVE ✅</div><p class="text-sm text-gray-400 mt-2">Tài khoản đang hoạt động bình thường.</p>';
-                }
-            } catch (e) {
-                resDiv.innerHTML = '<span class="text-red-500">Lỗi kết nối tới Facebook (Bị chặn CORS).</span>';
-            }
-        }
-
-        // --- CALCULATOR ---
-        function calcProfit() {
-            const cost = parseFloat(document.getElementById('calc-cost').value) || 0;
-            const sell = parseFloat(document.getElementById('calc-sell').value) || 0;
-            const profit = sell - cost;
-            const percent = cost > 0 ? ((profit / cost) * 100).toFixed(2) : 0;
-            
-            const res = document.getElementById('calc-result');
-            if(profit >= 0) res.innerHTML = `<span class="text-green-400">Lãi: +${profit.toLocaleString()} VNĐ</span> <br><span class="text-sm font-normal">(${percent}%)</span>`;
-            else res.innerHTML = `<span class="text-red-400">Lỗ: ${profit.toLocaleString()} VNĐ</span> <br><span class="text-sm font-normal">(${percent}%)</span>`;
-        }
-
-        // --- QR CODE ---
-        function generateQR() {
-            const text = document.getElementById('qr-text').value;
-            if(!text) return;
-            document.getElementById('qr-result').innerHTML = `
-                <div class="bg-white p-4 rounded-xl">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(text)}">
-                </div>
-            `;
-        }
-
-        // --- NOTE ---
-        document.getElementById('note-area').value = localStorage.getItem('sps_note') || '';
-        function saveNote() {
-            localStorage.setItem('sps_note', document.getElementById('note-area').value);
-            alert('Đã lưu ghi chú cá nhân!');
-        }
-
-        // --- TODO LIST ---
-        let todos = JSON.parse(localStorage.getItem('sps_todos')) || [];
+        // Todo
         function renderTodos() {
-            const list = document.getElementById('todo-list');
-            list.innerHTML = '';
-            todos.forEach((t, index) => {
-                list.innerHTML += `
-                    <li class="flex justify-between items-center glass p-3 rounded-xl ${t.done ? 'opacity-50 line-through' : ''}">
-                        <span onclick="toggleTodo(${index})" class="cursor-pointer flex-1">${t.text}</span>
-                        <button onclick="deleteTodo(${index})" class="text-red-400 hover:text-red-300"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </li>
-                `;
-            });
-            lucide.createIcons();
+            const todos = JSON.parse(localStorage.getItem('sps_todos') || '[]');
+            const list = document.getElementById('todoList');
+            list.innerHTML = todos.map((t, i) => `
+                <div class="flex items-center gap-2 p-2 rounded-lg glass text-sm">
+                    <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTodo(${i})">
+                    <span class="${t.done ? 'line-through opacity-50' : ''} flex-1">${t.text}</span>
+                    <button onclick="deleteTodo(${i})" class="text-red-400 text-xs">Xóa</button>
+                </div>
+            `).join('') || '<p class="text-xs text-secondary text-center">Chưa có việc nào.</p>';
         }
         function addTodo() {
-            const input = document.getElementById('todo-input');
-            if(!input.value.trim()) return;
-            todos.push({ text: input.value, done: false });
+            const input = document.getElementById('todoInput');
+            const text = input.value.trim();
+            if (!text) return;
+            const todos = JSON.parse(localStorage.getItem('sps_todos') || '[]');
+            todos.push({ text, done: false });
             localStorage.setItem('sps_todos', JSON.stringify(todos));
-            input.value = '';
-            renderTodos();
+            input.value = ''; renderTodos();
         }
-        function toggleTodo(index) {
-            todos[index].done = !todos[index].done;
-            localStorage.setItem('sps_todos', JSON.stringify(todos));
-            renderTodos();
+        function toggleTodo(i) {
+            const todos = JSON.parse(localStorage.getItem('sps_todos') || '[]');
+            todos[i].done = !todos[i].done;
+            localStorage.setItem('sps_todos', JSON.stringify(todos)); renderTodos();
         }
-        function deleteTodo(index) {
-            todos.splice(index, 1);
-            localStorage.setItem('sps_todos', JSON.stringify(todos));
-            renderTodos();
+        function deleteTodo(i) {
+            const todos = JSON.parse(localStorage.getItem('sps_todos') || '[]');
+            todos.splice(i, 1); localStorage.setItem('sps_todos', JSON.stringify(todos)); renderTodos();
         }
-        renderTodos();
 
-        // ==========================================
-        // 4. ADMIN LOGIC
-        // ==========================================
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); document.getElementById(id).classList.add('flex'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); }
+        // Calendar
+        function renderCalendar() {
+            const now = new Date();
+            const month = now.getMonth(), year = now.getFullYear();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            let html = `<h4 class="font-bold mb-2">${month + 1}/${year}</h4><div class="grid grid-cols-7 gap-1 text-xs">`;
+            ['CN','T2','T3','T4','T5','T6','T7'].forEach(d => html += `<div class="font-bold text-secondary p-1">${d}</div>`);
+            for (let i = 0; i < firstDay; i++) html += '<div></div>';
+            for (let d = 1; d <= daysInMonth; d++) {
+                const isToday = d === now.getDate();
+                html += `<div class="p-1 rounded-lg ${isToday ? 'bg-indigo-500 text-white' : 'glass'}">${d}</div>`;
+            }
+            html += '</div>';
+            document.getElementById('calendarWidget').innerHTML = html;
+        }
 
-        function loginAdmin() {
-            const user = document.getElementById('admin-user').value;
-            const pass = document.getElementById('admin-pass').value;
-            
-            if(user === 'nguyenlethaoiubo' && pass === 'lovbo0806') {
-                closeModal('admin-login-modal');
-                switchTab('admin');
+        // Financial Calculators
+        function calcProfit() { const r = +document.getElementById('pcRevenue').value || 0; const c = +document.getElementById('pcCost').value || 0; document.getElementById('pcResult').textContent = `Lợi nhuận: ${(r - c).toLocaleString()} (${r ? ((r - c) / r * 100).toFixed(1) : 0}%)`; }
+        function calcPricing() { const c = +document.getElementById('prCost').value || 0; const m = +document.getElementById('prMargin').value || 0; document.getElementById('prResult').textContent = `Giá bán: ${(c * (1 + m / 100)).toLocaleString()}`; }
+        function calcDiscount() { const p = +document.getElementById('dcPrice').value || 0; const d = +document.getElementById('dcPercent').value || 0; document.getElementById('dcResult').textContent = `Giá sau giảm: ${(p * (1 - d / 100)).toLocaleString()}`; }
+        function calcMarkup() { const c = +document.getElementById('mcCost').value || 0; const s = +document.getElementById('mcSell').value || 0; document.getElementById('mcResult').textContent = `Markup: ${c ? (((s - c) / c) * 100).toFixed(1) : 0}%`; }
+        function calcOrderQty() { const t = +document.getElementById('oqTotal').value || 0; const p = +document.getElementById('oqPer').value || 1; document.getElementById('oqResult').textContent = `Số đơn: ${Math.ceil(t / p)}`; }
+        function calcBulkPrice() { const u = +document.getElementById('bpUnit').value || 0; const q = +document.getElementById('bpQty').value || 0; document.getElementById('bpResult').textContent = `Tổng: ${(u * q).toLocaleString()}`; }
+        function calcResellerMargin() { const b = +document.getElementById('rmBuy').value || 0; const s = +document.getElementById('rmSell').value || 0; document.getElementById('rmResult').textContent = `Margin: ${b ? (((s - b) / b) * 100).toFixed(1) : 0}%`; }
+        function calcRevenue() { const p = +document.getElementById('revPrice').value || 0; const q = +document.getElementById('revQty').value || 0; document.getElementById('revResult').textContent = `Doanh thu: ${(p * q).toLocaleString()}`; }
+        function calcCommission() { const a = +document.getElementById('commAmount').value || 0; const r = +document.getElementById('commRate').value || 0; document.getElementById('commResult').textContent = `Hoa hồng: ${(a * r / 100).toLocaleString()}`; }
+        function calcBreakeven() { const f = +document.getElementById('beFixed').value || 0; const p = +document.getElementById('bePrice').value || 1; const v = +document.getElementById('beVar').value || 0; document.getElementById('beResult').textContent = `Hòa vốn: ${Math.ceil(f / (p - v))} đơn vị`; }
+
+        // Invoice / Quotation
+        function generateInvoice() {
+            const customer = document.getElementById('invCustomer').value || 'Khách hàng';
+            const item = document.getElementById('invItem').value || 'Dịch vụ';
+            const amount = +document.getElementById('invAmount').value || 0;
+            const html = `<div style="font-family:sans-serif;padding:40px;max-width:600px;margin:auto">
+                <h1 style="color:#6366f1">HÓA ĐƠN</h1>
+                <p><strong>Khách hàng:</strong> ${customer}</p>
+                <p><strong>Ngày:</strong> ${new Date().toLocaleDateString('vi-VN')}</p>
+                <hr>
+                <p><strong>Dịch vụ:</strong> ${item}</p>
+                <p style="font-size:24px;color:#6366f1"><strong>Tổng: ${amount.toLocaleString()} VND</strong></p>
+                <hr><p style="font-size:12px;color:#888">Cảm ơn quý khách!</p>
+            </div>`;
+            const printArea = document.getElementById('invoicePrintArea');
+            printArea.innerHTML = html; printArea.classList.remove('hidden');
+            window.print();
+            setTimeout(() => printArea.classList.add('hidden'), 1000);
+        }
+        function generateQuotation() {
+            const customer = document.getElementById('quoCustomer').value || 'Khách hàng';
+            const item = document.getElementById('quoItem').value || 'Dịch vụ';
+            const amount = +document.getElementById('quoAmount').value || 0;
+            const html = `<div style="font-family:sans-serif;padding:40px;max-width:600px;margin:auto">
+                <h1 style="color:#ec4899">BÁO GIÁ</h1>
+                <p><strong>Khách hàng:</strong> ${customer}</p>
+                <p><strong>Ngày:</strong> ${new Date().toLocaleDateString('vi-VN')}</p>
+                <hr><p><strong>Dịch vụ:</strong> ${item}</p>
+                <p style="font-size:24px;color:#ec4899"><strong>Báo giá: ${amount.toLocaleString()} VND</strong></p>
+                <hr><p style="font-size:12px;color:#888">Báo giá có giá trị trong 7 ngày.</p>
+            </div>`;
+            const printArea = document.getElementById('invoicePrintArea');
+            printArea.innerHTML = html; printArea.classList.remove('hidden');
+            window.print();
+            setTimeout(() => printArea.classList.add('hidden'), 1000);
+        }
+
+        // ==================== SUPPORT ====================
+        function submitSupport(e) { e.preventDefault(); showToast('Đã gửi yêu cầu hỗ trợ! Chúng tôi sẽ phản hồi sớm.'); e.target.reset(); }
+
+        // ==================== ADMIN ====================
+        function openAdminLogin() {
+            if (localStorage.getItem('sps_admin') === 'true') { openAdminPanel(); }
+            else { openModal('adminLoginModal'); }
+        }
+        function doAdminLogin() {
+            const u = document.getElementById('adminUser').value;
+            const p = document.getElementById('adminPass').value;
+            if (u === 'nguyenlethaoiubo' && p === 'lovbo0806') {
+                localStorage.setItem('sps_admin', 'true');
+                closeModal('adminLoginModal');
+                document.querySelector('button[onclick="openAdminLogin()"]').classList.remove('hidden');
+                openAdminPanel();
+                showToast('Đăng nhập admin thành công!');
             } else {
-                document.getElementById('login-error').classList.remove('hidden');
+                document.getElementById('adminLoginError').classList.remove('hidden');
             }
         }
+        function openAdminPanel() { openModal('adminPanel'); adminTab('settings'); }
 
-        function logoutAdmin() { switchTab('home'); }
-
-        function saveAdminSettings() {
-            const name = document.getElementById('admin-web-name').value;
-            const ann = document.getElementById('admin-announcement').value;
-            localStorage.setItem('sps_settings', JSON.stringify({webName: name, announcement: ann}));
-            loadSettings();
-            alert('Đã lưu cấu hình! F5 để thấy thay đổi.');
-        }
-
-        function addAdminService() {
-            const name = document.getElementById('admin-srv-name').value;
-            const price = document.getElementById('admin-srv-price').value;
-            const cat = document.getElementById('admin-srv-cat').value;
-            if(!name) return alert('Nhập tên dịch vụ!');
-            
-            services.push({
-                id: Date.now(),
-                name: name,
-                price: price ? parseFloat(price).toLocaleString() + 'đ' : 'Liên hệ',
-                cat: cat,
-                icon: 'star'
+        let currentAdminTab = 'settings';
+        function adminTab(tab) {
+            currentAdminTab = tab;
+            document.querySelectorAll('.admin-tab').forEach(b => {
+                b.classList.toggle('bg-indigo-500/20', b.textContent.trim() === { settings: 'Cài đặt', services: 'Dịch vụ', blog: 'Blog', tools: 'Tools', payment: 'Thanh toán' }[tab]);
             });
-            localStorage.setItem('sps_services', JSON.stringify(services));
-            renderServices();
-            alert('Đã thêm!');
-            document.getElementById('admin-srv-name').value = '';
-            document.getElementById('admin-srv-price').value = '';
-        }
-
-        // ==========================================
-        // 5. FAB (Trợ năng) & EFFECTS & MUSIC
-        // ==========================================
-        let fabOpen = false;
-        function toggleFab() {
-            fabOpen = !fabOpen;
-            document.getElementById('fab-menu').style.display = fabOpen ? 'flex' : 'none';
-        }
-
-        // Drag FAB
-        const fab = document.getElementById('fab-container');
-        let isDragging = false, offsetX, offsetY;
-        fab.addEventListener('mousedown', (e) => {
-            if(e.target.closest('button')) return; // Không kéo khi bấm nút
-            isDragging = true;
-            offsetX = e.clientX - fab.getBoundingClientRect().left;
-            offsetY = e.clientY - fab.getBoundingClientRect().top;
-        });
-        document.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                fab.style.left = (e.clientX - offsetX) + 'px';
-                fab.style.bottom = 'auto'; fab.style.top = (e.clientY - offsetY) + 'px';
-                fab.style.right = 'auto';
+            const content = document.getElementById('adminContent');
+            if (tab === 'settings') {
+                content.innerHTML = `<div class="space-y-3">
+                    <label class="text-sm font-medium">Tên website</label>
+                    <input class="admin-input" id="adminSiteName" value="${siteData.siteName}">
+                    <label class="text-sm font-medium">Thông báo đầu trang</label>
+                    <input class="admin-input" id="adminAnnouncement" value="${siteData.announcement}">
+                    <div class="flex items-center gap-2"><input type="checkbox" id="adminAnnEnabled" ${siteData.announcementEnabled ? 'checked' : ''}><label class="text-sm">Bật thông báo</label></div>
+                    <label class="text-sm font-medium">Liên hệ Zalo</label>
+                    <input class="admin-input" id="adminZalo" value="${siteData.contact.zalo}">
+                    <label class="text-sm font-medium">Email</label>
+                    <input class="admin-input" id="adminEmail" value="${siteData.contact.email}">
+                    <button onclick="saveAdminSettings()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Lưu cài đặt</button>
+                </div>`;
+            } else if (tab === 'services') {
+                content.innerHTML = `<div class="space-y-2">${siteData.services.map((s, i) => `
+                    <div class="flex gap-2 items-center glass p-2 rounded-lg">
+                        <input class="admin-input flex-1" value="${s.name}" onchange="updateService(${i},'name',this.value)">
+                        <input class="admin-input w-24" value="${s.price}" onchange="updateService(${i},'price',this.value)">
+                        <button onclick="deleteService(${i})" class="text-red-400 text-xs px-2">Xóa</button>
+                    </div>`).join('')}
+                    <button onclick="addService()" class="w-full py-2 rounded-lg glass text-sm btn-press">+ Thêm dịch vụ</button>
+                </div>`;
+            } else if (tab === 'blog') {
+                content.innerHTML = `<div class="space-y-2">${siteData.blog.map((p, i) => `
+                    <div class="glass p-2 rounded-lg flex gap-2 items-center">
+                        <input class="admin-input flex-1" value="${p.title}" onchange="updateBlog(${i},'title',this.value)">
+                        <button onclick="deleteBlog(${i})" class="text-red-400 text-xs px-2">Xóa</button>
+                    </div>`).join('')}
+                    <button onclick="addBlog()" class="w-full py-2 rounded-lg glass text-sm btn-press">+ Thêm bài viết</button>
+                </div>`;
+            } else if (tab === 'payment') {
+                content.innerHTML = `<div class="space-y-3">
+                    <label class="text-sm font-medium">Ngân hàng</label>
+                    <input class="admin-input" id="adminBank" value="${siteData.payment.bank}">
+                    <label class="text-sm font-medium">Số tài khoản</label>
+                    <input class="admin-input" id="adminAccount" value="${siteData.payment.account}">
+                    <label class="text-sm font-medium">Chủ tài khoản</label>
+                    <input class="admin-input" id="adminAccountName" value="${siteData.payment.name}">
+                    <button onclick="savePayment()" class="w-full py-2 rounded-lg bg-indigo-500 text-white text-sm btn-press">Lưu thanh toán</button>
+                    <div class="glass p-3 rounded-lg text-xs mt-2">
+                        <p class="font-medium mb-1">QR thanh toán:</p>
+                        <div id="adminQrContainer" class="flex justify-center"></div>
+                    </div>
+                </div>`;
+                setTimeout(() => {
+                    const container = document.getElementById('adminQrContainer');
+                    if (container) {
+                        container.innerHTML = '';
+                        new QRCode(container, {
+                            text: `${siteData.payment.bank}|${siteData.payment.account}|${siteData.payment.name}`,
+                            width: 160, height: 160
+                        });
+                    }
+                }, 100);
+            } else if (tab === 'tools') {
+                content.innerHTML = `<p class="text-sm text-secondary">Các công cụ được quản lý tự động.</p>`;
             }
-        });
-        document.addEventListener('mouseup', () => isDragging = false);
+        }
+        function saveAdminSettings() {
+            siteData.siteName = document.getElementById('adminSiteName').value;
+            siteData.announcement = document.getElementById('adminAnnouncement').value;
+            siteData.announcementEnabled = document.getElementById('adminAnnEnabled').checked;
+            siteData.contact.zalo = document.getElementById('adminZalo').value;
+            siteData.contact.email = document.getElementById('adminEmail').value;
+            saveData(); document.getElementById('siteName').textContent = siteData.siteName;
+            document.getElementById('footerSiteName').textContent = siteData.siteName;
+            if (siteData.announcementEnabled) { document.getElementById('announcementBar').classList.remove('hidden'); document.getElementById('announcementText').textContent = siteData.announcement; }
+            else { document.getElementById('announcementBar').classList.add('hidden'); }
+            showToast('Đã lưu cài đặt!');
+        }
+        function updateService(i, field, val) { siteData.services[i][field] = val; saveData(); renderServices(siteData.services); }
+        function deleteService(i) { siteData.services.splice(i, 1); saveData(); renderServices(siteData.services); adminTab('services'); }
+        function addService() { siteData.services.push({ id: Date.now(), name: 'Dịch vụ mới', price: '0đ', icon: 'package', desc: 'Mô tả...' }); saveData(); renderServices(siteData.services); adminTab('services'); }
+        function updateBlog(i, field, val) { siteData.blog[i][field] = val; saveData(); renderBlog(siteData.blog); }
+        function deleteBlog(i) { siteData.blog.splice(i, 1); saveData(); renderBlog(siteData.blog); adminTab('blog'); }
+        function addBlog() { siteData.blog.push({ id: Date.now(), title: 'Bài viết mới', excerpt: 'Mô tả...', date: new Date().toISOString().slice(0, 10) }); saveData(); renderBlog(siteData.blog); adminTab('blog'); }
+        function savePayment() { siteData.payment.bank = document.getElementById('adminBank').value; siteData.payment.account = document.getElementById('adminAccount').value; siteData.payment.name = document.getElementById('adminAccountName').value; saveData(); showToast('Đã lưu thông tin thanh toán!'); }
 
-        // Canvas Effects
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let effectType = 'none';
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resizeCanvas); resizeCanvas();
-
-        function changeEffect(type) {
-            effectType = type; particles = [];
-            if(type === 'snow') {
-                for(let i=0; i<150; i++) particles.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*3+1, d: Math.random()*1+0.5});
-            } else if(type === 'meteor') {
-                for(let i=0; i<15; i++) particles.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height - canvas.height, len: Math.random()*200+100, speed: Math.random()*10+5});
-            } else if(type === 'rain') {
-                for(let i=0; i<100; i++) particles.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, len: Math.random()*20+10, speed: Math.random()*15+10});
-            }
-            toggleFab();
+        // ==================== SERVICE DETAIL ====================
+        function openServiceDetail(id) {
+            const s = siteData.services.find(x => x.id === id);
+            if (!s) return;
+            document.getElementById('toolTitle').textContent = s.name;
+            document.getElementById('toolBody').innerHTML = `
+                <div class="space-y-3">
+                    <p class="text-sm text-secondary">${s.desc}</p>
+                    <p class="text-2xl font-bold text-indigo-400">${s.price}</p>
+                    <button onclick="showToast('Đã thêm vào giỏ hàng!');closeModal('toolModal')" class="w-full py-2.5 rounded-xl bg-indigo-500 text-white btn-press">Đặt hàng</button>
+                    <div class="glass p-3 rounded-lg text-xs">
+                        <p class="font-medium mb-1">Thanh toán:</p>
+                        <p>${siteData.payment.bank} - ${siteData.payment.account}</p>
+                        <p>Chủ TK: ${siteData.payment.name}</p>
+                    </div>
+                </div>`;
+            openModal('toolModal');
         }
 
-        function drawEffects() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if(effectType === 'snow') {
-                ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-                particles.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y += p.d; if(p.y > canvas.height) p.y = 0; });
-            } else if(effectType === 'meteor') {
-                particles.forEach(p => {
-                    ctx.strokeStyle = "rgba(255, 255, 255, 0.8)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - p.len, p.y + p.len); ctx.stroke();
-                    p.x += p.speed; p.y += p.speed;
-                    if(p.y > canvas.height || p.x > canvas.width) { p.x = Math.random()*canvas.width; p.y = -100; }
-                });
-            } else if(effectType === 'rain') {
-                ctx.strokeStyle = "rgba(59, 130, 246, 0.5)"; ctx.lineWidth = 1;
-                particles.forEach(p => { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y+p.len); ctx.stroke(); p.y += p.speed; if(p.y > canvas.height) p.y = -20; });
-            }
-            requestAnimationFrame(drawEffects);
-        }
-        drawEffects();
-
-        // Music (Soundcloud)
-        let isMusicPlaying = false;
-        const scIframe = document.getElementById('sc-player');
-        const widget = SC.Widget(scIframe);
-        // Link nhạc 1
-        scIframe.src = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1471388108&color=%233b82f6&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false";
-
-        function toggleMusic() {
-            isMusicPlaying = !isMusicPlaying;
-            const label = document.getElementById('music-label');
-            if(isMusicPlaying) { widget.play(); label.innerText = 'Tắt nhạc'; } 
-            else { widget.pause(); label.innerText = 'Bật nhạc'; }
-        }
-
-        // ==========================================
-        // 6. INITIALIZATION
-        // ==========================================
-        window.onload = () => {
-            lucide.createIcons();
-            loadSettings();
-            renderServices();
-            // Mặc định lấy IP và thời tiết (nếu muốn)
-            // fetchIP(); fetchWeather();
-        };
+        // Expose functions globally
+        window.openTool = openTool;
+        window.setEffect = setEffect;
+        // ... other functions are already global
     </script>
 </body>
 </html>
-
