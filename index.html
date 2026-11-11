@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Thao Service • MMO & Social Support</title>
+    <title>Thao Service • Premium MMO Support</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,90 +18,111 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
+        :root {
+            --bg-grad: linear-gradient(135deg, #e0f2fe 0%, #f3e8ff 50%, #e0e7ff 100%);
+            --text-main: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.6);
+        }
+        .dark {
+            --bg-grad: linear-gradient(135deg, #050914 0%, #0f172a 40%, #2e1065 100%);
+            --text-main: #f8fafc;
+            --glass-bg: rgba(15, 23, 42, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
         body { 
             font-family: 'Inter', sans-serif; 
             overflow-x: hidden; 
-            transition: background 0.3s, color 0.3s; 
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f8fafc 100%);
-            color: #0f172a;
+            transition: background 0.5s ease, color 0.5s ease; 
+            background: var(--bg-grad);
+            color: var(--text-main);
             min-height: 100vh;
-        }
-        .dark body {
-            background: linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1e1b4b 100%);
-            color: #f1f5f9;
+            background-attachment: fixed;
         }
 
-        /* Liquid Glass Effect */
-        .glass {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        /* Animated Background Lights */
+        .bg-orbs {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; pointer-events: none;
         }
-        .dark .glass {
-            background: rgba(30, 41, 59, 0.55);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        }
-        .glass-strong {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(30px) saturate(200%);
-            -webkit-backdrop-filter: blur(30px) saturate(200%);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-        }
-        .dark .glass-strong {
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Animations */
-        .snowflake { position: fixed; top: -10px; color: #e0f2fe; font-size: 1em; pointer-events: none; animation: fall linear forwards; z-index: 0; }
-        .flower { position: fixed; top: -10px; font-size: 1.5em; pointer-events: none; animation: fall linear forwards; z-index: 0; }
-        .lava { position: fixed; bottom: -10px; border-radius: 50%; pointer-events: none; animation: rise linear forwards; z-index: 0; box-shadow: 0 0 10px rgba(255,100,0,0.8); }
-        .fog { position: fixed; bottom: 0; left: 0; width: 100%; height: 35vh; background: linear-gradient(to top, rgba(255,255,255,0.7), transparent); pointer-events: none; z-index: 0; }
-        .dark .fog { background: linear-gradient(to top, rgba(59,130,246,0.15), transparent); }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; animation: float 10s infinite ease-in-out alternate; }
+        .orb-1 { background: #3b82f6; width: 300px; height: 300px; top: -10%; left: -10%; }
+        .orb-2 { background: #8b5cf6; width: 400px; height: 400px; bottom: 10%; right: -20%; animation-delay: -5s; }
+        .dark .orb { opacity: 0.3; }
         
-        @keyframes fall { to { transform: translateY(105vh) rotate(720deg); opacity: 0.2; } }
-        @keyframes rise { to { transform: translateY(-105vh); opacity: 0; } }
+        @keyframes float { 
+            0% { transform: translate(0, 0) scale(1); } 
+            100% { transform: translate(50px, 50px) scale(1.1); } 
+        }
+
+        /* Liquid Glass Core */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+        .dark .glass { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05); }
+        
+        .glass-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+        .dark .glass-card:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
 
         /* Hide Scrollbar */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* iPhone Dock Animation */
-        .dock-item { transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .dock-item:active { transform: scale(0.85); }
+        /* Animations */
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .animate-pop { animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes pop { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #60a5fa; border-radius: 10px; }
-        
-        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        /* Dock Menu */
+        .dock-item { transition: all 0.2s ease; }
+        .dock-item:active { transform: scale(0.9); }
+        .dock-active { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+        .dark .dock-active { background: rgba(59, 130, 246, 0.25); color: #60a5fa; }
+
+        /* Weather Styling */
+        .weather-gradient { background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(59, 130, 246, 0.2)); }
     </style>
     <script>
         tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#3b82f6' } } } }
     </script>
 </head>
-<body class="pb-24 relative">
+<body class="pb-24 relative overflow-x-hidden">
 
     <!-- Background Effects Layer -->
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
     <div id="effect-layer" class="fixed inset-0 pointer-events-none z-0"></div>
 
     <!-- React Root -->
     <div id="root" class="relative z-10"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect, useRef, useCallback } = React;
 
         /* ================= CONSTANTS & DATA ================= */
         const ADMIN_USER = "nguyenlethaoiubo";
         const ADMIN_PASS = "nguyenthao080626";
         
-        // Fix link Soundcloud bị lỗi font
         const SC_TRACKS = [
             "https://soundcloud.com/quang-huynhh/v-b-n-anh-remix-jack-j97-x",
             "https://soundcloud.com/doyu-358490204/jack-j97-ng-i-d-ng-wen-remix"
@@ -110,34 +131,29 @@
         const DEFAULT_PROFILE = {
             name: "Nguyễn Lê Thảo",
             verified: true,
-            bio: "Chuyên cung cấp dịch vụ MMO, Support Facebook/Meta, TikTok, Google và các tool hỗ trợ. Uy tín - Nhanh chóng - Bảo mật.",
+            bio: "Chuyên cung cấp dịch vụ MMO, Support Meta, TikTok, Google & Tool. Uy tín - Nhanh chóng - Bảo mật tuyệt đối.",
             avatar: "https://ui-avatars.com/api/?name=NL&background=3b82f6&color=fff&size=200",
             cover: "https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&q=80",
             contact: {
-                telegram: "usertaiwan8686", facebook: "nguyenlethaoservice",
-                phone: "0898666218", email: "nguyenlethao.profile08@gmail.com", discord: "nguyenlethao.service"
+                telegram: "usertaiwan8686", 
+                facebook: "nguyenlethaoservice",
+                phone: "0898666218", 
+                email: "nguyenlethao.profile08@gmail.com", 
+                discord: "nguyenlethao.service"
             }
         };
 
         const DEFAULT_PRODUCTS = [
-            { id: 1, category: "Support Social", subcategory: "Meta", name: "UNLOCK 282", price: "150.000đ", desc: "Mở khóa tính năng 282", stock: 10, image: "" },
-            { id: 2, category: "Support Social", subcategory: "Meta", name: "UNLOCK 956", price: "200.000đ", desc: "Mở khóa tính năng 956", stock: 5, image: "" },
-            { id: 3, category: "Support Social", subcategory: "Meta", name: "UNLOCK FAQ", price: "100.000đ", desc: "Mở FAQ", stock: 8, image: "" },
-            { id: 4, category: "Support Social", subcategory: "Meta", name: "SETCAMP BM", price: "250.000đ", desc: "Setup camp BM", stock: 6, image: "" },
-            { id: 5, category: "Support Social", subcategory: "Meta", name: "BM 250 / 2K5", price: "300.000đ", desc: "BM 250 hoặc 2K5", stock: 4, image: "" },
-            { id: 6, category: "Support Social", subcategory: "Meta", name: "TICK PROFILE / FANPAGE", price: "500.000đ", desc: "Tick xanh profile/fanpage", stock: 3, image: "" },
-            { id: 7, category: "Support Social", subcategory: "Meta", name: "PAY TICK / UPDATE TICK", price: "400.000đ", desc: "Pay/Update tick", stock: 5, image: "" },
-            { id: 8, category: "Support Social", subcategory: "TikTok", name: "UNLOCK LIVE", price: "200.000đ", desc: "Mở live TikTok", stock: 7, image: "" },
-            { id: 9, category: "Support Social", subcategory: "TikTok", name: "UNLOCK ACCOUNT", price: "180.000đ", desc: "Mở tài khoản TikTok", stock: 10, image: "" },
-            { id: 10, category: "Support Social", subcategory: "TikTok", name: "UPDATE ARTIST", price: "350.000đ", desc: "Update Artist", stock: 3, image: "" },
-            { id: 11, category: "Support Social", subcategory: "TikTok", name: "UPDATE BUSINESSES", price: "350.000đ", desc: "Update Business", stock: 3, image: "" },
-            { id: 12, category: "Support Social", subcategory: "Google", name: "UNLOCK GOOGLE SPAM/2FA/DIE", price: "250.000đ", desc: "Unlock Google", stock: 5, image: "" },
-            { id: 13, category: "Shop Liên Quân", subcategory: "", name: "Acc Kim Cương 100+", price: "500.000đ", desc: "Full tướng, ngọc đỏ", stock: 5, image: "" },
-            { id: 14, category: "Shop Free Fire", subcategory: "", name: "Acc FF Thách Đấu", price: "300.000đ", desc: "Full nhân vật", stock: 2, image: "" }
+            { id: 1, category: "Support Social", subcategory: "Meta", name: "UNLOCK 282", price: "150.000đ", desc: "Mở khóa tính năng 282", stock: 10, image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&q=80" },
+            { id: 2, category: "Support Social", subcategory: "Meta", name: "UNLOCK 956", price: "200.000đ", desc: "Mở khóa tính năng 956", stock: 5, image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&q=80" },
+            { id: 3, category: "Support Social", subcategory: "Meta", name: "UNLOCK FAQ", price: "100.000đ", desc: "Mở FAQ", stock: 8, image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&q=80" },
+            { id: 4, category: "Support Social", subcategory: "TikTok", name: "UNLOCK LIVE", price: "200.000đ", desc: "Mở live TikTok", stock: 7, image: "https://images.unsplash.com/photo-1595054326165-92cbce64d72e?w=500&q=80" },
+            { id: 5, category: "Shop Liên Quân", subcategory: "", name: "Acc Kim Cương 100+", price: "500.000đ", desc: "Full tướng, ngọc đỏ", stock: 5, image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500&q=80" },
+            { id: 6, category: "Shop Free Fire", subcategory: "", name: "Acc FF Thách Đấu", price: "300.000đ", desc: "Full nhân vật", stock: 2, image: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=500&q=80" }
         ];
 
         const DEFAULT_POSTS = [
-            { id: 1, title: "Hướng dẫn mua hàng", content: "Vui lòng liên hệ Telegram để được hỗ trợ thanh toán và nhận hàng.", date: new Date().toISOString(), image: "" },
+            { id: 1, title: "Hướng dẫn mua hàng", content: "Vui lòng liên hệ Telegram để được hỗ trợ thanh toán và nhận hàng tự động.", date: new Date().toISOString(), image: "" },
             { id: 2, title: "Cập nhật bảo mật Meta", content: "Hệ thống đã cập nhật quy trình mới cho UNLOCK 956.", date: new Date().toISOString(), image: "" }
         ];
 
@@ -156,12 +172,11 @@
         /* ================= UTILS ================= */
         const ls = {
             get: (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
-            set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) { alert("Bộ nhớ đầy, vui lòng xoá bớt ảnh!"); } },
+            set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) { console.warn("Memory full"); } },
             del: (k) => localStorage.removeItem(k)
         };
 
-        // Nén ảnh trước khi lưu LocalStorage để tránh tràn bộ nhớ
-        const compressImage = (file, maxW = 400, q = 0.7) => new Promise(res => {
+        const compressImage = (file, maxW = 500, q = 0.7) => new Promise(res => {
             const r = new FileReader();
             r.onload = e => {
                 const img = new Image();
@@ -178,23 +193,11 @@
             r.readAsDataURL(file);
         });
 
-        /* ================= ICON FIX HOOK ================= */
-        // Fix triệt để lỗi icon không render khi DOM thay đổi
         function useLucide() {
             useEffect(() => {
-                let scheduled = false;
-                const run = () => {
-                    if (!window.lucide) return;
-                    if (!document.querySelector('[data-lucide]')) return;
-                    window.lucide.createIcons();
-                };
-                const schedule = () => {
-                    if (scheduled) return;
-                    scheduled = true;
-                    requestAnimationFrame(() => { scheduled = false; run(); });
-                };
+                const run = () => { if (window.lucide) window.lucide.createIcons(); };
                 run();
-                const obs = new MutationObserver(schedule);
+                const obs = new MutationObserver(run);
                 obs.observe(document.body, { childList: true, subtree: true });
                 return () => obs.disconnect();
             }, []);
@@ -221,41 +224,20 @@
 
                 if (type === 'snow') {
                     interval = setInterval(() => {
-                        add('❄', 'snowflake', {
-                            left: Math.random() * 100 + 'vw',
-                            animationDuration: (Math.random() * 4 + 4) + 's',
-                            opacity: Math.random() * 0.7 + 0.3,
-                            fontSize: (Math.random() * 10 + 12) + 'px'
-                        }, 8000);
+                        add('❄', 'snowflake fixed text-white/50', { left: Math.random() * 100 + 'vw', top: '-10px', animation: `fall ${Math.random()*4+4}s linear forwards`, fontSize: (Math.random()*10+10)+'px' }, 8000);
                     }, 300);
                 } else if (type === 'flower') {
-                    const flowers = ['🌸', '🌺', '🌼', '🌷', '🍁', '🍂'];
+                    const flowers = ['🌸', '🌺', '🌼', '🌷', '🍁'];
                     interval = setInterval(() => {
-                        add(flowers[Math.floor(Math.random() * flowers.length)], 'flower', {
-                            left: Math.random() * 100 + 'vw',
-                            animationDuration: (Math.random() * 4 + 5) + 's',
-                            fontSize: (Math.random() * 12 + 14) + 'px'
-                        }, 9000);
+                        add(flowers[Math.floor(Math.random() * flowers.length)], 'flower fixed', { left: Math.random() * 100 + 'vw', top: '-10px', animation: `fall ${Math.random()*4+5}s linear forwards`, fontSize: (Math.random()*12+14)+'px' }, 9000);
                     }, 500);
                 } else if (type === 'lava') {
                     interval = setInterval(() => {
                         const size = Math.random() * 6 + 4;
-                        add('', 'lava', {
-                            left: Math.random() * 100 + 'vw',
-                            animationDuration: (Math.random() * 3 + 4) + 's',
-                            width: size + 'px', height: size + 'px',
-                            background: `radial-gradient(circle, hsl(${Math.random() * 30 + 15}, 100%, 60%), hsl(${Math.random() * 20}, 100%, 40%))`
-                        }, 7000);
+                        add('', 'lava fixed rounded-full', { left: Math.random() * 100 + 'vw', bottom: '-10px', animation: `rise ${Math.random()*3+4}s linear forwards`, width: size+'px', height: size+'px', background: `hsl(${Math.random()*30+15}, 100%, 60%)`, boxShadow: '0 0 10px rgba(255,100,0,0.8)' }, 7000);
                     }, 150);
-                } else if (type === 'fog') {
-                    layer.innerHTML = '<div class="fog"></div>';
                 }
-
-                return () => {
-                    if (interval) clearInterval(interval);
-                    timeouts.forEach(t => clearTimeout(t));
-                    layer.innerHTML = '';
-                };
+                return () => { if (interval) clearInterval(interval); timeouts.forEach(t => clearTimeout(t)); layer.innerHTML = ''; };
             }, [type]);
             return null;
         }
@@ -270,37 +252,37 @@
         function ProfileHome({ profile, posts, onNavigate }) {
             return (
                 <div className="animate-fade-in space-y-4">
-                    <div className="relative rounded-3xl overflow-hidden glass">
-                        <div className="h-40 md:h-56 relative bg-gradient-to-r from-blue-500 to-cyan-400">
+                    <div className="relative rounded-[2rem] overflow-hidden glass shadow-2xl">
+                        <div className="h-48 md:h-64 relative bg-blue-500">
                             {profile.cover && <img src={profile.cover} className="w-full h-full object-cover" alt="Cover" />}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         </div>
-                        <div className="px-5 pb-6 -mt-14 relative">
-                            <img src={profile.avatar} className="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-white dark:border-slate-800 object-cover shadow-lg bg-white" alt="Avatar" />
+                        <div className="px-6 pb-6 -mt-16 relative">
+                            <img src={profile.avatar} className="w-28 h-28 rounded-full border-4 border-white dark:border-slate-800 object-cover shadow-xl bg-white" alt="Avatar" />
                             <div className="mt-3">
-                                <h2 className="text-2xl font-extrabold flex items-center">
+                                <h2 className="text-2xl font-extrabold flex items-center text-white drop-shadow-md">
                                     {profile.name} {profile.verified && <VerifiedIcon size={24} />}
                                 </h2>
-                                <p className="text-xs text-gray-500 mt-0.5">@{ADMIN_USER} • MMO Provider</p>
+                                <p className="text-xs text-blue-200 mt-0.5 font-medium">@{ADMIN_USER} • MMO Provider</p>
                             </div>
-                            <p className="mt-3 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{profile.bio}</p>
+                            <p className="mt-3 text-sm leading-relaxed opacity-90">{profile.bio}</p>
                             
-                            <div className="flex gap-2 mt-5">
-                                <button onClick={() => onNavigate('shop')} className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 transition">Xem Shop</button>
-                                <button onClick={() => onNavigate('contact')} className="flex-1 glass-strong py-2.5 rounded-xl text-sm font-bold hover:bg-white/80 transition">Liên Hệ</button>
+                            <div className="flex gap-3 mt-6">
+                                <button onClick={() => onNavigate('shop')} className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white py-3 rounded-2xl text-sm font-bold shadow-lg shadow-blue-500/30 transition-all active:scale-95">Xem Shop</button>
+                                <button onClick={() => onNavigate('contact')} className="flex-1 glass py-3 rounded-2xl text-sm font-bold hover:bg-white/10 transition-all active:scale-95">Liên Hệ</button>
                             </div>
                         </div>
                     </div>
 
-                    <div className="glass rounded-2xl p-5">
-                        <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-                            <i data-lucide="newspaper" size="18" className="text-blue-500"></i> Bài viết mới
+                    <div className="glass rounded-3xl p-5 glass-card">
+                        <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                            <i data-lucide="newspaper" size="20" className="text-blue-500"></i> Bài viết mới
                         </h3>
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                             {posts.slice(-3).reverse().map(p => (
-                                <div key={p.id} onClick={() => onNavigate('posts')} className="glass-strong rounded-xl p-3 cursor-pointer hover:bg-white/90 dark:hover:bg-slate-700/80 transition">
+                                <div key={p.id} onClick={() => onNavigate('posts')} className="glass rounded-2xl p-4 cursor-pointer hover:bg-white/50 dark:hover:bg-slate-700/50 transition border border-white/20">
                                     <p className="font-semibold text-sm">{p.title}</p>
-                                    <p className="text-xs text-gray-500 line-clamp-2 mt-1">{p.content}</p>
+                                    <p className="text-xs opacity-70 line-clamp-2 mt-1">{p.content}</p>
                                 </div>
                             ))}
                         </div>
@@ -311,43 +293,65 @@
 
         function Shop({ products, filter, setFilter }) {
             const [search, setSearch] = useState('');
+            
+            // Fix logic: Lọc theo danh mục trước, sau đó tìm kiếm trong danh mục đó
             let list = products.filter(p => {
-                if (filter && p.category !== filter && p.subcategory !== filter) return false;
-                if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
-                return true;
+                const matchFilter = !filter || p.category === filter || p.subcategory === filter;
+                const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
+                return matchFilter && matchSearch;
             });
 
             return (
                 <div className="animate-fade-in">
-                    <div className="glass rounded-2xl p-4 mb-4">
+                    <div className="glass rounded-3xl p-4 mb-5 sticky top-4 z-10 shadow-lg">
                         <div className="flex gap-2 mb-3">
-                            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Tìm sản phẩm..." className="flex-1 glass-strong rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 ring-blue-500" />
+                            <div className="relative flex-1">
+                                <i data-lucide="search" size="18" className="absolute left-3 top-2.5 opacity-50"></i>
+                                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Tìm sản phẩm trong mục này..." className="w-full bg-white/50 dark:bg-black/20 rounded-2xl pl-10 pr-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 transition-all border border-white/20" />
+                            </div>
                         </div>
                         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-                            <button onClick={() => setFilter('')} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold ${!filter ? 'bg-blue-500 text-white' : 'glass-strong'}`}>Tất cả</button>
+                            <button onClick={() => setFilter('')} className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all ${!filter ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/40'}`}>Tất cả</button>
                             {["Shop Liên Quân", "Shop Free Fire", "Support Social", "Proxy / VPN", "Bypass / Tool"].map(c => (
-                                <button key={c} onClick={() => setFilter(c)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold ${filter === c ? 'bg-blue-500 text-white' : 'glass-strong'}`}>{c}</button>
+                                <button key={c} onClick={() => setFilter(c)} className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all ${filter === c ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/40'}`}>{c}</button>
                             ))}
                         </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {list.length === 0 && <p className="text-center py-10 opacity-50 col-span-2">Không tìm thấy sản phẩm nào.</p>}
                         {list.map(p => (
-                            <div key={p.id} className="glass rounded-2xl overflow-hidden flex flex-col">
-                                {p.image ? <img src={p.image} className="h-40 w-full object-cover" alt="" /> :
-                                    <div className="h-40 bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-white"><i data-lucide="package" size="48"></i></div>}
-                                <div className="p-4 flex-1 flex flex-col">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <span className="text-[10px] font-bold text-blue-500 bg-blue-100 dark:bg-blue-900/50 px-2 py-0.5 rounded-full">{p.subcategory || p.category}</span>
-                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${p.stock > 0 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
-                                            {p.stock > 0 ? `Kho: ${p.stock}` : 'Hết'}
-                                        </span>
-                                    </div>
-                                    <h3 className="font-bold text-base">{p.name}</h3>
-                                    <p className="text-xs text-gray-500 mt-1 flex-1">{p.desc}</p>
-                                    <div className="mt-3 flex justify-between items-center">
-                                        <span className="font-bold text-red-500">{p.price}</span>
-                                        <button disabled={p.stock <= 0} className={`px-4 py-1.5 rounded-lg text-xs font-bold text-white ${p.stock > 0 ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400'}`}>Mua</button>
+                            <div key={p.id} className="glass-card glass rounded-3xl overflow-hidden flex flex-col relative group">
+                                <div className="absolute top-3 left-3 z-10 flex gap-1">
+                                    <span className="text-[10px] font-bold text-blue-600 bg-blue-100/80 backdrop-blur-md px-2.5 py-1 rounded-full">{p.subcategory || p.category}</span>
+                                </div>
+                                <div className="absolute top-3 right-3 z-10">
+                                    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-md ${p.stock > 0 ? 'bg-green-100/80 text-green-700' : 'bg-red-100/80 text-red-700'}`}>
+                                        {p.stock > 0 ? `Còn ${p.stock}` : 'Hết hàng'}
+                                    </span>
+                                </div>
+                                
+                                <div className="h-48 bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-slate-800 dark:to-slate-900 relative overflow-hidden flex items-center justify-center p-4">
+                                    <div className="absolute inset-0 bg-blue-500/10 group-hover:bg-blue-500/20 transition-all duration-500"></div>
+                                    {p.image ? (
+                                        <img src={p.image} className="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-500 relative z-10" alt={p.name} />
+                                    ) : (
+                                        <i data-lucide="package" size="64" className="text-blue-400 opacity-50 relative z-10"></i>
+                                    )}
+                                </div>
+                                
+                                <div className="p-5 flex-1 flex flex-col relative bg-gradient-to-t from-white/80 to-white/40 dark:from-slate-900/80 dark:to-slate-800/40 backdrop-blur-xl border-t border-white/40 dark:border-white/10">
+                                    <h3 className="font-extrabold text-lg text-center mb-1">{p.name}</h3>
+                                    <p className="text-xs opacity-70 text-center mb-4 line-clamp-2">{p.desc}</p>
+                                    
+                                    <div className="mt-auto flex justify-between items-center">
+                                        <div>
+                                            <p className="text-[10px] opacity-50 line-through">{parseInt(p.price.replace(/\D/g,'')) * 1.2}đ</p>
+                                            <span className="font-extrabold text-blue-500 text-xl">{p.price}</span>
+                                        </div>
+                                        <button disabled={p.stock <= 0} className={`px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-1 shadow-lg transition-transform active:scale-95 ${p.stock > 0 ? 'bg-blue-500 hover:bg-blue-600 shadow-blue-500/30' : 'bg-gray-400'}`}>
+                                            <i data-lucide="shopping-cart" size="14"></i> Mua ngay
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -373,9 +377,11 @@
             const getW = async (lat, lon, name) => {
                 setLoading(true);
                 try {
-                    const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability&timezone=Asia/Ho_Chi_Minh`);
+                    // Full API lấy thông tin chi tiết
+                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,weather_code,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=Asia/Ho_Chi_Minh&forecast_days=3`;
+                    const r = await fetch(url);
                     const d = await r.json();
-                    setWeather({ name, current: d.current, hourly: d.hourly });
+                    setWeather({ name, current: d.current, hourly: d.hourly, daily: d.daily });
                     setActiveCity(name);
                 } catch (e) { alert('Lỗi tải thời tiết'); }
                 setLoading(false);
@@ -396,46 +402,97 @@
             const codeMap = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',51:'🌦',61:'🌧',80:'🌧',95:'⛈'};
 
             return (
-                <div className="glass p-5 rounded-2xl animate-fade-in">
-                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="cloud-sun" size="22" className="text-blue-500"></i> Thời tiết</h2>
-                    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
-                        {cities.map(c => (
-                            <button key={c.name} onClick={() => getW(c.lat, c.lon, c.name)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold ${activeCity === c.name ? 'bg-blue-500 text-white' : 'glass-strong'}`}>{c.name}</button>
-                        ))}
-                        <button onClick={myLoc} className="whitespace-nowrap bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                            <i data-lucide="map-pin" size="12"></i> Vị trí của tôi
-                        </button>
+                <div className="animate-fade-in space-y-4">
+                    {/* Header Weather */}
+                    <div className="glass rounded-3xl p-6 text-center shadow-xl relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-full weather-gradient z-0"></div>
+                        <div className="relative z-10">
+                            <h2 className="text-xl font-bold flex items-center justify-center gap-2 mb-2"><i data-lucide="cloud-sun" size="24" className="text-blue-500"></i> Thời Tiết</h2>
+                            <div className="flex justify-center gap-2 overflow-x-auto no-scrollbar pb-2 mb-2">
+                                {cities.map(c => (
+                                    <button key={c.name} onClick={() => getW(c.lat, c.lon, c.name)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold transition ${activeCity === c.name ? 'bg-blue-500 text-white shadow-lg' : 'glass'}`}>{c.name}</button>
+                                ))}
+                                <button onClick={myLoc} className="whitespace-nowrap bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg flex items-center gap-1">
+                                    <i data-lucide="map-pin" size="12"></i> Vị trí
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     
-                    {loading ? <p className="text-sm text-center py-3 animate-pulse">Đang tải...</p> : weather && (
-                        <div className="mt-3 space-y-3">
-                            <div className="glass-strong p-4 rounded-xl flex justify-between items-center">
-                                <div>
-                                    <p className="font-bold">{weather.name}</p>
-                                    <p className="text-xs text-gray-500">Độ ẩm: {weather.current.relative_humidity_2m}% • Gió: {weather.current.wind_speed_10m} km/h</p>
+                    {loading ? <div className="text-center py-10"><i data-lucide="loader-2" className="animate-spin inline-block text-blue-500" size="32"></i></div> : weather && (
+                        <div className="space-y-4">
+                            {/* Current Weather Card */}
+                            <div className="glass rounded-3xl p-6 flex flex-col items-center justify-center text-center shadow-lg relative overflow-hidden">
+                                <h3 className="font-bold text-xl mb-1">{weather.name}</h3>
+                                <p className="text-sm opacity-70 mb-4">{new Date().toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                                <div className="flex items-center gap-6">
+                                    <div className="text-7xl drop-shadow-lg">{codeMap[weather.current.weather_code] || '🌤'}</div>
+                                    <div>
+                                        <div className="text-5xl font-extrabold text-blue-500">{weather.current.temperature_2m}°</div>
+                                        <p className="text-sm font-medium mt-1">Cảm giác: {weather.current.apparent_temperature}°</p>
+                                    </div>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-4xl">{codeMap[weather.current.weather_code] || '🌤'}</p>
-                                    <p className="text-2xl font-extrabold text-blue-500">{weather.current.temperature_2m}°C</p>
+                                <div className="grid grid-cols-3 gap-4 w-full mt-6">
+                                    <div className="glass rounded-2xl p-2 text-center">
+                                        <i data-lucide="droplets" size="16" className="mx-auto text-blue-400 mb-1"></i>
+                                        <p className="text-[10px] opacity-70">Độ ẩm</p>
+                                        <p className="font-bold text-sm">{weather.current.relative_humidity_2m}%</p>
+                                    </div>
+                                    <div className="glass rounded-2xl p-2 text-center">
+                                        <i data-lucide="wind" size="16" className="mx-auto text-teal-400 mb-1"></i>
+                                        <p className="text-[10px] opacity-70">Gió</p>
+                                        <p className="font-bold text-sm">{weather.current.wind_speed_10m} km/h</p>
+                                    </div>
+                                    <div className="glass rounded-2xl p-2 text-center">
+                                        <i data-lucide="sun" size="16" className="mx-auto text-yellow-400 mb-1"></i>
+                                        <p className="text-[10px] opacity-70">UV</p>
+                                        <p className="font-bold text-sm">{weather.daily.uv_index_max[0]}</p>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <div>
-                                <p className="text-xs font-bold mb-2 text-gray-500">Dự báo 24H</p>
-                                <div className="overflow-x-auto no-scrollbar flex gap-3 glass-strong p-3 rounded-xl">
-                                    {weather.hourly.time.slice(0, 12).map((time, i) => (
-                                        <div key={i} className="text-center min-w-[60px]">
-                                            <p className="text-[10px] text-gray-500">{time.split('T')[1]}</p>
+
+                            {/* Sun & Moon Info */}
+                            <div className="glass rounded-3xl p-5 shadow-lg">
+                                <h4 className="font-bold text-sm mb-3 flex items-center gap-2"><i data-lucide="sunrise" size="16" className="text-orange-400"></i> Mặt trời & Mặt trăng</h4>
+                                <div className="grid grid-cols-2 gap-3 text-sm">
+                                    <div className="glass rounded-xl p-3 flex items-center gap-3">
+                                        <i data-lucide="sunrise" size="20" className="text-orange-500"></i>
+                                        <div><p className="text-[10px] opacity-60">Bình minh</p><p className="font-bold">{weather.daily.sunrise[0].split('T')[1]}</p></div>
+                                    </div>
+                                    <div className="glass rounded-xl p-3 flex items-center gap-3">
+                                        <i data-lucide="sunset" size="20" className="text-red-500"></i>
+                                        <div><p className="text-[10px] opacity-60">Hoàng hôn</p><p className="font-bold">{weather.daily.sunset[0].split('T')[1]}</p></div>
+                                    </div>
+                                </div>
+                                <div className="mt-3 flex justify-between text-xs opacity-70 px-2">
+                                    <span>Golden Hour: {weather.daily.sunrise[0].split('T')[1]} - 1h</span>
+                                    <span>Blue Hour: {weather.daily.sunset[0].split('T')[1]} - 1h</span>
+                                </div>
+                            </div>
+
+                            {/* 48h Hourly Forecast */}
+                            <div className="glass rounded-3xl p-5 shadow-lg">
+                                <h4 className="font-bold text-sm mb-4 flex items-center gap-2"><i data-lucide="clock" size="16" className="text-blue-500"></i> Dự báo 48 giờ tới</h4>
+                                <div className="overflow-x-auto no-scrollbar flex gap-3 pb-2">
+                                    {weather.hourly.time.slice(0, 48).map((time, i) => (
+                                        <div key={i} className="min-w-[70px] glass rounded-2xl p-3 text-center flex flex-col items-center justify-between">
+                                            <p className="text-[10px] opacity-60">{time.split('T')[1]}</p>
+                                            <p className="text-xl my-1">{codeMap[weather.hourly.weather_code[i]] || '🌤'}</p>
                                             <p className="font-bold text-sm">{weather.hourly.temperature_2m[i]}°</p>
-                                            <p className="text-[10px] text-blue-500">{weather.hourly.precipitation_probability[i]}%</p>
+                                            <div className="flex items-center gap-1 mt-1 text-blue-400">
+                                                <i data-lucide="umbrella" size="10"></i>
+                                                <span className="text-[10px] font-bold">{weather.hourly.precipitation_probability[i]}%</span>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
                             </div>
 
-                            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-3 rounded-xl text-sm">
-                                <p className="font-bold text-red-600 dark:text-red-400 flex items-center gap-1"><i data-lucide="alert-triangle" size="16"></i> Cảnh báo Miền Trung</p>
-                                <p className="mt-1 text-gray-700 dark:text-gray-300 text-xs leading-relaxed"><strong>Nguyên nhân:</strong> Mưa lớn do bão/áp thấp, địa hình dốc gây lũ quét, sạt lở đất.<br/><strong>Cách phòng tránh:</strong> Gia cố nhà cửa; không qua suối/rốn khi mưa lớn; chuẩn bị đèn pin, lương thực; theo dõi tin bão; sơ tán khi có lệnh.</p>
+                            {/* Warnings */}
+                            <div className="bg-red-500/10 border border-red-500/30 backdrop-blur-md p-4 rounded-3xl text-sm">
+                                <p className="font-bold text-red-500 flex items-center gap-2 mb-2"><i data-lucide="alert-triangle" size="18"></i> Cảnh báo thời tiết</p>
+                                <p className="text-xs opacity-80 leading-relaxed mb-2"><strong>Nguy cơ:</strong> Mưa lớn, dông lốc, sạt lở đất, ngập úng cục bộ.</p>
+                                <p className="text-xs opacity-80 leading-relaxed"><strong>Khuyến nghị:</strong> Hạn chế di chuyển qua vùng trũng, chuẩn bị đèn pin và theo dõi thông tin thường xuyên.</p>
                             </div>
                         </div>
                     )}
@@ -443,36 +500,31 @@
             );
         }
 
+        // ... Các component khác giữ nguyên hoặc tối ưu UI
         function IpCheck() {
             const [ip, setIp] = useState(null);
             const [loading, setLoading] = useState(false);
-            
             const check = async () => {
                 setLoading(true); setIp(null);
                 try {
-                    // Đã fix lỗi API ipwho.is (ổn định hơn ipapi.co)
                     const r = await fetch('https://ipwho.is/');
                     const d = await r.json();
-                    if(d.success) setIp(d);
-                    else alert('Lỗi check IP');
-                } catch (e) { alert('Lỗi mạng, thử lại sau!'); }
+                    if(d.success) setIp(d); else alert('Lỗi check IP');
+                } catch (e) { alert('Lỗi mạng!'); }
                 setLoading(false);
             };
-
             return (
-                <div className="glass p-5 rounded-2xl animate-fade-in">
-                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="globe" size="22" className="text-blue-500"></i> Check IP</h2>
-                    <button onClick={check} disabled={loading} className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition">
+                <div className="glass p-6 rounded-3xl animate-fade-in shadow-xl">
+                    <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="globe" size="24" className="text-blue-500"></i> Check IP</h2>
+                    <button onClick={check} disabled={loading} className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-blue-500/30 transition active:scale-95">
                         {loading ? 'Đang check...' : 'Check IP Ngay'}
                     </button>
-                    
                     {ip && (
-                        <div className="mt-3 glass-strong p-4 rounded-xl text-xs space-y-2">
-                            <div className="flex justify-between border-b border-white/30 pb-1"><span className="text-gray-500">IP:</span><span className="font-bold">{ip.ip}</span></div>
-                            <div className="flex justify-between border-b border-white/30 pb-1"><span className="text-gray-500">Loại:</span><span className="font-bold">{ip.country_code === 'VN' ? 'Local (VN)' : 'Proxy / VPN'}</span></div>
-                            <div className="flex justify-between border-b border-white/30 pb-1"><span className="text-gray-500">Thành phố:</span><span className="font-bold">{ip.city || 'N/A'}</span></div>
-                            <div className="flex justify-between border-b border-white/30 pb-1"><span className="text-gray-500">Mã bưu chính:</span><span className="font-bold">{ip.postal || 'N/A'}</span></div>
-                            <div className="flex justify-between"><span className="text-gray-500">Quốc gia:</span><span className="font-bold">{ip.country}</span></div>
+                        <div className="mt-4 glass rounded-2xl p-4 text-xs space-y-2 border border-white/20">
+                            <div className="flex justify-between border-b border-white/10 pb-2"><span className="opacity-70">IP:</span><span className="font-bold">{ip.ip}</span></div>
+                            <div className="flex justify-between border-b border-white/10 pb-2"><span className="opacity-70">Loại:</span><span className="font-bold">{ip.country_code === 'VN' ? 'Local (VN)' : 'Proxy / VPN'}</span></div>
+                            <div className="flex justify-between border-b border-white/10 pb-2"><span className="opacity-70">Thành phố:</span><span className="font-bold">{ip.city || 'N/A'}</span></div>
+                            <div className="flex justify-between"><span className="opacity-70">Quốc gia:</span><span className="font-bold">{ip.country}</span></div>
                         </div>
                     )}
                 </div>
@@ -483,39 +535,33 @@
             const [speed, setSpeed] = useState(null);
             const [testing, setTesting] = useState(false);
             const [netInfo, setNetInfo] = useState(null);
-
             const test = async () => {
                 setTesting(true); setSpeed(null);
                 const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
                 if (c) setNetInfo({ type: c.effectiveType, down: c.downlink });
-                
                 const start = performance.now();
                 try {
-                    // Dùng file test tốc độ của Cloudflare
                     await fetch('https://speed.cloudflare.com/__down?bytes=2000000&cache=' + Date.now(), { cache: 'no-store' });
                     const dur = (performance.now() - start) / 1000;
                     setSpeed(((2000000 * 8) / (dur * 1000000)).toFixed(2));
                 } catch (e) { alert('Lỗi test mạng'); }
                 setTesting(false);
             };
-
             return (
-                <div className="glass p-5 rounded-2xl animate-fade-in">
-                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="wifi" size="22" className="text-purple-500"></i> Check 4G / 5G / WiFi</h2>
-                    <button onClick={test} disabled={testing} className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2.5 rounded-xl font-bold shadow-lg shadow-purple-500/30 transition">
+                <div className="glass p-6 rounded-3xl animate-fade-in shadow-xl">
+                    <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="wifi" size="24" className="text-purple-500"></i> Check Mạng</h2>
+                    <button onClick={test} disabled={testing} className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-purple-500/30 transition active:scale-95">
                         {testing ? 'Đang test...' : 'Bắt đầu test'}
                     </button>
-                    
                     {netInfo && (
-                        <div className="mt-3 glass-strong p-3 rounded-xl text-xs space-y-1">
-                            <div className="flex justify-between"><span className="text-gray-500">Loại kết nối:</span><span className="font-bold">{netInfo.type?.toUpperCase() || 'N/A'}</span></div>
-                            <div className="flex justify-between"><span className="text-gray-500">Ước tính:</span><span className="font-bold">{netInfo.down} Mbps</span></div>
+                        <div className="mt-4 glass rounded-2xl p-3 text-xs flex justify-between">
+                            <span className="opacity-70">Kết nối:</span><span className="font-bold uppercase">{netInfo.type || 'N/A'}</span>
                         </div>
                     )}
                     {speed && (
-                        <div className="mt-3 glass-strong p-4 rounded-xl text-center">
-                            <p className="text-xs text-gray-500">Tốc độ tải xuống</p>
-                            <p className="text-3xl font-extrabold text-purple-500">{speed} <span className="text-lg">Mbps</span></p>
+                        <div className="mt-4 glass rounded-2xl p-6 text-center border border-white/20">
+                            <p className="text-sm opacity-70 mb-1">Tốc độ tải xuống</p>
+                            <p className="text-4xl font-extrabold text-purple-500">{speed} <span className="text-lg">Mbps</span></p>
                         </div>
                     )}
                 </div>
@@ -525,26 +571,24 @@
         function Notes() {
             const [notes, setNotes] = useState(() => ls.get('notes', []));
             const [input, setInput] = useState('');
-            
             const add = () => {
                 if (!input.trim()) return;
                 const n = [...notes, { id: Date.now(), text: input }];
                 setNotes(n); ls.set('notes', n); setInput('');
             };
             const del = id => { const n = notes.filter(x => x.id !== id); setNotes(n); ls.set('notes', n); };
-            
             return (
-                <div className="glass p-5 rounded-2xl animate-fade-in">
-                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="sticky-note" size="22" className="text-yellow-500"></i> Ghi chú</h2>
-                    <div className="flex gap-2">
-                        <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && add()} placeholder="Nhập ghi chú..." className="flex-1 glass-strong rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 ring-blue-500" />
-                        <button onClick={add} className="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded-xl font-bold">+</button>
+                <div className="glass p-6 rounded-3xl animate-fade-in shadow-xl">
+                    <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="sticky-note" size="24" className="text-yellow-500"></i> Ghi chú</h2>
+                    <div className="flex gap-2 mb-4">
+                        <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && add()} placeholder="Nhập ghi chú..." className="flex-1 bg-white/50 dark:bg-black/20 rounded-2xl px-4 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 border border-white/20" />
+                        <button onClick={add} className="bg-blue-500 text-white w-12 rounded-2xl font-bold shadow-lg active:scale-95 transition">+</button>
                     </div>
-                    <ul className="mt-3 space-y-2 max-h-60 overflow-y-auto no-scrollbar">
+                    <ul className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
                         {notes.map(n => (
-                            <li key={n.id} className="glass-strong rounded-xl p-2 flex justify-between items-center text-sm">
+                            <li key={n.id} className="glass rounded-xl p-3 flex justify-between items-center text-sm border border-white/10">
                                 <span>{n.text}</span>
-                                <button onClick={() => del(n.id)} className="text-red-500 p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded"><i data-lucide="trash-2" size="16"></i></button>
+                                <button onClick={() => del(n.id)} className="text-red-500 p-1 hover:bg-red-500/10 rounded-lg transition"><i data-lucide="trash-2" size="16"></i></button>
                             </li>
                         ))}
                     </ul>
@@ -556,7 +600,6 @@
             const [mail, setMail] = useState(() => ls.get('tempmail', null));
             const [messages, setMessages] = useState([]);
             const [loading, setLoading] = useState(false);
-
             const create = async () => {
                 setLoading(true);
                 try {
@@ -565,19 +608,15 @@
                     const domain = dd['hydra:member'][0].domain;
                     const address = `user${Math.floor(Math.random() * 1000000)}@${domain}`;
                     const password = 'Password123!';
-                    
                     const cr = await fetch('https://api.mail.tm/accounts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password }) });
                     if (!cr.ok) throw new Error();
-                    
                     const tr = await fetch('https://api.mail.tm/token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password }) });
                     const td = await tr.json();
-                    
                     const m = { address, token: td.token };
                     ls.set('tempmail', m); setMail(m);
-                } catch (e) { alert('Lỗi tạo mail, thử lại!'); }
+                } catch (e) { alert('Lỗi tạo mail, vui lòng thử lại!'); }
                 setLoading(false);
             };
-
             const fetchM = async () => {
                 if (!mail) return;
                 try {
@@ -586,27 +625,26 @@
                     setMessages(d['hydra:member'] || []);
                 } catch (e) { alert('Lỗi tải mail'); }
             };
-
             return (
-                <div className="glass p-5 rounded-2xl animate-fade-in">
-                    <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="mail" size="22" className="text-orange-500"></i> Email Tạm</h2>
+                <div className="glass p-6 rounded-3xl animate-fade-in shadow-xl">
+                    <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="mail" size="24" className="text-orange-500"></i> Email Tạm</h2>
                     {!mail ? (
-                        <button onClick={create} disabled={loading} className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl font-bold shadow-lg shadow-orange-500/30">
+                        <button onClick={create} disabled={loading} className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-orange-500/30 transition active:scale-95">
                             {loading ? 'Đang tạo...' : 'Tạo Mail Tạm'}
                         </button>
                     ) : (
-                        <div className="glass-strong p-3 rounded-xl text-sm">
-                            <p className="font-bold text-orange-500 break-all">{mail.address}</p>
-                            <div className="flex gap-2 mt-2">
-                                <button onClick={fetchM} className="flex-1 glass-strong py-1.5 rounded-lg text-xs font-bold">Tải hộp thư</button>
-                                <button onClick={() => { ls.del('tempmail'); setMail(null); setMessages([]); }} className="flex-1 bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 py-1.5 rounded-lg text-xs font-bold">Xoá</button>
+                        <div className="glass rounded-2xl p-4 text-sm border border-white/20">
+                            <p className="font-bold text-orange-500 break-all mb-3">{mail.address}</p>
+                            <div className="flex gap-2">
+                                <button onClick={fetchM} className="flex-1 bg-white/50 dark:bg-black/20 py-2 rounded-xl text-xs font-bold hover:bg-white/70 transition">Tải hộp thư</button>
+                                <button onClick={() => { ls.del('tempmail'); setMail(null); setMessages([]); }} className="flex-1 bg-red-500/10 text-red-500 py-2 rounded-xl text-xs font-bold hover:bg-red-500/20 transition">Xoá</button>
                             </div>
                             {messages.length > 0 && (
-                                <ul className="mt-3 space-y-1 max-h-48 overflow-y-auto no-scrollbar">
+                                <ul className="mt-4 space-y-2 max-h-48 overflow-y-auto no-scrollbar">
                                     {messages.map(m => (
-                                        <li key={m.id} className="border-b border-white/30 pb-1 text-xs">
+                                        <li key={m.id} className="border-b border-white/10 pb-2 text-xs">
                                             <p className="font-semibold">{m.subject || '(Không tiêu đề)'}</p>
-                                            <p className="text-gray-500 text-[10px]">Từ: {m.from?.address}</p>
+                                            <p className="opacity-60 text-[10px]">Từ: {m.from?.address}</p>
                                         </li>
                                     ))}
                                 </ul>
@@ -620,14 +658,14 @@
         function PostsPage({ posts }) {
             return (
                 <div className="animate-fade-in space-y-4">
-                    <h2 className="text-2xl font-bold">Bài Viết</h2>
-                    {posts.length === 0 && <p className="text-center text-gray-500 py-10">Chưa có bài viết</p>}
+                    <h2 className="text-2xl font-extrabold px-1">Bài Viết</h2>
+                    {posts.length === 0 && <p className="text-center opacity-50 py-10">Chưa có bài viết</p>}
                     {[...posts].reverse().map(p => (
-                        <div key={p.id} className="glass p-5 rounded-2xl">
-                            {p.image && <img src={p.image} className="w-full h-48 object-cover rounded-xl mb-3" alt="" />}
+                        <div key={p.id} className="glass p-6 rounded-3xl glass-card">
+                            {p.image && <img src={p.image} className="w-full h-48 object-cover rounded-2xl mb-4" alt="" />}
                             <h3 className="font-bold text-lg text-blue-500">{p.title}</h3>
-                            <p className="text-xs text-gray-500 mt-1">{new Date(p.date).toLocaleDateString('vi-VN')}</p>
-                            <p className="text-sm mt-2 text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{p.content}</p>
+                            <p className="text-xs opacity-60 mt-1">{new Date(p.date).toLocaleDateString('vi-VN')}</p>
+                            <p className="text-sm mt-3 whitespace-pre-wrap leading-relaxed">{p.content}</p>
                         </div>
                     ))}
                 </div>
@@ -637,14 +675,16 @@
         function NotificationsPage({ notifications }) {
             return (
                 <div className="animate-fade-in space-y-3">
-                    <h2 className="text-2xl font-bold">Thông Báo</h2>
-                    {notifications.length === 0 && <p className="text-center text-gray-500 py-10">Không có thông báo</p>}
+                    <h2 className="text-2xl font-extrabold px-1 mb-4">Thông Báo</h2>
+                    {notifications.length === 0 && <p className="text-center opacity-50 py-10">Không có thông báo</p>}
                     {[...notifications].reverse().map(n => (
-                        <div key={n.id} className="glass p-4 rounded-2xl flex gap-3">
-                            <i data-lucide="bell" size="20" className="text-blue-500 flex-shrink-0 mt-1"></i>
+                        <div key={n.id} className="glass p-4 rounded-2xl flex gap-3 glass-card">
+                            <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="bell" size="18" className="text-blue-500"></i>
+                            </div>
                             <div className="flex-1">
-                                <p className="text-sm">{n.text}</p>
-                                <p className="text-xs text-gray-500 mt-1">{new Date(n.createdAt).toLocaleString('vi-VN')}</p>
+                                <p className="text-sm font-medium">{n.text}</p>
+                                <p className="text-[10px] opacity-50 mt-1">{new Date(n.createdAt).toLocaleString('vi-VN')}</p>
                             </div>
                         </div>
                     ))}
@@ -653,32 +693,32 @@
         }
 
         function ContactPage({ profile }) {
-            const c = profile.contact;
+            const c = profile.contact || DEFAULT_PROFILE.contact;
             const items = [
-                { icon: 'send', label: 'Telegram', value: `@${c.telegram}`, link: `https://t.me/${c.telegram}`, color: 'text-blue-500' },
-                { icon: 'facebook', label: 'Facebook', value: `@${c.facebook}`, link: `https://facebook.com/${c.facebook}`, color: 'text-blue-600' },
-                { icon: 'phone', label: 'Điện thoại', value: c.phone, link: `tel:${c.phone}`, color: 'text-green-500' },
-                { icon: 'mail', label: 'Email', value: c.email, link: `mailto:${c.email}`, color: 'text-red-500' },
-                { icon: 'message-square', label: 'Discord', value: c.discord, link: `https://discord.com/users/${c.discord}`, color: 'text-indigo-500' }
+                { icon: 'send', label: 'Telegram', value: `@${c.telegram}`, link: `https://t.me/${c.telegram}`, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+                { icon: 'facebook', label: 'Facebook', value: `@${c.facebook}`, link: `https://facebook.com/${c.facebook}`, color: 'text-blue-600', bg: 'bg-blue-600/10' },
+                { icon: 'phone', label: 'Điện thoại', value: c.phone, link: `tel:${c.phone}`, color: 'text-green-500', bg: 'bg-green-500/10' },
+                { icon: 'mail', label: 'Email', value: c.email, link: `mailto:${c.email}`, color: 'text-red-500', bg: 'bg-red-500/10' },
+                { icon: 'message-square', label: 'Discord', value: c.discord, link: `https://discord.com/users/${c.discord}`, color: 'text-indigo-500', bg: 'bg-indigo-500/10' }
             ];
             return (
                 <div className="animate-fade-in space-y-4">
-                    <div className="glass p-6 rounded-2xl text-center">
-                        <img src={profile.avatar} alt="" className="w-20 h-20 rounded-full mx-auto border-4 border-blue-500 shadow-lg" />
-                        <h2 className="text-xl font-bold mt-3 flex items-center justify-center">{profile.name}{profile.verified && <VerifiedIcon size={18} />}</h2>
-                        <p className="text-sm text-gray-500 mt-1">Liên hệ để được hỗ trợ 24/7</p>
+                    <div className="glass p-8 rounded-3xl text-center glass-card">
+                        <img src={profile.avatar} alt="" className="w-24 h-24 rounded-full mx-auto border-4 border-blue-500 shadow-xl mb-4 object-cover" />
+                        <h2 className="text-2xl font-extrabold flex items-center justify-center">{profile.name}{profile.verified && <VerifiedIcon size={20} />}</h2>
+                        <p className="text-sm opacity-60 mt-1">Liên hệ hỗ trợ 24/7</p>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                         {items.map((it, i) => (
-                            <a key={i} href={it.link} target="_blank" rel="noreferrer" className="glass rounded-2xl p-4 flex items-center gap-3 hover:bg-white/80 dark:hover:bg-slate-700/60 transition">
-                                <div className={`w-10 h-10 rounded-xl glass-strong flex items-center justify-center ${it.color}`}>
-                                    <i data-lucide={it.icon} size="20"></i>
+                            <a key={i} href={it.link} target="_blank" rel="noreferrer" className="glass rounded-2xl p-4 flex items-center gap-4 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all active:scale-98 glass-card">
+                                <div className={`w-12 h-12 rounded-xl ${it.bg} flex items-center justify-center ${it.color}`}>
+                                    <i data-lucide={it.icon} size="22"></i>
                                 </div>
                                 <div className="flex-1">
-                                    <p className="text-xs text-gray-500">{it.label}</p>
+                                    <p className="text-xs opacity-60">{it.label}</p>
                                     <p className="text-sm font-bold break-all">{it.value}</p>
                                 </div>
-                                <i data-lucide="chevron-right" size="16" className="text-gray-400"></i>
+                                <i data-lucide="chevron-right" size="20" className="opacity-30"></i>
                             </a>
                         ))}
                     </div>
@@ -692,33 +732,31 @@
             const [p, setP] = useState('');
             const [show, setShow] = useState(false);
             const [err, setErr] = useState('');
-
             const submit = e => {
                 e.preventDefault();
                 if (u === ADMIN_USER && p === ADMIN_PASS) onLogin();
                 else setErr('Sai tài khoản hoặc mật khẩu!');
             };
-
             return (
                 <div className="animate-fade-in max-w-md mx-auto mt-10">
-                    <div className="glass p-6 rounded-2xl">
-                        <div className="text-center mb-5">
-                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 mx-auto flex items-center justify-center">
-                                <i data-lucide="shield" size="32" className="text-white"></i>
+                    <div className="glass p-8 rounded-3xl shadow-2xl">
+                        <div className="text-center mb-6">
+                            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 mx-auto flex items-center justify-center shadow-lg shadow-blue-500/30">
+                                <i data-lucide="shield" size="40" className="text-white"></i>
                             </div>
-                            <h2 className="text-xl font-bold mt-3">Đăng nhập Admin</h2>
-                            <p className="text-xs text-gray-500">Chỉ admin mới có quyền truy cập</p>
+                            <h2 className="text-2xl font-extrabold mt-4">Admin Login</h2>
+                            <p className="text-xs opacity-60">Chỉ admin mới có quyền truy cập</p>
                         </div>
-                        <form onSubmit={submit} className="space-y-3">
-                            <input value={u} onChange={e => setU(e.target.value)} placeholder="Tài khoản" className="w-full glass-strong rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500" />
+                        <form onSubmit={submit} className="space-y-4">
+                            <input value={u} onChange={e => setU(e.target.value)} placeholder="Tài khoản" className="w-full bg-white/50 dark:bg-black/20 rounded-2xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 border border-white/20" />
                             <div className="relative">
-                                <input type={show ? 'text' : 'password'} value={p} onChange={e => setP(e.target.value)} placeholder="Mật khẩu" className="w-full glass-strong rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 ring-blue-500 pr-10" />
-                                <button type="button" onClick={() => setShow(!show)} className="absolute right-3 top-2.5 text-gray-500">
+                                <input type={show ? 'text' : 'password'} value={p} onChange={e => setP(e.target.value)} placeholder="Mật khẩu" className="w-full bg-white/50 dark:bg-black/20 rounded-2xl px-4 py-3 text-sm outline-none focus:ring-2 ring-blue-500 border border-white/20 pr-12" />
+                                <button type="button" onClick={() => setShow(!show)} className="absolute right-4 top-3.5 opacity-50 hover:opacity-100 transition">
                                     <i data-lucide={show ? 'eye-off' : 'eye'} size="18"></i>
                                 </button>
                             </div>
-                            {err && <p className="text-xs text-red-500 text-center">{err}</p>}
-                            <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition">Đăng nhập</button>
+                            {err && <p className="text-xs text-red-500 text-center font-bold">{err}</p>}
+                            <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-blue-500/30 transition active:scale-95">Đăng nhập</button>
                         </form>
                     </div>
                 </div>
@@ -729,7 +767,6 @@
             const [tab, setTab] = useState('profile');
             const [form, setForm] = useState({});
             const [editId, setEditId] = useState(null);
-
             const tabs = [
                 { id: 'profile', label: 'Profile', icon: 'user' },
                 { id: 'site', label: 'Web', icon: 'settings' },
@@ -737,46 +774,44 @@
                 { id: 'posts', label: 'Bài viết', icon: 'newspaper' },
                 { id: 'notifs', label: 'Thông báo', icon: 'bell' }
             ];
-
             const updImg = async (e, k, cb) => {
                 const f = e.target.files[0]; if (!f) return;
-                const b64 = await compressImage(f, 500, 0.7);
+                const b64 = await compressImage(f, 600, 0.7);
                 cb(k, b64);
             };
 
-            // --- Sub-tabs ---
             const ProfileTab = () => {
                 const p = data.profile;
                 const upd = (k, v) => setData({ ...data, profile: { ...p, [k]: v } });
                 return (
-                    <div className="space-y-3">
-                        <div><label className="text-xs font-bold text-gray-500">Tên Profile</label>
-                        <input value={p.name} onChange={e => upd('name', e.target.value)} className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none" /></div>
+                    <div className="space-y-4">
+                        <div><label className="text-xs font-bold opacity-70 mb-1 block">Tên Profile</label>
+                        <input value={p.name} onChange={e => upd('name', e.target.value)} className="w-full bg-white/50 dark:bg-black/20 rounded-xl px-4 py-2.5 text-sm outline-none border border-white/20" /></div>
                         <div className="flex items-center gap-2">
-                            <input type="checkbox" checked={p.verified} onChange={e => upd('verified', e.target.checked)} id="vf" />
-                            <label htmlFor="vf" className="text-sm">Hiện tick xanh</label>
+                            <input type="checkbox" checked={p.verified} onChange={e => upd('verified', e.target.checked)} id="vf" className="w-4 h-4 rounded text-blue-500" />
+                            <label htmlFor="vf" className="text-sm font-medium">Hiện tick xanh</label>
                         </div>
-                        <div><label className="text-xs font-bold text-gray-500">Bio</label>
-                        <textarea value={p.bio} onChange={e => upd('bio', e.target.value)} rows="3" className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none" /></div>
-                        <div><label className="text-xs font-bold text-gray-500">Avatar</label>
-                        <div className="flex items-center gap-2 mt-1">
-                            <img src={p.avatar} className="w-12 h-12 rounded-full object-cover" />
+                        <div><label className="text-xs font-bold opacity-70 mb-1 block">Bio</label>
+                        <textarea value={p.bio} onChange={e => upd('bio', e.target.value)} rows="3" className="w-full bg-white/50 dark:bg-black/20 rounded-xl px-4 py-2.5 text-sm outline-none border border-white/20" /></div>
+                        <div><label className="text-xs font-bold opacity-70 mb-1 block">Avatar</label>
+                        <div className="flex items-center gap-3">
+                            <img src={p.avatar} className="w-12 h-12 rounded-full object-cover border-2 border-blue-500" />
                             <input type="file" accept="image/*" onChange={e => updImg(e, 'avatar', upd)} className="text-xs" />
                         </div></div>
-                        <div><label className="text-xs font-bold text-gray-500">Ảnh bìa</label>
-                        <div className="mt-1"><img src={p.cover} className="w-full h-20 object-cover rounded-lg mb-1" />
+                        <div><label className="text-xs font-bold opacity-70 mb-1 block">Ảnh bìa</label>
+                        <div><img src={p.cover} className="w-full h-24 object-cover rounded-xl mb-2 border border-white/20" />
                         <input type="file" accept="image/*" onChange={e => updImg(e, 'cover', upd)} className="text-xs" /></div></div>
                     </div>
                 );
             };
 
             const SiteTab = () => (
-                <div className="space-y-3">
-                    <div><label className="text-xs font-bold text-gray-500">Tên Web (Khác tên Profile)</label>
-                    <input value={data.siteName} onChange={e => setData({ ...data, siteName: e.target.value })} className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none" /></div>
-                    <div><label className="text-xs font-bold text-gray-500">Hiệu ứng mặc định</label>
-                    <select value={data.defaultEffect} onChange={e => setData({ ...data, defaultEffect: e.target.value })} className="w-full glass-strong rounded-xl px-3 py-2 text-sm outline-none">
-                        <option value="none">Không</option><option value="snow">Tuyết</option><option value="flower">Hoa</option><option value="fog">Sương</option><option value="lava">Núi lửa</option>
+                <div className="space-y-4">
+                    <div><label className="text-xs font-bold opacity-70 mb-1 block">Tên Web</label>
+                    <input value={data.siteName} onChange={e => setData({ ...data, siteName: e.target.value })} className="w-full bg-white/50 dark:bg-black/20 rounded-xl px-4 py-2.5 text-sm outline-none border border-white/20" /></div>
+                    <div><label className="text-xs font-bold opacity-70 mb-1 block">Hiệu ứng mặc định</label>
+                    <select value={data.defaultEffect} onChange={e => setData({ ...data, defaultEffect: e.target.value })} className="w-full bg-white/50 dark:bg-black/20 rounded-xl px-4 py-2.5 text-sm outline-none border border-white/20">
+                        <option value="none">Không</option><option value="snow">Tuyết</option><option value="flower">Hoa</option><option value="lava">Núi lửa</option>
                     </select></div>
                 </div>
             );
@@ -790,39 +825,39 @@
                     setForm({}); setEditId(null);
                 };
                 return (
-                    <div className="space-y-3">
-                        <div className="glass-strong p-3 rounded-xl space-y-2">
-                            <select value={form.category || ''} onChange={e => setForm({ ...form, category: e.target.value, subcategory: '' })} className="w-full p-2 rounded text-sm outline-none">
+                    <div className="space-y-4">
+                        <div className="glass rounded-xl p-4 space-y-3">
+                            <select value={form.category || ''} onChange={e => setForm({ ...form, category: e.target.value, subcategory: '' })} className="w-full bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20">
                                 <option value="">-- Danh mục --</option>
                                 {CATEGORIES.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
                             </select>
                             {CATEGORIES.find(c => c.name === form.category)?.subs.length > 0 && (
-                                <select value={form.subcategory || ''} onChange={e => setForm({ ...form, subcategory: e.target.value })} className="w-full p-2 rounded text-sm outline-none">
+                                <select value={form.subcategory || ''} onChange={e => setForm({ ...form, subcategory: e.target.value })} className="w-full bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20">
                                     <option value="">-- Danh mục con --</option>
                                     {CATEGORIES.find(c => c.name === form.category).subs.map(s => <option key={s} value={s}>{s}</option>)}
                                 </select>
                             )}
-                            <input value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Tên SP" className="w-full p-2 rounded text-sm outline-none" />
+                            <input value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Tên SP" className="w-full bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20" />
                             <div className="flex gap-2">
-                                <input value={form.price || ''} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="Giá" className="w-1/2 p-2 rounded text-sm outline-none" />
-                                <input type="number" value={form.stock || 0} onChange={e => setForm({ ...form, stock: Number(e.target.value) })} placeholder="Kho" className="w-1/2 p-2 rounded text-sm outline-none" />
+                                <input value={form.price || ''} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="Giá" className="w-1/2 bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20" />
+                                <input type="number" value={form.stock || 0} onChange={e => setForm({ ...form, stock: Number(e.target.value) })} placeholder="Kho" className="w-1/2 bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20" />
                             </div>
-                            <input value={form.desc || ''} onChange={e => setForm({ ...form, desc: e.target.value })} placeholder="Mô tả" className="w-full p-2 rounded text-sm outline-none" />
+                            <input value={form.desc || ''} onChange={e => setForm({ ...form, desc: e.target.value })} placeholder="Mô tả" className="w-full bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20" />
                             <div className="flex items-center gap-2">
-                                {form.image && <img src={form.image} className="w-10 h-10 rounded object-cover" />}
+                                {form.image && <img src={form.image} className="w-10 h-10 rounded-lg object-cover" />}
                                 <input type="file" accept="image/*" onChange={e => updImg(e, 'image', (k, v) => setForm({ ...form, [k]: v }))} className="text-xs" />
                             </div>
                             <div className="flex gap-2">
-                                <button onClick={save} className="flex-1 bg-blue-500 text-white py-2 rounded font-bold text-sm">{editId ? 'Cập nhật' : 'Thêm'}</button>
-                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-500 text-white px-3 rounded text-sm">Hủy</button>}
+                                <button onClick={save} className="flex-1 bg-blue-500 text-white py-2.5 rounded-xl font-bold text-sm shadow-lg active:scale-95 transition">{editId ? 'Cập nhật' : 'Thêm SP'}</button>
+                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-500 text-white px-4 rounded-xl text-sm active:scale-95 transition">Hủy</button>}
                             </div>
                         </div>
-                        <div className="space-y-1 max-h-60 overflow-y-auto">
+                        <div className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
                             {data.products.map(p => (
-                                <div key={p.id} className="glass-strong p-2 rounded-xl flex items-center gap-2 text-xs">
-                                    <div className="flex-1 truncate">{p.name} - {p.price} (Kho: {p.stock})</div>
-                                    <button onClick={() => { setForm(p); setEditId(p.id); }} className="text-blue-500"><i data-lucide="edit" size="14"></i></button>
-                                    <button onClick={() => setData({ ...data, products: data.products.filter(x => x.id !== p.id) })} className="text-red-500"><i data-lucide="trash-2" size="14"></i></button>
+                                <div key={p.id} className="glass p-3 rounded-xl flex items-center gap-2 text-xs border border-white/20">
+                                    <div className="flex-1 truncate font-medium">{p.name} - <span className="text-blue-500">{p.price}</span> (Kho: {p.stock})</div>
+                                    <button onClick={() => { setForm(p); setEditId(p.id); }} className="text-blue-500 p-1 hover:bg-blue-500/10 rounded"><i data-lucide="edit" size="14"></i></button>
+                                    <button onClick={() => setData({ ...data, products: data.products.filter(x => x.id !== p.id) })} className="text-red-500 p-1 hover:bg-red-500/10 rounded"><i data-lucide="trash-2" size="14"></i></button>
                                 </div>
                             ))}
                         </div>
@@ -838,25 +873,25 @@
                     setForm({}); setEditId(null);
                 };
                 return (
-                    <div className="space-y-3">
-                        <div className="glass-strong p-3 rounded-xl space-y-2">
-                            <input value={form.title || ''} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Tiêu đề" className="w-full p-2 rounded text-sm outline-none" />
-                            <textarea value={form.content || ''} onChange={e => setForm({ ...form, content: e.target.value })} placeholder="Nội dung" rows="3" className="w-full p-2 rounded text-sm outline-none" />
+                    <div className="space-y-4">
+                        <div className="glass rounded-xl p-4 space-y-3">
+                            <input value={form.title || ''} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Tiêu đề" className="w-full bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20" />
+                            <textarea value={form.content || ''} onChange={e => setForm({ ...form, content: e.target.value })} placeholder="Nội dung" rows="3" className="w-full bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20" />
                             <div className="flex items-center gap-2">
-                                {form.image && <img src={form.image} className="w-10 h-10 rounded object-cover" />}
+                                {form.image && <img src={form.image} className="w-10 h-10 rounded-lg object-cover" />}
                                 <input type="file" accept="image/*" onChange={e => updImg(e, 'image', (k, v) => setForm({ ...form, [k]: v }))} className="text-xs" />
                             </div>
                             <div className="flex gap-2">
-                                <button onClick={save} className="flex-1 bg-green-500 text-white py-2 rounded font-bold text-sm">{editId ? 'Cập nhật' : 'Đăng'}</button>
-                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-500 text-white px-3 rounded text-sm">Hủy</button>}
+                                <button onClick={save} className="flex-1 bg-green-500 text-white py-2.5 rounded-xl font-bold text-sm shadow-lg active:scale-95 transition">{editId ? 'Cập nhật' : 'Đăng bài'}</button>
+                                {editId && <button onClick={() => { setEditId(null); setForm({}); }} className="bg-gray-500 text-white px-4 rounded-xl text-sm active:scale-95 transition">Hủy</button>}
                             </div>
                         </div>
-                        <div className="space-y-1 max-h-60 overflow-y-auto">
+                        <div className="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
                             {data.posts.map(p => (
-                                <div key={p.id} className="glass-strong p-2 rounded-xl flex items-center gap-2 text-xs">
-                                    <div className="flex-1 truncate">{p.title}</div>
-                                    <button onClick={() => { setForm(p); setEditId(p.id); }} className="text-blue-500"><i data-lucide="edit" size="14"></i></button>
-                                    <button onClick={() => setData({ ...data, posts: data.posts.filter(x => x.id !== p.id) })} className="text-red-500"><i data-lucide="trash-2" size="14"></i></button>
+                                <div key={p.id} className="glass p-3 rounded-xl flex items-center gap-2 text-xs border border-white/20">
+                                    <div className="flex-1 truncate font-medium">{p.title}</div>
+                                    <button onClick={() => { setForm(p); setEditId(p.id); }} className="text-blue-500 p-1 hover:bg-blue-500/10 rounded"><i data-lucide="edit" size="14"></i></button>
+                                    <button onClick={() => setData({ ...data, posts: data.posts.filter(x => x.id !== p.id) })} className="text-red-500 p-1 hover:bg-red-500/10 rounded"><i data-lucide="trash-2" size="14"></i></button>
                                 </div>
                             ))}
                         </div>
@@ -867,16 +902,16 @@
             const NotifsTab = () => {
                 const [text, setText] = useState('');
                 return (
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                         <div className="flex gap-2">
-                            <input value={text} onChange={e => setText(e.target.value)} placeholder="Thông báo mới..." className="flex-1 p-2 rounded-xl text-sm outline-none glass-strong" />
-                            <button onClick={() => { if(!text)return; setData({ ...data, notifications: [...data.notifications, { id: Date.now(), text, createdAt: Date.now() }] }); setText(''); }} className="bg-blue-500 text-white px-4 rounded-xl font-bold">+</button>
+                            <input value={text} onChange={e => setText(e.target.value)} placeholder="Thông báo mới..." className="flex-1 bg-white/50 dark:bg-black/20 p-2.5 rounded-xl text-sm outline-none border border-white/20" />
+                            <button onClick={() => { if(!text)return; setData({ ...data, notifications: [...data.notifications, { id: Date.now(), text, createdAt: Date.now() }] }); setText(''); }} className="bg-blue-500 text-white px-5 rounded-xl font-bold shadow-lg active:scale-95 transition">Thêm</button>
                         </div>
-                        <div className="space-y-1">
+                        <div className="space-y-2">
                             {data.notifications.map(n => (
-                                <div key={n.id} className="glass-strong p-2 rounded-xl flex items-center gap-2 text-xs">
+                                <div key={n.id} className="glass p-3 rounded-xl flex items-center gap-2 text-xs border border-white/20">
                                     <div className="flex-1 truncate">{n.text}</div>
-                                    <button onClick={() => setData({ ...data, notifications: data.notifications.filter(x => x.id !== n.id) })} className="text-red-500"><i data-lucide="trash-2" size="14"></i></button>
+                                    <button onClick={() => setData({ ...data, notifications: data.notifications.filter(x => x.id !== n.id) })} className="text-red-500 p-1 hover:bg-red-500/10 rounded"><i data-lucide="trash-2" size="14"></i></button>
                                 </div>
                             ))}
                         </div>
@@ -886,18 +921,18 @@
 
             return (
                 <div className="animate-fade-in">
-                    <div className="glass p-3 rounded-2xl mb-4 flex justify-between items-center">
-                        <h2 className="font-bold text-lg flex items-center gap-2"><i data-lucide="shield-check" size="20" className="text-red-500"></i> Dashboard</h2>
-                        <button onClick={onLogout} className="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold">Thoát</button>
+                    <div className="glass p-4 rounded-3xl mb-4 flex justify-between items-center shadow-lg">
+                        <h2 className="font-extrabold text-lg flex items-center gap-2"><i data-lucide="shield-check" size="22" className="text-red-500"></i> Dashboard</h2>
+                        <button onClick={onLogout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg shadow-red-500/30 transition active:scale-95">Thoát</button>
                     </div>
-                    <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4">
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-1">
                         {tabs.map(t => (
-                            <button key={t.id} onClick={() => { setTab(t.id); setForm({}); setEditId(null); }} className={`whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 ${tab === t.id ? 'bg-blue-500 text-white' : 'glass-strong'}`}>
+                            <button key={t.id} onClick={() => { setTab(t.id); setForm({}); setEditId(null); }} className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition ${tab === t.id ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'glass hover:bg-white/40'}`}>
                                 <i data-lucide={t.icon} size="14"></i> {t.label}
                             </button>
                         ))}
                     </div>
-                    <div className="glass p-4 rounded-2xl">
+                    <div className="glass p-5 rounded-3xl shadow-xl">
                         {tab === 'profile' && <ProfileTab />}
                         {tab === 'site' && <SiteTab />}
                         {tab === 'products' && <ProductsTab />}
@@ -920,46 +955,46 @@
                 { id: 'weather', label: 'Thời tiết', icon: 'cloud-sun' },
                 { id: 'notes', label: 'Ghi chú', icon: 'sticky-note' },
                 { id: 'tempmail', label: 'Email Tạm', icon: 'mail' },
-                { id: 'speedtest', label: 'Check 4G/5G/WiFi', icon: 'wifi' },
-                { id: 'contact', label: 'Contact Support', icon: 'phone' }
+                { id: 'speedtest', label: 'Check Mạng', icon: 'wifi' },
+                { id: 'contact', label: 'Liên hệ Hỗ trợ', icon: 'phone' }
             ];
 
             return (
                 <>
-                    {open && <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" onClick={onClose}></div>}
-                    <div className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] glass-strong z-50 transform transition-transform duration-300 ${open ? 'translate-x-0' : '-translate-x-full'} flex flex-col`}>
-                        <div className="p-4 flex items-center gap-3 border-b border-white/20">
-                            <img src={data.profile.avatar} className="w-12 h-12 rounded-full object-cover border-2 border-blue-500" alt="Avt" />
+                    {open && <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity" onClick={onClose}></div>}
+                    <div className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] glass z-50 transform transition-transform duration-300 ease-out ${open ? 'translate-x-0' : '-translate-x-full'} flex flex-col border-r border-white/20`}>
+                        <div className="p-5 flex items-center gap-3 border-b border-white/20">
+                            <img src={data.profile.avatar} className="w-14 h-14 rounded-full object-cover border-2 border-blue-500 shadow-md" alt="Avt" />
                             <div className="flex-1 min-w-0">
-                                <p className="font-bold flex items-center text-sm truncate">{data.profile.name}{data.profile.verified && <VerifiedIcon size={14} />}</p>
-                                <p className="text-[10px] text-gray-500 truncate">@{ADMIN_USER}</p>
+                                <p className="font-bold flex items-center text-sm truncate">{data.profile.name}{data.profile.verified && <VerifiedIcon size={16} />}</p>
+                                <p className="text-[11px] opacity-60 truncate">@{ADMIN_USER}</p>
                             </div>
-                            <button onClick={onClose} className="p-1"><i data-lucide="x" size="20"></i></button>
+                            <button onClick={onClose} className="p-2 glass rounded-full hover:bg-white/20 transition"><i data-lucide="x" size="18"></i></button>
                         </div>
                         
-                        <div className="flex-1 overflow-y-auto p-3 space-y-1 no-scrollbar">
+                        <div className="flex-1 overflow-y-auto p-4 space-y-1.5 no-scrollbar">
                             {items.map(it => (
                                 <div key={it.id}>
                                     <button onClick={() => {
                                         if (it.expandable) setExpanded(expanded === it.id ? null : it.id);
                                         else { onNavigate(it.id); onClose(); }
-                                    }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-blue-500/10 transition ${activePage === it.id ? 'text-blue-500' : ''}`}>
-                                        <i data-lucide={it.icon} size="18" className="text-blue-500"></i>
+                                    }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all hover:bg-white/40 dark:hover:bg-white/10 ${activePage === it.id ? 'text-blue-500 bg-white/30' : ''}`}>
+                                        <i data-lucide={it.icon} size="20" className={activePage === it.id ? 'text-blue-500' : 'text-blue-400'}></i>
                                         <span className="flex-1 text-left">{it.label}</span>
-                                        {it.expandable && <i data-lucide={expanded === it.id ? 'chevron-down' : 'chevron-right'} size="16"></i>}
+                                        {it.expandable && <i data-lucide={expanded === it.id ? 'chevron-down' : 'chevron-right'} size="16" className="opacity-50"></i>}
                                     </button>
                                     
                                     {it.expandable && expanded === it.id && (
-                                        <div className="ml-6 mt-1 space-y-0.5">
+                                        <div className="ml-8 mt-1 space-y-1">
                                             {CATEGORIES.map(c => (
                                                 <div key={c.name}>
-                                                    <button onClick={() => { onNavigate('shop', c.name); onClose(); }} className="w-full text-left px-2 py-1.5 rounded text-xs hover:bg-blue-500/10">
+                                                    <button onClick={() => { onNavigate('shop', c.name); onClose(); }} className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium hover:bg-white/30 dark:hover:bg-white/10 transition">
                                                         {c.name}
                                                     </button>
                                                     {c.subs.length > 0 && (
-                                                        <div className="ml-3">
+                                                        <div className="ml-3 border-l border-white/20 pl-2">
                                                             {c.subs.map(s => (
-                                                                <button key={s} onClick={() => { onNavigate('shop', s); onClose(); }} className="w-full text-left px-2 py-1 rounded text-[11px] hover:bg-blue-500/10 text-gray-600 dark:text-gray-400">• {s}</button>
+                                                                <button key={s} onClick={() => { onNavigate('shop', s); onClose(); }} className="w-full text-left px-3 py-1.5 rounded-lg text-[11px] opacity-70 hover:bg-white/30 dark:hover:bg-white/10 hover:opacity-100 transition">• {s}</button>
                                                             ))}
                                                         </div>
                                                     )}
@@ -970,14 +1005,14 @@
                                 </div>
                             ))}
                             
-                            <div className="pt-2 border-t border-white/20 mt-2">
+                            <div className="pt-3 border-t border-white/20 mt-3">
                                 {isAdmin ? (
-                                    <button onClick={() => { onNavigate('admin'); onClose(); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-500/10">
-                                        <i data-lucide="shield-check" size="18"></i> Admin Panel
+                                    <button onClick={() => { onNavigate('admin'); onClose(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-red-500 hover:bg-red-500/10 transition">
+                                        <i data-lucide="shield-check" size="20"></i> Admin Panel
                                     </button>
                                 ) : (
-                                    <button onClick={() => { onNavigate('admin-login'); onClose(); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-500/10">
-                                        <i data-lucide="lock" size="18"></i> Đăng nhập Admin
+                                    <button onClick={() => { onNavigate('admin-login'); onClose(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold hover:bg-white/20 transition">
+                                        <i data-lucide="lock" size="20"></i> Đăng nhập Admin
                                     </button>
                                 )}
                             </div>
@@ -987,54 +1022,56 @@
             );
         }
 
-        function Accessibility({ effect, setEffect, musicOn, setMusicOn, track, setTrack }) {
+        function Accessibility({ effect, setEffect, musicOn, setMusicOn, track, setTrack, lang, setLang }) {
             const [open, setOpen] = useState(false);
-            const effects = ['none', 'snow', 'flower', 'fog', 'lava'];
+            const effects = ['none', 'snow', 'flower', 'lava'];
             
             return (
                 <>
-                    <button onClick={() => setOpen(!open)} className="fixed top-20 right-4 z-40 w-12 h-12 rounded-2xl glass-strong flex items-center justify-center shadow-xl hover:scale-105 transition">
-                        <i data-lucide="sparkles" size="22" className="text-blue-500"></i>
+                    {/* Nút trợ năng nhỏ gọn, lơ lửng */}
+                    <button onClick={() => setOpen(!open)} className="fixed top-24 right-4 z-40 w-10 h-10 rounded-full glass flex items-center justify-center shadow-xl hover:scale-110 transition-transform active:scale-90">
+                        <i data-lucide="settings-2" size="20" className="text-blue-500"></i>
                     </button>
                     
                     {open && (
-                        <div className="fixed top-36 right-4 z-40 w-72 glass-strong rounded-2xl p-3 animate-fade-in shadow-2xl">
-                            <div className="flex justify-between items-center mb-2">
-                                <p className="text-xs font-bold">Tiện ích</p>
-                                <button onClick={() => setOpen(false)}><i data-lucide="x" size="16"></i></button>
+                        <div className="fixed top-36 right-4 z-40 w-72 glass rounded-3xl p-4 animate-pop shadow-2xl border border-white/30">
+                            <div className="flex justify-between items-center mb-3">
+                                <p className="text-sm font-extrabold flex items-center gap-2"><i data-lucide="sliders-horizontal" size="16"></i> Tiện ích</p>
+                                <button onClick={() => setOpen(false)} className="p-1 glass rounded-full hover:bg-white/20"><i data-lucide="x" size="14"></i></button>
                             </div>
                             
-                            <div className="grid grid-cols-4 gap-1.5 mb-2">
-                                <button onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} title="Lên đầu" className="glass rounded-xl p-2 flex justify-center"><i data-lucide="arrow-up" size="16"></i></button>
-                                <button onClick={() => window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})} title="Xuống cuối" className="glass rounded-xl p-2 flex justify-center"><i data-lucide="arrow-down" size="16"></i></button>
-                                <button onClick={() => { const q=prompt("Tìm kiếm:"); if(q) window.find(q); }} title="Tìm kiếm" className="glass rounded-xl p-2 flex justify-center"><i data-lucide="search" size="16"></i></button>
-                                <button onClick={() => { ls.set('readPos', {url: location.href, pos: window.scrollY, time: Date.now()}); alert('Đã lưu vị trí!'); }} title="Lưu vị trí" className="glass rounded-xl p-2 flex justify-center"><i data-lucide="bookmark" size="16"></i></button>
-                            </div>
-
-                            <div className="mb-2">
-                                <p className="text-[10px] font-bold text-gray-500 mb-1">Hiệu ứng</p>
-                                <div className="grid grid-cols-3 gap-1">
+                            <div className="mb-4">
+                                <p className="text-[10px] font-bold opacity-60 mb-1.5 uppercase tracking-wider">Hiệu ứng nền</p>
+                                <div className="grid grid-cols-4 gap-1.5">
                                     {effects.map(e => (
-                                        <button key={e} onClick={() => setEffect(e)} className={`text-[10px] py-1 rounded-lg capitalize ${effect === e ? 'bg-blue-500 text-white' : 'glass'}`}>{e === 'none' ? 'Tắt' : e}</button>
+                                        <button key={e} onClick={() => setEffect(e)} className={`text-[10px] py-1.5 rounded-xl capitalize font-bold transition ${effect === e ? 'bg-blue-500 text-white shadow-md' : 'glass hover:bg-white/40'}`}>{e === 'none' ? 'Tắt' : e}</button>
                                     ))}
                                 </div>
                             </div>
 
-                            <div className="mb-2">
-                                <div className="flex justify-between items-center mb-1">
-                                    <p className="text-[10px] font-bold text-gray-500">Nhạc nền</p>
-                                    <button onClick={() => setMusicOn(!musicOn)} className={`px-2 py-0.5 rounded-full text-[10px] ${musicOn ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>{musicOn ? 'BẬT' : 'TẮT'}</button>
+                            <div className="mb-4">
+                                <p className="text-[10px] font-bold opacity-60 mb-1.5 uppercase tracking-wider">Ngôn ngữ</p>
+                                <div className="flex gap-2">
+                                    <button onClick={() => setLang('vi')} className={`flex-1 text-xs py-1.5 rounded-xl font-bold ${lang === 'vi' ? 'bg-blue-500 text-white' : 'glass'}`}>Tiếng Việt</button>
+                                    <button onClick={() => setLang('en')} className={`flex-1 text-xs py-1.5 rounded-xl font-bold ${lang === 'en' ? 'bg-blue-500 text-white' : 'glass'}`}>English</button>
                                 </div>
-                                {musicOn && (
-                                    <div className="space-y-1">
-                                        <div className="rounded-xl overflow-hidden">
-                                            <iframe width="100%" height="60" scrolling="no" frameBorder="no" allow="autoplay" src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(SC_TRACKS[track])}&color=%233b82f6&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false`}></iframe>
-                                        </div>
-                                        <button onClick={() => setTrack((track + 1) % SC_TRACKS.length)} className="w-full glass rounded-lg py-1 text-[10px] font-bold flex justify-center items-center gap-1">
-                                            <i data-lucide="skip-forward" size="12"></i> Bài kế tiếp
-                                        </button>
+                            </div>
+
+                            <div>
+                                <div className="flex justify-between items-center mb-2">
+                                    <p className="text-[10px] font-bold opacity-60 uppercase tracking-wider">Nhạc nền</p>
+                                    <button onClick={() => setMusicOn(!musicOn)} className={`px-3 py-1 rounded-full text-[10px] font-bold transition ${musicOn ? 'bg-green-500 text-white shadow-md' : 'bg-gray-300 text-gray-600'}`}>{musicOn ? 'BẬT' : 'TẮT'}</button>
+                                </div>
+                                
+                                {/* Nhạc luôn tồn tại trong DOM, chỉ ẩn/hiện UI */}
+                                <div className={`overflow-hidden transition-all duration-300 ${musicOn ? 'h-auto opacity-100' : 'h-0 opacity-0'}`}>
+                                    <div className="rounded-xl overflow-hidden glass mb-2 border border-white/20">
+                                        <iframe width="100%" height="60" scrolling="no" frameBorder="no" allow="autoplay" src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(SC_TRACKS[track])}&color=%233b82f6&auto_play=${musicOn}&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false`}></iframe>
                                     </div>
-                                )}
+                                    <button onClick={() => setTrack((track + 1) % SC_TRACKS.length)} className="w-full glass rounded-xl py-2 text-xs font-bold flex justify-center items-center gap-1 hover:bg-white/40 transition">
+                                        <i data-lucide="skip-forward" size="14"></i> Bài kế tiếp
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -1048,13 +1085,14 @@
             const [darkMode, setDarkMode] = useState(() => ls.get('darkMode', true));
             const [effect, setEffect] = useState(() => ls.get('effect', 'snow'));
             const [musicOn, setMusicOn] = useState(() => ls.get('musicOn', false));
+            const [lang, setLang] = useState(() => ls.get('lang', 'vi'));
             const [track, setTrack] = useState(0);
             const [activePage, setActivePage] = useState('profile');
             const [shopFilter, setShopFilter] = useState('');
             const [drawerOpen, setDrawerOpen] = useState(false);
             const [isAdmin, setIsAdmin] = useState(() => ls.get('isAdmin', false));
+            const [scrolled, setScrolled] = useState(false);
 
-            // State dữ liệu chính
             const [data, setDataState] = useState(() => ({
                 profile: ls.get('profile', DEFAULT_PROFILE),
                 products: ls.get('products', DEFAULT_PRODUCTS),
@@ -1074,6 +1112,14 @@
             useEffect(() => { ls.set('effect', effect); }, [effect]);
             useEffect(() => { ls.set('musicOn', musicOn); }, [musicOn]);
             useEffect(() => { ls.set('isAdmin', isAdmin); }, [isAdmin]);
+            useEffect(() => { ls.set('lang', lang); }, [lang]);
+            
+            // Hiệu ứng scroll header
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 20);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
 
             const navigate = (page, filter) => {
                 setActivePage(page);
@@ -1082,40 +1128,45 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
 
-            // Notif 12H
             const [dismissed, setDismissed] = useState(() => ls.get('notifDismissed', {}));
             const visibleNotifs = data.notifications.filter(n => (dismissed[n.id] || 0) < Date.now());
 
             return (
-                <div className="max-w-4xl mx-auto p-3 pb-32">
+                <div className="max-w-3xl mx-auto p-4 pb-32">
                     <Effects type={effect} />
                     
-                    {/* Header */}
-                    <header className="glass sticky top-3 z-20 rounded-2xl p-3 mb-4 flex justify-between items-center">
-                        <button onClick={() => setDrawerOpen(true)} className="p-2"><i data-lucide="menu" size="22" className="text-blue-500"></i></button>
-                        <h1 className="text-base font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-cyan-400">{data.siteName}</h1>
-                        <div className="flex gap-1">
-                            <button onClick={() => setDarkMode(!darkMode)} className="p-2 glass-strong rounded-full">
-                                <i data-lucide={darkMode ? 'sun' : 'moon'} size="18"></i>
+                    {/* Nút Setting chìm */}
+                    <Accessibility effect={effect} setEffect={setEffect} musicOn={musicOn} setMusicOn={setMusicOn} track={track} setTrack={setTrack} lang={lang} setLang={setLang} />
+                    
+                    {/* Header Glass (Chỉ hiện khi scroll) */}
+                    <header className={`fixed top-0 left-0 w-full z-30 transition-all duration-300 px-4 py-3 ${scrolled ? 'glass shadow-lg' : 'bg-transparent'}`}>
+                        <div className="max-w-3xl mx-auto flex justify-between items-center">
+                            <h1 className="text-lg font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-cyan-400">{data.siteName}</h1>
+                            <button onClick={() => setDarkMode(!darkMode)} className="w-10 h-10 glass rounded-full flex items-center justify-center shadow-md active:scale-90 transition">
+                                <i data-lucide={darkMode ? 'sun' : 'moon'} size="18" className="text-yellow-500"></i>
                             </button>
                         </div>
                     </header>
 
+                    <div className="mt-14"></div>
+
                     {/* Notification Banners */}
                     {visibleNotifs.length > 0 && (
-                        <div className="space-y-2 mb-4">
+                        <div className="space-y-2 mb-5">
                             {visibleNotifs.map(n => (
-                                <div key={n.id} className="glass rounded-xl p-3 flex items-start gap-2 animate-fade-in">
-                                    <i data-lucide="bell" size="16" className="text-blue-500 mt-0.5"></i>
-                                    <p className="flex-1 text-xs">{n.text}</p>
-                                    <button onClick={() => { const nd = { ...dismissed, [n.id]: Date.now() + 12 * 3600 * 1000 }; ls.set('notifDismissed', nd); setDismissed(nd); }} className="text-gray-400 hover:text-red-500"><i data-lucide="x" size="14"></i></button>
+                                <div key={n.id} className="glass rounded-2xl p-4 flex items-start gap-3 animate-fade-in border border-white/30 shadow-md">
+                                    <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="bell" size="16" className="text-blue-500"></i>
+                                    </div>
+                                    <p className="flex-1 text-sm font-medium pt-1">{n.text}</p>
+                                    <button onClick={() => { const nd = { ...dismissed, [n.id]: Date.now() + 12 * 3600 * 1000 }; ls.set('notifDismissed', nd); setDismissed(nd); }} className="text-gray-400 hover:text-red-500 transition p-1"><i data-lucide="x" size="16"></i></button>
                                 </div>
                             ))}
                         </div>
                     )}
 
                     {/* Page Content */}
-                    <div className="min-h-[60vh]">
+                    <div className="min-h-[70vh]">
                         {activePage === 'profile' && <ProfileHome profile={data.profile} posts={data.posts} onNavigate={navigate} />}
                         {activePage === 'shop' && <Shop products={data.products} filter={shopFilter} setFilter={setShopFilter} />}
                         {activePage === 'posts' && <PostsPage posts={data.posts} />}
@@ -1130,22 +1181,26 @@
                         {activePage === 'admin' && (isAdmin ? <AdminPanel data={data} setData={setData} onLogout={() => { setIsAdmin(false); navigate('profile'); }} /> : <AdminLogin onLogin={() => { setIsAdmin(true); navigate('admin'); }} />)}
                     </div>
 
-                    {/* Floating Tools */}
-                    <Accessibility effect={effect} setEffect={setEffect} musicOn={musicOn} setMusicOn={setMusicOn} track={track} setTrack={setTrack} />
-                    
                     {/* Drawer Menu */}
                     <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} activePage={activePage} onNavigate={navigate} data={data} isAdmin={isAdmin} />
 
-                    {/* Bottom Nav (Chỉ 3 nút) */}
-                    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[92%] max-w-md glass-strong rounded-3xl p-2 flex justify-around items-center z-30 shadow-2xl">
-                        <button onClick={() => setDrawerOpen(true)} className={`dock-item flex flex-col items-center p-2 px-4 ${drawerOpen ? 'text-blue-500' : 'text-gray-500'}`}>
-                            <i data-lucide="menu" size="22"></i><span className="text-[10px] font-bold mt-1">Menu</span>
+                    {/* Bottom Nav (Floating iOS Dock) */}
+                    <nav className="fixed bottom-5 left-1/2 -translate-x-1/2 w-[90%] max-w-sm glass rounded-[2.5rem] p-2 flex justify-between items-center z-30 shadow-2xl border border-white/30 backdrop-blur-3xl">
+                        <button onClick={() => setDrawerOpen(true)} className={`dock-item flex-1 flex flex-col items-center py-2.5 rounded-3xl ${drawerOpen ? 'dock-active' : 'text-gray-500 hover:text-blue-500'}`}>
+                            <i data-lucide="menu" size="22"></i>
+                            <span className="text-[10px] font-bold mt-1">Menu</span>
                         </button>
-                        <button onClick={() => navigate('shop')} className={`dock-item flex flex-col items-center p-2 px-4 ${activePage === 'shop' ? 'text-blue-500' : 'text-gray-500'}`}>
-                            <i data-lucide="shopping-bag" size="22"></i><span className="text-[10px] font-bold mt-1">Shop</span>
+                        <button onClick={() => navigate('shop')} className={`dock-item flex-1 flex flex-col items-center py-2.5 rounded-3xl ${activePage === 'shop' ? 'dock-active' : 'text-gray-500 hover:text-blue-500'}`}>
+                            <i data-lucide="shopping-bag" size="22"></i>
+                            <span className="text-[10px] font-bold mt-1">Shop</span>
                         </button>
-                        <button onClick={() => navigate('contact')} className={`dock-item flex flex-col items-center p-2 px-4 ${activePage === 'contact' ? 'text-blue-500' : 'text-gray-500'}`}>
-                            <i data-lucide="phone" size="22"></i><span className="text-[10px] font-bold mt-1">Contact</span>
+                        <button onClick={() => navigate('weather')} className={`dock-item flex-1 flex flex-col items-center py-2.5 rounded-3xl ${activePage === 'weather' ? 'dock-active' : 'text-gray-500 hover:text-blue-500'}`}>
+                            <i data-lucide="cloud-sun" size="22"></i>
+                            <span className="text-[10px] font-bold mt-1">Weather</span>
+                        </button>
+                        <button onClick={() => navigate('contact')} className={`dock-item flex-1 flex flex-col items-center py-2.5 rounded-3xl ${activePage === 'contact' ? 'dock-active' : 'text-gray-500 hover:text-blue-500'}`}>
+                            <i data-lucide="phone" size="22"></i>
+                            <span className="text-[10px] font-bold mt-1">Contact</span>
                         </button>
                     </nav>
                 </div>
